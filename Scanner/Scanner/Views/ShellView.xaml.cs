@@ -67,7 +67,7 @@ namespace Scanner.Views
             ViewModel.SaveFileDialogRequested += ViewModel_SaveFileDialogRequested;
             ViewModel.SaveInProgressDialogRequested += ViewModel_SaveInProgressDialogRequested;
             ViewModel.ProjectDeletionDialogRequested += ViewModel_ProjectDeletionDialogRequested;
-            ViewModel.MultiEditInProgressDialogRequested += ViewModel_MultiEditInProgressDialogRequested;
+            ViewModel.IndeterminateProgressDialogRequested += ViewModel_IndeterminateProgressDialogRequested;
             ViewModel.DonationDialogRequested += ViewModel_DonationDialogRequested;
             ViewModel.OtherAppsDialogRequested += ViewModel_OtherAppsDialogRequested;
             ViewModel.ShowNotificationRequested += ViewModel_ShowNotificationRequested;
@@ -275,9 +275,9 @@ namespace Scanner.Views
             ShowProjectDeletionDialog(e.Process, e.Project);
         }
 
-        private void ViewModel_MultiEditInProgressDialogRequested(object? sender, Task e)
+        private void ViewModel_IndeterminateProgressDialogRequested(object? sender, (string Title, Task Task) e)
         {
-            ShowMultiEditInProgressDialog(e);
+            ShowIndeterminateProgressDialog(e.Title, e.Task);
         }
 
         private void ViewModel_DonationDialogRequested(object? sender, EventArgs e)
@@ -392,7 +392,7 @@ namespace Scanner.Views
             });
         }
 
-        private void ShowMultiEditInProgressDialog(Task task)
+        private void ShowIndeterminateProgressDialog(string title, Task task)
         {
             this.RunOnUIThread(Microsoft.UI.Dispatching.DispatcherQueuePriority.Normal, async () =>
             {
@@ -404,7 +404,7 @@ namespace Scanner.Views
 
                 isDialogVisible = true;
 
-                MultiEditInProgressDialogView dialog = new MultiEditInProgressDialogView(task);
+                IndeterminateProgressDialogView dialog = new(title, task);
                 dialog.XamlRoot = this.XamlRoot;
                 ContentDialogResult result = await dialog.ShowAsync();
 

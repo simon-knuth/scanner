@@ -7,12 +7,14 @@ using System.Threading.Tasks;
 
 namespace Scanner.Messages
 {
-    internal class ShowMultiEditInProgressDialogMessage : RequestMessage<Task>
+    internal class ShowIndeterminateProgressDialogMessage : RequestMessage<Task>
     {
+        public readonly string Title;
         public readonly Task Process;
 
-        public ShowMultiEditInProgressDialogMessage(Task process)
+        public ShowIndeterminateProgressDialogMessage(string title, Task process)
         {
+            Title = title;
             Process = process;
         }
     }

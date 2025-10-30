@@ -588,7 +588,7 @@ namespace Scanner.ViewModels
             Task process = ProjectService.ApplyActionAsync(new RotatePagesAction(rotations));
 
             if (rotations.Count > 1)
-                Messenger.Send(new ShowMultiEditInProgressDialogMessage(process));
+                Messenger.Send(new ShowIndeterminateProgressDialogMessage(Resources.Strings.Resources.ApplyingChanges, process));
 
             await process;
         }
@@ -605,7 +605,7 @@ namespace Scanner.ViewModels
             Task process = ProjectService.ApplyActionAsync(new RemovePagesAction(pages));
 
             if (pages.Count > 1)
-                Messenger.Send(new ShowMultiEditInProgressDialogMessage(process));
+                Messenger.Send(new ShowIndeterminateProgressDialogMessage(Resources.Strings.Resources.ApplyingChanges, process));
 
             await process;
         }
@@ -678,41 +678,49 @@ namespace Scanner.ViewModels
             if (CurrentProject is not PdfProject pdfProject) return;
             if (ProjectService.SelectedPagesCount == 0) return;
 
-            // get save options
-            SaveOptions? saveOptions = await SaveLocationService.GetSaveOptionsAsync(viewDispatcherQueue!, ((App)Application.Current).MainWindow, CurrentProject.InitialScanOptions,
-                CurrentProject, true, false, pdfProject.FileNameInfo.DesiredDisplayName);
-            if (saveOptions == null)
-                return;
-
-            // export
-            if (IsMultiSelect && ProjectService.SelectedPages != null)
+            await Task.Run(async () =>
             {
-                // export selected pages as one PDF file
-                Dictionary<IProjectPage, PdfProjectSnapshotPage> pages = [];
-                foreach (IProjectPage page in ProjectService.SelectedPages.OrderBy(x => x.Index))
-                {
-                    if (page is not ImagePage imagePage)
-                        continue;
+                // get save options
+                SaveOptions? saveOptions = await SaveLocationService.GetSaveOptionsAsync(viewDispatcherQueue!, ((App)Application.Current).MainWindow, CurrentProject.InitialScanOptions,
+                    CurrentProject, true, false, pdfProject.FileNameInfo.DesiredDisplayName);
+                if (saveOptions == null)
+                    return;
 
-                    pages.Add(page, new PdfProjectSnapshotPage(page.SourceFile, imagePage.Filter, imagePage.Brightness, imagePage.Contrast));
-                }
-                await PdfProject.CreatePdfFromPagesAsync(pages, null, saveOptions.FileName, saveOptions.TargetFolder, viewDispatcherQueue!);
-            }
-            else if (ProjectService.SelectedPage != null)
-            {
-                // export every page as a separate PDF
-                foreach (IProjectPage page in CurrentProject.Pages)
-                {
-                    if (page is not ImagePage imagePage)
-                        continue;
+                // show loading dialog
+                TaskCompletionSource tcs = new();
+                Messenger.Send(new ShowIndeterminateProgressDialogMessage(Resources.Strings.Resources.ExportInProgress, tcs.Task));
 
+                // export
+                if (IsMultiSelect && ProjectService.SelectedPages != null)
+                {
+                    // export selected pages as one PDF file
                     Dictionary<IProjectPage, PdfProjectSnapshotPage> pages = [];
-                    pages.Add(page, new PdfProjectSnapshotPage(page.SourceFile, imagePage.Filter, imagePage.Brightness, imagePage.Contrast));
+                    foreach (IProjectPage page in ProjectService.SelectedPages.OrderBy(x => x.Index))
+                    {
+                        if (page is not ImagePage imagePage)
+                            continue;
 
+                        pages.Add(page, new PdfProjectSnapshotPage(page.SourceFile, imagePage.Filter, imagePage.Brightness, imagePage.Contrast));
+                    }
                     await PdfProject.CreatePdfFromPagesAsync(pages, null, saveOptions.FileName, saveOptions.TargetFolder, viewDispatcherQueue!);
                 }
-                await ProjectService.TrySharePagesAsync([ProjectService.SelectedPage]);
-            }
+                else if (ProjectService.SelectedPage != null)
+                {
+                    // export every page as a separate PDF
+                    foreach (IProjectPage page in CurrentProject.Pages)
+                    {
+                        if (page is not ImagePage imagePage)
+                            continue;
+
+                        Dictionary<IProjectPage, PdfProjectSnapshotPage> pages = [];
+                        pages.Add(page, new PdfProjectSnapshotPage(page.SourceFile, imagePage.Filter, imagePage.Brightness, imagePage.Contrast));
+
+                        await PdfProject.CreatePdfFromPagesAsync(pages, null, saveOptions.FileName, saveOptions.TargetFolder, viewDispatcherQueue!);
+                    }
+                }
+
+                tcs.TrySetResult();
+            });
         }
     }
 

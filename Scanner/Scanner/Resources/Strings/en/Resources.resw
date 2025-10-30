@@ -1874,4 +1874,7 @@ Fuzzy</comment>
   <data name="ExportAllPagesAsSeparatePDFs" xml:space="preserve">
     <value>Export all pages as separate PDFs...</value>
   </data>
+  <data name="ExportInProgress" xml:space="preserve">
+    <value>Export in progress...</value>
+  </data>
 </root>

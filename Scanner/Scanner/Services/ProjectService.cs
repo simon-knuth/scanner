@@ -828,7 +828,7 @@ namespace Scanner.Services
             if (upUntil == null)
                 upUntil = UndoStack.Peek();
             else if (upUntil != UndoStack.Peek())
-                Messenger.Send(new ShowMultiEditInProgressDialogMessage(process.Task));
+                Messenger.Send(new ShowIndeterminateProgressDialogMessage(Resources.Strings.Resources.ApplyingChanges, process.Task));
 
             while (UndoStack.TryPeek(out IProjectAction? action) && action != upUntil)
             {
@@ -849,7 +849,7 @@ namespace Scanner.Services
             if (upUntil == null)
                 upUntil = RedoStack.Peek();
             else if (upUntil != RedoStack.Peek())
-                Messenger.Send(new ShowMultiEditInProgressDialogMessage(process.Task));
+                Messenger.Send(new ShowIndeterminateProgressDialogMessage(Resources.Strings.Resources.ApplyingChanges, process.Task));
 
             while (RedoStack.TryPeek(out IProjectAction? action) && action != upUntil)
             {
@@ -900,7 +900,7 @@ namespace Scanner.Services
 
                 // create new project from preserved files
                 Task createProjectTask = TryCreateProjectAsync(creationData, uiDispatcherQueue);
-                Messenger.Send(new ShowMultiEditInProgressDialogMessage(createProjectTask));
+                Messenger.Send(new ShowIndeterminateProgressDialogMessage(Resources.Strings.Resources.ApplyingChanges, createProjectTask));
                 await createProjectTask;
             }
             finally

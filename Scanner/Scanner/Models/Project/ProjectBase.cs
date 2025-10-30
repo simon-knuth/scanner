@@ -140,7 +140,7 @@ namespace Scanner.Models
         {
             TaskCompletionSource process = new();
             if (insertions.Count > 1)
-                Messenger.Send(new ShowMultiEditInProgressDialogMessage(process.Task));
+                Messenger.Send(new ShowIndeterminateProgressDialogMessage(Resources.Strings.Resources.ApplyingChanges, process.Task));
 
             await StartEditingAsync();
 
@@ -223,7 +223,7 @@ namespace Scanner.Models
         {
             TaskCompletionSource process = new();
             if (insertions.Count > 1)
-                Messenger.Send(new ShowMultiEditInProgressDialogMessage(process.Task));
+                Messenger.Send(new ShowIndeterminateProgressDialogMessage(Resources.Strings.Resources.ApplyingChanges, process.Task));
 
             await StartEditingAsync();
 
@@ -307,7 +307,7 @@ namespace Scanner.Models
         {
             TaskCompletionSource process = new();
             if (pages.Count > 1)
-                Messenger.Send(new ShowMultiEditInProgressDialogMessage(process.Task));
+                Messenger.Send(new ShowIndeterminateProgressDialogMessage(Resources.Strings.Resources.ApplyingChanges, process.Task));
 
             await StartEditingAsync();
 
@@ -432,7 +432,7 @@ namespace Scanner.Models
         {
             TaskCompletionSource process = new();
             if (instructions.Count > 1)
-                Messenger.Send(new ShowMultiEditInProgressDialogMessage(process.Task));
+                Messenger.Send(new ShowIndeterminateProgressDialogMessage(Resources.Strings.Resources.ApplyingChanges, process.Task));
 
             foreach (KeyValuePair<IProjectPage, BitmapRotation> instruction in instructions)
             {
@@ -628,7 +628,7 @@ namespace Scanner.Models
         {
             TaskCompletionSource process = new();
             if (pages.Count > 1)
-                Messenger.Send(new ShowMultiEditInProgressDialogMessage(process.Task));
+                Messenger.Send(new ShowIndeterminateProgressDialogMessage(Resources.Strings.Resources.ApplyingChanges, process.Task));
 
             await StartEditingAsync();
 
@@ -724,7 +724,7 @@ namespace Scanner.Models
         {
             TaskCompletionSource process = new();
             if (pages.Count > 1)
-                Messenger.Send(new ShowMultiEditInProgressDialogMessage(process.Task));
+                Messenger.Send(new ShowIndeterminateProgressDialogMessage(Resources.Strings.Resources.ApplyingChanges, process.Task));
 
             List<AppliedCrop> result = [];
 
@@ -766,7 +766,7 @@ namespace Scanner.Models
         {
             TaskCompletionSource process = new();
             if (pages.Count > 1)
-                Messenger.Send(new ShowMultiEditInProgressDialogMessage(process.Task));
+                Messenger.Send(new ShowIndeterminateProgressDialogMessage(Resources.Strings.Resources.ApplyingChanges, process.Task));
 
             List<IProjectPage> result = [];
 

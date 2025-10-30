@@ -11,6 +11,7 @@ using Scanner.Extensions;
 using Scanner.Messages;
 using Scanner.Models;
 using Scanner.Models.Interfaces;
+using Scanner.Resources.Strings;
 using Scanner.Services.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -40,7 +41,7 @@ namespace Scanner.ViewModels
         public event EventHandler<(TaskCompletionSource<SaveOptions?> Process, ScanOptions ScanOptions, ProjectBase? Project, string? DesiredFileDisplayName)> SaveFileDialogRequested;
         public event EventHandler<(TaskCompletionSource<bool> Process, ProjectBase? Project)> ProjectDeletionDialogRequested;
         public event EventHandler<TaskCompletionSource> SaveInProgressDialogRequested;
-        public event EventHandler<Task> MultiEditInProgressDialogRequested;
+        public event EventHandler<(string Title, Task Task)> IndeterminateProgressDialogRequested;
         public event EventHandler DonationDialogRequested;
         public event EventHandler OtherAppsDialogRequested;
         public event EventHandler<Notification> ShowNotificationRequested;
@@ -104,9 +105,9 @@ namespace Scanner.ViewModels
             {
                 m.Reply(ShowSaveInProgressDialogAsync());
             });
-            Messenger.Register<ShowMultiEditInProgressDialogMessage>(this, (r, m) =>
+            Messenger.Register<ShowIndeterminateProgressDialogMessage>(this, (r, m) =>
             {
-                m.Reply(ShowMultiEditInProgressDialogAsync(m.Process));
+                m.Reply(ShowIndeterminateProgressDialogAsync(m.Title, m.Process));
             });
             Messenger.Register<ShowDonationDialogMessage>(this, (r, m) =>
             {
@@ -193,10 +194,10 @@ namespace Scanner.ViewModels
             return await result.Task;
         }
 
-        private async Task ShowMultiEditInProgressDialogAsync(Task process)
+        private async Task ShowIndeterminateProgressDialogAsync(string title, Task process)
         {
             if (!ProjectService.IsScanProcessRunning)
-                MultiEditInProgressDialogRequested?.Invoke(this, process);
+                IndeterminateProgressDialogRequested?.Invoke(this, (title, process));
             
             await process;
         }

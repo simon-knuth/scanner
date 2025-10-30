@@ -230,7 +230,7 @@ namespace Scanner.ViewModels
                 process = ProjectService.ApplyActionAsync(new CropPagesAction(pages, cropRegion));
 
             if (pages.Count > 1)
-                Messenger.Send(new ShowMultiEditInProgressDialogMessage(process));
+                Messenger.Send(new ShowIndeterminateProgressDialogMessage(Resources.Strings.Resources.ApplyingChanges, process));
 
             await process;
         }

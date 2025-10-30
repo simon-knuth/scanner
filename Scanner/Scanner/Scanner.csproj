@@ -106,7 +106,7 @@
     <Page Update="Controls\ScanOptionsPresenter.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Update="Views\Dialogs\MultiEditInProgressDialogView.xaml">
+    <Page Update="Views\Dialogs\IndeterminateProgressDialogView.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\Dialogs\SaveOptionsDialogView.xaml">
