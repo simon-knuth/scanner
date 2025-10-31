@@ -18,8 +18,8 @@
     Content="{x:Bind strings:Resources.DeleteProjectDialogBody}"
     PrimaryButtonText="{x:Bind strings:Resources.Delete}"
     CloseButtonText="{x:Bind strings:Resources.Cancel}"
-    DefaultButton="Close"
-    CloseButtonStyle="{ThemeResource AccentButtonStyle}"
+    DefaultButton="Primary"
+    PrimaryButtonStyle="{ThemeResource AccentButtonStyle}"
     FlowDirection="{x:Bind AccessibilityService.DefaultFlowDirection, Mode=OneWay}"
     PrimaryButtonClick="ContentDialog_PrimaryButtonClick">
 
