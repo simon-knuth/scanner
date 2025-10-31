@@ -693,6 +693,10 @@
                             </SplitButton>
                             <Button x:Name="ButtonDiscardCrop" Style="{StaticResource EditorButtonStyle}" ToolTipService.ToolTip="{x:Bind strings:Resources.Cancel}" Click="ButtonDiscardCrop_Click">
                                 <FontIcon Glyph="&#xE711;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+
+                                <Button.KeyboardAccelerators>
+                                    <KeyboardAccelerator Key="Escape" />
+                                </Button.KeyboardAccelerators>
                             </Button>
                         </StackPanel>
 
@@ -780,6 +784,10 @@
                             </SplitButton>
                             <Button x:Name="ButtonDiscardDraw" Style="{StaticResource EditorButtonStyle}" ToolTipService.ToolTip="{x:Bind strings:Resources.Cancel}" Click="ButtonDiscardDraw_Click">
                                 <FontIcon Glyph="&#xE711;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+
+                                <Button.KeyboardAccelerators>
+                                    <KeyboardAccelerator Key="Escape" />
+                                </Button.KeyboardAccelerators>
                             </Button>
                         </StackPanel>
                     </Grid>

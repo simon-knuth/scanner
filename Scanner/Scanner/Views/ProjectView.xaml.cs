@@ -324,6 +324,9 @@ namespace Scanner.Views
         {
             if (e.Key == Windows.System.VirtualKey.F2)
                 FocusProjectNameTextBox();
+
+            if (e.Key == Windows.System.VirtualKey.Escape)
+                ViewModel.IsMultiSelect = false;
         }
 
         private void ControlAnimated_Loading(FrameworkElement sender, object args)
