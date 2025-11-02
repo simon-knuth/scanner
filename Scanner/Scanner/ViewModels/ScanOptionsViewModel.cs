@@ -41,8 +41,8 @@ namespace Scanner.ViewModels
         public RelayCommand DisposeCommand => new RelayCommand(Dispose);
         #endregion
 
-        private ScanOptions? scanOptions;
-        public ScanOptions? ScanOptions
+        private ScanOptions scanOptions = new(null);
+        public ScanOptions ScanOptions
         {
             get => scanOptions;
             set
@@ -67,9 +67,12 @@ namespace Scanner.ViewModels
             get => selectedScanner;
             set
             {
-                SetProperty(ref selectedScanner, value);
-                ScanOptions = new ScanOptions(value);
-                OnPropertyChanged(nameof(AreScanOptionsAvailable));
+                if (SetProperty(ref selectedScanner, value))
+                {
+                    ScanOptions = new ScanOptions(value);
+                    OnPropertyChanged(nameof(AreScanOptionsAvailable));
+                    Messenger.Send(new SelectedScannerChangedMessage(value));
+                }
             }
         }
 

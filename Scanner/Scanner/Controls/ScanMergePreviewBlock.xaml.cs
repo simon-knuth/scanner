@@ -1,0 +1,56 @@
+using CommunityToolkit.Mvvm.ComponentModel;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Automation.Peers;
+using Microsoft.UI.Xaml.Controls;
+using Scanner.Models;
+using Scanner.Views;
+using static Scanner.Helpers.Helpers;
+
+namespace Scanner.Controls
+{
+    public sealed partial class ScanMergePreviewBlock : UserControl
+    {
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        #region Dependency Properties
+        public static readonly DependencyProperty ScanMergeElementProperty =
+            DependencyProperty.Register(nameof(ScanMergeElement), typeof(ScanMergeElement), typeof(ScanMergePreviewBlock), null);
+        #endregion
+
+        public ScanMergeElement ScanMergeElement
+        {
+            get => (ScanMergeElement)GetValue(ScanMergeElementProperty);
+            set => SetValue(ScanMergeElementProperty, value);
+        }
+
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        public ScanMergePreviewBlock()
+        {
+            this.InitializeComponent();
+            ((FrameworkElement)Content).DataContext = this;
+        }
+
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        
+    }
+
+    sealed class CardControlAutomationPeer : FrameworkElementAutomationPeer
+    {
+        private readonly ScanMergePreviewBlock owner;
+
+        public CardControlAutomationPeer(ScanMergePreviewBlock owner) : base(owner) => this.owner = owner;
+
+        protected override int GetPositionInSetCore()
+          => ((ItemsRepeater)owner.Parent)?.GetElementIndex(this.owner) + 1 ?? base.GetPositionInSetCore();
+
+        protected override int GetSizeOfSetCore()
+          => ((ItemsRepeater)owner.Parent)?.ItemsSourceView?.Count ?? base.GetSizeOfSetCore();
+    }
+}

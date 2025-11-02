@@ -254,7 +254,7 @@
                                 <x:Boolean>False</x:Boolean>
                             </MenuFlyoutItem.CommandParameter>
                         </MenuFlyoutItem>
-                        <MenuFlyoutItem Text="{x:Bind strings:Resources.ScanMerge}" IsEnabled="{x:Bind ViewModel.CanScanAndMerge, Mode=OneWay}">
+                        <MenuFlyoutItem Text="{x:Bind strings:Resources.ScanMergeEntryPoint}" IsEnabled="{x:Bind ViewModel.CanScanAndMerge, Mode=OneWay}" Command="{x:Bind ViewModel.ShowScanMergeDialogCommand}">
                             <MenuFlyoutItem.Icon>
                                 <FontIcon Glyph="&#xEA3C;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                             </MenuFlyoutItem.Icon>

@@ -22,7 +22,7 @@ namespace Scanner.Models
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////                
         [ObservableProperty]
-        private IScanningDevice scanner;
+        private IScanningDevice? scanner;
 
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(ShortFriendlySourceMode))]
@@ -54,15 +54,17 @@ namespace Scanner.Models
         [ObservableProperty]
         private int contrast = AppConfig.DefaultContrast;
 
-        public Rect? SelectedRegion;
+        public Rect? SelectedRegion { get; set; }
 
-        public DateTime ScanTime = DateTime.MinValue;
+        public ScanMergeConfig? ScanMergeConfig { get; set; }
+
+        public DateTime ScanTime { get; set; } = DateTime.MinValue;
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public ScanOptions(IScanningDevice scanner)
+        public ScanOptions(IScanningDevice? scanner)
         {
             SetScanOptionsForScanner(scanner);
         }

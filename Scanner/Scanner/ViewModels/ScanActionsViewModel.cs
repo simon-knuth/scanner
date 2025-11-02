@@ -27,6 +27,7 @@ namespace Scanner.ViewModels
 
         #region Commands
         public AsyncRelayCommand<bool> ScanCommand => new AsyncRelayCommand<bool>(ScanAsync);
+        public RelayCommand ShowScanMergeDialogCommand => new RelayCommand(() => Messenger.Send(new ShowScanMergeDialogMessage()));
         public RelayCommand ShowSettingsCommand => new RelayCommand(ShowSettings);
 
         public RelayCommand<DispatcherQueue> ViewLoadingCommand => new RelayCommand<DispatcherQueue>(ViewLoading);
@@ -110,6 +111,16 @@ namespace Scanner.ViewModels
             ProjectService.PropertyChanged += ProjectService_PropertyChanged;
             CurrentProject = ProjectService.CurrentProject;
             UpdateCanAddToProject();
+
+            Messenger.Register<InvokeScanMergeMessage>(this, async (r, m) =>
+            {
+                if (ScanOptions != null)
+                {
+                    ScanOptions.ScanMergeConfig = m.ScanMergeConfig;
+                    await ScanAsync(true);
+                    ScanOptions.ScanMergeConfig = null;
+                }
+            });
         }
 
 
@@ -136,13 +147,9 @@ namespace Scanner.ViewModels
 
             ScanOptions.ScanTime = DateTime.Now;
             if (addToProject)
-            {
                 await ProjectService.TryScanToProjectAsync(ScanOptions);
-            }
             else
-            {
-                await ProjectService.TryCreateProjectFromScanAsync(ScanOptions, viewDispatcherQueue);
-            }
+                await ProjectService.TryCreateProjectFromScanAsync(ScanOptions, viewDispatcherQueue!);
         }
 
         private void ScanActionsViewModel_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -170,6 +177,7 @@ namespace Scanner.ViewModels
                     break;
                 case nameof(ScanOptions.TargetFormat):
                     OnPropertyChanged(nameof(CanScanModeBeSwitched));
+                    OnPropertyChanged(nameof(CanScanAndMerge));
                     UpdateCanAddToProject();
                     break;
             }

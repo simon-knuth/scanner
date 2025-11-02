@@ -1,0 +1,34 @@
+﻿using Microsoft.UI.Xaml.Data;
+using Scanner.Models;
+using System;
+
+namespace Scanner.Views.Converters
+{
+    public partial class ScanMergeElementGlyphConverter : IValueConverter
+    {
+        private const string glyphStartPage = "\uE819";
+        private const string glyphStartPageReversed = "\uE81B";
+        private const string glyphSinglePage = "\uE160";
+        private const string glyphMultiplePages = "\uE10C";
+
+        /// <summary>
+        ///     Converts the given <see cref="ScanMergeElement"/> into a glyph string.
+        /// </summary>
+        public object Convert(object value, Type targetType, object parameter, string language)
+        {
+            ScanMergeElement? element = value as ScanMergeElement;
+            if (element == null)
+                return string.Empty;
+
+            if (element.IsStartPage && !element.IsOrderReversed) return glyphStartPage;
+            else if (element.IsStartPage && element.IsOrderReversed) return glyphStartPageReversed;
+            else if (!element.IsPlaceholderForMultiplePages) return glyphSinglePage;
+            else return glyphMultiplePages;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
+        {
+            throw new NotImplementedException();
+        }
+    }
+}

@@ -384,7 +384,9 @@ namespace Scanner.Views
             ViewModel.PropertyChanging += ViewModel_PropertyChanging;
             ViewModel.PropertyChanged += ViewModel_PropertyChanged;
             ViewModel.Scanners.CollectionChanged += Scanners_CollectionChanged;
-            ViewModel.ScanOptions.PropertyChanged += ScanOptions_PropertyChanged;
+
+            if (ViewModel.ScanOptions != null)
+                ViewModel.ScanOptions.PropertyChanged += ScanOptions_PropertyChanged;
         }
 
 

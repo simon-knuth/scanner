@@ -349,6 +349,7 @@ namespace Scanner.Services
                 CurrentScanState = ScanState.Scanning;
 
                 if (CurrentProject == null) return;
+                if (scanOptions.Scanner == null) return;
 
                 // get save options
                 IsActionRunning = true;
@@ -387,7 +388,15 @@ namespace Scanner.Services
                 List<ProjectFileInsertion> insertions = new();
                 for (int i = 0; i < files.Count; i++)
                 {
-                    insertions.Add(new ProjectFileInsertion(files[i], CurrentProject.Pages.Count + i, saveOptions?.FileName, saveOptions?.TargetFolder, scanOptions.GetBaseFilter(), scanOptions.GetFilter(), scanOptions.Brightness, scanOptions.Contrast));
+                    if (scanOptions.ScanMergeConfig == null)
+                    {
+                        insertions.Add(new ProjectFileInsertion(files[i], CurrentProject.Pages.Count + i, saveOptions?.FileName, saveOptions?.TargetFolder, scanOptions.GetBaseFilter(), scanOptions.GetFilter(), scanOptions.Brightness, scanOptions.Contrast));
+                    }
+                    else
+                    {
+                        insertions.Add(new ProjectFileInsertion(files[i], GetNewIndexAccordingToMergeConfig(scanOptions.ScanMergeConfig, i, files.Count, true),
+                            saveOptions?.FileName, saveOptions?.TargetFolder, scanOptions.GetBaseFilter(), scanOptions.GetFilter(), scanOptions.Brightness, scanOptions.Contrast));
+                    }
                 }
                 IProjectAction action = new AddFilesAction(insertions, false);
 
@@ -412,7 +421,8 @@ namespace Scanner.Services
             try
             {
                 // get confirmation and delete
-                if (await Messenger.Send(new ShowProjectDeletionDialogMessage(CurrentProject)).Response == false) return false;
+                if (await Messenger.Send(new ShowProjectDeletionDialogMessage(CurrentProject)).Response == false)
+                    return false;
 
                 // close project
                 await TryCloseProjectAsync(ignoreUnsavedChanges: true);
@@ -1009,6 +1019,59 @@ namespace Scanner.Services
                 ScanState.Saving => GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.ScanProgressSaving),
                 _ => "",
             };
+        }
+
+        /// <summary>
+        ///     Calculates the index where a new page will be placed in the <see cref="ScanResult"/>. If the insertion is
+        ///     reversed, the index is shifted accordingly to accomodate inserting pages starting from the back unless
+        ///     <paramref name="forInsertion"/> is false.
+        /// </summary>
+        /// <param name="indexOfNewPage">Index of the new page among all new pages.</param>
+        /// <param name="totalNewPages">The number of pages being added in total.</param>
+        internal static int GetNewIndexAccordingToMergeConfig(ScanMergeConfig mergeConfig, int indexOfNewPage, int totalNewPages,
+            bool forInsertion = false)
+        {
+            if (!mergeConfig.InsertReversed)
+            {
+                // insert normally
+                if (indexOfNewPage < mergeConfig.InsertIndices.Count)
+                {
+                    return mergeConfig.InsertIndices[indexOfNewPage];
+                }
+                else
+                {
+                    // surplus page
+                    return mergeConfig.SurplusPagesIndex + indexOfNewPage - mergeConfig.InsertIndices.Count;
+                }
+            }
+            else
+            {
+                // insert reversed
+                if (forInsertion)
+                {
+                    if (totalNewPages - 1 - indexOfNewPage < mergeConfig.InsertIndices.Count)
+                    {
+                        return mergeConfig.InsertIndices[totalNewPages - 1 - indexOfNewPage] - (totalNewPages - 1 - indexOfNewPage);
+                    }
+                    else
+                    {
+                        // surplus page
+                        return mergeConfig.SurplusPagesIndex - mergeConfig.InsertIndices.Count;
+                    }
+                }
+                else
+                {
+                    if (totalNewPages - 1 - indexOfNewPage < mergeConfig.InsertIndices.Count)
+                    {
+                        return mergeConfig.InsertIndices[totalNewPages - 1 - indexOfNewPage];
+                    }
+                    else
+                    {
+                        // surplus page
+                        return mergeConfig.SurplusPagesIndex + totalNewPages - 1 - indexOfNewPage - mergeConfig.InsertIndices.Count;
+                    }
+                }
+            }
         }
     }
 }

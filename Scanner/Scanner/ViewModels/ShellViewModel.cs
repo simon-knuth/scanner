@@ -44,6 +44,7 @@ namespace Scanner.ViewModels
         public event EventHandler<(string Title, Task Task)> IndeterminateProgressDialogRequested;
         public event EventHandler DonationDialogRequested;
         public event EventHandler OtherAppsDialogRequested;
+        public event EventHandler ScanMergeDialogRequested;
         public event EventHandler<Notification> ShowNotificationRequested;
         #endregion
 
@@ -124,6 +125,10 @@ namespace Scanner.ViewModels
             Messenger.Register<ShowFeedbackMessage>(this, (r, m) =>
             {
                 ShowFeedback();
+            });
+            Messenger.Register<ShowScanMergeDialogMessage>(this, (r, m) =>
+            {
+                ShowScanMergeDialog();
             });
         }
 
@@ -292,6 +297,11 @@ namespace Scanner.ViewModels
         private void ShowOtherAppsDialog()
         {
             OtherAppsDialogRequested?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void ShowScanMergeDialog()
+        {
+            ScanMergeDialogRequested?.Invoke(this, EventArgs.Empty);
         }
     }
 }

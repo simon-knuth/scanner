@@ -70,6 +70,7 @@ namespace Scanner.Views
             ViewModel.IndeterminateProgressDialogRequested += ViewModel_IndeterminateProgressDialogRequested;
             ViewModel.DonationDialogRequested += ViewModel_DonationDialogRequested;
             ViewModel.OtherAppsDialogRequested += ViewModel_OtherAppsDialogRequested;
+            ViewModel.ScanMergeDialogRequested += ViewModel_ScanMergeDialogRequested;
             ViewModel.ShowNotificationRequested += ViewModel_ShowNotificationRequested;
             ViewModel.ProjectService.PropertyChanged += ProjectService_PropertyChanged;
         }
@@ -290,6 +291,11 @@ namespace Scanner.Views
             ShowOtherAppsDialog();
         }
 
+        private void ViewModel_ScanMergeDialogRequested(object? sender, EventArgs e)
+        {
+            ShowScanMergeDialog();
+        }
+
         private void ButtonSettings_RightTapped(object sender, RightTappedRoutedEventArgs e)
         {
 #if DEBUG
@@ -445,6 +451,26 @@ namespace Scanner.Views
                 isDialogVisible = true;
 
                 OtherAppsDialogView dialog = new OtherAppsDialogView();
+                dialog.XamlRoot = this.XamlRoot;
+                ContentDialogResult result = await dialog.ShowAsync();
+
+                isDialogVisible = false;
+            });
+        }
+
+        private void ShowScanMergeDialog()
+        {
+            this.RunOnUIThread(Microsoft.UI.Dispatching.DispatcherQueuePriority.Normal, async () =>
+            {
+                // return if dialog is already visible
+                if (isDialogVisible)
+                {
+                    return;
+                }
+
+                isDialogVisible = true;
+
+                ScanMergeDialogView dialog = new ScanMergeDialogView();
                 dialog.XamlRoot = this.XamlRoot;
                 ContentDialogResult result = await dialog.ShowAsync();
 
