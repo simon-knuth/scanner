@@ -76,6 +76,7 @@ namespace Scanner.Models
         /// </summary>
         public readonly ScanOptions InitialScanOptions;
         public readonly TargetFormat Format;
+        public string FriendlyFormatName => Format.GetFriendlyName();
 
         public bool IsPdf => Format == TargetFormat.PDF;
 

@@ -327,7 +327,7 @@ namespace Scanner.Models
     // MISCELLANEOUS ////////////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /// <summary>
-    ///     The possible scanner sources.
+    /// The possible scanner sources.
     /// </summary>
     public enum ScannerSource
     {
@@ -338,7 +338,7 @@ namespace Scanner.Models
     }
 
     /// <summary>
-    ///     The possible target formats.
+    /// The possible target formats.
     /// </summary>
     public enum TargetFormat
     {
@@ -347,12 +347,13 @@ namespace Scanner.Models
         JPG = 2,
         PNG = 3,
         BMP = 4,
-        TIFF = 5,
-        RAW = 6
+        SinglePagePDF = 5,
+        TIFF = 6,
+        RAW = 7
     }
 
     /// <summary>
-    ///     The possible scanner color modes.
+    /// The possible scanner color modes.
     /// </summary>
     public enum ScannerColorMode
     {
@@ -364,7 +365,7 @@ namespace Scanner.Models
     }
 
     /// <summary>
-    ///     The possible scanner auto crop modes.
+    /// The possible scanner auto crop modes.
     /// </summary>
     public enum ScannerAutoCropMode
     {

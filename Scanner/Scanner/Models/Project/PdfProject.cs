@@ -482,7 +482,7 @@ namespace Scanner.Models
             hasFileNameBeenApplied = FileNameInfo!.DesiredName == FileNameInfo.ActualName;
         }
 
-        public static async Task<Dictionary<IProjectPage, StorageFile?>> CreatePdfFromPagesAsync(Dictionary<IProjectPage, PdfProjectSnapshotPage> pages, StorageFile? targetFile, string? desiredFileName, StorageFolder? targetFolder, DispatcherQueue uiDispatcherQueue)
+        public static async Task<Dictionary<IProjectPage, StorageFile?>> CreatePdfFromPagesAsync(Dictionary<IProjectPage, IProjectSnapshotPage> pages, StorageFile? targetFile, string? desiredFileName, StorageFolder? targetFolder, DispatcherQueue uiDispatcherQueue)
         {
             Dictionary<IProjectPage, StorageFile?> result = new();
             List<StorageFile> files = [];

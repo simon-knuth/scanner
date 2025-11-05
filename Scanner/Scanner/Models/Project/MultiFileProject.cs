@@ -33,9 +33,9 @@ using static Scanner.Helpers.RotationHelpers;
 namespace Scanner.Models
 {
     /// <summary>
-    /// A project that produces one or more image file(s).
+    /// A project that produces one file per page.
     /// </summary>
-    public partial class ImageProject : ProjectBase
+    public partial class MultiFileProject : ProjectBase
     {
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -45,7 +45,7 @@ namespace Scanner.Models
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        private ImageProject(IList<IProjectPage> pages, TargetFormat format, ScanOptions initialScanOptions) : base(pages, format, initialScanOptions)
+        private MultiFileProject(IList<IProjectPage> pages, TargetFormat format, ScanOptions initialScanOptions) : base(pages, format, initialScanOptions)
         {
             foreach (IProjectPage page in pages)
             {
@@ -56,7 +56,7 @@ namespace Scanner.Models
             }
         }
 
-        public static async Task<ProjectBase> CreateAsync(ImageProjectCreationData creationData, bool keepSourceFiles, DispatcherQueue uiDispatcherQueue)
+        public static async Task<ProjectBase> CreateAsync(MultiFileProjectCreationData creationData, bool keepSourceFiles, DispatcherQueue uiDispatcherQueue)
         {
             // empty project folders
             await AppDataService.EmptyFolderAsync(AppDataService.ProjectFolder);
@@ -73,7 +73,7 @@ namespace Scanner.Models
             }
 
             // create project and update previews
-            ImageProject project = new ImageProject(pages, creationData.Format, creationData.InitialScanOptions);
+            MultiFileProject project = new MultiFileProject(pages, creationData.Format, creationData.InitialScanOptions);
             await project.GeneratePagePreviewsAsync(pages.OfType<ImagePage>().ToList(), uiDispatcherQueue);
             return project;
         }
@@ -242,12 +242,12 @@ namespace Scanner.Models
                         }
 
                         // take snapshot
-                        ImageProjectSnapshot? snapshot = null;
+                        MultiFileProjectSnapshot? snapshot = null;
                         await uiDispatcherQueue.RunOnThreadAndWaitAsync(DispatcherQueuePriority.Low, () =>
                         {
-                            snapshot = new ImageProjectSnapshot(this);
+                            snapshot = new MultiFileProjectSnapshot(this);
                         });
-                        if (snapshot == null) throw new ApplicationException("Failed to save Project (snapshot is null)");
+                        if (snapshot == null) throw new ApplicationException("Failed to save project (snapshot is null)");
 
                         // continue processing edits during save process
                         projectObjectSemaphore.Release();
@@ -257,7 +257,7 @@ namespace Scanner.Models
                         Dictionary<IProjectPage, StorageFile?> pageSaves = await snapshot.TrySaveAsync(uiDispatcherQueue);
 
                         // process save result
-                        if (pageSaves.Count == 0) throw new ApplicationException("Failed to save Project (no files saved)");
+                        if (pageSaves.Count == 0) throw new ApplicationException("Failed to save project (no files saved)");
 
                         // update target files
                         await projectObjectSemaphore.WaitAsync();

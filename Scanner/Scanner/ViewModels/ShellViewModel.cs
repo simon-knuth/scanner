@@ -258,7 +258,7 @@ namespace Scanner.ViewModels
         private async Task SaveAsCurrentPageAsync()
         {
             if (CurrentProject == null) return;
-            if (CurrentProject is not ImageProject imageProject) return;
+            if (CurrentProject is not MultiFileProject imageProject) return;
 
             if (ProjectService.SelectedPage != null)
                 await imageProject.SaveAsSinglePageAsync(ProjectService.SelectedPage, viewDispatcherQueue!);

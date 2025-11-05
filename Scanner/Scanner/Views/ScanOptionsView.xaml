@@ -151,7 +151,7 @@
                         <!-- File format -->
                         <StackPanel Orientation="Vertical" Spacing="12" Margin="0,12,0,0">
                             <TextBlock Text="{x:Bind strings:Resources.FileFormatHeading}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Style="{StaticResource BaseTextBlockStyle}" />
-                            <ComboBox x:Name="ComboBoxFileFormats" HorizontalAlignment="Stretch" Padding="12,6,28,6" Height="32" SelectedIndex="{x:Bind TargetFormat, Mode=TwoWay}" SizeChanged="ComboBoxFileFormats_SizeChanged">
+                            <ComboBox x:Name="ComboBoxFileFormats" MaxDropDownHeight="800" HorizontalAlignment="Stretch" Padding="12,6,28,6" Height="32" SelectedIndex="{x:Bind TargetFormat, Mode=TwoWay}" SizeChanged="ComboBoxFileFormats_SizeChanged">
                                 <ComboBox.Items>
                                     <ComboBoxItem Content="{x:Bind strings:Resources.MultiPageFormats}" Padding="8,4,8,4" FontSize="12" IsEnabled="False" />
                                     <ComboBoxItem FontWeight="SemiBold">
@@ -221,6 +221,23 @@
                                             <FontIcon Grid.Row="0" Grid.Column="0" Glyph="&#xE91B;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                                             <TextBlock Grid.Row="0" Grid.Column="1" Text="BMP" MaxLines="1" />
                                             <TextBlock Grid.Row="1" Grid.Column="1" Text="{x:Bind strings:Resources.FileFormatDescriptionBMP}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="WrapWholeWords" Style="{StaticResource CaptionTextBlockStyle}" />
+                                        </Grid>
+                                    </ComboBoxItem>
+                                    <ComboBoxItem FontWeight="SemiBold">
+                                        <Grid ColumnSpacing="12">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="20" />
+                                                <RowDefinition Height="Auto" />
+                                            </Grid.RowDefinitions>
+
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="16" />
+                                                <ColumnDefinition Width="1*" />
+                                            </Grid.ColumnDefinitions>
+
+                                            <FontIcon Grid.Row="0" Grid.Column="0" Glyph="&#xEA90;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                            <TextBlock Grid.Row="0" Grid.Column="1" Text="{x:Bind strings:Resources.FileFormatSinglePagePDF}" MaxLines="1" />
+                                            <TextBlock Grid.Row="1" Grid.Column="1" Text="{x:Bind strings:Resources.FileFormatDescriptionSinglePagePDF}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="WrapWholeWords" Style="{StaticResource CaptionTextBlockStyle}" />
                                         </Grid>
                                     </ComboBoxItem>
                                     <ComboBoxItem Foreground="{ThemeResource TextFillColorSecondaryBrush}">

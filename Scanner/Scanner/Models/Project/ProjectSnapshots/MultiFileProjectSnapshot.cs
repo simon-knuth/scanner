@@ -24,7 +24,7 @@ using static Scanner.Helpers.Helpers;
 
 namespace Scanner.Models
 {
-    public partial class ImageProjectSnapshot : IProjectSnapshot
+    public partial class MultiFileProjectSnapshot : IProjectSnapshot
     {
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -44,13 +44,13 @@ namespace Scanner.Models
         /// <remarks>
         /// Editing the <see cref="IProjectPage"/> references from the snapshot is not allowed.
         /// </remarks>
-        public Dictionary<IProjectPage, ImageProjectSnapshotPage> Pages { get; private set; } = new();
+        public Dictionary<IProjectPage, MultiFileProjectSnapshotPage> Pages { get; private set; } = new();
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public ImageProjectSnapshot(ImageProject project)
+        public MultiFileProjectSnapshot(MultiFileProject project)
         {
             Format = project.Format;
 
@@ -58,7 +58,7 @@ namespace Scanner.Models
             {
                 if (page is ImagePage imagePage)
                 {
-                    Pages.Add(page, new ImageProjectSnapshotPage(imagePage.SourceFile, imagePage.TargetFile, imagePage.TargetFolder!,
+                    Pages.Add(page, new MultiFileProjectSnapshotPage(imagePage.SourceFile, imagePage.TargetFile, imagePage.TargetFolder!,
                         imagePage.FileNameInfo!.DesiredName, imagePage.Filter, imagePage.Brightness, imagePage.Contrast));
                 }
             }
@@ -75,10 +75,20 @@ namespace Scanner.Models
             // save images to target folders
             try
             {
-                foreach (KeyValuePair<IProjectPage, ImageProjectSnapshotPage> page in Pages)
+                foreach (KeyValuePair<IProjectPage, MultiFileProjectSnapshotPage> page in Pages)
                 {
                     StorageFile generatedFile;
-                    if (page.Value.Filter != ImageFilter.None || FileExtensionToTargetFormat(page.Value.SourceFile.FileType) != Format)
+                    if (Format == TargetFormat.SinglePagePDF)
+                    {
+                        // need to generate PDF file
+                        Dictionary<IProjectPage, IProjectSnapshotPage> pdfPages = new()
+                        {
+                            { page.Key, page.Value }
+                        };
+                        Dictionary<IProjectPage, StorageFile?> pdfResult = await PdfProject.CreatePdfFromPagesAsync(pdfPages, page.Value.TargetFile, page.Value.DesiredFileName, page.Value.TargetFolder, uiDispatcherQueue);
+                        generatedFile = pdfResult[page.Key];
+                    }
+                    else if (page.Value.Filter != ImageFilter.None || FileExtensionToTargetFormat(page.Value.SourceFile.FileType) != Format)
                     {
                         // encoding necessary ~> prepare file
                         if (page.Value.TargetFile == null)
@@ -142,12 +152,5 @@ namespace Scanner.Models
 
             return result;
         }
-
-
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // MISCELLANEOUS ////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public record ImageProjectSnapshotPage(StorageFile SourceFile, StorageFile? TargetFile, StorageFolder TargetFolder,
-            string? DesiredFileName, ImageFilter Filter, int Brightness, int Contrast);
     }
 }

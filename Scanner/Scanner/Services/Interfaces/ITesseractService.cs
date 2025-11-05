@@ -33,6 +33,6 @@ namespace Scanner.Services.Interfaces
         // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         BitmapRotation? GetRecommendedRotation(StorageFile file);
-        Task GeneratePdfAsync(List<PdfProjectSnapshotPage> Pages, string targetFilePath, DispatcherQueue uiDispatcherQueue);
+        Task GeneratePdfAsync(List<IProjectSnapshotPage> Pages, string targetFilePath, DispatcherQueue uiDispatcherQueue);
     }
 }

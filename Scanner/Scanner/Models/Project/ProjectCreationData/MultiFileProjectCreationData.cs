@@ -26,7 +26,7 @@ using static Scanner.Helpers.Helpers;
 
 namespace Scanner.Models
 {
-    public partial class ImageProjectCreationData : IProjectCreationData
+    public partial class MultiFileProjectCreationData : IProjectCreationData
     {
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -45,7 +45,7 @@ namespace Scanner.Models
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public ImageProjectCreationData(IReadOnlyList<StorageFile> files, TargetFormat format, string? targetFileName, StorageFolder? targetFolder, ScanOptions initialScanOptions)
+        public MultiFileProjectCreationData(IReadOnlyList<StorageFile> files, TargetFormat format, string? targetFileName, StorageFolder? targetFolder, ScanOptions initialScanOptions)
         {
             Format = format;
             InitialScanOptions = initialScanOptions;
@@ -56,7 +56,7 @@ namespace Scanner.Models
             }
         }
 
-        public ImageProjectCreationData(Collection<IProjectPage> pages, TargetFormat format, string? targetFileName, ScanOptions initialScanOptions)
+        public MultiFileProjectCreationData(Collection<IProjectPage> pages, TargetFormat format, string? targetFileName, ScanOptions initialScanOptions)
         {
             Format = format;
             InitialScanOptions = initialScanOptions;
@@ -77,7 +77,7 @@ namespace Scanner.Models
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public async Task<ProjectBase> CreateProjectAsync(bool keepSourceFiles, DispatcherQueue uiDispatcherQueue)
         {
-            return await ImageProject.CreateAsync(this, keepSourceFiles, uiDispatcherQueue);
+            return await MultiFileProject.CreateAsync(this, keepSourceFiles, uiDispatcherQueue);
         }
     }
 }

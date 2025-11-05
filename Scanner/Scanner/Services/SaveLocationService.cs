@@ -207,7 +207,7 @@ namespace Scanner.Services
                         string? baseFileDisplayName = null;
                         if (existingProject is PdfProject pdfProject)
                             baseFileDisplayName = pdfProject.FileNameInfo.DesiredDisplayName;
-                        else if (existingProject is ImageProject imageProject && imageProject.Pages[0] is ImagePage imagePage)
+                        else if (existingProject is MultiFileProject imageProject && imageProject.Pages[0] is ImagePage imagePage)
                             baseFileDisplayName = imagePage.FileNameInfo?.DesiredDisplayName;                            
 
                         // ask user for location

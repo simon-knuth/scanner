@@ -482,7 +482,7 @@ namespace Scanner.ViewModels
         private async Task SaveAsCurrentPageAsync()
         {
             if (CurrentProject == null) return;
-            if (CurrentProject is not ImageProject imageProject) return;
+            if (CurrentProject is not MultiFileProject imageProject) return;
 
             if (ProjectService.SelectedPage != null)
                 await imageProject.SaveAsSinglePageAsync(ProjectService.SelectedPage, viewDispatcherQueue!);
@@ -496,7 +496,7 @@ namespace Scanner.ViewModels
             {
                 await ProjectService.TryCopyProjectAsync();
             }
-            else if (CurrentProject is ImageProject imageProject && ProjectService.SelectedPage != null)
+            else if (CurrentProject is MultiFileProject imageProject && ProjectService.SelectedPage != null)
             {
                 await ProjectService.TryCopyPagesAsync([.. imageProject.Pages]);
             }
@@ -510,7 +510,7 @@ namespace Scanner.ViewModels
             {
                 await ProjectService.TryShareProjectAsync();
             }
-            else if (CurrentProject is ImageProject imageProject && ProjectService.SelectedPage != null)
+            else if (CurrentProject is MultiFileProject imageProject && ProjectService.SelectedPage != null)
             {
                 await ProjectService.TrySharePagesAsync([.. imageProject.Pages]);
             }
@@ -524,7 +524,7 @@ namespace Scanner.ViewModels
             {
                 await ProjectService.TryOpenWithProjectAsync(app);
             }
-            if (CurrentProject is ImageProject)
+            if (CurrentProject is MultiFileProject)
             {
                 if (ProjectService.SelectedPage == null) return;
                 await ProjectService.TryOpenWithPageAsync(app, ProjectService.SelectedPage);
@@ -657,7 +657,7 @@ namespace Scanner.ViewModels
                 else
                     Task.Run(() => pdfProject.GenerateFileNameWithAIAsync(viewDispatcherQueue));
             }
-            if (CurrentProject is ImageProject)
+            if (CurrentProject is MultiFileProject)
             {
                 throw new NotImplementedException();
             }
@@ -694,7 +694,7 @@ namespace Scanner.ViewModels
                 if (IsMultiSelect && ProjectService.SelectedPages != null)
                 {
                     // export selected pages as one PDF file
-                    Dictionary<IProjectPage, PdfProjectSnapshotPage> pages = [];
+                    Dictionary<IProjectPage, IProjectSnapshotPage> pages = [];
                     foreach (IProjectPage page in ProjectService.SelectedPages.OrderBy(x => x.Index))
                     {
                         if (page is not ImagePage imagePage)
@@ -712,7 +712,7 @@ namespace Scanner.ViewModels
                         if (page is not ImagePage imagePage)
                             continue;
 
-                        Dictionary<IProjectPage, PdfProjectSnapshotPage> pages = [];
+                        Dictionary<IProjectPage, IProjectSnapshotPage> pages = [];
                         pages.Add(page, new PdfProjectSnapshotPage(page.SourceFile, imagePage.Filter, imagePage.Brightness, imagePage.Contrast));
 
                         await PdfProject.CreatePdfFromPagesAsync(pages, null, saveOptions.FileName, saveOptions.TargetFolder, viewDispatcherQueue!);

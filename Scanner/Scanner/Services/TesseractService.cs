@@ -103,14 +103,14 @@ namespace Scanner.Services
             }
         }
 
-        public async Task GeneratePdfAsync(List<PdfProjectSnapshotPage> pages, string targetFilePath, DispatcherQueue uiDispatcherQueue)
+        public async Task GeneratePdfAsync(List<IProjectSnapshotPage> pages, string targetFilePath, DispatcherQueue uiDispatcherQueue)
         {
             using (TesseractEngine engine = new TesseractEngine(trainingDataFolderPath, "eng"))
             {
                 using (IResultRenderer renderer = PdfResultRenderer.CreatePdfRenderer(targetFilePath, trainingDataFolderPath, false))
                 {
                     renderer.BeginDocument("Scan");
-                    foreach (PdfProjectSnapshotPage snapshotPage in pages)
+                    foreach (IProjectSnapshotPage snapshotPage in pages)
                     {
                         if (snapshotPage.Filter == ImageFilter.None && snapshotPage.Brightness == 0 && snapshotPage.Contrast == 0)
                         {

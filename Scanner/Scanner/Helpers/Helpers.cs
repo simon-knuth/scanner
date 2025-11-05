@@ -126,6 +126,7 @@ namespace Scanner.Helpers
             switch (targetFormat)
             {
                 case TargetFormat.PDF:
+                case TargetFormat.SinglePagePDF:
                     return ".pdf";
                 case TargetFormat.JPG:
                     return ".jpg";
@@ -154,8 +155,6 @@ namespace Scanner.Helpers
             
             switch (normalizedExtension)
             {
-                case ".pdf":
-                    return TargetFormat.PDF;
                 case ".jpg":
                 case ".jpeg":
                     return TargetFormat.JPG;
@@ -168,6 +167,8 @@ namespace Scanner.Helpers
                     return TargetFormat.TIFF;
                 case ".raw":
                     return TargetFormat.RAW;
+                case ".pdf":
+                    throw new ArgumentException("PDF file format can be mapped to multiple TargetFormats");
                 default:
                     throw new ArgumentException($"Unsupported file extension: {fileExtension}", nameof(fileExtension));
             }

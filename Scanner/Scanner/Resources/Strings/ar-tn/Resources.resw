@@ -1843,4 +1843,10 @@ Fuzzy</comment>
   <data name="ExportInProgress" xml:space="preserve">
     <value></value>
   </data>
+  <data name="FileFormatSinglePagePDF" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="FileFormatDescriptionSinglePagePDF" xml:space="preserve">
+    <value></value>
+  </data>
 </root>

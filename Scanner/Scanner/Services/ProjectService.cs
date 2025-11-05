@@ -284,9 +284,10 @@ namespace Scanner.Services
                         case TargetFormat.JPG:
                         case TargetFormat.PNG:
                         case TargetFormat.BMP:
+                        case TargetFormat.SinglePagePDF:
                         case TargetFormat.TIFF:
                         case TargetFormat.RAW:
-                            ImageProjectCreationData imageCreationData = new(files, scanOptions.TargetFormat, saveOptions.FileName, saveOptions.TargetFolder, scanOptions);
+                            MultiFileProjectCreationData imageCreationData = new(files, scanOptions.TargetFormat, saveOptions.FileName, saveOptions.TargetFolder, scanOptions);
                             project = await imageCreationData.CreateProjectAsync(false, uiDispatcherQueue);
                             break;
                         default:
@@ -306,7 +307,7 @@ namespace Scanner.Services
                         // generate name in the background
                         _ = Task.Run(async () => await pdfProject.GenerateFileNameWithAIAsync(imageBuffer, uiDispatcherQueue));
                     }
-                    else if (CurrentProject is ImageProject imageProject)
+                    else if (CurrentProject is MultiFileProject imageProject)
                     {
                         throw new NotImplementedException();
                     }
@@ -503,7 +504,7 @@ namespace Scanner.Services
             try
             {
                 // copy project
-                if (CurrentProject is ImageProject imageProject)
+                if (CurrentProject is MultiFileProject imageProject)
                 {
                     await imageProject.CopyPagesAsync(pages);
                 }
@@ -559,7 +560,7 @@ namespace Scanner.Services
             try
             {
                 // open with page
-                if (CurrentProject is ImageProject imageProject)
+                if (CurrentProject is MultiFileProject imageProject)
                 {
                     await imageProject.TryOpenWithPageAsync(app, page);
                 }
@@ -615,7 +616,7 @@ namespace Scanner.Services
             try
             {
                 // copy project
-                if (CurrentProject is ImageProject imageProject)
+                if (CurrentProject is MultiFileProject imageProject)
                 {
                     await imageProject.SharePagesAsync(pages);
                 }
@@ -890,12 +891,13 @@ namespace Scanner.Services
                     case TargetFormat.JPG:
                     case TargetFormat.PNG:
                     case TargetFormat.BMP:
+                    case TargetFormat.SinglePagePDF:
                     case TargetFormat.TIFF:
                     case TargetFormat.RAW:
-                        if (CurrentProject is ImageProject imageProject)
-                            creationData = new ImageProjectCreationData(CurrentProject.Pages, targetFormat, null, CurrentProject.InitialScanOptions);
+                        if (CurrentProject is MultiFileProject imageProject)
+                            creationData = new MultiFileProjectCreationData(CurrentProject.Pages, targetFormat, null, CurrentProject.InitialScanOptions);
                         else if (CurrentProject is PdfProject pdfProject)
-                            creationData = new ImageProjectCreationData(CurrentProject.Pages, targetFormat, pdfProject.FileNameInfo.DesiredName, CurrentProject.InitialScanOptions);
+                            creationData = new MultiFileProjectCreationData(CurrentProject.Pages, targetFormat, pdfProject.FileNameInfo.DesiredName, CurrentProject.InitialScanOptions);
                         break;
                     default:
                         throw new ArgumentException("Can't convert project to " + targetFormat.ToString());

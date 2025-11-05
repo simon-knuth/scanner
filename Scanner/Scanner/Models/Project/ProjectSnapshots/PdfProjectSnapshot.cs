@@ -72,13 +72,10 @@ namespace Scanner.Models
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public Task<Dictionary<IProjectPage, StorageFile?>> TrySaveAsync(DispatcherQueue uiDispatcherQueue)
         {
-            return PdfProject.CreatePdfFromPagesAsync(Pages, TargetFile, DesiredFileName, TargetFolder, uiDispatcherQueue);
+            Dictionary<IProjectPage, IProjectSnapshotPage> pdfPages = Pages.ToDictionary(
+                x => x.Key,
+                x => (IProjectSnapshotPage)x.Value);
+            return PdfProject.CreatePdfFromPagesAsync(pdfPages, TargetFile, DesiredFileName, TargetFolder, uiDispatcherQueue);
         }
-
-
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // MISCELLANEOUS ////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public record PdfProjectSnapshotPage(StorageFile SourceFile, ImageFilter Filter, int Brightness, int Contrast);
     }
 }

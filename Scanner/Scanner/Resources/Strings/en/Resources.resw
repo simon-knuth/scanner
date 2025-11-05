@@ -1877,4 +1877,10 @@ Fuzzy</comment>
   <data name="ExportInProgress" xml:space="preserve">
     <value>Export in progress...</value>
   </data>
+  <data name="FileFormatSinglePagePDF" xml:space="preserve">
+    <value>Single-page PDF</value>
+  </data>
+  <data name="FileFormatDescriptionSinglePagePDF" xml:space="preserve">
+    <value>One PDF file per page. Viewable on any device, but difficult to edit later.</value>
+  </data>
 </root>
