@@ -27,6 +27,7 @@ using static Scanner.Helpers.Helpers;
 using System.Security.Cryptography;
 using Scanner.Models.FileNaming;
 using Scanner.Views;
+using Scanner.Helpers;
 
 namespace Scanner.Services
 {

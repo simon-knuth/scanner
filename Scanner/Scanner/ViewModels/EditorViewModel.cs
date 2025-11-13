@@ -3,6 +3,8 @@ using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml.Media.Imaging;
+using Scanner.Extensions;
+using Scanner.Helpers;
 using Scanner.Messages;
 using Scanner.Models;
 using Scanner.Models.Interfaces;
@@ -14,6 +16,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Graphics.Imaging;
+using static Scanner.Helpers.PageDimensionsHelper;
 using static Scanner.Helpers.RotationHelpers;
 using static Scanner.Models.ImagePage;
 
@@ -61,7 +64,7 @@ namespace Scanner.ViewModels
             {
                 if (SetProperty(ref selectedAspectRatio, value))
                 {
-                    SelectedAspectRatioValue = AspectRatioToValue(value);
+                    SelectedAspectRatioValue = value.ToValue();
                     SettingsService.LastUsedCropAspectRatio = value;
                 }
             }
@@ -295,41 +298,6 @@ namespace Scanner.ViewModels
             if (ProjectService.SelectedPage is ImagePage imagePage && imagePage.Contrast != contrast)
             {
                 await ProjectService.ApplyActionAsync(new SetContrastAction(imagePage, contrast));
-            }
-        }
-
-        private double? AspectRatioToValue(AspectRatio aspectRatio)
-        {
-            switch (aspectRatio)
-            {
-                case AspectRatio.Custom:
-                    return null;
-                case AspectRatio.Square:
-                    return 1;
-                case AspectRatio.ThreeByTwo:
-                    return 1.5;
-                case AspectRatio.FourByThree:
-                    return 1.3333;
-                case AspectRatio.DinA:
-                    return 0.7070;
-                case AspectRatio.AnsiA:
-                    return 0.7741;
-                case AspectRatio.AnsiB:
-                    return 0.6458;
-                case AspectRatio.AnsiC:
-                    return 0.7728;
-                case AspectRatio.Kai4:
-                    return 0.7216;
-                case AspectRatio.Kai8:
-                    return 0.6929;
-                case AspectRatio.Kai16:
-                    return 0.7216;
-                case AspectRatio.Kai32:
-                    return 0.6954;
-                case AspectRatio.Legal:
-                    return 0.6067;
-                default:
-                    throw new ArgumentException($"Can't convert AspectRatio {aspectRatio} to value");
             }
         }
     }

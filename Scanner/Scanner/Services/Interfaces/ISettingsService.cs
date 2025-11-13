@@ -17,6 +17,7 @@ using System.ComponentModel;
 using Scanner.ViewModels;
 using Scanner.Models.FileNaming;
 using Scanner.Views;
+using Scanner.Helpers;
 
 namespace Scanner.Services.Interfaces
 {
@@ -113,22 +114,5 @@ namespace Scanner.Services.Interfaces
         DateTime = 0,
         Date = 1,
         Custom = 2
-    }
-
-    public enum AspectRatio
-    {
-        Custom = 0,
-        Square = 1,
-        ThreeByTwo = 2,
-        FourByThree = 3,
-        DinA = 4,
-        AnsiA = 5,
-        AnsiB = 6,
-        AnsiC = 7,
-        Kai4 = 8,
-        Kai8 = 9,
-        Kai16 = 10,
-        Kai32 = 11,
-        Legal = 12
     }
 }
