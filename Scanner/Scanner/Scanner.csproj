@@ -69,7 +69,7 @@
     <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3537.50" />
     <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.2.0" />
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.6584" />
-    <PackageReference Include="Microsoft.WindowsAppSDK" Version="2.0.250930001-experimental1" />
+    <PackageReference Include="Microsoft.WindowsAppSDK" Version="2.0.0-experimental3" />
     <PackageReference Include="ReswPlus" Version="0.3.1.5" />
     <PackageReference Include="Sentry" Version="5.16.0" />
     <PackageReference Include="Serilog" Version="4.3.0" />
