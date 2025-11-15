@@ -77,7 +77,6 @@
     <PackageReference Include="Serilog.Formatting.Compact" Version="3.0.0" />
     <PackageReference Include="Serilog.Sinks.Async" Version="2.1.0" />
     <PackageReference Include="Serilog.Sinks.File" Version="7.0.0" />
-    <PackageReference Include="Tesseract" Version="5.2.0" />
     <PackageReference Include="WinUIEx" Version="2.8.0" />
   </ItemGroup>
   <ItemGroup>
@@ -86,6 +85,9 @@
     <Folder Include="Assets\contrast-white\" />
     <Folder Include="Assets\ClipShelf\" />
     <Folder Include="Resources\Test Images\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Tesseract\src\Tesseract\Tesseract.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Page Update="Views\Dialogs\OtherAppsDialogView.xaml">

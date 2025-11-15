@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.12.35417.141 d17.12
+# Visual Studio Version 18
+VisualStudioVersion = 18.0.11205.157 d18.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scanner", "Scanner\Scanner.csproj", "{42A379DA-B677-4BF2-A0D4-897971531106}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tesseract", "..\Tesseract\src\Tesseract\Tesseract.csproj", "{57C54683-EE7B-18D7-4711-A28A3D26BF2A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,18 @@ Global
 		{42A379DA-B677-4BF2-A0D4-897971531106}.Release|x86.ActiveCfg = Release|x86
 		{42A379DA-B677-4BF2-A0D4-897971531106}.Release|x86.Build.0 = Release|x86
 		{42A379DA-B677-4BF2-A0D4-897971531106}.Release|x86.Deploy.0 = Release|x86
+		{57C54683-EE7B-18D7-4711-A28A3D26BF2A}.Debug|ARM64.ActiveCfg = Debug|Any CPU
+		{57C54683-EE7B-18D7-4711-A28A3D26BF2A}.Debug|ARM64.Build.0 = Debug|Any CPU
+		{57C54683-EE7B-18D7-4711-A28A3D26BF2A}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{57C54683-EE7B-18D7-4711-A28A3D26BF2A}.Debug|x64.Build.0 = Debug|Any CPU
+		{57C54683-EE7B-18D7-4711-A28A3D26BF2A}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{57C54683-EE7B-18D7-4711-A28A3D26BF2A}.Debug|x86.Build.0 = Debug|Any CPU
+		{57C54683-EE7B-18D7-4711-A28A3D26BF2A}.Release|ARM64.ActiveCfg = Release|Any CPU
+		{57C54683-EE7B-18D7-4711-A28A3D26BF2A}.Release|ARM64.Build.0 = Release|Any CPU
+		{57C54683-EE7B-18D7-4711-A28A3D26BF2A}.Release|x64.ActiveCfg = Release|Any CPU
+		{57C54683-EE7B-18D7-4711-A28A3D26BF2A}.Release|x64.Build.0 = Release|Any CPU
+		{57C54683-EE7B-18D7-4711-A28A3D26BF2A}.Release|x86.ActiveCfg = Release|Any CPU
+		{57C54683-EE7B-18D7-4711-A28A3D26BF2A}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
