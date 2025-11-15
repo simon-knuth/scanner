@@ -1,0 +1,3 @@
+[submodule "Tesseract"]
+	path = Tesseract
+	url = https://github.com/simon-knuth/tesseract-arm64
