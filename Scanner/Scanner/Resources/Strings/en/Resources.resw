@@ -1883,4 +1883,10 @@ Fuzzy</comment>
   <data name="FileFormatDescriptionSinglePagePDF" xml:space="preserve">
     <value>One PDF file per page. Viewable on any device, but difficult to edit later.</value>
   </data>
+  <data name="SearchingKnownScanners" xml:space="preserve">
+    <value>Searching known scanners...</value>
+  </data>
+  <data name="ManageScanners" xml:space="preserve">
+    <value>Manage scanners</value>
+  </data>
 </root>

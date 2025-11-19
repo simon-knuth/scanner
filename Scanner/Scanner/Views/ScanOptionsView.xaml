@@ -363,13 +363,33 @@
                 
                 <Grid Grid.Row="0" Padding="16,4,16,0">
                     <Frame Margin="-8,0,-8,0" IsEnabled="{x:Bind ViewModel.ProjectService.IsScanProcessRunning, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}" ui:Effects.Shadow="{ThemeResource ShadowScannersComboBox}">
-                        <ComboBox x:Name="ComboBoxScanners" Padding="14,11,28,11" CornerRadius="8" HorizontalAlignment="Stretch" SelectedIndex="0" SelectionChanged="ComboBoxScanners_SelectionChanged" RightTapped="ComboBoxScanners_RightTapped">
+                        <ComboBox x:Name="ComboBoxScanners" Padding="14,11,28,11" CornerRadius="8" HorizontalAlignment="Stretch" SelectedIndex="0" SelectionChanged="ComboBoxScanners_SelectionChanged" RightTapped="ComboBoxScanners_RightTapped" SizeChanged="ComboBoxScanners_SizeChanged">
                             <ComboBox.Items>
                                 <ComboBoxItem IsEnabled="False">
                                     <StackPanel Orientation="Horizontal" Spacing="12">
                                         <ProgressRing Width="16" Height="16" Foreground="{ThemeResource AccentFillColorSecondaryBrush}" />
-                                        <TextBlock Text="{x:Bind strings:Resources.SearchingScanners}" MaxLines="1" TextTrimming="CharacterEllipsis" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Style="{StaticResource BodyTextBlockStyle}" />
+                                        <TextBlock Text="{x:Bind strings:Resources.SearchingKnownScanners}" MaxLines="1" TextTrimming="CharacterEllipsis" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Style="{StaticResource BodyTextBlockStyle}" />
                                     </StackPanel>
+                                </ComboBoxItem>
+                                <ComboBoxItem IsEnabled="False" Margin="-16,-10,-16,-6" Padding="0">
+                                    <MenuFlyoutSeparator />
+                                </ComboBoxItem>
+                                <ComboBoxItem x:Name="ComboBoxItemManageScanners">
+                                    <Grid ColumnSpacing="12">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="20" />
+                                            <RowDefinition Height="Auto" />
+                                        </Grid.RowDefinitions>
+
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="16" />
+                                            <ColumnDefinition Width="1*" />
+                                        </Grid.ColumnDefinitions>
+
+                                        <FontIcon Grid.Row="0" Grid.Column="0" Glyph="&#xE712;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                        <TextBlock Grid.Row="0" Grid.Column="1" Text="{x:Bind strings:Resources.ManageScanners}" MaxLines="1" />
+                                        <TextBlock Grid.Row="1" Grid.Column="1" Text="Install and manage scanners in the Windows Settings app." Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="WrapWholeWords" Style="{StaticResource CaptionTextBlockStyle}" />
+                                    </Grid>
                                 </ComboBoxItem>
                             </ComboBox.Items>
 

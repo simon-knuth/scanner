@@ -20,6 +20,7 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.System;
 
 
 namespace Scanner.Views
@@ -32,6 +33,10 @@ namespace Scanner.Views
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////        
         #region Events
         public event EventHandler? ExpandPageListRequested;
+        #endregion
+
+        #region Constants
+        private const int invalidScannerItems = 3;
         #endregion
 
         #region Dependency Properties
@@ -433,7 +438,7 @@ namespace Scanner.Views
                             }
                             else
                             {
-                                ComboBoxScanners.SelectedIndex = ComboBoxScanners.Items.Count - 1;
+                                ComboBoxScanners.SelectedIndex = ComboBoxScanners.Items.Count - invalidScannerItems;
                             }
                         }
                     });
@@ -562,12 +567,27 @@ namespace Scanner.Views
             ExpandPageListRequested?.Invoke(this, EventArgs.Empty);
         }
 
-        private void ComboBoxScanners_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private async void ComboBoxScanners_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (e.AddedItems.Count == 0) return;
-            
-            // apply scanner selection
-            ViewModel.SelectedScanner = (IScanningDevice)((ComboBoxItem)e.AddedItems[0]).Tag;
+
+            IScanningDevice? selectedDevice = ((ComboBoxItem)e.AddedItems[0]).Tag as IScanningDevice;
+            if (selectedDevice != null)
+            {
+                // apply scanner selection
+                ViewModel.SelectedScanner = (IScanningDevice)((ComboBoxItem)e.AddedItems[0]).Tag;
+            }
+            else if ((ComboBoxItem)e.AddedItems[0] == ComboBoxItemManageScanners)
+            {
+                // restore previous selection
+                if (ViewModel.SelectedScanner != null)
+                    ComboBoxScanners.SelectedItem = ComboBoxScanners.Items.FirstOrDefault(x => ((ComboBoxItem)x).Tag == ViewModel.SelectedScanner);
+                else
+                    ComboBoxScanners.SelectedIndex = ComboBoxScanners.Items.Count - invalidScannerItems;
+
+                // open scanner settings
+                await Launcher.LaunchUriAsync(new Uri("ms-settings:printers"));
+            }
         }
 
         private void Scanners_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
@@ -640,7 +660,7 @@ namespace Scanner.Views
                         ComboBoxScanners.Items.Insert(e.NewStartingIndex, movedItem);
                         break;
                     case System.Collections.Specialized.NotifyCollectionChangedAction.Reset:
-                        while (ComboBoxScanners.Items.Count > 1)
+                        while (ComboBoxScanners.Items.Count > invalidScannerItems)
                         {
                             ComboBoxScanners.Items.RemoveAt(0);
                         }
@@ -721,6 +741,26 @@ namespace Scanner.Views
         private void SliderContrast_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
         {
             ViewModel.ResetContrastCommand.Execute(null);
+        }
+
+        private void ComboBoxScanners_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            foreach (ComboBoxItem item in ComboBoxScanners.Items)
+            {
+                item.MaxWidth = e.NewSize.Width;
+            }
+        }
+
+        private void ComboBoxScanners_Loading(FrameworkElement sender, object args)
+        {
+            if (ViewModel.SelectedScanner == null)
+                ComboBoxScanners.SelectedIndex = ComboBoxScanners.Items.Count - invalidScannerItems;
+        }
+
+        private void ComboBoxScanners_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (ViewModel.SelectedScanner == null)
+                ComboBoxScanners.SelectedIndex = ComboBoxScanners.Items.Count - invalidScannerItems;
         }
     }
 }
