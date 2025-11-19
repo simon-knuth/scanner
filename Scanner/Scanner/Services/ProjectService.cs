@@ -30,6 +30,10 @@ using WinRT.Interop;
 using static Scanner.Helpers.RotationHelpers;
 using static Scanner.Helpers.Helpers;
 using Scanner.Extensions;
+using Windows.UI.Shell;
+using Windows.Win32.UI.Shell;
+using Windows.Win32;
+using WinUIEx;
 
 namespace Scanner.Services
 {
@@ -143,6 +147,7 @@ namespace Scanner.Services
                 OnPropertyChanged(nameof(IsProcessRunning));
                 OnPropertyChanged(nameof(IsProcessRunningOrEditing));
                 OnPropertyChanged(nameof(CanSaveProject));
+                UpdateTaskbarProgress();
             }
         }
 
@@ -1001,6 +1006,7 @@ namespace Scanner.Services
                 case nameof(ProjectBase.IsSaving):
                 case nameof(ProjectBase.IsSaved):
                     OnPropertyChanged(nameof(CanSaveProject));
+                    UpdateTaskbarProgress();
                     break;
             }
         }
@@ -1074,6 +1080,14 @@ namespace Scanner.Services
                     }
                 }
             }
+        }
+
+        private void UpdateTaskbarProgress()
+        {
+            ITaskbarList3 taskbarList = (ITaskbarList3)new TaskbarList();
+            taskbarList.HrInit();
+            TBPFLAG flag = IsScanProcessRunning || (CurrentProject != null && CurrentProject.IsSaving) ? TBPFLAG.TBPF_INDETERMINATE : TBPFLAG.TBPF_NOPROGRESS;
+            taskbarList.SetProgressState((Windows.Win32.Foundation.HWND)((App)App.Current).MainWindow.GetWindowHandle(), flag);
         }
     }
 }
