@@ -63,10 +63,11 @@ namespace Scanner
                 .AddSingleton<IAppDataService, AppDataService>()
                 .AddSingleton<ISettingsService, SettingsService>()
                 .AddSingleton<ISentryService, SentryService>()
-                .AddSingleton<ITesseractService, TesseractService>()
+                .AddSingleton<IOcrService, OcrService>()
                 .AddSingleton<ISaveLocationService, SaveLocationService>()
                 .AddSingleton<ICopilotRuntimeService, CopilotRuntimeService>()
                 .AddSingleton<IAccessibilityService, AccessibilityService>()
+                .AddSingleton<IPdfService, PdfService>()
                 .BuildServiceProvider());
         }
 

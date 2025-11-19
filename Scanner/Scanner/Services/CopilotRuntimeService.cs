@@ -91,7 +91,7 @@ namespace Scanner.Services
                 if (imageDescriptionGenerator == null)
                     return null;
 
-                descriptionResult = await imageDescriptionGenerator.DescribeAsync(imageBuffer, ImageDescriptionKind.BriefDescription, new ContentFilterOptions()).AsTask(cts.Token);
+                descriptionResult = await imageDescriptionGenerator.DescribeAsync(imageBuffer, ImageDescriptionKind.DiagramDescription, new ContentFilterOptions()).AsTask(cts.Token);
                 imageDescriptionGenerator.Dispose();
             }
             catch (Exception exc)

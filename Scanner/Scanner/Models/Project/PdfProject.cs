@@ -11,6 +11,9 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Documents;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
+using PdfSharp.Drawing;
+using PdfSharp.Fonts;
+using PdfSharp.Pdf;
 using Scanner.Extensions;
 using Scanner.Messages;
 using Scanner.Models.Interfaces;
@@ -22,6 +25,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -29,6 +33,7 @@ using Windows.ApplicationModel;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Devices.Scanners;
 using Windows.Graphics.Imaging;
+using Windows.Media.Ocr;
 using Windows.Storage;
 using Windows.Storage.Streams;
 using WinRT.Interop;
@@ -46,7 +51,7 @@ namespace Scanner.Models
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         #region Constants
-        private const string tesseractOutputFileDisplayName = "tessoutput";
+        private const string pdfOutputFileDisplayName = "tessoutput";
         #endregion
 
         public StorageFolder? TargetFolder;
@@ -486,12 +491,53 @@ namespace Scanner.Models
         {
             Dictionary<IProjectPage, StorageFile?> result = new();
             List<StorageFile> files = [];
-            string pdfGenerationFilePath = Path.Combine(AppDataService.PdfOutputFolder.Path, tesseractOutputFileDisplayName);
+            string pdfGenerationFilePath = Path.Combine(AppDataService.PdfOutputFolder.Path, pdfOutputFileDisplayName);
 
             // generate PDF
             try
             {
-                await TesseractService.GeneratePdfAsync(pages.Values.ToList(), pdfGenerationFilePath, uiDispatcherQueue);
+                await TesseractService.GeneratePdfAsync([.. pages.Values], pdfGenerationFilePath, uiDispatcherQueue);
+
+                //var elements = TesseractService.GetPageTextElements([.. pages.Values]);
+                //GlobalFontSettings.UseWindowsFontsUnderWindows = true;
+                //PdfDocument document = new PdfDocument();
+
+                //foreach (var snapshotPage in pages.Values)
+                //{
+                //    PdfPage page = document.AddPage();
+                //    XGraphics gfx = XGraphics.FromPdfPage(page);
+
+                //    // configure page and draw image
+                //    XImage image = XImage.FromFile(snapshotPage.SourceFile.Path);
+                //    double imageWidth = image.PixelWidth / image.HorizontalResolution;
+                //    double imageHeight = image.PixelHeight / image.VerticalResolution;
+                //    page.Width = XUnit.FromInch(imageWidth);
+                //    page.Height = XUnit.FromInch(imageHeight);
+                //    XRect rect = new(0, 0, XUnitPt.FromInch(imageWidth), XUnitPt.FromInch(imageHeight));
+                //    gfx.DrawImage(image, rect);
+
+                //    // overlay invisible text at OCR positions
+                //    XBrush transparentBrush = new XSolidBrush(XColor.FromKnownColor(XKnownColor.Green));
+
+                //    foreach (var word in elements.Values.First())
+                //    {
+                //        // convert coordinates from tesseract
+                //        double x = word.Bounds.X1 * 72.0 / image.HorizontalResolution;
+                //        double y = word.Bounds.Y1 * 72.0 / image.HorizontalResolution;
+                //        double width = word.Bounds.Width * 72.0 / image.HorizontalResolution;
+                //        double height = word.Bounds.Height * 72.0 / image.HorizontalResolution;
+
+                //        // configure font size
+                //        XFont font = GetFittedFont(gfx, word.Text, width, height);
+
+                //        XGraphicsState state = gfx.Save();
+                //        gfx.RotateTransform(word.Angle);
+                //        gfx.DrawString(word.Text, font, transparentBrush, x, y);
+                //        gfx.Restore(state);
+                //    }
+                //}
+
+                //await document.SaveAsync(pdfGenerationFilePath + ".pdf");
             }
             catch (Exception exc)
             {
@@ -502,7 +548,7 @@ namespace Scanner.Models
             // save PDF to target folder
             try
             {
-                StorageFile generatedFile = await AppDataService.PdfOutputFolder.GetFileAsync($"{tesseractOutputFileDisplayName}.pdf");
+                StorageFile generatedFile = await AppDataService.PdfOutputFolder.GetFileAsync($"{pdfOutputFileDisplayName}.pdf");
                 if (targetFile != null)
                 {
                     await generatedFile.MoveAndReplaceAsync(targetFile);
@@ -524,6 +570,23 @@ namespace Scanner.Models
             }
 
             return result;
+        }
+
+        private static XFont GetFittedFont(XGraphics gfx, string text, double targetWidth, double targetHeight)
+        {
+            double fontSize = targetHeight;
+            XFont font = new XFont("Arial", fontSize, XFontStyleEx.Regular);
+
+            XSize textSize = gfx.MeasureString(text, font);
+
+            // If text is too wide, scale down the font
+            //if (textSize.Width > targetWidth)
+            //{
+            //    fontSize = fontSize * (targetWidth / textSize.Width);
+            //    font = new XFont("Arial", fontSize, XFontStyleEx.Regular);
+            //}
+
+            return font;
         }
     }
 }

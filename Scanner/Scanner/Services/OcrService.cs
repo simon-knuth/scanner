@@ -4,6 +4,9 @@ using Microsoft.UI;
 using Microsoft.UI.Dispatching;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml.Media;
+using PdfSharp.Drawing;
+using PdfSharp.Pdf;
+using PdfSharp.Pdf.IO;
 using Scanner.Extensions;
 using Scanner.Models;
 using Scanner.Models.Interfaces;
@@ -28,19 +31,24 @@ using Windows.Storage;
 using Windows.Storage.Streams;
 using WinRT.Interop;
 using static Scanner.Models.PdfProjectSnapshot;
+using static Scanner.Services.Interfaces.IPdfService;
 
 namespace Scanner.Services
 {
-    internal class TesseractService : ITesseractService
+    internal class OcrService : IOcrService
     {
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         #region Services
         private readonly ILogService? LogService = Ioc.Default.GetService<ILogService>();
+        private readonly IPdfService PdfService = Ioc.Default.GetRequiredService<IPdfService>();
         #endregion
 
+        #region Constants
         private const float minOrientationConfidence = 3;
+        private const double tesseractDpi = 72;
+        #endregion
 
         private TesseractEngine osdEngine = new TesseractEngine(trainingDataFolderPath, "osd");
 
@@ -56,7 +64,7 @@ namespace Scanner.Services
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public TesseractService()
+        public OcrService()
         {
 
         }
@@ -105,11 +113,15 @@ namespace Scanner.Services
 
         public async Task GeneratePdfAsync(List<IProjectSnapshotPage> pages, string targetFilePath, DispatcherQueue uiDispatcherQueue)
         {
-            using (TesseractEngine engine = new TesseractEngine(trainingDataFolderPath, "eng"))
+            PdfPageScalingInstruction[] pageScalingInstructions = new PdfPageScalingInstruction[pages.Count];
+
+            using (TesseractEngine engine = new(trainingDataFolderPath, "eng"))
             {
                 using (IResultRenderer renderer = PdfResultRenderer.CreatePdfRenderer(targetFilePath, trainingDataFolderPath, false))
                 {
                     renderer.BeginDocument("Scan");
+
+                    int i = 0;
                     foreach (IProjectSnapshotPage snapshotPage in pages)
                     {
                         if (snapshotPage.Filter == ImageFilter.None && snapshotPage.Brightness == 0 && snapshotPage.Contrast == 0)
@@ -121,6 +133,7 @@ namespace Scanner.Services
                                 {
                                     renderer.AddPage(pdfPage);
                                 }
+                                pageScalingInstructions[i] = new(tesseractDpi / 96);
                             }
                         }
                         else
@@ -151,13 +164,23 @@ namespace Scanner.Services
                                         {
                                             renderer.AddPage(pdfPage);
                                         }
+                                        pageScalingInstructions[i] = new(tesseractDpi / 96);
                                     }
                                 }
                             }
                         }
+                        i++;
                     }
                 }
             }
+
+            PdfService.ScalePdf(targetFilePath + ".pdf", pageScalingInstructions);
         }
     }
+
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // MISCELLANEOUS ////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public record PageTextElement(Rect Bounds, double Angle, string Text);
 }

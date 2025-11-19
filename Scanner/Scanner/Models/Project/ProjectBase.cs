@@ -50,7 +50,7 @@ namespace Scanner.Models
         protected static readonly ICopilotRuntimeService CopilotRuntimeService = Ioc.Default.GetRequiredService<ICopilotRuntimeService>();
         protected static readonly ILogService? LogService = Ioc.Default.GetService<ILogService>();
         protected static readonly ISaveLocationService SaveLocationService = Ioc.Default.GetRequiredService<ISaveLocationService>();
-        protected static readonly ITesseractService TesseractService = Ioc.Default.GetRequiredService<ITesseractService>();
+        protected static readonly IOcrService TesseractService = Ioc.Default.GetRequiredService<IOcrService>();
         #endregion
 
         #region Events

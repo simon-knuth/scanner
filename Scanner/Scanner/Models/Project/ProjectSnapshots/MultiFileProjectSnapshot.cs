@@ -32,7 +32,7 @@ namespace Scanner.Models
         #region Services
         private static readonly IAppDataService AppDataService = Ioc.Default.GetRequiredService<IAppDataService>();
         private static readonly ILogService? LogService = Ioc.Default.GetService<ILogService>();
-        private static readonly ITesseractService TesseractService = Ioc.Default.GetRequiredService<ITesseractService>();
+        private static readonly IOcrService TesseractService = Ioc.Default.GetRequiredService<IOcrService>();
         #endregion
 
         #region Constants
