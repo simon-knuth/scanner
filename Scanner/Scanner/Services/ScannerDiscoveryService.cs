@@ -160,7 +160,7 @@ namespace Scanner.Services
             {
                 // search for scanner
                 await semaphoreDevices.WaitAsync();
-                IScanningDevice? device = Devices.FirstOrDefault((x) => x.Id == scannerId);
+                IScanningDevice? device = Devices.FirstOrDefault((x) => x.Id.ToLower() == scannerId.ToLower());
 
                 // remove scanner
                 if (device != null)
@@ -196,7 +196,7 @@ namespace Scanner.Services
             {
                 // check for duplicate
                 await semaphoreDevices.WaitAsync();
-                if (Devices.Exists((x) => x.Id == scanner.Id))
+                if (Devices.Exists((x) => x.Id.ToLower() == scanner.Id.ToLower()))
                 {
                     // duplicate detected ~> ignore
                     LogService?.Log.Information("ScannerDiscoveryService - Found duplicate {@Scanner}", scanner);
