@@ -1525,7 +1525,7 @@
                                     <Grid 
                                         x:Name="PaneContentGrid"
                                         BorderBrush="{ThemeResource NavigationViewItemSeparatorForeground}"
-                                        HorizontalAlignment="Left"
+                                        HorizontalAlignment="Stretch"
                                         Margin="0,3,0,3"
                                         Visibility="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=TemplateSettings.LeftPaneVisibility}">
                                         <Grid.RowDefinitions>

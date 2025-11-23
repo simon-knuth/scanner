@@ -50,7 +50,7 @@
                 </StackPanel.ChildrenTransitions>
                 
                 <TextBlock Text="General" Margin="0,0,0,24" FontSize="24" Style="{StaticResource BaseTextBlockStyle}" />
-                <TextBlock Text="Save options" Margin="0,0,0,8" Style="{StaticResource BaseTextBlockStyle}" />
+                <TextBlock Text="Saving" Margin="0,0,0,8" Style="{StaticResource BaseTextBlockStyle}" />
                 <controls:SettingsExpander Header="Save location" IsExpanded="{x:Bind ViewModel.SettingsService.SettingSaveLocationType, Mode=OneWay, Converter={StaticResource EnumIntComparisonConverter}, ConverterParameter=0}">
                     <controls:SettingsExpander.HeaderIcon>
                         <FontIcon Glyph="&#xE8B7;" FontFamily="{StaticResource SymbolThemeFontFamily}" />
@@ -207,7 +207,7 @@
                     <ToggleSwitch IsOn="{x:Bind ViewModel.SettingsService.SettingOcrPdfs, Mode=TwoWay}" />
                 </controls:SettingsCard>
 
-                <TextBlock Text="Scanning" Margin="0,24,0,8" Style="{StaticResource BaseTextBlockStyle}" />
+                <TextBlock Text="Scans" Margin="0,24,0,8" Style="{StaticResource BaseTextBlockStyle}" />
                 <controls:SettingsCard Header="Automatic rotation">
                     <controls:SettingsCard.HeaderIcon>
                         <FontIcon Glyph="&#xE7AD;" FontFamily="{StaticResource SymbolThemeFontFamily}" />
