@@ -57,6 +57,7 @@ namespace Scanner.Services.Interfaces
         SettingFileNamingPattern SettingFileNamingPattern { get; set; }
         FileNamingPattern CustomFileNamingPattern { get; set; }
         bool SettingGenerateFileNameWithAI { get; set; }
+        bool SettingOcrPdfs { get; set; }
 
         void TryLogAllSettings();
     }

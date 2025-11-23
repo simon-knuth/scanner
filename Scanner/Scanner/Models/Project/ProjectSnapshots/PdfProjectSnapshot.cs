@@ -29,7 +29,8 @@ namespace Scanner.Models
         #region Services
         private static readonly IAppDataService AppDataService = Ioc.Default.GetRequiredService<IAppDataService>();
         private static readonly ILogService? LogService = Ioc.Default.GetService<ILogService>();
-        private static readonly IOcrService TesseractService = Ioc.Default.GetRequiredService<IOcrService>();
+        private static readonly IOcrService OcrService = Ioc.Default.GetRequiredService<IOcrService>();
+        private static readonly ISettingsService SettingsService = Ioc.Default.GetRequiredService<ISettingsService>();
         #endregion
 
         public TargetFormat Format { get; private set; } = TargetFormat.PDF;
@@ -75,7 +76,7 @@ namespace Scanner.Models
             Dictionary<IProjectPage, IProjectSnapshotPage> pdfPages = Pages.ToDictionary(
                 x => x.Key,
                 x => (IProjectSnapshotPage)x.Value);
-            return PdfProject.CreatePdfFromPagesAsync(pdfPages, TargetFile, DesiredFileName, TargetFolder, uiDispatcherQueue);
+            return PdfProject.CreatePdfFromPagesAsync(pdfPages, TargetFile, DesiredFileName, TargetFolder, SettingsService.SettingOcrPdfs, uiDispatcherQueue);
         }
     }
 }

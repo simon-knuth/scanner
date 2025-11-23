@@ -238,6 +238,12 @@ namespace Scanner.Services
             set => SetSetting(nameof(SettingGenerateFileNameWithAI), value);
         }
 
+        public bool SettingOcrPdfs
+        {
+            get => GetSetting<bool>(nameof(SettingOcrPdfs), true);
+            set => SetSetting(nameof(SettingOcrPdfs), value);
+        }
+
         private ApplicationDataContainer settingsContainer = ApplicationData.Current.LocalSettings;
         private const int latestSettingsVersion = 0;
 

@@ -32,7 +32,8 @@ namespace Scanner.Models
         #region Services
         private static readonly IAppDataService AppDataService = Ioc.Default.GetRequiredService<IAppDataService>();
         private static readonly ILogService? LogService = Ioc.Default.GetService<ILogService>();
-        private static readonly IOcrService TesseractService = Ioc.Default.GetRequiredService<IOcrService>();
+        private static readonly IOcrService OcrService = Ioc.Default.GetRequiredService<IOcrService>();
+        private static readonly ISettingsService SettingsService = Ioc.Default.GetRequiredService<ISettingsService>();
         #endregion
 
         #region Constants
@@ -85,7 +86,7 @@ namespace Scanner.Models
                         {
                             { page.Key, page.Value }
                         };
-                        Dictionary<IProjectPage, StorageFile?> pdfResult = await PdfProject.CreatePdfFromPagesAsync(pdfPages, page.Value.TargetFile, page.Value.DesiredFileName, page.Value.TargetFolder, uiDispatcherQueue);
+                        Dictionary<IProjectPage, StorageFile?> pdfResult = await PdfProject.CreatePdfFromPagesAsync(pdfPages, page.Value.TargetFile, page.Value.DesiredFileName, page.Value.TargetFolder, SettingsService.SettingOcrPdfs, uiDispatcherQueue);
                         generatedFile = pdfResult[page.Key];
                     }
                     else if (page.Value.Filter != ImageFilter.None || FileExtensionToTargetFormat(page.Value.SourceFile.FileType) != Format)

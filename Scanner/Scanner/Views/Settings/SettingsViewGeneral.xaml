@@ -199,6 +199,14 @@
                     <ToggleSwitch IsOn="{x:Bind ViewModel.SettingsService.SettingAutoSave, Mode=TwoWay}" />
                 </controls:SettingsCard>
 
+                <controls:SettingsCard Header="Searchable PDFs" Description="Use OCR to add text data to saved PDF files. Disable this setting if saving PDFs takes to long.">
+                    <controls:SettingsCard.HeaderIcon>
+                        <FontIcon Glyph="&#xE721;" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                    </controls:SettingsCard.HeaderIcon>
+
+                    <ToggleSwitch IsOn="{x:Bind ViewModel.SettingsService.SettingOcrPdfs, Mode=TwoWay}" />
+                </controls:SettingsCard>
+
                 <TextBlock Text="Scanning" Margin="0,24,0,8" Style="{StaticResource BaseTextBlockStyle}" />
                 <controls:SettingsCard Header="Automatic rotation">
                     <controls:SettingsCard.HeaderIcon>

@@ -487,7 +487,7 @@ namespace Scanner.Models
             hasFileNameBeenApplied = FileNameInfo!.DesiredName == FileNameInfo.ActualName;
         }
 
-        public static async Task<Dictionary<IProjectPage, StorageFile?>> CreatePdfFromPagesAsync(Dictionary<IProjectPage, IProjectSnapshotPage> pages, StorageFile? targetFile, string? desiredFileName, StorageFolder? targetFolder, DispatcherQueue uiDispatcherQueue)
+        public static async Task<Dictionary<IProjectPage, StorageFile?>> CreatePdfFromPagesAsync(Dictionary<IProjectPage, IProjectSnapshotPage> pages, StorageFile? targetFile, string? desiredFileName, StorageFolder? targetFolder, bool ocr, DispatcherQueue uiDispatcherQueue)
         {
             Dictionary<IProjectPage, StorageFile?> result = new();
             List<StorageFile> files = [];
@@ -496,8 +496,15 @@ namespace Scanner.Models
             // generate PDF
             try
             {
-                await TesseractService.GeneratePdfAsync([.. pages.Values], pdfGenerationFilePath, uiDispatcherQueue);
-                await CreatePdfFromImageAsync(pdfGenerationFilePath + ".pdf", [.. pages.Values], pdfGenerationFilePath + ".pdf");
+                if (ocr)
+                {
+                    await OcrService.GeneratePdfAsync([.. pages.Values], pdfGenerationFilePath, uiDispatcherQueue);
+                    await CreatePdfFromImageAsync(pdfGenerationFilePath + ".pdf", [.. pages.Values], pdfGenerationFilePath + ".pdf");
+                }
+                else
+                {
+                    await CreatePdfFromImageAsync(pdfGenerationFilePath + ".pdf", [.. pages.Values]);
+                }
             }
             catch (Exception exc)
             {

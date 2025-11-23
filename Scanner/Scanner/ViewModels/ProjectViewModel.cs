@@ -702,7 +702,7 @@ namespace Scanner.ViewModels
 
                         pages.Add(page, new PdfProjectSnapshotPage(page.SourceFile, imagePage.Filter, imagePage.Brightness, imagePage.Contrast));
                     }
-                    await PdfProject.CreatePdfFromPagesAsync(pages, null, saveOptions.FileName, saveOptions.TargetFolder, viewDispatcherQueue!);
+                    await PdfProject.CreatePdfFromPagesAsync(pages, null, saveOptions.FileName, saveOptions.TargetFolder, SettingsService.SettingOcrPdfs, viewDispatcherQueue!);
                 }
                 else if (ProjectService.SelectedPage != null)
                 {
@@ -715,7 +715,7 @@ namespace Scanner.ViewModels
                         Dictionary<IProjectPage, IProjectSnapshotPage> pages = [];
                         pages.Add(page, new PdfProjectSnapshotPage(page.SourceFile, imagePage.Filter, imagePage.Brightness, imagePage.Contrast));
 
-                        await PdfProject.CreatePdfFromPagesAsync(pages, null, saveOptions.FileName, saveOptions.TargetFolder, viewDispatcherQueue!);
+                        await PdfProject.CreatePdfFromPagesAsync(pages, null, saveOptions.FileName, saveOptions.TargetFolder, SettingsService.SettingOcrPdfs, viewDispatcherQueue!);
                     }
                 }
 

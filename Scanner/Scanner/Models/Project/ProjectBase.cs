@@ -50,7 +50,7 @@ namespace Scanner.Models
         protected static readonly ICopilotRuntimeService CopilotRuntimeService = Ioc.Default.GetRequiredService<ICopilotRuntimeService>();
         protected static readonly ILogService? LogService = Ioc.Default.GetService<ILogService>();
         protected static readonly ISaveLocationService SaveLocationService = Ioc.Default.GetRequiredService<ISaveLocationService>();
-        protected static readonly IOcrService TesseractService = Ioc.Default.GetRequiredService<IOcrService>();
+        protected static readonly IOcrService OcrService = Ioc.Default.GetRequiredService<IOcrService>();
         #endregion
 
         #region Events
@@ -543,7 +543,7 @@ namespace Scanner.Models
             {
                 foreach (KeyValuePair<StorageFile, RotationIntent> auto in autos)
                 {
-                    BitmapRotation? rotation = TesseractService.GetRecommendedRotation(auto.Key);
+                    BitmapRotation? rotation = OcrService.GetRecommendedRotation(auto.Key);
                     if (rotation != null)
                     {
                         mergedInstructions.Add(auto.Key, (BitmapRotation)rotation);
@@ -580,7 +580,7 @@ namespace Scanner.Models
             {
                 foreach (KeyValuePair<IProjectPage, RotationIntent> auto in autos)
                 {
-                    BitmapRotation? rotation = TesseractService.GetRecommendedRotation(auto.Key.SourceFile);
+                    BitmapRotation? rotation = OcrService.GetRecommendedRotation(auto.Key.SourceFile);
                     if (rotation != null)
                     {
                         mergedInstructions.Add(auto.Key, (BitmapRotation)rotation);
