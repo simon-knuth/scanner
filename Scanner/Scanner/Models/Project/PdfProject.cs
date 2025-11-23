@@ -497,47 +497,7 @@ namespace Scanner.Models
             try
             {
                 await TesseractService.GeneratePdfAsync([.. pages.Values], pdfGenerationFilePath, uiDispatcherQueue);
-
-                //var elements = TesseractService.GetPageTextElements([.. pages.Values]);
-                //GlobalFontSettings.UseWindowsFontsUnderWindows = true;
-                //PdfDocument document = new PdfDocument();
-
-                //foreach (var snapshotPage in pages.Values)
-                //{
-                //    PdfPage page = document.AddPage();
-                //    XGraphics gfx = XGraphics.FromPdfPage(page);
-
-                //    // configure page and draw image
-                //    XImage image = XImage.FromFile(snapshotPage.SourceFile.Path);
-                //    double imageWidth = image.PixelWidth / image.HorizontalResolution;
-                //    double imageHeight = image.PixelHeight / image.VerticalResolution;
-                //    page.Width = XUnit.FromInch(imageWidth);
-                //    page.Height = XUnit.FromInch(imageHeight);
-                //    XRect rect = new(0, 0, XUnitPt.FromInch(imageWidth), XUnitPt.FromInch(imageHeight));
-                //    gfx.DrawImage(image, rect);
-
-                //    // overlay invisible text at OCR positions
-                //    XBrush transparentBrush = new XSolidBrush(XColor.FromKnownColor(XKnownColor.Green));
-
-                //    foreach (var word in elements.Values.First())
-                //    {
-                //        // convert coordinates from tesseract
-                //        double x = word.Bounds.X1 * 72.0 / image.HorizontalResolution;
-                //        double y = word.Bounds.Y1 * 72.0 / image.HorizontalResolution;
-                //        double width = word.Bounds.Width * 72.0 / image.HorizontalResolution;
-                //        double height = word.Bounds.Height * 72.0 / image.HorizontalResolution;
-
-                //        // configure font size
-                //        XFont font = GetFittedFont(gfx, word.Text, width, height);
-
-                //        XGraphicsState state = gfx.Save();
-                //        gfx.RotateTransform(word.Angle);
-                //        gfx.DrawString(word.Text, font, transparentBrush, x, y);
-                //        gfx.Restore(state);
-                //    }
-                //}
-
-                //await document.SaveAsync(pdfGenerationFilePath + ".pdf");
+                await CreatePdfFromImageAsync(pdfGenerationFilePath + ".pdf", [.. pages.Values], pdfGenerationFilePath + ".pdf");
             }
             catch (Exception exc)
             {
@@ -572,21 +532,40 @@ namespace Scanner.Models
             return result;
         }
 
-        private static XFont GetFittedFont(XGraphics gfx, string text, double targetWidth, double targetHeight)
+        private static async Task CreatePdfFromImageAsync(string targetPdfPath, List<IProjectSnapshotPage> snapshotPages, string? ocrPdfPath = null)
         {
-            double fontSize = targetHeight;
-            XFont font = new XFont("Arial", fontSize, XFontStyleEx.Regular);
+            using PdfDocument document = new();
+            
+            XPdfForm? ocrPdf = null;
+            if (ocrPdfPath != null)
+                ocrPdf = XPdfForm.FromFile(ocrPdfPath);
 
-            XSize textSize = gfx.MeasureString(text, font);
+            for (int i = 0; i < snapshotPages.Count; i++)
+            {
+                IProjectSnapshotPage snapshotPage = snapshotPages[i];
+                PdfPage newPdfPage = document.AddPage();
 
-            // If text is too wide, scale down the font
-            //if (textSize.Width > targetWidth)
-            //{
-            //    fontSize = fontSize * (targetWidth / textSize.Width);
-            //    font = new XFont("Arial", fontSize, XFontStyleEx.Regular);
-            //}
+                // get image
+                using XImage image = XImage.FromFile(snapshotPage.SourceFile.Path);
 
-            return font;
+                // setup page
+                newPdfPage.Width = XUnit.FromInch(image.PixelWidth / image.HorizontalResolution);
+                newPdfPage.Height = XUnit.FromInch(image.PixelHeight / image.VerticalResolution);
+                using XGraphics gfx = XGraphics.FromPdfPage(newPdfPage);
+
+                // add OCR layer
+                if (ocrPdf != null)
+                {
+                    ocrPdf.PageIndex = i;
+                    gfx.DrawImage(ocrPdf, 0, 0);
+                }
+
+                // add image layer
+                gfx.DrawImage(image, 0, 0);
+            }
+
+            ocrPdf?.Dispose();
+            await document.SaveAsync(targetPdfPath);
         }
     }
 }

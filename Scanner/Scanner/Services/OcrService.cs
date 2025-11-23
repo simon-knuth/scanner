@@ -31,7 +31,6 @@ using Windows.Storage;
 using Windows.Storage.Streams;
 using WinRT.Interop;
 using static Scanner.Models.PdfProjectSnapshot;
-using static Scanner.Services.Interfaces.IPdfService;
 
 namespace Scanner.Services
 {
@@ -42,7 +41,6 @@ namespace Scanner.Services
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         #region Services
         private readonly ILogService? LogService = Ioc.Default.GetService<ILogService>();
-        private readonly IPdfService PdfService = Ioc.Default.GetRequiredService<IPdfService>();
         #endregion
 
         #region Constants
@@ -113,11 +111,9 @@ namespace Scanner.Services
 
         public async Task GeneratePdfAsync(List<IProjectSnapshotPage> pages, string targetFilePath, DispatcherQueue uiDispatcherQueue)
         {
-            PdfPageScalingInstruction[] pageScalingInstructions = new PdfPageScalingInstruction[pages.Count];
-
             using (TesseractEngine engine = new(trainingDataFolderPath, "eng"))
             {
-                using (IResultRenderer renderer = PdfResultRenderer.CreatePdfRenderer(targetFilePath, trainingDataFolderPath, false))
+                using (IResultRenderer renderer = PdfResultRenderer.CreatePdfRenderer(targetFilePath, trainingDataFolderPath, true))
                 {
                     renderer.BeginDocument("Scan");
 
@@ -133,7 +129,6 @@ namespace Scanner.Services
                                 {
                                     renderer.AddPage(pdfPage);
                                 }
-                                pageScalingInstructions[i] = new(tesseractDpi / 96);
                             }
                         }
                         else
@@ -163,9 +158,7 @@ namespace Scanner.Services
                                         using (Page pdfPage = engine.Process(image))
                                         {
                                             renderer.AddPage(pdfPage);
-                                        }
-                                        pageScalingInstructions[i] = new(tesseractDpi / 96);
-                                    }
+                                        }                                    }
                                 }
                             }
                         }
@@ -173,8 +166,6 @@ namespace Scanner.Services
                     }
                 }
             }
-
-            PdfService.ScalePdf(targetFilePath + ".pdf", pageScalingInstructions);
         }
     }
 

@@ -67,7 +67,6 @@ namespace Scanner
                 .AddSingleton<ISaveLocationService, SaveLocationService>()
                 .AddSingleton<ICopilotRuntimeService, CopilotRuntimeService>()
                 .AddSingleton<IAccessibilityService, AccessibilityService>()
-                .AddSingleton<IPdfService, PdfService>()
                 .BuildServiceProvider());
         }
 
