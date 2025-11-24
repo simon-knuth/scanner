@@ -105,7 +105,7 @@
                 <Setter Property="Background" Value="White" />
                 <Setter Property="BorderBrush" Value="{StaticResource ImageCropperThumbStrokeBrush}" />
                 <Setter Property="CornerRadius" Value="2" />
-                <Setter Property="BorderThickness" Value="1" />
+                <Setter Property="BorderThickness" Value="0" />
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="controls:ImageCropperThumb">
@@ -129,7 +129,7 @@
                 <Setter Property="Background" Value="White" />
                 <Setter Property="BorderBrush" Value="{StaticResource ImageCropperThumbStrokeBrush}" />
                 <Setter Property="CornerRadius" Value="2" />
-                <Setter Property="BorderThickness" Value="1" />
+                <Setter Property="BorderThickness" Value="0" />
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="controls:ImageCropperThumb">
@@ -153,14 +153,14 @@
                 <Setter Property="Background" Value="White" />
                 <Setter Property="BorderBrush" Value="{StaticResource ImageCropperThumbStrokeBrush}" />
                 <Setter Property="CornerRadius" Value="2" />
-                <Setter Property="BorderThickness" Value="1" />
+                <Setter Property="BorderThickness" Value="0" />
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="controls:ImageCropperThumb">
                             <Grid Background="Transparent" Padding="4">
                                 <Path Fill="White"
                                       Stroke="{StaticResource ImageCropperThumbStroke}"
-                                      StrokeThickness="1"
+                                      StrokeThickness="0"
                                       StrokeLineJoin="Round"
                                       StrokeStartLineCap="Round"
                                       StrokeEndLineCap="Round"
@@ -168,15 +168,18 @@
                                       VerticalAlignment="Bottom">
                                     <Path.Data>
                                         <PathGeometry>
-                                            <PathFigure StartPoint="6,28" IsClosed="True">
+                                            <PathFigure StartPoint="6,26" IsClosed="True">
                                                 <LineSegment Point="6,6" />
-                                                <LineSegment Point="28,6" />
-                                                <LineSegment Point="28,4" />
-                                                <ArcSegment Point="24,0" Size="4,4" SweepDirection="Counterclockwise" />
-                                                <LineSegment Point="4,0" />
-                                                <ArcSegment Point="0,4" Size="4,4" SweepDirection="Counterclockwise" />
-                                                <LineSegment Point="0,24" />
-                                                <ArcSegment Point="4,28" Size="4,4" SweepDirection="Counterclockwise" />
+                                                <LineSegment Point="26,6" />
+                                                <ArcSegment Point="28,4" Size="2,2" SweepDirection="Counterclockwise" />
+                                                <LineSegment Point="28,2" />
+                                                <ArcSegment Point="26,0" Size="2,2" SweepDirection="Counterclockwise" />
+                                                <LineSegment Point="2,0" />
+                                                <ArcSegment Point="0,2" Size="2,2" SweepDirection="Counterclockwise" />
+                                                <LineSegment Point="0,26" />
+                                                <ArcSegment Point="2,28" Size="2,2" SweepDirection="Counterclockwise" />
+                                                <LineSegment Point="4,28" />
+                                                <ArcSegment Point="6,26" Size="2,2" SweepDirection="Counterclockwise" />
                                             </PathFigure>
                                         </PathGeometry>
                                     </Path.Data>
@@ -195,14 +198,14 @@
                 <Setter Property="Background" Value="White" />
                 <Setter Property="BorderBrush" Value="{StaticResource ImageCropperThumbStrokeBrush}" />
                 <Setter Property="CornerRadius" Value="2" />
-                <Setter Property="BorderThickness" Value="1" />
+                <Setter Property="BorderThickness" Value="0" />
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="controls:ImageCropperThumb">
                             <Grid Background="Transparent" Padding="4">
                                 <Path Fill="White"
                                     Stroke="{StaticResource ImageCropperThumbStroke}"
-                                    StrokeThickness="1"
+                                    StrokeThickness="0"
                                     StrokeLineJoin="Round"
                                     StrokeStartLineCap="Round"
                                     StrokeEndLineCap="Round"
@@ -210,15 +213,18 @@
                                     VerticalAlignment="Bottom">
                                     <Path.Data>
                                         <PathGeometry>
-                                            <PathFigure StartPoint="22,28" IsClosed="True">
+                                            <PathFigure StartPoint="22,26" IsClosed="True">
                                                 <LineSegment Point="22,6" />
-                                                <LineSegment Point="0,6" />
-                                                <LineSegment Point="0,4" />
-                                                <ArcSegment Point="4,0" Size="4,4" SweepDirection="Clockwise" />
-                                                <LineSegment Point="24,0" />
-                                                <ArcSegment Point="28,4" Size="4,4" SweepDirection="Clockwise" />
-                                                <LineSegment Point="28,24" />
-                                                <ArcSegment Point="24,28" Size="4,4" SweepDirection="Clockwise" />
+                                                <LineSegment Point="2,6" />
+                                                <ArcSegment Point="0,4" Size="2,2" SweepDirection="Clockwise" />
+                                                <LineSegment Point="0,2" />
+                                                <ArcSegment Point="2,0" Size="2,2" SweepDirection="Clockwise" />
+                                                <LineSegment Point="26,0" />
+                                                <ArcSegment Point="28,2" Size="2,2" SweepDirection="Clockwise" />
+                                                <LineSegment Point="28,26" />
+                                                <ArcSegment Point="26,28" Size="2,2" SweepDirection="Clockwise" />
+                                                <LineSegment Point="24,28" />
+                                                <ArcSegment Point="22,26" Size="2,2" SweepDirection="Clockwise" />
                                             </PathFigure>
                                         </PathGeometry>
                                     </Path.Data>
@@ -237,14 +243,14 @@
                 <Setter Property="Background" Value="White" />
                 <Setter Property="BorderBrush" Value="{StaticResource ImageCropperThumbStrokeBrush}" />
                 <Setter Property="CornerRadius" Value="2" />
-                <Setter Property="BorderThickness" Value="1" />
+                <Setter Property="BorderThickness" Value="0" />
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="controls:ImageCropperThumb">
                             <Grid Background="Transparent" Padding="4">
                                 <Path Fill="White"
                                       Stroke="{StaticResource ImageCropperThumbStroke}"
-                                      StrokeThickness="1"
+                                      StrokeThickness="0"
                                       StrokeLineJoin="Round"
                                       StrokeStartLineCap="Round"
                                       StrokeEndLineCap="Round"
@@ -252,15 +258,18 @@
                                       VerticalAlignment="Top">
                                     <Path.Data>
                                         <PathGeometry>
-                                            <PathFigure StartPoint="6,0" IsClosed="True">
+                                            <PathFigure StartPoint="6,2" IsClosed="True">
                                                 <LineSegment Point="6,22" />
-                                                <LineSegment Point="28,22" />
-                                                <LineSegment Point="28,24" />
-                                                <ArcSegment Point="24,28" Size="4,4" SweepDirection="Clockwise" />
-                                                <LineSegment Point="4,28" />
-                                                <ArcSegment Point="0,24" Size="4,4" SweepDirection="Clockwise" />
-                                                <LineSegment Point="0,4" />
-                                                <ArcSegment Point="4,0" Size="4,4" SweepDirection="Clockwise" />
+                                                <LineSegment Point="26,22" />
+                                                <ArcSegment Point="28,24" Size="2,2" SweepDirection="Clockwise" />
+                                                <LineSegment Point="28,26" />
+                                                <ArcSegment Point="26,28" Size="2,2" SweepDirection="Clockwise" />
+                                                <LineSegment Point="2,28" />
+                                                <ArcSegment Point="0,26" Size="2,2" SweepDirection="Clockwise" />
+                                                <LineSegment Point="0,2" />
+                                                <ArcSegment Point="2,0" Size="2,2" SweepDirection="Clockwise" />
+                                                <LineSegment Point="4,0" />
+                                                <ArcSegment Point="6,2" Size="2,2" SweepDirection="Clockwise" />
                                             </PathFigure>
                                         </PathGeometry>
                                     </Path.Data>
@@ -279,14 +288,14 @@
                 <Setter Property="Background" Value="White" />
                 <Setter Property="BorderBrush" Value="{StaticResource ImageCropperThumbStrokeBrush}" />
                 <Setter Property="CornerRadius" Value="2" />
-                <Setter Property="BorderThickness" Value="1" />
+                <Setter Property="BorderThickness" Value="0" />
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="controls:ImageCropperThumb">
                             <Grid Background="Transparent" Padding="4">
                                 <Path Fill="White"
                                       Stroke="{StaticResource ImageCropperThumbStroke}"
-                                      StrokeThickness="1"
+                                      StrokeThickness="0"
                                       StrokeLineJoin="Round"
                                       StrokeStartLineCap="Round"
                                       StrokeEndLineCap="Round"
@@ -294,15 +303,18 @@
                                       VerticalAlignment="Top">
                                     <Path.Data>
                                         <PathGeometry>
-                                            <PathFigure StartPoint="22,0" IsClosed="True">
+                                            <PathFigure StartPoint="22,2" IsClosed="True">
                                                 <LineSegment Point="22,22" />
-                                                <LineSegment Point="0,22" />
-                                                <LineSegment Point="0,24" />
-                                                <ArcSegment Point="4,28" Size="4,4" SweepDirection="Counterclockwise" />
-                                                <LineSegment Point="24,28" />
-                                                <ArcSegment Point="28,24" Size="4,4" SweepDirection="Counterclockwise" />
-                                                <LineSegment Point="28,4" />
-                                                <ArcSegment Point="24,0" Size="4,4" SweepDirection="Counterclockwise" />
+                                                <LineSegment Point="2,22" />
+                                                <ArcSegment Point="0,24" Size="2,2" SweepDirection="Counterclockwise" />
+                                                <LineSegment Point="0,26" />
+                                                <ArcSegment Point="2,28" Size="2,2" SweepDirection="Counterclockwise" />
+                                                <LineSegment Point="26,28" />
+                                                <ArcSegment Point="28,26" Size="2,2" SweepDirection="Counterclockwise" />
+                                                <LineSegment Point="28,2" />
+                                                <ArcSegment Point="26,0" Size="2,2" SweepDirection="Counterclockwise" />
+                                                <LineSegment Point="24,0" />
+                                                <ArcSegment Point="22,2" Size="2,2" SweepDirection="Counterclockwise" />
                                             </PathFigure>
                                         </PathGeometry>
                                     </Path.Data>
@@ -345,16 +357,16 @@
                                         <Path x:Name="PART_OverlayAreaPath"
                                               Fill="{TemplateBinding Overlay}"
                                               IsHitTestVisible="False" />
-                                        <controls:ImageCropperThumb x:Name="PART_TopThumb" Margin="0,-4,0,0" CornerRadius="4,4,0,0"
+                                        <controls:ImageCropperThumb x:Name="PART_TopThumb" Margin="0,-4,0,0" CornerRadius="2"
                                                             Style="{StaticResource HorizontalImageCropperThumbStyle}" />
                                         <!--  ui:FrameworkElementExtensions.Cursor="SizeNorthSouth"  -->
-                                        <controls:ImageCropperThumb x:Name="PART_BottomThumb" Margin="0,4,0,0" CornerRadius="0,0,4,4"
+                                        <controls:ImageCropperThumb x:Name="PART_BottomThumb" Margin="0,4,0,0" CornerRadius="2"
                                                             Style="{StaticResource HorizontalImageCropperThumbStyle}" />
                                         <!--  ui:FrameworkElementExtensions.Cursor="SizeNorthSouth"  -->
-                                        <controls:ImageCropperThumb x:Name="PART_LeftThumb" Margin="-4,0,0,0" CornerRadius="4,0,0,4"
+                                        <controls:ImageCropperThumb x:Name="PART_LeftThumb" Margin="-4,0,0,0" CornerRadius="2"
                                                             Style="{StaticResource VerticalImageCropperThumbStyle}" />
                                         <!--  ui:FrameworkElementExtensions.Cursor="SizeWestEast"  -->
-                                        <controls:ImageCropperThumb x:Name="PART_RightThumb" Margin="4,0,0,0" CornerRadius="0,4,4,0"
+                                        <controls:ImageCropperThumb x:Name="PART_RightThumb" Margin="4,0,0,0" CornerRadius="2"
                                                             Style="{StaticResource VerticalImageCropperThumbStyle}" />
                                         <!--  ui:FrameworkElementExtensions.Cursor="SizeWestEast"  -->
                                         <controls:ImageCropperThumb x:Name="PART_UpperLeftThumb"
