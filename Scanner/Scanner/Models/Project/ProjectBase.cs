@@ -435,33 +435,57 @@ namespace Scanner.Models
             if (instructions.Count > 1)
                 Messenger.Send(new ShowIndeterminateProgressDialogMessage(Resources.Strings.Resources.ApplyingChanges, process.Task));
 
-            foreach (KeyValuePair<IProjectPage, BitmapRotation> instruction in instructions)
+            List<(IProjectPage Page, StorageFile OldFile, StorageFile NewFile)> finalStepData = [];
+            try
             {
-                if (instruction.Value == BitmapRotation.None) continue;
-
-                StorageFile oldFile = instruction.Key.SourceFile;
-                StorageFile newFile;
-
-                await StartEditingAsync();
-                try
+                // generate rotated files
+                foreach (KeyValuePair<IProjectPage, BitmapRotation> instruction in instructions)
                 {
-                    newFile = await RotateFileAsync(instruction.Key.SourceFile, instruction.Value, false, pagesFolder);
-                    areFilesSaved = false;
-                }
-                finally
-                {
-                    FinishEditing();
-                }
-                await instruction.Key.ChangeSourceFileAsync(pagesFolder, newFile, uiDispatcherQueue);
+                    if (instruction.Value == BitmapRotation.None) continue;
 
-                // delete old file
-                if (oldFile != newFile)
+                    StorageFile newFile;
+                    await StartEditingAsync();
+                    try
+                    {
+                        newFile = await RotateFileAsync(instruction.Key.SourceFile, instruction.Value, false, pagesFolder);
+                        areFilesSaved = false;
+                        finalStepData.Add((instruction.Key, instruction.Key.SourceFile, newFile));
+                    }
+                    finally
+                    {
+                        FinishEditing();
+                    }
+                }
+            }
+            catch (Exception exc)
+            {
+                // roll back changes
+                foreach (var data in finalStepData)
+                {
+                    // delete rotated files
+                    if (data.OldFile != data.NewFile)
+                    {
+                        _ = Task.Run(async () =>
+                        {
+                            await data.NewFile.DeleteAsync(StorageDeleteOption.PermanentDelete);
+                        });
+                    }
+                }
+
+                throw new ActionFailedAndRolledBackException(exc);
+            }
+
+            // delete old files
+            foreach (var data in finalStepData)
+            {
+                if (data.OldFile != data.NewFile)
                 {
                     _ = Task.Run(async () =>
                     {
-                        await oldFile.DeleteAsync(StorageDeleteOption.PermanentDelete);
+                        await data.OldFile.DeleteAsync(StorageDeleteOption.PermanentDelete);
                     });
                 }
+                await data.Page.ChangeSourceFileAsync(pagesFolder, data.NewFile, uiDispatcherQueue);
             }
 
             process.TrySetResult();
