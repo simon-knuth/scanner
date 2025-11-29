@@ -28,7 +28,7 @@ namespace Scanner.ViewModels
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         #region Services
-        private readonly ILogService? LogService = Ioc.Default.GetService<ILogService>();
+        public readonly ILogService? LogService = Ioc.Default.GetService<ILogService>();
         public readonly IProjectService ProjectService = Ioc.Default.GetRequiredService<IProjectService>();
         public readonly ISettingsService SettingsService = Ioc.Default.GetRequiredService<ISettingsService>();
         #endregion

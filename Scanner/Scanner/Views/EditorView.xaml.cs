@@ -548,15 +548,23 @@ namespace Scanner.Views
             page.PropertyChanged -= Page_PropertyChanged;
             page.PropertyChanged += Page_PropertyChanged;
 
-            // load the image file into a CanvasBitmap
-            CanvasBitmap newBitmap = await CanvasBitmap.LoadAsync(canvas, page.SourceBitmapUri);
+            try
+            {
+                // load the image file into a CanvasBitmap
+                CanvasBitmap newBitmap = await CanvasBitmap.LoadAsync(canvas, page.SourceBitmapUri);
 
-            // update canvas size
-            canvas.Width = newBitmap.Size.Width;
-            canvas.Height = newBitmap.Size.Height;
-            canvas.Invalidate();
+                // update canvas size
+                canvas.Width = newBitmap.Size.Width;
+                canvas.Height = newBitmap.Size.Height;
+                canvas.Invalidate();
 
-            return new CanvasPageData(page, newBitmap);
+                return new CanvasPageData(page, newBitmap);
+            }
+            catch (Exception exc)
+            {
+                ViewModel.LogService?.Log.Warning(exc, "EditorView - Failed to cahce canvas bitmap");
+                return null;
+            }
         }
 
         private void Page_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)

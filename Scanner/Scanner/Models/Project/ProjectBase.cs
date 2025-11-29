@@ -759,38 +759,57 @@ namespace Scanner.Models
                 Messenger.Send(new ShowIndeterminateProgressDialogMessage(Resources.Strings.Resources.ApplyingChanges, process.Task));
 
             List<AppliedCrop> result = [];
-
-            foreach (IProjectPage page in pages)
+            await StartEditingAsync();
+            try
             {
-                StorageFile oldFile = page.SourceFile;
-                StorageFile? newFile = null;
-                AppliedCrop appliedCrop = new(page, oldFile, page.Width, page.Height);
-
-                await StartEditingAsync();
-                try
+                foreach (IProjectPage page in pages)
                 {
+                    StorageFile oldFile = page.SourceFile;
+                    StorageFile? newFile = null;
+                    AppliedCrop appliedCrop = new(page, oldFile, page.Width, page.Height);
+
                     await Task.Run(async () => newFile = await CropFileAsync(page.SourceFile, cropRegion, false, pagesFolder));
                     page.Width = (uint)Math.Round(cropRegion.Width);
                     page.Height = (uint)Math.Round(cropRegion.Height);
 
-                    areFilesSaved = false;
+                    await page.ChangeSourceFileAsync(pagesFolder, newFile!, uiDispatcherQueue);
+
+                    // move to undo folder
+                    await oldFile.MoveAsync(AppDataService.UndoFolder, oldFile.Name, NameCollisionOption.GenerateUniqueName);
+
+                    result.Add(appliedCrop);
                 }
-                finally
+
+                // update previews
+                await GeneratePagePreviewsAsync(pages, uiDispatcherQueue);
+            }
+            catch (Exception exc)
+            {
+                // roll back changes
+                foreach (AppliedCrop appliedCrop in result)
                 {
-                    FinishEditing();
+                    StorageFile croppedFile = appliedCrop.Page.SourceFile;
+
+                    // restore previous file
+                    await appliedCrop.PreviousFile.MoveAsync(pagesFolder, appliedCrop.PreviousFile.Name, NameCollisionOption.GenerateUniqueName);
+                    appliedCrop.Page.Width = appliedCrop.PreviousWidth;
+                    appliedCrop.Page.Height = appliedCrop.PreviousHeight;
+
+                    await appliedCrop.Page.ChangeSourceFileAsync(pagesFolder, appliedCrop.PreviousFile, uiDispatcherQueue);
+
+                    // delete cropped file
+                    _ = Task.Run(async () => await croppedFile.DeleteAsync(StorageDeleteOption.PermanentDelete));
                 }
-                await page.ChangeSourceFileAsync(pagesFolder, newFile!, uiDispatcherQueue);
 
-                // move to undo folder
-                await oldFile.MoveAsync(AppDataService.UndoFolder, oldFile.Name, NameCollisionOption.GenerateUniqueName);
-
-                result.Add(appliedCrop);
+                throw new ActionFailedAndRolledBackException(exc);
+            }
+            finally
+            {
+                areFilesSaved = false;
+                FinishEditing();
+                process.TrySetResult();
             }
 
-            // update previews
-            await GeneratePagePreviewsAsync(pages, uiDispatcherQueue);
-
-            process.TrySetResult();
             return result;
         }
 
@@ -801,17 +820,16 @@ namespace Scanner.Models
                 Messenger.Send(new ShowIndeterminateProgressDialogMessage(Resources.Strings.Resources.ApplyingChanges, process.Task));
 
             List<IProjectPage> result = [];
-
-            foreach (IProjectPage page in pages)
+            await StartEditingAsync();
+            try
             {
-                StorageFile newFile;
-
-                await StartEditingAsync();
-                try
+                foreach (IProjectPage page in pages)
                 {
+                    StorageFile newFile;
+
                     // copy file
                     newFile = await page.SourceFile.CopyAsync(pagesFolder, page.SourceFile.Name, NameCollisionOption.GenerateUniqueName);
-                    
+
                     // crop
                     await Task.Run(async () => await CropFileAsync(newFile, cropRegion, true, pagesFolder));
                     page.Width = (uint)Math.Round(cropRegion.Width);
@@ -825,19 +843,31 @@ namespace Scanner.Models
                         imagePage?.BaseFilter ?? ImageFilter.None, imagePage?.Filter ?? ImageFilter.None,
                         imagePage?.Brightness ?? AppConfig.DefaultBrightness, imagePage?.Contrast ?? AppConfig.DefaultContrast);
                     result.AddRange(await AddFilesInternalAsync([insertion], false, uiDispatcherQueue));
+                }
 
-                    areFilesSaved = false;
-                }
-                finally
+                // update previews
+                await GeneratePagePreviewsAsync(pages, uiDispatcherQueue);
+            }
+            catch (Exception exc)
+            {
+                // roll back changes
+                foreach (AppliedCrop appliedCrop in result)
                 {
-                    FinishEditing();
+                    StorageFile croppedFile = appliedCrop.Page.SourceFile;
+
+                    // delete cropped file
+                    _ = Task.Run(async () => await croppedFile.DeleteAsync(StorageDeleteOption.PermanentDelete));
                 }
+
+                throw new ActionFailedAndRolledBackException(exc);
+            }
+            finally
+            {
+                areFilesSaved = false;
+                FinishEditing();
+                process.TrySetResult();
             }
 
-            // update previews
-            await GeneratePagePreviewsAsync(pages, uiDispatcherQueue);
-
-            process.TrySetResult();
             return result;
         }
 
