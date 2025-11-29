@@ -657,6 +657,7 @@ namespace Scanner.Models
 
             await StartEditingAsync();
 
+            Dictionary<ImagePage, ImageFilter> previousFilters = pages.ToDictionary(x => x, x => x.Filter);
             try
             {
                 foreach (ImagePage page in pages)
@@ -664,16 +665,22 @@ namespace Scanner.Models
                     page.Filter = filter;
                 }
 
-                areFilesSaved = false;
-
                 await GeneratePagePreviewsAsync([.. pages.Cast<IProjectPage>()], uiDispatcherQueue);
             }
             catch (Exception exc)
             {
+                foreach (var previousState in previousFilters)
+                {
+                    previousState.Key.Filter = previousState.Value;
+                }
+
+                await GeneratePagePreviewsAsync([.. pages.Cast<IProjectPage>()], uiDispatcherQueue);
+
                 throw new ActionFailedAndRolledBackException(exc);
             }
             finally
             {
+                areFilesSaved = false;
                 FinishEditing();
                 process.TrySetResult();
             }

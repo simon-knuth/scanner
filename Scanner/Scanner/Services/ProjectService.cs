@@ -716,9 +716,10 @@ namespace Scanner.Services
             await InternalApplyActionAsync(action, false);
         }
 
-        private async Task InternalApplyActionAsync(IProjectAction action, bool redoing)
+        private async Task<bool> InternalApplyActionAsync(IProjectAction action, bool redoing)
         {
-            if (CurrentProject == null) return;
+            if (CurrentProject == null)
+                return false;
 
             try
             {
@@ -766,6 +767,8 @@ namespace Scanner.Services
                     }
                     OnPropertyChanged(nameof(CanRedo));
                 }
+
+                return true;
             }
             catch (ActionFailedAndRolledBackException)
             {
@@ -780,6 +783,8 @@ namespace Scanner.Services
                     RedoStack.Push(action);
                     OnPropertyChanged(nameof(RedoStack));
                 }
+
+                return false;
             }
             catch (Exception)
             {
@@ -788,6 +793,8 @@ namespace Scanner.Services
                     Title = "Something went wrong and the project needs to be closed"
                 }));
                 await TryCloseProjectAsync(ignoreUnsavedChanges: true);
+
+                return false;
             }
             finally
             {
@@ -795,9 +802,10 @@ namespace Scanner.Services
             }
         }
 
-        private async Task UndoActionAsync(IProjectAction action)
+        private async Task<bool> UndoActionAsync(IProjectAction action)
         {
-            if (CurrentProject == null) return;
+            if (CurrentProject == null)
+                return false;
 
             try
             {
@@ -808,6 +816,8 @@ namespace Scanner.Services
                 RedoStack.Push(action);
                 OnPropertyChanged(nameof(CanUndo));
                 OnPropertyChanged(nameof(CanRedo));
+
+                return true;
             }
             catch (ActionFailedAndRolledBackException)
             {
@@ -819,6 +829,8 @@ namespace Scanner.Services
                 // update undo stack
                 UndoStack.Push(action);
                 OnPropertyChanged(nameof(CanUndo));
+
+                return false;
             }
             catch (Exception)
             {
@@ -827,6 +839,8 @@ namespace Scanner.Services
                     Title = "Something went wrong and the project needs to be closed"
                 }));
                 await TryCloseProjectAsync(ignoreUnsavedChanges: true);
+
+                return false;
             }
             finally
             {
@@ -846,11 +860,14 @@ namespace Scanner.Services
             else if (upUntil != UndoStack.Peek())
                 Messenger.Send(new ShowIndeterminateProgressDialogMessage(Resources.Strings.Resources.ApplyingChanges, process.Task));
 
-            while (UndoStack.TryPeek(out IProjectAction? action) && action != upUntil)
+            bool success = true;
+            while (UndoStack.TryPeek(out IProjectAction? action) && action != upUntil && success)
             {
-                await UndoActionAsync(UndoStack.Pop());
+                success = await UndoActionAsync(UndoStack.Pop());
             }
-            if (UndoStack.Count > 0) await UndoActionAsync(UndoStack.Pop());
+
+            if (UndoStack.Count > 0 && success)
+                await UndoActionAsync(UndoStack.Pop());
 
             process.TrySetResult();
         }
@@ -867,11 +884,13 @@ namespace Scanner.Services
             else if (upUntil != RedoStack.Peek())
                 Messenger.Send(new ShowIndeterminateProgressDialogMessage(Resources.Strings.Resources.ApplyingChanges, process.Task));
 
-            while (RedoStack.TryPeek(out IProjectAction? action) && action != upUntil)
+            bool success = true;
+            while (RedoStack.TryPeek(out IProjectAction? action) && action != upUntil && success)
             {
-                await InternalApplyActionAsync(RedoStack.Pop(), true);
+                success = await InternalApplyActionAsync(RedoStack.Pop(), true);
             }
-            if (RedoStack.Count > 0) await InternalApplyActionAsync(RedoStack.Pop(), true);
+            if (RedoStack.Count > 0 && success)
+                await InternalApplyActionAsync(RedoStack.Pop(), true);
 
             process.TrySetResult();
         }
