@@ -206,7 +206,7 @@
                                     <KeyboardAccelerator Modifiers="Control" Key="S" />
                                 </MenuFlyoutItem.KeyboardAccelerators>
                             </MenuFlyoutItem>
-                            <MenuFlyoutItem Text="{x:Bind strings:Resources.SaveProjectAs}" IsEnabled="{x:Bind ViewModel.ProjectService.CanSaveProject, Mode=OneWay}" Visibility="{x:Bind ViewModel.CurrentProject.IsPdf, Mode=OneWay}" Command="{x:Bind ViewModel.SaveAsAsyncCommand}">
+                            <MenuFlyoutItem Text="{x:Bind strings:Resources.SaveProjectAs}" IsEnabled="{x:Bind ViewModel.ProjectService.CanSaveAsProject, Mode=OneWay}" Visibility="{x:Bind ViewModel.CurrentProject.IsPdf, Mode=OneWay}" Command="{x:Bind ViewModel.SaveAsAsyncCommand}">
                                 <MenuFlyoutItem.Icon>
                                     <FontIcon Glyph="&#xE792;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                                 </MenuFlyoutItem.Icon>
@@ -215,7 +215,7 @@
                                     <KeyboardAccelerator Key="F12" />
                                 </MenuFlyoutItem.KeyboardAccelerators>
                             </MenuFlyoutItem>
-                            <MenuFlyoutSubItem Text="{x:Bind strings:Resources.SaveProjectAs}" IsEnabled="{x:Bind ViewModel.ProjectService.CanSaveProject, Mode=OneWay}" Visibility="{x:Bind ViewModel.CurrentProject.IsPdf, Mode=OneWay, Converter={StaticResource NegativeBoolVisibilityConverter}}">
+                            <MenuFlyoutSubItem Text="{x:Bind strings:Resources.SaveProjectAs}" IsEnabled="{x:Bind ViewModel.ProjectService.CanSaveAsProject, Mode=OneWay}" Visibility="{x:Bind ViewModel.CurrentProject.IsPdf, Mode=OneWay, Converter={StaticResource NegativeBoolVisibilityConverter}}">
                                 <MenuFlyoutSubItem.Icon>
                                     <FontIcon Glyph="&#xE792;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                                 </MenuFlyoutSubItem.Icon>

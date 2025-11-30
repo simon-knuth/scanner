@@ -194,10 +194,10 @@
                             <KeyboardAccelerator Modifiers="Control" Key="O" />
                         </Button.KeyboardAccelerators>
                     </Button>
-                    <Button x:Name="ButtonSave" ToolTipService.ToolTip="{x:Bind strings:Resources.SaveProjectToolTip}" Style="{StaticResource TitlebarButtonStyle}" IsEnabled="{x:Bind ViewModel.ProjectService.CanSaveProject, Mode=OneWay}" Command="{x:Bind ViewModel.SaveAsyncCommand}" RightTapped="ButtonSave_RightTapped">
+                    <Button x:Name="ButtonSave" Padding="0" ToolTipService.ToolTip="{x:Bind strings:Resources.SaveProjectToolTip}" Style="{StaticResource TitlebarButtonStyle}" IsEnabled="{x:Bind ViewModel.ProjectService.CanSaveProject, Mode=OneWay}" Command="{x:Bind ViewModel.SaveAsyncCommand}" RightTapped="ButtonSave_RightTapped">
                         <Grid>
-                            <FontIcon Glyph="{x:Bind SaveButtonGlyph, Mode=OneWay}" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
-                            <ProgressRing x:Name="ProgressRingSave" IsActive="True" x:Load="{x:Bind ViewModel.CurrentProject.IsSaving, Mode=OneWay}" />
+                            <FontIcon Glyph="{x:Bind SaveButtonGlyph, Mode=OneWay}" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                            <ProgressRing x:Name="ProgressRingSave" Width="32" Height="32" HorizontalAlignment="Center" VerticalAlignment="Center" IsActive="True" x:Load="{x:Bind ViewModel.CurrentProject.IsSaving, Mode=OneWay}" />
                         </Grid>
 
                         <FlyoutBase.AttachedFlyout>
