@@ -96,6 +96,7 @@ namespace Scanner.Services.Interfaces
 
         void SelectPreviousPage();
         void SelectNextPage();
+        void MakeDefaultSelection();
     }
 
 

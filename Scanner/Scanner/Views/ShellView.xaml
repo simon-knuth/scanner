@@ -78,6 +78,10 @@
                         <Setter Target="BorderScanOptions.Background" Value="{ThemeResource LayerFillColorDefaultBrush}" />
                         <Setter Target="BorderScanOptions.BorderBrush" Value="{ThemeResource DividerStrokeColorDefaultBrush}" />
                         <Setter Target="BorderScanActionsView.Background" Value="{ThemeResource LayerFillColorDefaultBrush}" />
+                        <Setter Target="BorderEditor.(Grid.Column)" Value="0" />
+                        <Setter Target="BorderEditor.(Grid.RowSpan)" Value="1" />
+                        <Setter Target="BorderEditor.Margin" Value="0,152,0,0" />
+                        <Setter Target="BorderEditor.CornerRadius" Value="0" />
                     </VisualState.Setters>
                 </VisualState>
                 
@@ -101,6 +105,10 @@
                         <Setter Target="BorderScanOptions.Background" Value="{ThemeResource LayerFillColorDefaultBrush}" />
                         <Setter Target="BorderScanOptions.BorderBrush" Value="{ThemeResource DividerStrokeColorDefaultBrush}" />
                         <Setter Target="BorderScanActionsView.Background" Value="{ThemeResource LayerFillColorDefaultBrush}" />
+                        <Setter Target="BorderEditor.(Grid.Column)" Value="0" />
+                        <Setter Target="BorderEditor.(Grid.RowSpan)" Value="1" />
+                        <Setter Target="BorderEditor.Margin" Value="0,152,0,0" />
+                        <Setter Target="BorderEditor.CornerRadius" Value="0" />
                     </VisualState.Setters>
                 </VisualState>
 

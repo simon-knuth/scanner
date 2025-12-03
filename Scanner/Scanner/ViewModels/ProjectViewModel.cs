@@ -186,9 +186,8 @@ namespace Scanner.ViewModels
                         ProjectService.SelectedPage = ProjectService.SelectedPages?.OrderBy(x => x.Index).FirstOrDefault();
                         if (ProjectService.SelectedPage == null && ProjectService.CurrentProject?.Pages.Count > 0)
                         {
-                            ProjectService.SelectedPage = ProjectService.CurrentProject.Pages[0];
+                            ProjectService.MakeDefaultSelection();
                         }
-
                         ProjectService.SelectedPages = null;
                     }
                 }

@@ -151,12 +151,6 @@
 
             <!-- Right buttons -->
             <Button x:Name="ButtonPreview" Grid.Column="2" Margin="8,0,0,0" Width="48" HorizontalAlignment="Right" VerticalAlignment="Stretch" IsEnabled="{x:Bind ViewModel.CanPreviewScan, Mode=OneWay}" ToolTipService.ToolTip="{x:Bind strings:Resources.Preview}" x:Load="{x:Bind IsPreviewButtonVisible, Mode=OneWay}" Loading="ButtonAnimated_Loading">
-                <Button.Transitions>
-                    <TransitionCollection>
-                        <RepositionThemeTransition IsStaggeringEnabled="False" />
-                    </TransitionCollection>
-                </Button.Transitions>
-                
                 <animations:Implicit.ShowAnimations>
                     <animations:ImplicitAnimationSet>
                         <animations:OpacityAnimation Duration="0:0:0.25" From="0.0" To="1.0" EasingMode="EaseInOut"/>

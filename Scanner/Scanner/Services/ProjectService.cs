@@ -96,9 +96,7 @@ namespace Scanner.Services
                 {
                     OnPropertyChanged(nameof(CanSelectPreviousPage));
                     OnPropertyChanged(nameof(CanSelectNextPage));
-
-                    if (value != null)
-                        SelectedPagesCount = 1;
+                    OnPropertyChanged(nameof(SelectedPagesCount));
                 }
             }
         }
@@ -116,8 +114,7 @@ namespace Scanner.Services
             }
         }
 
-        [ObservableProperty]
-        private int selectedPagesCount;
+        public int SelectedPagesCount => SelectedPages?.Count ?? (SelectedPage != null ? 1 : 0);
 
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(IsProcessRunning))]
@@ -716,6 +713,14 @@ namespace Scanner.Services
             }
         }
 
+        public void MakeDefaultSelection()
+        {
+            if (CurrentProject == null) return;
+
+            SelectedPage = CurrentProject.Pages[CurrentProject.Pages.Count - 1];
+            SelectedPages = null;
+        }
+
         public async Task ApplyActionAsync(IProjectAction action)
         {
             await InternalApplyActionAsync(action, false);
@@ -1038,7 +1043,7 @@ namespace Scanner.Services
 
         private void SelectedPages_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
-            SelectedPagesCount = SelectedPages.Count;
+            OnPropertyChanged(nameof(SelectedPagesCount));
         }
 
         private string GetFriendlyCurrentScanState()

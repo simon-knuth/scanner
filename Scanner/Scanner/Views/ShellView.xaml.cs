@@ -126,29 +126,91 @@ namespace Scanner.Views
                 // narrow
                 if (ViewModel.CurrentProject == null)
                 {
+                    if (VisualStateGroup.CurrentState == VisualStateNarrowNoProject)
+                        return;
+
                     VisualStateManager.GoToState(this, nameof(VisualStateNarrowNoProject), false);
                 }
                 else
                 {
+                    if (VisualStateGroup.CurrentState == VisualStateNarrow)
+                        return;
+
                     VisualStateManager.GoToState(this, nameof(VisualStateNarrow), false);
                 }
+
+                // show UI based on current selection
+                if (ViewModel.ProjectService.SelectedPagesCount == 0)
+                {
+                    // 0 pages selected ~> scan options
+                    BorderEditor.Visibility = Visibility.Collapsed;
+                    BorderScanOptions.Visibility = Visibility.Visible;
+                    ProjectView.IsExpanded = false;
+                    ScanActionsView.AreScanOptionsVisible = false;
+                }
+                else if (ViewModel.ProjectService.SelectedPagesCount == 1)
+                {
+                    // 1 page selected ~> editor
+                    ProjectView.IsExpanded = false;
+                    ScanActionsView.AreScanOptionsVisible = true;
+                    BorderScanOptions.Visibility = Visibility.Collapsed;
+                    BorderEditor.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    // multiple pages selected ~> page list
+                    BorderEditor.Visibility = Visibility.Collapsed;
+                    BorderScanOptions.Visibility = Visibility.Collapsed;
+                    TryExpandPageList();
+                    ScanActionsView.AreScanOptionsVisible = true;
+                }
+                
             }
             else if (width < 1500)
             {
                 // default
                 if (ViewModel.CurrentProject == null)
                 {
+                    if (VisualStateGroup.CurrentState == VisualStateDefaultNoProject)
+                        return;
+
                     VisualStateManager.GoToState(this, nameof(VisualStateDefaultNoProject), false);
                 }
                 else
                 {
+                    if (VisualStateGroup.CurrentState == VisualStateDefault)
+                        return;
+
                     VisualStateManager.GoToState(this, nameof(VisualStateDefault), false);
                 }
+
+                // ensure selection
+                if (ViewModel.CurrentProject != null && ViewModel.ProjectService.SelectedPagesCount == 0)
+                    ViewModel.ProjectService.MakeDefaultSelection();
+
+                // show scan options based on page list
+                if (!ProjectView.IsExpanded)
+                    BorderScanOptions.Visibility = Visibility.Visible;
+
+                BorderEditor.Visibility = Visibility.Visible;
             }
             else
             {
                 // wide
+                if (VisualStateGroup.CurrentState == VisualStateWide)
+                    return;
+
                 VisualStateManager.GoToState(this, nameof(VisualStateWide), false);
+
+                // ensure selection
+                if (ViewModel.CurrentProject != null && ViewModel.ProjectService.SelectedPagesCount == 0)
+                    ViewModel.ProjectService.MakeDefaultSelection();
+
+                // show scan options based on page list
+                if (!ProjectView.IsExpanded)
+                    BorderScanOptions.Visibility = Visibility.Visible;
+
+                BorderEditor.Visibility = Visibility.Visible;
             }
         }
 
@@ -211,6 +273,14 @@ namespace Scanner.Views
         {
             if (ProjectView.IsExpanded) return;
 
+            if (VisualStateGroup.CurrentState == VisualStateNarrow
+                || VisualStateGroup.CurrentState == VisualStateNarrowNoProject)
+            {
+                BorderEditor.Visibility = Visibility.Collapsed;
+                ViewModel.ProjectService.SelectedPage = null;
+                ViewModel.ProjectService.SelectedPages = null;
+            }
+
             ProjectView.IsExpanded = true;
             BorderScanOptions.Visibility = Visibility.Collapsed;
             ScanActionsView.AreScanOptionsVisible = true;
@@ -218,6 +288,14 @@ namespace Scanner.Views
 
         private void ScanActionsView_ExpandScanOptionsRequested(object sender, EventArgs e)
         {
+            if (VisualStateGroup.CurrentState == VisualStateNarrow
+                || VisualStateGroup.CurrentState == VisualStateNarrowNoProject)
+            {
+                BorderEditor.Visibility = Visibility.Collapsed;
+                ViewModel.ProjectService.SelectedPage = null;
+                ViewModel.ProjectService.SelectedPages = null;
+            }
+
             ScanActionsView.AreScanOptionsVisible = false;
             BorderScanOptions.Visibility = Visibility.Visible;
             ProjectView.IsExpanded = false;
@@ -521,6 +599,21 @@ namespace Scanner.Views
                     {
                         OnPropertyChanged(nameof(ShowScanActionsDivider));
                     });
+                    break;
+                case nameof(IProjectService.SelectedPage):
+                case nameof(IProjectService.SelectedPages):
+                    // show editor if narrow layout and no multi-select
+                    if (ViewModel.ProjectService.SelectedPages != null || ViewModel.ProjectService.SelectedPage == null)
+                        return;
+
+                    if (VisualStateGroup.CurrentState == VisualStateNarrow
+                        || VisualStateGroup.CurrentState == VisualStateNarrowNoProject)
+                    {
+                        ProjectView.IsExpanded = false;
+                        ScanActionsView.AreScanOptionsVisible = true;
+                        BorderScanOptions.Visibility = Visibility.Collapsed;
+                        BorderEditor.Visibility = Visibility.Visible;
+                    }
                     break;
             }
         }
