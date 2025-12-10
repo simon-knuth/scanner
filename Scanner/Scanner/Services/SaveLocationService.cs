@@ -165,7 +165,15 @@ namespace Scanner.Services
                 case SettingSaveLocationType.FixedLocation:
                     await initializationCompleted.Task;
                     TrackRecentlyUsedFolder(fixedSaveLocation!);
-                    return new SaveOptions(fixedSaveLocation!, fileName, SettingsService.SettingGenerateFileNameWithAI);
+
+                    if (scanOptions.TargetFormat == TargetFormat.PDF)
+                    {
+                        return new SaveOptions(fixedSaveLocation!, fileName, SettingsService.SettingGenerateFileNameWithAI);
+                    }
+                    else
+                    {
+                        return new SaveOptions(fixedSaveLocation!, fileName, false);
+                    }
 
                 case SettingSaveLocationType.AskBeforeNewProject:
                     if (existingProject != null)

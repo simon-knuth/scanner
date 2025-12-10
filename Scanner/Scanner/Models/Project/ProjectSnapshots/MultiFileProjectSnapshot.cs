@@ -107,7 +107,14 @@ namespace Scanner.Models
                             using (IRandomAccessStream sourceStream = await page.Value.SourceFile.OpenAsync(FileAccessMode.Read))
                             using (IRandomAccessStream targetStream = await generatedFile.OpenAsync(FileAccessMode.ReadWrite))
                             {
-                                BitmapEncoder encoder = await BitmapEncoder.CreateAsync(ProjectBase.GetBitmapEncoderIdForFile(generatedFile), targetStream);
+                                BitmapPropertySet propertySet = new BitmapPropertySet();
+                                if (Format == TargetFormat.JPG)
+                                {
+                                    // prevent large JPEG files by setting quality
+                                    propertySet.Add("ImageQuality", new BitmapTypedValue(jpegQuality, Windows.Foundation.PropertyType.Single));
+                                }
+
+                                BitmapEncoder encoder = await BitmapEncoder.CreateAsync(ProjectBase.GetBitmapEncoderIdForFile(generatedFile), targetStream, propertySet);
 
                                 if (page.Value.Filter != ImageFilter.None)
                                 {
