@@ -148,11 +148,11 @@ namespace Scanner.Views
             }
         }
 
-        private async void BorderScanAnimation_Loaded(object sender, RoutedEventArgs e)
+        private void BorderScanAnimation_Loaded(object sender, RoutedEventArgs e)
         {
             try
             {
-                await StoryboardScanAnimation.BeginAsync();
+                StoryboardScanAnimation.Begin();
             }
             catch (Exception)
             {

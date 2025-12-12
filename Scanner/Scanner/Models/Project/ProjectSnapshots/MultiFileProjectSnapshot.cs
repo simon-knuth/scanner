@@ -129,7 +129,6 @@ namespace Scanner.Models
                                     encoder.SetSoftwareBitmap(softwareBitmap);
                                     await encoder.FlushAsync();
                                 }
-                                
                             }                                
                         });
                     }

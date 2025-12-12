@@ -268,9 +268,6 @@ namespace Scanner.Views
                         ViewModel.ProjectService.SelectedPage.PropertyChanged += SelectedPage_PropertyChanged;
                     break;
                 case nameof(IProjectService.CurrentProject):
-                    if (ViewModel.ProjectService.CurrentProject == null)
-                        ClearCanvasData();
-
                     OnPropertyChanged(nameof(ProjectNavigationIndicator));
                     break;
                 case nameof(IProjectService.TotalNumberOfPages):
@@ -792,31 +789,6 @@ namespace Scanner.Views
             ViewModel.ResetContrastCommand.Execute(null);
         }
 
-        private void FlipViewPages_Unloaded(object sender, RoutedEventArgs e)
-        {
-            ClearCanvasData();
-        }
-
-        private void ClearCanvasData()
-        {
-            Dictionary<IProjectPage, CanvasControl> canvases = pageCanvases;
-            pageCanvases = [];
-
-            foreach (CanvasControl canvas in pageCanvases.Values)
-            {
-                CanvasPageData? pageData = canvas.Tag as CanvasPageData;
-                if (pageData != null)
-                {
-                    canvas.Draw -= CanvasPreview_Draw;
-                    canvas.DataContextChanged -= CanvasPreview_DataContextChanged;
-                    pageData.Bitmap.Dispose();
-                    pageData.Page.PropertyChanged -= Page_PropertyChanged;
-                }
-                canvas.RemoveFromVisualTree();
-            }
-            pageCanvases.Clear();
-        }
-
         private void NumberBoxBrightness_ValueChanged(NumberBox sender, NumberBoxValueChangedEventArgs args)
         {
             if (double.IsNaN(args.OldValue))    // ignore initial event
@@ -841,6 +813,25 @@ namespace Scanner.Views
         private void SliderContrast_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
         {
             _ = ViewModel.SetContrastForCurrentPageCommand.ExecuteAsync((int)e.NewValue);
+        }
+
+        private void FlipViewItemPage_Unloaded(object sender, RoutedEventArgs e)
+        {
+            if (((FlipViewItem)sender).DataContext is not IProjectPage page)
+                return;
+
+            CanvasControl canvas = pageCanvases[page];
+            pageCanvases.Remove(page);
+
+            CanvasPageData? pageData = canvas.Tag as CanvasPageData;
+            if (pageData != null)
+            {
+                canvas.Draw -= CanvasPreview_Draw;
+                canvas.DataContextChanged -= CanvasPreview_DataContextChanged;
+                pageData.Bitmap.Dispose();
+                pageData.Page.PropertyChanged -= Page_PropertyChanged;
+            }
+            canvas.RemoveFromVisualTree();
         }
 
 

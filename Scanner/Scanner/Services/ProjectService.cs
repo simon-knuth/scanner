@@ -931,7 +931,7 @@ namespace Scanner.Services
                         if (CurrentProject is MultiFileProject imageProject)
                             creationData = new MultiFileProjectCreationData(CurrentProject.Pages, targetFormat, null, CurrentProject.InitialScanOptions);
                         else if (CurrentProject is PdfProject pdfProject)
-                            creationData = new MultiFileProjectCreationData(CurrentProject.Pages, targetFormat, pdfProject.FileNameInfo.DesiredName, CurrentProject.InitialScanOptions);
+                            creationData = new MultiFileProjectCreationData(CurrentProject.Pages, targetFormat, pdfProject.FileNameInfo.DesiredDisplayName + TargetFormatToFileExtension(targetFormat), CurrentProject.InitialScanOptions);
                         break;
                     default:
                         throw new ArgumentException("Can't convert project to " + targetFormat.ToString());

@@ -1,44 +1,25 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.DependencyInjection;
-using CommunityToolkit.Mvvm.Messaging;
-using CommunityToolkit.WinUI.Helpers;
+﻿using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Graphics.Imaging;
-using Microsoft.UI;
 using Microsoft.UI.Dispatching;
-using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Documents;
-using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Media.Imaging;
 using PdfSharp.Drawing;
-using PdfSharp.Fonts;
 using PdfSharp.Pdf;
 using Scanner.Extensions;
 using Scanner.Messages;
 using Scanner.Models.Interfaces;
 using Scanner.Models.Project;
-using Scanner.Services;
 using Scanner.Services.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
-using System.Reflection.Metadata;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.DataTransfer;
-using Windows.Devices.Scanners;
 using Windows.Graphics.Imaging;
-using Windows.Media.Ocr;
 using Windows.Storage;
 using Windows.Storage.Streams;
-using WinRT.Interop;
-using static Scanner.Helpers.RotationHelpers;
-using static Scanner.Models.PdfProjectSnapshot;
 
 namespace Scanner.Models
 {
@@ -52,6 +33,7 @@ namespace Scanner.Models
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         #region Constants
         private const string pdfOutputFileDisplayName = "tessoutput";
+        private const double jpegQuality = 0.85;
         #endregion
 
         public StorageFolder? TargetFolder;
@@ -499,11 +481,11 @@ namespace Scanner.Models
                 if (ocr)
                 {
                     await OcrService.GeneratePdfAsync([.. pages.Values], pdfGenerationFilePath, uiDispatcherQueue);
-                    await CreatePdfFromImageAsync(pdfGenerationFilePath + ".pdf", [.. pages.Values], pdfGenerationFilePath + ".pdf");
+                    await CreatePdfFromImageAsync(pdfGenerationFilePath + ".pdf", [.. pages.Values], uiDispatcherQueue, pdfGenerationFilePath + ".pdf");
                 }
                 else
                 {
-                    await CreatePdfFromImageAsync(pdfGenerationFilePath + ".pdf", [.. pages.Values]);
+                    await CreatePdfFromImageAsync(pdfGenerationFilePath + ".pdf", [.. pages.Values], uiDispatcherQueue);
                 }
             }
             catch (Exception exc)
@@ -539,10 +521,10 @@ namespace Scanner.Models
             return result;
         }
 
-        private static async Task CreatePdfFromImageAsync(string targetPdfPath, List<IProjectSnapshotPage> snapshotPages, string? ocrPdfPath = null)
+        private static async Task CreatePdfFromImageAsync(string targetPdfPath, List<IProjectSnapshotPage> snapshotPages, DispatcherQueue uiDispatcherQueue, string? ocrPdfPath = null)
         {
             using PdfDocument document = new();
-            
+
             XPdfForm? ocrPdf = null;
             if (ocrPdfPath != null)
                 ocrPdf = XPdfForm.FromFile(ocrPdfPath);
@@ -553,7 +535,31 @@ namespace Scanner.Models
                 PdfPage newPdfPage = document.AddPage();
 
                 // get image
-                using XImage image = XImage.FromFile(snapshotPage.SourceFile.Path);
+                XImage image;
+                if (Helpers.Helpers.FileExtensionToTargetFormat(snapshotPage.SourceFile.FileType) != TargetFormat.JPG)
+                {
+                    // convert image to JPG to reduce PDF size
+                    using InMemoryRandomAccessStream targetStream = new();
+                    await uiDispatcherQueue.RunOnThreadAndWaitAsync(DispatcherQueuePriority.Low, async () =>
+                    {
+                        using IRandomAccessStream sourceStream = await snapshotPage.SourceFile.OpenAsync(FileAccessMode.Read);
+                        BitmapDecoder decoder = await BitmapDecoder.CreateAsync(sourceStream);
+
+                        BitmapPropertySet propertySet = new BitmapPropertySet();
+                        propertySet.Add("ImageQuality", new BitmapTypedValue(jpegQuality, Windows.Foundation.PropertyType.Single));
+                        BitmapEncoder encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.JpegEncoderId, targetStream);
+
+                        using SoftwareBitmap softwareBitmap = await decoder.GetSoftwareBitmapAsync();
+                        encoder.SetSoftwareBitmap(softwareBitmap);
+                        await encoder.FlushAsync();
+                    });
+                    image = XImage.FromStream(targetStream.AsStream());
+                }
+                else
+                {
+                    // use original image
+                    image = XImage.FromFile(snapshotPage.SourceFile.Path);
+                }
 
                 // setup page
                 newPdfPage.Width = XUnit.FromInch(image.PixelWidth / image.HorizontalResolution);
@@ -569,6 +575,7 @@ namespace Scanner.Models
 
                 // add image layer
                 gfx.DrawImage(image, 0, 0);
+                image.Dispose();
             }
 
             ocrPdf?.Dispose();
