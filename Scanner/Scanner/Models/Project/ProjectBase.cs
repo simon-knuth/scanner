@@ -932,10 +932,15 @@ namespace Scanner.Models
             consecutiveAtomicActionMergeTimers.TryGetValue(page, out ThreadPoolTimer? existingTimer);
             existingTimer?.Cancel();
 
-            page.Brightness = brightness;
+            page.DisplayedBrightness = brightness;
             consecutiveAtomicActionMergeTimers[page] = ThreadPoolTimer.CreateTimer(async (timer) =>
             {
                 consecutiveAtomicActionMergeTimers.TryRemove(page, out _);
+
+                await StartEditingAsync();
+                page.Brightness = page.DisplayedBrightness;
+                FinishEditing();
+
                 await GeneratePagePreviewsAsync(new List<ImagePage>([page]), uiDispatcherQueue);
             }, AppConfig.ConsecutiveAtomicActionMergeTime);
 
@@ -947,10 +952,15 @@ namespace Scanner.Models
             consecutiveAtomicActionMergeTimers.TryGetValue(page, out ThreadPoolTimer? existingTimer);
             existingTimer?.Cancel();
 
-            page.Contrast = contrast;
+            page.DisplayedContrast = contrast;
             consecutiveAtomicActionMergeTimers[page] = ThreadPoolTimer.CreateTimer(async (timer) =>
             {
                 consecutiveAtomicActionMergeTimers.TryRemove(page, out _);
+
+                await StartEditingAsync();
+                page.Contrast = page.DisplayedContrast;
+                FinishEditing();
+
                 await GeneratePagePreviewsAsync(new List<ImagePage>([page]), uiDispatcherQueue);
             }, AppConfig.ConsecutiveAtomicActionMergeTime);
 

@@ -566,14 +566,14 @@
                                                 </Grid.ColumnDefinitions>
 
                                                 <TextBlock Grid.Column="0" Text="{x:Bind strings:Resources.Brightness}" MaxLines="1" VerticalAlignment="Center" Style="{StaticResource BaseTextBlockStyle}" />
-                                                <NumberBox x:Name="NumberBoxBrightness" Grid.Column="1" Margin="0,0,-8,0" Minimum="-100" Maximum="100" SmallChange="1" LargeChange="10" MaxWidth="92" Padding="10,5,40,6" Background="Transparent" BorderThickness="0" Style="{StaticResource NoClearButtonNumberBoxStyle}" Value="{x:Bind ViewModel.PageBrightness, Mode=OneWay}" ValueChanged="NumberBoxBrightness_ValueChanged" />
+                                                <NumberBox x:Name="NumberBoxBrightness" Grid.Column="1" Margin="0,0,-8,0" Minimum="-100" Maximum="100" SmallChange="1" LargeChange="10" MaxWidth="92" Padding="10,5,40,6" Background="Transparent" BorderThickness="0" Style="{StaticResource NoClearButtonNumberBoxStyle}" Value="{x:Bind ViewModel.DisplayedPageBrightness, Mode=OneWay}" ValueChanged="NumberBoxBrightness_ValueChanged" />
                                                 <Button x:Name="ButtonBrightnessReset" Grid.Column="1" Width="32" Height="32" Margin="0,0,-8,0" VerticalAlignment="Center" Style="{StaticResource MutedButtonStyle}" ToolTipService.ToolTip="{x:Bind strings:Resources.ResetToDefault}" IsEnabled="{x:Bind ViewModel.CanResetBrightness, Mode=OneWay}" Command="{x:Bind ViewModel.ResetBrightnessCommand}">
                                                     <FontIcon Glyph="&#xE7A7;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                                                 </Button>
                                             </Grid>
                                             <StackPanel Orientation="Horizontal" Spacing="12" Padding="16,8,16,8" Background="{ThemeResource LayerOnAcrylicFillColorDefaultBrush}" BorderBrush="{ThemeResource DividerStrokeColorDefaultBrush}" BorderThickness="0,1,0,0">
                                                 <FontIcon Glyph="&#xEC8A;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
-                                                <Slider x:Name="SliderBrightness" Orientation="Horizontal" TabIndex="0" Width="148" TickPlacement="Outside" TickFrequency="100" Minimum="-100" Maximum="100" SnapsTo="StepValues" IsThumbToolTipEnabled="False" Value="{x:Bind ViewModel.PageBrightnessDouble, Mode=OneWay}" DoubleTapped="SliderBrightness_DoubleTapped" ValueChanged="SliderBrightness_ValueChanged" />
+                                                <Slider x:Name="SliderBrightness" Orientation="Horizontal" TabIndex="0" Width="148" TickPlacement="Outside" TickFrequency="100" Minimum="-100" Maximum="100" SnapsTo="StepValues" IsThumbToolTipEnabled="False" Value="{x:Bind ViewModel.DisplayedPageBrightnessDouble, Mode=OneWay}" DoubleTapped="SliderBrightness_DoubleTapped" ValueChanged="SliderBrightness_ValueChanged" />
                                                 <FontIcon Glyph="&#xE706;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                                             </StackPanel>
                                         </StackPanel>
@@ -601,14 +601,14 @@
                                                 </Grid.ColumnDefinitions>
 
                                                 <TextBlock Grid.Column="0" Text="{x:Bind strings:Resources.Contrast}" MaxLines="1" VerticalAlignment="Center" Style="{StaticResource BaseTextBlockStyle}" />
-                                                <NumberBox x:Name="NumberBoxContrast" Grid.Column="1" Margin="0,0,-8,0" Minimum="-100" Maximum="100" SmallChange="1" LargeChange="10" MaxWidth="92" Padding="10,5,40,6" Background="Transparent" BorderThickness="0" Style="{StaticResource NoClearButtonNumberBoxStyle}" Value="{x:Bind ViewModel.PageContrast, Mode=OneWay}" ValueChanged="NumberBoxContrast_ValueChanged" />
+                                                <NumberBox x:Name="NumberBoxContrast" Grid.Column="1" Margin="0,0,-8,0" Minimum="-100" Maximum="100" SmallChange="1" LargeChange="10" MaxWidth="92" Padding="10,5,40,6" Background="Transparent" BorderThickness="0" Style="{StaticResource NoClearButtonNumberBoxStyle}" Value="{x:Bind ViewModel.DisplayedPageContrast, Mode=OneWay}" ValueChanged="NumberBoxContrast_ValueChanged" />
                                                 <Button x:Name="ButtonContrastReset" Grid.Column="1" Width="32" Height="32" Margin="0,0,-8,0" VerticalAlignment="Center" Style="{StaticResource MutedButtonStyle}" ToolTipService.ToolTip="{x:Bind strings:Resources.ResetToDefault}" IsEnabled="{x:Bind ViewModel.CanResetContrast, Mode=OneWay}" Command="{x:Bind ViewModel.ResetContrastCommand}">
                                                     <FontIcon Glyph="&#xE7A7;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                                                 </Button>
                                             </Grid>
                                             <StackPanel Orientation="Horizontal" Spacing="12" Padding="16,8,16,8" Background="{ThemeResource LayerOnAcrylicFillColorDefaultBrush}" BorderBrush="{ThemeResource DividerStrokeColorDefaultBrush}" BorderThickness="0,1,0,0">
                                                 <FontIcon Glyph="&#xEA3A;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
-                                                <Slider x:Name="SliderContrast" Orientation="Horizontal" TabIndex="0" Width="148" TickPlacement="Outside" TickFrequency="100" Minimum="-100" Maximum="100" SnapsTo="StepValues" IsThumbToolTipEnabled="False" Value="{x:Bind ViewModel.PageContrastDouble, Mode=OneWay}" DoubleTapped="SliderContrast_DoubleTapped" ValueChanged="SliderContrast_ValueChanged" />
+                                                <Slider x:Name="SliderContrast" Orientation="Horizontal" TabIndex="0" Width="148" TickPlacement="Outside" TickFrequency="100" Minimum="-100" Maximum="100" SnapsTo="StepValues" IsThumbToolTipEnabled="False" Value="{x:Bind ViewModel.DisplayedPageContrastDouble, Mode=OneWay}" DoubleTapped="SliderContrast_DoubleTapped" ValueChanged="SliderContrast_ValueChanged" />
                                                 <FontIcon Glyph="&#xE7A1;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                                             </StackPanel>
                                         </StackPanel>

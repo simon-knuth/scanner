@@ -106,6 +106,18 @@ namespace Scanner.Models
         [ObservableProperty]
         private int contrast = AppConfig.DefaultContrast;
 
+        /// <summary>
+        /// Used for two-way binding in the UI. Value is copied to <see cref="Brightness"/> after a short delay.
+        /// </summary>
+        [ObservableProperty]
+        private int displayedBrightness = AppConfig.DefaultBrightness;
+
+        /// <summary>
+        /// Used for two-way binding in the UI. Value is copied to <see cref="Contrast"/> after a short delay.
+        /// </summary>
+        [ObservableProperty]
+        private int displayedContrast = AppConfig.DefaultContrast;
+
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////

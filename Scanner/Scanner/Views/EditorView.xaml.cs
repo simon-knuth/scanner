@@ -486,8 +486,8 @@ namespace Scanner.Views
 
             if (canvasPageData.Page is ImagePage imagePage)
             {
-                brightness = imagePage.Brightness;
-                contrast = imagePage.Contrast;
+                brightness = imagePage.DisplayedBrightness;
+                contrast = imagePage.DisplayedContrast;
                 filter = imagePage.Filter;
             }
 
@@ -588,8 +588,8 @@ namespace Scanner.Views
                         canvas.Tag = await CacheCanvasBitmapAsync(canvas, page, null);
                         break;
                     case nameof(ImagePage.Filter):
-                    case nameof(ImagePage.Brightness):
-                    case nameof(ImagePage.Contrast):
+                    case nameof(ImagePage.DisplayedBrightness):
+                    case nameof(ImagePage.DisplayedContrast):
                         page = sender as IProjectPage;
                         if (page == null)
                             return;

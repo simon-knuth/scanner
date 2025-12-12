@@ -76,40 +76,40 @@ namespace Scanner.ViewModels
         public bool AreSimilarPagesForCropAvailable => GetAreSimilarPagesForCropAvailable();
         public List<IProjectPage> SimilarPagesForCrop => GetSimilarPagesForCrop();
 
-        public int PageBrightness
+        public int DisplayedPageBrightness
         {
             get
             {
                 if (ProjectService.SelectedPage is not ImagePage imagePage)
                     return AppConfig.DefaultBrightness;
 
-                return imagePage.Brightness;
+                return imagePage.DisplayedBrightness;
             }
         }
 
-        public int PageContrast
+        public int DisplayedPageContrast
         {
             get
             {
                 if (ProjectService.SelectedPage is not ImagePage imagePage)
                     return AppConfig.DefaultContrast;
 
-                return imagePage.Contrast;
+                return imagePage.DisplayedContrast;
             }
         }
 
-        public double PageBrightnessDouble
+        public double DisplayedPageBrightnessDouble
         {
-            get => PageBrightness;
+            get => DisplayedPageBrightness;
         }
 
-        public double PageContrastDouble
+        public double DisplayedPageContrastDouble
         {
-            get => PageContrast;
+            get => DisplayedPageContrast;
         }
 
-        public bool CanResetBrightness => PageBrightness != 0;
-        public bool CanResetContrast => PageContrast != 0;
+        public bool CanResetBrightness => DisplayedPageBrightness != AppConfig.DefaultBrightness;
+        public bool CanResetContrast => DisplayedPageContrast != AppConfig.DefaultContrast;
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -154,10 +154,10 @@ namespace Scanner.ViewModels
                 case nameof(IProjectService.SelectedPage):
                     OnPropertyChanged(nameof(AreSimilarPagesForCropAvailable));
                     OnPropertyChanged(nameof(SimilarPagesForCrop));
-                    OnPropertyChanged(nameof(PageBrightness));
-                    OnPropertyChanged(nameof(PageContrast));
-                    OnPropertyChanged(nameof(PageBrightnessDouble));
-                    OnPropertyChanged(nameof(PageContrastDouble));
+                    OnPropertyChanged(nameof(DisplayedPageBrightness));
+                    OnPropertyChanged(nameof(DisplayedPageContrast));
+                    OnPropertyChanged(nameof(DisplayedPageBrightnessDouble));
+                    OnPropertyChanged(nameof(DisplayedPageContrastDouble));
                     OnPropertyChanged(nameof(CanResetBrightness));
                     OnPropertyChanged(nameof(CanResetContrast));
 
@@ -171,14 +171,14 @@ namespace Scanner.ViewModels
         {
             switch (e.PropertyName)
             {
-                case nameof(ImagePage.Brightness):
-                    OnPropertyChanged(nameof(PageBrightness));
-                    OnPropertyChanged(nameof(PageBrightnessDouble));
+                case nameof(ImagePage.DisplayedBrightness):
+                    OnPropertyChanged(nameof(DisplayedPageBrightness));
+                    OnPropertyChanged(nameof(DisplayedPageBrightnessDouble));
                     OnPropertyChanged(nameof(CanResetBrightness));
                     break;
-                case nameof(ImagePage.Contrast):
-                    OnPropertyChanged(nameof(PageContrast));
-                    OnPropertyChanged(nameof(PageContrastDouble));
+                case nameof(ImagePage.DisplayedContrast):
+                    OnPropertyChanged(nameof(DisplayedPageContrast));
+                    OnPropertyChanged(nameof(DisplayedPageContrastDouble));
                     OnPropertyChanged(nameof(CanResetContrast));
                     break;
             }
@@ -284,7 +284,7 @@ namespace Scanner.ViewModels
             if (CurrentProject == null) return;
             if (ProjectService.SelectedPage == null) return;
 
-            if (ProjectService.SelectedPage is ImagePage imagePage && imagePage.Brightness != brightness)
+            if (ProjectService.SelectedPage is ImagePage imagePage && imagePage.DisplayedBrightness != brightness)
             {
                 await ProjectService.ApplyActionAsync(new SetBrightnessAction(imagePage, brightness));
             }
@@ -295,7 +295,7 @@ namespace Scanner.ViewModels
             if (CurrentProject == null) return;
             if (ProjectService.SelectedPage == null) return;
 
-            if (ProjectService.SelectedPage is ImagePage imagePage && imagePage.Contrast != contrast)
+            if (ProjectService.SelectedPage is ImagePage imagePage && imagePage.DisplayedContrast != contrast)
             {
                 await ProjectService.ApplyActionAsync(new SetContrastAction(imagePage, contrast));
             }
