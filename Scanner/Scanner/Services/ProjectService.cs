@@ -80,6 +80,10 @@ namespace Scanner.Services
                         value.PagesRemoved += CurrentProject_PagesRemoved;
                         value.PropertyChanged += CurrentProject_PropertyChanged;
                     }
+                    else
+                    {
+                        ResetAutoSaveTimer();
+                    }
                 }
             }
         }
@@ -189,7 +193,6 @@ namespace Scanner.Services
         public ProjectService()
         {
             SettingsService.PropertyChanged += SettingsService_PropertyChanged;
-            ResetAutoSaveTimer();
         }
 
 
@@ -216,7 +219,11 @@ namespace Scanner.Services
                 if (SettingsService.SettingAutoSave)
                 {
                     // save
-                    await Task.Run(async () => await project.SaveAsync(false, UiDispatcherQueue!));
+                    await Task.Run(async () =>
+                    {
+                        await project.SaveAsync(false, UiDispatcherQueue!);
+                        ResetAutoSaveTimer();
+                    });
                 }
 
                 // free up space
@@ -332,7 +339,11 @@ namespace Scanner.Services
                     {
                         CurrentScanState = ScanState.Saving;
                     }
-                    await Task.Run(async () => await CurrentProject.SaveAsync(false, UiDispatcherQueue!));
+                    await Task.Run(async () =>
+                    {
+                        await CurrentProject.SaveAsync(false, UiDispatcherQueue!);
+                        ResetAutoSaveTimer();
+                    });
                 }
 
                 // free up space
@@ -970,7 +981,7 @@ namespace Scanner.Services
         private void ResetAutoSaveTimer()
         {
             // TODO: ensure auto save continues after exception
-            if (SettingsService?.SettingAutoSave == true)
+            if (CurrentProject != null && SettingsService?.SettingAutoSave == true)
             {
                 TimerElapsedHandler? handler = null;
                 handler = new TimerElapsedHandler(async (source) =>
