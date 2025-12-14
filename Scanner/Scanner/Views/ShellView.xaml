@@ -181,13 +181,17 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition x:Name="ColumnDefinitionTitlebarInsetHeader" Width="0" />
                     <ColumnDefinition Width="48" />
+                    <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="1*" />
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition x:Name="ColumnDefinitionTitlebarInsetFooter" Width="164" />
                 </Grid.ColumnDefinitions>
 
                 <Image Grid.Column="1" Source="/Assets/Logo small.svg" Width="16" Height="16" HorizontalAlignment="Center" VerticalAlignment="Center" />
-                <StackPanel x:Name="StackPanelTitlebarButtonsLeft" Grid.Column="2" Orientation="Horizontal" Spacing="8" HorizontalAlignment="Left" VerticalAlignment="Center">
+                <Border Grid.Column="2" VerticalAlignment="Center" CornerRadius="4" Margin="-16,0,0,0" Padding="4">
+                    <TextBlock Text="PREVIEW" Foreground="{ThemeResource TextFillColorDisabledBrush}" Style="{StaticResource CaptionTextBlockStyle}" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                </Border>
+                <StackPanel x:Name="StackPanelTitlebarButtonsLeft" Grid.Column="3" Orientation="Horizontal" Spacing="8" HorizontalAlignment="Left" VerticalAlignment="Center">
                     <Button ToolTipService.ToolTip="{x:Bind strings:Resources.NewProjectToolTip}" Style="{StaticResource TitlebarButtonStyle}" IsEnabled="{x:Bind ViewModel.CanStartNewProject, Mode=OneWay}" Command="{x:Bind ViewModel.TryCloseProjectAsyncCommand}">
                         <FontIcon Glyph="&#xE8A5;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
 
@@ -278,7 +282,7 @@
                         </Button.KeyboardAccelerators>
                     </Button>
                 </StackPanel>
-                <StackPanel x:Name="StackPanelTitlebarButtonsRight" Grid.Column="3" Orientation="Horizontal" Margin="0,0,4,0" HorizontalAlignment="Right" VerticalAlignment="Center">
+                <StackPanel x:Name="StackPanelTitlebarButtonsRight" Grid.Column="4" Orientation="Horizontal" Margin="0,0,4,0" HorizontalAlignment="Right" VerticalAlignment="Center">
                     <StackPanel x:Name="StackPanelTitlebarButtonsRightExpanded" Orientation="Horizontal" Spacing="8">
                         <Button x:Name="ButtonHistory" ToolTipService.ToolTip="{x:Bind strings:Resources.History}" Style="{StaticResource TitlebarButtonStyle}" Click="ButtonHistory_Click">
                             <FontIcon Glyph="&#xE81C;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />

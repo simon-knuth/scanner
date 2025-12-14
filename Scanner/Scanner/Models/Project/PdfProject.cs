@@ -480,7 +480,7 @@ namespace Scanner.Models
             {
                 if (ocr)
                 {
-                    await OcrService.GeneratePdfAsync([.. pages.Values], pdfGenerationFilePath, uiDispatcherQueue);
+                    await OcrService.GenerateOcrPdfAsync([.. pages.Values], pdfGenerationFilePath, uiDispatcherQueue);
                     await CreatePdfFromImageAsync(pdfGenerationFilePath + ".pdf", [.. pages.Values], uiDispatcherQueue, pdfGenerationFilePath + ".pdf");
                 }
                 else
@@ -547,7 +547,7 @@ namespace Scanner.Models
 
                         BitmapPropertySet propertySet = new BitmapPropertySet();
                         propertySet.Add("ImageQuality", new BitmapTypedValue(jpegQuality, Windows.Foundation.PropertyType.Single));
-                        BitmapEncoder encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.JpegEncoderId, targetStream);
+                        BitmapEncoder encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.JpegEncoderId, targetStream, propertySet);
 
                         using SoftwareBitmap softwareBitmap = await decoder.GetSoftwareBitmapAsync();
                         encoder.SetSoftwareBitmap(softwareBitmap);

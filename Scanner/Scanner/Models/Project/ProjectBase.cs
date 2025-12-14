@@ -89,10 +89,10 @@ namespace Scanner.Models
                 if (!SetProperty(ref _areFilesSaved, value))
                     return;
 
-                OnPropertyChanged(nameof(IsSaved));
-
                 if (!value && LatestSaveProcess != null)
                     hasMadeChangesDuringSaveProcess = true;
+
+                OnPropertyChanged(nameof(IsSaved));
             }
         }
 
@@ -435,60 +435,75 @@ namespace Scanner.Models
             if (instructions.Count > 1)
                 Messenger.Send(new ShowIndeterminateProgressDialogMessage(Resources.Strings.Resources.ApplyingChanges, process.Task));
 
-            List<(IProjectPage Page, StorageFile OldFile, StorageFile NewFile)> finalStepData = [];
             try
             {
-                // generate rotated files
-                foreach (KeyValuePair<IProjectPage, BitmapRotation> instruction in instructions)
-                {
-                    if (instruction.Value == BitmapRotation.None) continue;
+                List<(IProjectPage Page, StorageFile OldFile, StorageFile NewFile)> finalStepData = [];
 
-                    StorageFile newFile;
+                try
+                {
                     await StartEditingAsync();
+
                     try
                     {
-                        newFile = await RotateFileAsync(instruction.Key.SourceFile, instruction.Value, false, pagesFolder);
-                        areFilesSaved = false;
-                        finalStepData.Add((instruction.Key, instruction.Key.SourceFile, newFile));
-                    }
-                    finally
-                    {
-                        FinishEditing();
-                    }
-                }
-            }
-            catch (Exception exc)
-            {
-                // roll back changes
-                foreach (var data in finalStepData)
-                {
-                    // delete rotated files
-                    if (data.OldFile != data.NewFile)
-                    {
-                        _ = Task.Run(async () =>
+                        // generate rotated files
+                        foreach (KeyValuePair<IProjectPage, BitmapRotation> instruction in instructions)
                         {
-                            await data.NewFile.DeleteAsync(StorageDeleteOption.PermanentDelete);
-                        });
+                            if (instruction.Value == BitmapRotation.None) continue;
+
+                            StorageFile newFile;
+                            newFile = await RotateFileAsync(instruction.Key.SourceFile, instruction.Value, false, pagesFolder);
+                            await instruction.Key.ChangeSourceFileAsync(pagesFolder, newFile, uiDispatcherQueue);
+                            areFilesSaved = false;
+                            finalStepData.Add((instruction.Key, instruction.Key.SourceFile, newFile));
+                        }
+                    }
+                    catch (Exception exc)
+                    {
+                        // roll back changes
+                        foreach (var data in finalStepData)
+                        {
+                            // delete rotated files
+                            if (data.OldFile != data.NewFile)
+                            {
+                                _ = Task.Run(async () =>
+                                {
+                                    await data.NewFile.DeleteAsync(StorageDeleteOption.PermanentDelete);
+                                });
+                            }
+                        }
+
+                        throw new ActionFailedAndRolledBackException(exc);
                     }
                 }
-
-                throw new ActionFailedAndRolledBackException(exc);
-            }
-
-            // delete old files
-            foreach (var data in finalStepData)
-            {
-                if (data.OldFile != data.NewFile)
+                finally
                 {
-                    _ = Task.Run(async () =>
-                    {
-                        await data.OldFile.DeleteAsync(StorageDeleteOption.PermanentDelete);
-                    });
+                    FinishEditing();
                 }
-                await data.Page.ChangeSourceFileAsync(pagesFolder, data.NewFile, uiDispatcherQueue);
-            }
 
-            process.TrySetResult();
+                // delete old files
+                await saveSemaphore.WaitAsync();
+                try
+                {
+                    foreach (var data in finalStepData)
+                    {
+                        if (data.OldFile != data.NewFile)
+                        {
+                            _ = Task.Run(async () =>
+                            {
+                                await data.OldFile.DeleteAsync(StorageDeleteOption.PermanentDelete);
+                            });
+                        }
+                    }
+                }
+                finally
+                {
+                    saveSemaphore.Release();
+                }
+            }
+            finally
+            {
+                process.TrySetResult();
+            }
         }
 
         /// <summary>
@@ -709,6 +724,8 @@ namespace Scanner.Models
             encoder.SetPixelData(BitmapPixelFormat.Bgra8, BitmapAlphaMode.Ignore,
                                      (uint)renderer.SizeInPixels.Width, (uint)renderer.SizeInPixels.Height,
                                      renderer.Dpi, renderer.Dpi, renderer.GetPixelBytes());
+            encoder.BitmapTransform.ScaledWidth = (uint)(renderer.SizeInPixels.Width * 0.75);
+            encoder.BitmapTransform.ScaledHeight = (uint)(renderer.SizeInPixels.Height * 0.75);
             await encoder.FlushAsync();
         }
         

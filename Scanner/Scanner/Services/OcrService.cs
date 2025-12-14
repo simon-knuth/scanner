@@ -109,7 +109,7 @@ namespace Scanner.Services
             }
         }
 
-        public async Task GeneratePdfAsync(List<IProjectSnapshotPage> pages, string targetFilePath, DispatcherQueue uiDispatcherQueue)
+        public async Task GenerateOcrPdfAsync(List<IProjectSnapshotPage> pages, string targetFilePath, DispatcherQueue uiDispatcherQueue)
         {
             using (TesseractEngine engine = new(trainingDataFolderPath, "eng"))
             {
@@ -158,7 +158,8 @@ namespace Scanner.Services
                                         using (Page pdfPage = engine.Process(image))
                                         {
                                             renderer.AddPage(pdfPage);
-                                        }                                    }
+                                        }                                    
+                                    }
                                 }
                             }
                         }
