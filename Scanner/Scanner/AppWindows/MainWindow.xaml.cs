@@ -15,6 +15,7 @@ using Scanner.Messages;
 using Scanner.Services.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -70,6 +71,19 @@ namespace Scanner.AppWindows
             titlebar.PreferredHeightOption = TitleBarHeightOption.Tall;
             titlebar.ButtonBackgroundColor = Colors.Transparent;
             titlebar.ButtonInactiveBackgroundColor = Colors.Transparent;
+
+            // icon
+            string? iconPath = Environment.ProcessPath;
+            if (iconPath != null)
+            {
+                iconPath = Path.GetDirectoryName(iconPath);
+
+                if (iconPath != null)
+                {
+                    iconPath = Path.Combine(iconPath, "Assets/Icon.ico");
+                    AppWindow.SetIcon(iconPath);
+                }
+            }
 
             SetUpSharing();
         }

@@ -96,6 +96,11 @@
     <ProjectReference Include="..\..\Tesseract\src\Tesseract\Tesseract.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <Content Update="Assets\Icon.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
     <Page Update="Views\Dialogs\OtherAppsDialogView.xaml">
       <SubType>Designer</SubType>
     </Page>

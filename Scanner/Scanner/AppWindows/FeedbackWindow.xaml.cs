@@ -59,6 +59,19 @@ namespace Scanner.AppWindows
             titlebar.ExtendsContentIntoTitleBar = true;
             titlebar.ButtonBackgroundColor = Colors.Transparent;
             titlebar.ButtonInactiveBackgroundColor = Colors.Transparent;
+
+            // icon
+            string? iconPath = Environment.ProcessPath;
+            if (iconPath != null)
+            {
+                iconPath = Path.GetDirectoryName(iconPath);
+
+                if (iconPath != null)
+                {
+                    iconPath = Path.Combine(iconPath, "Assets/Icon.ico");
+                    AppWindow.SetIcon(iconPath);
+                }
+            }
         }
 
         private void FeedbackView_FeedbackSent(object sender, EventArgs e)
