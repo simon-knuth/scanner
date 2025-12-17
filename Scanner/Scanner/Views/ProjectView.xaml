@@ -206,7 +206,7 @@
                                     <KeyboardAccelerator Modifiers="Control" Key="S" />
                                 </MenuFlyoutItem.KeyboardAccelerators>
                             </MenuFlyoutItem>
-                            <MenuFlyoutItem Text="{x:Bind strings:Resources.SaveProjectAs}" IsEnabled="{x:Bind ViewModel.ProjectService.CanSaveAsProject, Mode=OneWay}" Visibility="{x:Bind ViewModel.CurrentProject.IsPdf, Mode=OneWay}" Command="{x:Bind ViewModel.SaveAsAsyncCommand}">
+                            <MenuFlyoutItem Text="{x:Bind strings:Resources.SaveProjectAs}" IsEnabled="{x:Bind ViewModel.ProjectService.CanSaveAsProject, Mode=OneWay}" Visibility="{x:Bind ShowActionExtentOptions, Mode=OneWay, Converter={StaticResource NegativeBoolVisibilityConverter}}" Command="{x:Bind ViewModel.SaveAsAsyncCommand}">
                                 <MenuFlyoutItem.Icon>
                                     <FontIcon Glyph="&#xE792;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                                 </MenuFlyoutItem.Icon>
@@ -215,7 +215,7 @@
                                     <KeyboardAccelerator Key="F12" />
                                 </MenuFlyoutItem.KeyboardAccelerators>
                             </MenuFlyoutItem>
-                            <MenuFlyoutSubItem Text="{x:Bind strings:Resources.SaveProjectAs}" IsEnabled="{x:Bind ViewModel.ProjectService.CanSaveAsProject, Mode=OneWay}" Visibility="{x:Bind ViewModel.CurrentProject.IsPdf, Mode=OneWay, Converter={StaticResource NegativeBoolVisibilityConverter}}">
+                            <MenuFlyoutSubItem Text="{x:Bind strings:Resources.SaveProjectAs}" IsEnabled="{x:Bind ViewModel.ProjectService.CanSaveAsProject, Mode=OneWay}" Visibility="{x:Bind ShowActionExtentOptions, Mode=OneWay}">
                                 <MenuFlyoutSubItem.Icon>
                                     <FontIcon Glyph="&#xE792;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                                 </MenuFlyoutSubItem.Icon>
@@ -399,12 +399,12 @@
                                     <KeyboardAccelerator Key="F2" />
                                 </MenuFlyoutItem.KeyboardAccelerators>
                             </MenuFlyoutItem>
-                            <MenuFlyoutItem Text="{x:Bind strings:Resources.Delete}" Visibility="{x:Bind ViewModel.CurrentProject.IsPdf, Mode=OneWay}" Command="{x:Bind ViewModel.TryDeleteProjectAsyncCommand}">
+                            <MenuFlyoutItem Text="{x:Bind strings:Resources.Delete}" Visibility="{x:Bind ShowActionExtentOptions, Mode=OneWay, Converter={StaticResource NegativeBoolVisibilityConverter}}" Command="{x:Bind ViewModel.TryDeleteProjectAsyncCommand}">
                                 <MenuFlyoutItem.Icon>
                                     <FontIcon Glyph="&#xE74D;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                                 </MenuFlyoutItem.Icon>
                             </MenuFlyoutItem>
-                            <MenuFlyoutSubItem Text="{x:Bind strings:Resources.Delete}" Visibility="{x:Bind ViewModel.CurrentProject.IsPdf, Mode=OneWay, Converter={StaticResource NegativeBoolVisibilityConverter}}">
+                            <MenuFlyoutSubItem Text="{x:Bind strings:Resources.Delete}" Visibility="{x:Bind ShowActionExtentOptions, Mode=OneWay}">
                                 <MenuFlyoutSubItem.Icon>
                                     <FontIcon Glyph="&#xE74D;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                                 </MenuFlyoutSubItem.Icon>
@@ -423,12 +423,12 @@
                                 </MenuFlyoutSubItem.Items>
                             </MenuFlyoutSubItem>
                             <MenuFlyoutSeparator />
-                            <MenuFlyoutItem Text="{x:Bind strings:Resources.Copy}" Visibility="{x:Bind ViewModel.CurrentProject.IsPdf, Mode=OneWay}" Command="{x:Bind ViewModel.TryCopyProjectOrPageAsyncCommand}">
+                            <MenuFlyoutItem Text="{x:Bind strings:Resources.Copy}" Visibility="{x:Bind ShowActionExtentOptions, Mode=OneWay, Converter={StaticResource NegativeBoolVisibilityConverter}}" Command="{x:Bind ViewModel.TryCopyProjectOrPageAsyncCommand}">
                                 <MenuFlyoutItem.Icon>
                                     <FontIcon Glyph="&#xE8C8;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                                 </MenuFlyoutItem.Icon>
                             </MenuFlyoutItem>
-                            <MenuFlyoutSubItem Text="{x:Bind strings:Resources.Copy}" Visibility="{x:Bind ViewModel.CurrentProject.IsPdf, Mode=OneWay, Converter={StaticResource NegativeBoolVisibilityConverter}}">
+                            <MenuFlyoutSubItem Text="{x:Bind strings:Resources.Copy}" Visibility="{x:Bind ShowActionExtentOptions, Mode=OneWay}">
                                 <MenuFlyoutSubItem.Icon>
                                     <FontIcon Glyph="&#xE8C8;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                                 </MenuFlyoutSubItem.Icon>
@@ -466,12 +466,12 @@
                                     <FontIcon Glyph="&#xE749;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                                 </MenuFlyoutItem.Icon>
                             </MenuFlyoutItem>
-                            <MenuFlyoutItem Text="{x:Bind strings:Resources.Share}" Visibility="{x:Bind ViewModel.CurrentProject.IsPdf, Mode=OneWay}" Command="{x:Bind ViewModel.TryShareProjectOrPageAsyncCommand}">
+                            <MenuFlyoutItem Text="{x:Bind strings:Resources.Share}" Visibility="{x:Bind ShowActionExtentOptions, Mode=OneWay, Converter={StaticResource NegativeBoolVisibilityConverter}}" Command="{x:Bind ViewModel.TryShareProjectOrPageAsyncCommand}">
                                 <MenuFlyoutItem.Icon>
                                     <FontIcon Glyph="&#xE72D;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                                 </MenuFlyoutItem.Icon>
                             </MenuFlyoutItem>
-                            <MenuFlyoutSubItem Text="{x:Bind strings:Resources.Share}" Visibility="{x:Bind ViewModel.CurrentProject.IsPdf, Mode=OneWay, Converter={StaticResource NegativeBoolVisibilityConverter}}">
+                            <MenuFlyoutSubItem Text="{x:Bind strings:Resources.Share}" Visibility="{x:Bind ShowActionExtentOptions, Mode=OneWay}">
                                 <MenuFlyoutSubItem.Icon>
                                     <FontIcon Glyph="&#xE72D;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                                 </MenuFlyoutSubItem.Icon>

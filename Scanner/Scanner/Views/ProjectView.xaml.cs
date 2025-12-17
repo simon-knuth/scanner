@@ -169,6 +169,8 @@ namespace Scanner.Views
         public string TotalPagesString => string.Format(GetLocalized(Scanner.Resources.Strings.ResourcesExtension.KeyEnum.TotalPagesIndicator), ViewModel.ProjectService.TotalNumberOfPages);
         public string SelectedFileString => string.Format(GetLocalized(Scanner.Resources.Strings.ResourcesExtension.KeyEnum.SelectedFileIndicator), ViewModel.ProjectService.SelectedPage?.PageNumber, ViewModel.ProjectService.TotalNumberOfPages);
 
+        public bool ShowActionExtentOptions => ViewModel.CurrentProject != null && !ViewModel.CurrentProject.IsPdf && ViewModel.CurrentProject.Pages.Count > 1;
+
         private bool showEntranceExitAnimations;
 
         private ScrollViewer? carouselScrollViewer;
@@ -185,6 +187,7 @@ namespace Scanner.Views
 
             ViewModel.PropertyChanged += ViewModel_PropertyChanged;
             ViewModel.ProjectService.PropertyChanged += ProjectService_PropertyChanged;
+            ViewModel.PropertyChanging += ViewModel_PropertyChanging;
 
             WeakReferenceMessenger.Default.Register<InvokeShareUIMessage>(this, (r, m) => InvokeShareUI());
         }
@@ -209,7 +212,14 @@ namespace Scanner.Views
                     {
                         OnPropertyChanged(nameof(ShowTextBlockTotalPages));
                         OnPropertyChanged(nameof(ShowFileNameGenerationButton));
+                        OnPropertyChanged(nameof(ShowActionExtentOptions));
                     });
+
+                    if (ViewModel.CurrentProject != null)
+                    {
+                        ViewModel.CurrentProject.PagesAdded += CurrentProject_PagesAddedOrRemoved;
+                        ViewModel.CurrentProject.PagesRemoved += CurrentProject_PagesAddedOrRemoved;
+                    }
                     break;
                 case nameof(ViewModel.IsMultiSelect):
                     this.RunOnUIThread(Microsoft.UI.Dispatching.DispatcherQueuePriority.Normal, ApplyIsMultiSelect);
@@ -225,7 +235,15 @@ namespace Scanner.Views
                     break;
             }
         }
-        
+
+        private void CurrentProject_PagesAddedOrRemoved(object? sender, EventArgs e)
+        {
+            this.RunOnUIThread(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, () =>
+            {
+                OnPropertyChanged(nameof(ShowActionExtentOptions));
+            });
+        }
+
         private void ProjectService_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             switch (e.PropertyName)
@@ -285,6 +303,20 @@ namespace Scanner.Views
                         OnPropertyChanged(nameof(TotalPagesString));
                         OnPropertyChanged(nameof(SelectedFileString));
                     });
+                    break;
+            }
+        }
+
+        private void ViewModel_PropertyChanging(object? sender, System.ComponentModel.PropertyChangingEventArgs e)
+        {
+            switch (e.PropertyName)
+            {
+                case nameof(ViewModel.CurrentProject):
+                    if (ViewModel.CurrentProject != null)
+                    {
+                        ViewModel.CurrentProject.PagesAdded -= CurrentProject_PagesAddedOrRemoved;
+                        ViewModel.CurrentProject.PagesRemoved -= CurrentProject_PagesAddedOrRemoved;
+                    }
                     break;
             }
         }
