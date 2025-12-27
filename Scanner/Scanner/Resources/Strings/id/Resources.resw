@@ -1590,6 +1590,33 @@ Fuzzy</comment>
   <data name="GiveFeedback" xml:space="preserve">
     <value />
   </data>
+  <data name="PaperSizeInternationalDINA3" xml:space="preserve">
+    <value>DIN A3</value>
+  </data>
+  <data name="PaperSizeInternationalDINA4" xml:space="preserve">
+    <value>DIN A4</value>
+  </data>
+  <data name="PaperSizeInternationalDINA5" xml:space="preserve">
+    <value>DIN A5</value>
+  </data>
+  <data name="ScanAreaAlignmentBody" xml:space="preserve">
+    <value />
+  </data>
+  <data name="OrientationPortrait" xml:space="preserve">
+    <value />
+  </data>
+  <data name="OrientationLandscape" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Tip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="ScanAreaAlignmentTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="ScanAlignmentPreview" xml:space="preserve">
+    <value />
+  </data>
   <data name="SettingsFileNamingCustomPatternExplanation" xml:space="preserve">
     <value>Seret dan lepas blok untuk membuat pola penamaan file dinamis anda sendiri. Pilih blok untuk mengubah outputnya atau seret ke tempat sampah untuk menghapusnya.</value>
     <comment>The description for the custom file naming dialog.</comment>

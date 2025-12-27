@@ -1388,6 +1388,33 @@ Trunchierea „o singură regiune” creează o singură imagine, mod util pentr
   <data name="GiveFeedback" xml:space="preserve">
     <value />
   </data>
+  <data name="PaperSizeInternationalDINA3" xml:space="preserve">
+    <value>DIN A3</value>
+  </data>
+  <data name="PaperSizeInternationalDINA4" xml:space="preserve">
+    <value>DIN A4</value>
+  </data>
+  <data name="PaperSizeInternationalDINA5" xml:space="preserve">
+    <value>DIN A5</value>
+  </data>
+  <data name="ScanAreaAlignmentBody" xml:space="preserve">
+    <value />
+  </data>
+  <data name="OrientationPortrait" xml:space="preserve">
+    <value />
+  </data>
+  <data name="OrientationLandscape" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Tip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="ScanAreaAlignmentTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="ScanAlignmentPreview" xml:space="preserve">
+    <value />
+  </data>
   <data name="SettingsFileNamingCustomPatternExplanation" xml:space="preserve">
     <value>Trageți și mutați blocuri pentru a vă crea propriul sistem dinamic de denumire a fișierelor. Selectați un bloc pentru a-i modifica opțiunile sau trageți-l în coș pentru a-l șterge.</value>
     <comment>The description for the custom file naming dialog.</comment>

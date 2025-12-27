@@ -67,6 +67,14 @@ namespace Scanner.Services.Interfaces
         }
 
         /// <summary>
+        /// Holds scans for previews, including the one for scan area alignment.
+        /// </summary>
+        StorageFolder PreviewScanFolder
+        {
+            get;
+        }
+
+        /// <summary>
         /// Holds prior file states for undo.
         /// </summary>
         StorageFolder UndoFolder

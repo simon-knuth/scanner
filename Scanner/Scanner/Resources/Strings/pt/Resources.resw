@@ -1591,6 +1591,33 @@ Fuzzy</comment>
   <data name="GiveFeedback" xml:space="preserve">
     <value />
   </data>
+  <data name="PaperSizeInternationalDINA3" xml:space="preserve">
+    <value>DIN A3</value>
+  </data>
+  <data name="PaperSizeInternationalDINA4" xml:space="preserve">
+    <value>DIN A4</value>
+  </data>
+  <data name="PaperSizeInternationalDINA5" xml:space="preserve">
+    <value>DIN A5</value>
+  </data>
+  <data name="ScanAreaAlignmentBody" xml:space="preserve">
+    <value />
+  </data>
+  <data name="OrientationPortrait" xml:space="preserve">
+    <value />
+  </data>
+  <data name="OrientationLandscape" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Tip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="ScanAreaAlignmentTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="ScanAlignmentPreview" xml:space="preserve">
+    <value />
+  </data>
   <data name="SettingsFileNamingCustomPatternExplanation" xml:space="preserve">
     <value>Arraste e largue blocos para construir o seu próprio padrão dinâmico de nomes de ficheiros. Selecione um bloco para modificar o seu resultado ou arraste-o para o lixo para removê-lo.</value>
     <comment>The description for the custom file naming dialog.</comment>

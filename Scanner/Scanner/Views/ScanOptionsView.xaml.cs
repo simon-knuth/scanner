@@ -1,3 +1,4 @@
+using CommunityToolkit.Labs.WinUI;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -8,8 +9,10 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Microsoft.UI.Xaml.Navigation;
 using Scanner.Extensions;
+using Scanner.Helpers;
 using Scanner.Models;
 using Scanner.Models.Interfaces;
+using Scanner.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -283,27 +286,141 @@ namespace Scanner.Views
         }
         #endregion
 
+        #region Scan area
+        public bool IsScanAreaSelectionVisible => ViewModel.SelectedScanner != null && ViewModel.ScanOptions.SourceMode is ScannerSource.Flatbed or ScannerSource.Feeder;
+        public bool IsScanAreaAlignmentVisible => ViewModel.SelectedScanner != null && ViewModel.ScanOptions.SourceMode is ScannerSource.Flatbed && IsPaperSizeAreaSelected;
+
+        public Size MaxScanArea
+        {
+            get
+            {
+                if (ViewModel.SelectedScanner == null)
+                    return new Size(0, 0);
+
+                switch (ViewModel.ScanOptions.SourceMode)
+                {
+                    case ScannerSource.Flatbed:
+                        return ViewModel.SelectedScanner.FlatbedMaxScanArea;
+                    case ScannerSource.Feeder:
+                        return ViewModel.SelectedScanner.FeederMaxScanArea;
+                    case ScannerSource.Auto:
+                    case ScannerSource.None:
+                    default:
+                        return new Size(0, 0);
+                }
+            }
+        }
+
+        public bool IsPaperSizeAreaSelected => ViewModel.ScanOptions.ScanArea is PaperSizeArea;
+
+        public PaperSize SelectedPaperSize
+        {
+            get => ScanOptions.ScanArea is PaperSizeArea paperSizeArea ? paperSizeArea.PaperSize : PaperSize.DinA4;
+            set
+            {
+                if (ScanOptions.ScanArea is PaperSizeArea paperSizeArea)
+                    paperSizeArea.PaperSize = value;
+            }
+        }
+
+        public int SelectedOrientationInt
+        {
+            get => ScanOptions.ScanArea is PaperSizeArea paperSizeArea ? (int)paperSizeArea.Orientation : -1;
+            set
+            {
+                if (ScanOptions.ScanArea is PaperSizeArea paperSizeArea)
+                    paperSizeArea.Orientation = (ScanOrientation)value;
+            }
+        }
+
+        public ScanOrientation SelectedOrientation
+        {
+            get => ScanOptions.ScanArea is PaperSizeArea paperSizeArea ? paperSizeArea.Orientation : ScanOrientation.Portrait;
+            set
+            {
+                if (ScanOptions.ScanArea is PaperSizeArea paperSizeArea)
+                    paperSizeArea.Orientation = value;
+            }
+        }
+        
+        public bool IsTopLeftScanCornerSelected
+        {
+            get => ScanOptions.ScanArea is PaperSizeArea paperSizeArea ? paperSizeArea.Corner == ScanCorner.TopLeft : false;
+            set
+            {
+                if (value && ScanOptions.ScanArea is PaperSizeArea paperSizeArea)
+                    paperSizeArea.Corner = ScanCorner.TopLeft;
+            }
+        }
+
+        public ScanCorner SelectedCorner
+        {
+            get => ScanOptions.ScanArea is PaperSizeArea paperSizeArea ? paperSizeArea.Corner : ScanCorner.TopLeft;
+            set
+            {
+                if (ScanOptions.ScanArea is PaperSizeArea paperSizeArea)
+                    paperSizeArea.Corner = value;
+            }
+        }
+
+        public bool IsTopRightScanCornerSelected
+        {
+            get => ScanOptions.ScanArea is PaperSizeArea paperSizeArea ? paperSizeArea.Corner == ScanCorner.TopRight : false;
+            set
+            {
+                if (value && ScanOptions.ScanArea is PaperSizeArea paperSizeArea)
+                    paperSizeArea.Corner = ScanCorner.TopRight;
+            }
+        }
+
+        public bool IsBottomRightScanCornerSelected
+        {
+            get => ScanOptions.ScanArea is PaperSizeArea paperSizeArea ? paperSizeArea.Corner == ScanCorner.BottomRight : false;
+            set
+            {
+                if (value && ScanOptions.ScanArea is PaperSizeArea paperSizeArea)
+                    paperSizeArea.Corner = ScanCorner.BottomRight;
+            }
+        }
+
+        public bool IsBottomLeftScanCornerSelected
+        {
+            get => ScanOptions.ScanArea is PaperSizeArea paperSizeArea ? paperSizeArea.Corner == ScanCorner.BottomLeft : false;
+            set
+            {
+                if (value && ScanOptions.ScanArea is PaperSizeArea paperSizeArea)
+                    paperSizeArea.Corner = ScanCorner.BottomLeft;
+            }
+        }
+        #endregion
+
         #region Auto crop
         public bool IsAutoCropDisabled
         {
-            get => ViewModel.ScanOptions.AutoCropMode == ScannerAutoCropMode.Disabled;
+            get => ViewModel.ScanOptions.ScanArea is not AutoCropArea autoCropRegion || autoCropRegion.AutoCropMode == ScannerAutoCropMode.Disabled;
             set
             {
                 if (value)
                 {
-                    ViewModel.ScanOptions.AutoCropMode = ScannerAutoCropMode.Disabled;
+                    ViewModel.ScanOptions.ScanArea = new AutoCropArea
+                    {
+                        AutoCropMode = ScannerAutoCropMode.Disabled
+                    };
                 }
             }
         }
 
         public bool IsAutoCropSingle
         {
-            get => ViewModel.ScanOptions.AutoCropMode == ScannerAutoCropMode.SingleRegion;
+            get => ViewModel.ScanOptions.ScanArea is AutoCropArea autoCropRegion && autoCropRegion.AutoCropMode == ScannerAutoCropMode.SingleRegion;
             set
             {
                 if (value)
                 {
-                    ViewModel.ScanOptions.AutoCropMode = ScannerAutoCropMode.SingleRegion;
+                    ViewModel.ScanOptions.ScanArea = new AutoCropArea
+                    {
+                        AutoCropMode = ScannerAutoCropMode.SingleRegion
+                    };
                 }
             }
         }
@@ -330,12 +447,15 @@ namespace Scanner.Views
 
         public bool IsAutoCropMulti
         {
-            get => ViewModel.ScanOptions.AutoCropMode == ScannerAutoCropMode.MultipleRegions;
+            get => ViewModel.ScanOptions.ScanArea is AutoCropArea autoCropRegion && autoCropRegion.AutoCropMode == ScannerAutoCropMode.MultipleRegions;
             set
             {
                 if (value)
                 {
-                    ViewModel.ScanOptions.AutoCropMode = ScannerAutoCropMode.MultipleRegions;
+                    ViewModel.ScanOptions.ScanArea = new AutoCropArea
+                    {
+                        AutoCropMode = ScannerAutoCropMode.MultipleRegions
+                    };
                 }
             }
         }
@@ -361,7 +481,7 @@ namespace Scanner.Views
         }
         #endregion
 
-        #region Brightness & Contrast
+        #region Brightness & contrast
         public bool CanResetBrightness => ViewModel.ScanOptions.Brightness != 0;
         public bool CanResetContrast => ViewModel.ScanOptions.Contrast != 0;
         #endregion
@@ -378,6 +498,8 @@ namespace Scanner.Views
             && ViewModel.ScanOptions?.SourceMode == ScannerSource.Feeder
             && ViewModel.SelectedScanner.IsFeederDuplexSupported;
 
+        public bool CanPreviewScan => ScanOptions?.Scanner != null && ScanOptions.Scanner.IsPreviewSupported(ScanOptions.SourceMode);
+
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
@@ -391,7 +513,10 @@ namespace Scanner.Views
             ViewModel.Scanners.CollectionChanged += Scanners_CollectionChanged;
 
             if (ViewModel.ScanOptions != null)
+            {
                 ViewModel.ScanOptions.PropertyChanged += ScanOptions_PropertyChanged;
+                ViewModel.ScanOptions.PropertyChanging += ScanOptions_PropertyChanging;
+            }
         }
 
 
@@ -406,6 +531,7 @@ namespace Scanner.Views
                     if (ViewModel.ScanOptions != null)
                     {
                         ViewModel.ScanOptions.PropertyChanged -= ScanOptions_PropertyChanged;
+                        ViewModel.ScanOptions.PropertyChanging -= ScanOptions_PropertyChanging;
                     }
                     break;
             }
@@ -440,6 +566,8 @@ namespace Scanner.Views
                             {
                                 ComboBoxScanners.SelectedIndex = ComboBoxScanners.Items.Count - invalidScannerItems;
                             }
+
+                            FlyoutScanAreaAlignment?.Hide();
                         }
                     });
                     break;
@@ -474,10 +602,32 @@ namespace Scanner.Views
                         OnPropertyChanged(nameof(IsAutoCropMulti));
                         OnPropertyChanged(nameof(IsAutoCropMultiSupported));
                         OnPropertyChanged(nameof(IsDuplexVisible));
+                        OnPropertyChanged(nameof(CanPreviewScan));
+                        OnPropertyChanged(nameof(MaxScanArea));
+                        OnPropertyChanged(nameof(IsPaperSizeAreaSelected));
+                        OnPropertyChanged(nameof(IsScanAreaSelectionVisible));
+                        OnPropertyChanged(nameof(IsScanAreaAlignmentVisible));
+                        OnPropertyChanged(nameof(IsTopLeftScanCornerSelected));
+                        OnPropertyChanged(nameof(IsTopRightScanCornerSelected));
+                        OnPropertyChanged(nameof(IsBottomLeftScanCornerSelected));
+                        OnPropertyChanged(nameof(IsBottomRightScanCornerSelected));
+                        OnPropertyChanged(nameof(SelectedOrientation));
+                        OnPropertyChanged(nameof(SelectedOrientationInt));
 
                         OnPropertyChanged(nameof(ScanOptions));
+
+                        ApplyScanAreaToComboBox(ScanOptions.ScanArea);
                     });
                     break;
+            }
+        }
+
+        private void ScanOptions_PropertyChanging(object? sender, System.ComponentModel.PropertyChangingEventArgs e)
+        {
+            if (e.PropertyName == nameof(ScanOptions.ScanArea))
+            {
+                if (ScanOptions.ScanArea is PaperSizeArea paperSizeArea)
+                    paperSizeArea.PropertyChanged -= PaperSizeArea_PropertyChanged;
             }
         }
 
@@ -502,6 +652,10 @@ namespace Scanner.Views
                         OnPropertyChanged(nameof(IsAutoCropSingle));
                         OnPropertyChanged(nameof(IsAutoCropMulti));
                         OnPropertyChanged(nameof(IsDuplexVisible));
+                        OnPropertyChanged(nameof(CanPreviewScan));
+                        OnPropertyChanged(nameof(MaxScanArea));
+                        OnPropertyChanged(nameof(IsScanAreaSelectionVisible));
+                        OnPropertyChanged(nameof(IsScanAreaAlignmentVisible));
                     });
                     break;
                 case nameof(ScanOptions.ColorMode):
@@ -536,7 +690,7 @@ namespace Scanner.Views
                         OnPropertyChanged(nameof(CanResetContrast));
                     });
                     break;
-                case nameof(ScanOptions.AutoCropMode):
+                case nameof(ScanOptions.ScanArea):
                     this.RunOnUIThread(Microsoft.UI.Dispatching.DispatcherQueuePriority.Normal, () =>
                     {
                         OnPropertyChanged(nameof(IsAutoCropDisabled));
@@ -544,17 +698,31 @@ namespace Scanner.Views
                         OnPropertyChanged(nameof(IsAutoCropSingleSupported));
                         OnPropertyChanged(nameof(IsAutoCropMulti));
                         OnPropertyChanged(nameof(IsAutoCropMultiSupported));
+                        OnPropertyChanged(nameof(IsPaperSizeAreaSelected));
+                        OnPropertyChanged(nameof(IsScanAreaAlignmentVisible));
+                        OnPropertyChanged(nameof(IsTopLeftScanCornerSelected));
+                        OnPropertyChanged(nameof(IsTopRightScanCornerSelected));
+                        OnPropertyChanged(nameof(IsBottomLeftScanCornerSelected));
+                        OnPropertyChanged(nameof(IsBottomRightScanCornerSelected));
+                        OnPropertyChanged(nameof(SelectedOrientation));
+                        OnPropertyChanged(nameof(SelectedOrientationInt));
+                        ApplyScanAreaToComboBox(ScanOptions.ScanArea);
                     });
+                    
+                    if (ScanOptions.ScanArea is PaperSizeArea paperSizeArea)
+                        paperSizeArea.PropertyChanged += PaperSizeArea_PropertyChanged;
                     break;
             }
         }
 
-        private void ComboBoxFileFormats_SizeChanged(object sender, SizeChangedEventArgs e)
+        private void PaperSizeArea_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            foreach (ComboBoxItem item in ComboBoxFileFormats.Items)
-            {
-                item.MaxWidth = e.NewSize.Width;
-            }
+            OnPropertyChanged(nameof(IsTopLeftScanCornerSelected));
+            OnPropertyChanged(nameof(IsTopRightScanCornerSelected));
+            OnPropertyChanged(nameof(IsBottomLeftScanCornerSelected));
+            OnPropertyChanged(nameof(IsBottomRightScanCornerSelected));
+            OnPropertyChanged(nameof(SelectedOrientation));
+            OnPropertyChanged(nameof(SelectedOrientationInt));
         }
 
         private void GridContent_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -743,14 +911,6 @@ namespace Scanner.Views
             ViewModel.ResetContrastCommand.Execute(null);
         }
 
-        private void ComboBoxScanners_SizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            foreach (ComboBoxItem item in ComboBoxScanners.Items)
-            {
-                item.MaxWidth = e.NewSize.Width;
-            }
-        }
-
         private void ComboBoxScanners_Loading(FrameworkElement sender, object args)
         {
             if (ViewModel.SelectedScanner == null)
@@ -761,6 +921,90 @@ namespace Scanner.Views
         {
             if (ViewModel.SelectedScanner == null)
                 ComboBoxScanners.SelectedIndex = ComboBoxScanners.Items.Count - invalidScannerItems;
+        }
+
+        private void ComboBoxScanArea_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ComboBoxItem? item = ComboBoxScanArea.SelectedItem as ComboBoxItem;
+            if (item == null)
+                return;
+            
+            if (item == ComboBoxItemScanEverything)
+            {
+                IsAutoCropDisabled = true;
+            }
+            else if (item == ComboBoxItemAutoCropSingle)
+            {
+                IsAutoCropSingle = true;
+            }
+            else if (item == ComboBoxItemAutoCropMulti)
+            {
+                IsAutoCropMulti = true;
+            }
+            else if (item.Tag is PaperSize paperSize)
+            {
+                if (ScanOptions.ScanArea is PaperSizeArea paperSizeArea)
+                {
+                    paperSizeArea.PaperSize = paperSize;
+                }
+                else
+                {
+                    ScanOptions.ScanArea = new PaperSizeArea
+                    {
+                        PaperSize = paperSize
+                    };
+                }
+            }
+        }
+
+        private void FrameComboBoxScanners_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            foreach (ComboBoxItem item in ComboBoxScanners.Items)
+            {
+                item.MaxWidth = e.NewSize.Width;
+            }
+        }
+
+        private void ApplyScanAreaToComboBox(ScanArea? scanArea)
+        {
+            if (ComboBoxScanArea == null)
+                return;
+
+            if (scanArea == null)
+            {
+                ComboBoxScanArea.SelectedItem = ComboBoxItemScanEverything;
+            }
+            else if (scanArea is AutoCropArea autoCropArea)
+            {
+                if (autoCropArea.AutoCropMode == ScannerAutoCropMode.Disabled)
+                {
+                    ComboBoxScanArea.SelectedItem = ComboBoxItemScanEverything;
+                }
+                else if (autoCropArea.AutoCropMode == ScannerAutoCropMode.SingleRegion)
+                {
+                    ComboBoxScanArea.SelectedItem = ComboBoxItemAutoCropSingle;
+                }
+                else if (autoCropArea.AutoCropMode == ScannerAutoCropMode.MultipleRegions)
+                {
+                    ComboBoxScanArea.SelectedItem = ComboBoxItemAutoCropMulti;
+                }
+            }
+            else if (scanArea is PaperSizeArea paperSizeArea)
+            {
+                foreach (ComboBoxItem item in ComboBoxScanArea.Items)
+                {
+                    if (item.Tag is PaperSize paperSize && paperSize == paperSizeArea.PaperSize)
+                    {
+                        ComboBoxScanArea.SelectedItem = item;
+                        return;
+                    }
+                }
+            }
+        }
+
+        private void ComboBoxScanArea_Loading(FrameworkElement sender, object args)
+        {
+            ApplyScanAreaToComboBox(ViewModel.ScanOptions.ScanArea);
         }
     }
 }

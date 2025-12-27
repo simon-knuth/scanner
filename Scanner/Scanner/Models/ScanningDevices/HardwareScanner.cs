@@ -16,6 +16,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.Devices.Enumeration;
 using Windows.Devices.Scanners;
+using Windows.Foundation;
 using Windows.Foundation.Metadata;
 using Windows.Storage;
 using WinRT.Interop;
@@ -58,6 +59,9 @@ namespace Scanner.Models.ScanningDevices
         public bool IsFlatbedAutoCropMultiRegionAllowed { get; private set; }
 
         public List<ScanResolution> FlatbedResolutions { get; private set; }
+
+        public Size FlatbedMinScanArea { get; private set; }
+        public Size FlatbedMaxScanArea { get; private set; }
         #endregion
 
         #region Feeder
@@ -78,6 +82,9 @@ namespace Scanner.Models.ScanningDevices
         public bool IsFeederDuplexSupported { get; private set; }
 
         public List<ScanResolution> FeederResolutions { get; private set; }
+
+        public Size FeederMinScanArea { get; private set; }
+        public Size FeederMaxScanArea { get; private set; }
         #endregion
 
 
@@ -170,6 +177,9 @@ namespace Scanner.Models.ScanningDevices
                     {
                         LogService?.Log.Information("HardwareScanner - Generated {@Resolutions} for flatbed", FlatbedResolutions);
                     }
+
+                    FlatbedMinScanArea = device.FlatbedConfiguration.MinScanArea;
+                    FlatbedMaxScanArea = device.FlatbedConfiguration.MaxScanArea;
                 }
             }
 
@@ -243,6 +253,9 @@ namespace Scanner.Models.ScanningDevices
                     {
                         LogService?.Log.Information("HardwareScanner - Generated {@Resolutions} for feeder", FeederResolutions);
                     }
+
+                    FeederMinScanArea = device.FeederConfiguration.MinScanArea;
+                    FeederMaxScanArea = device.FeederConfiguration.MaxScanArea;
                 }
             }
 
@@ -313,17 +326,11 @@ namespace Scanner.Models.ScanningDevices
                         imageScanner.FlatbedConfiguration.AutoCroppingMode = scanOptions.GetAutoCropModeForScanner();
 
                     // scan region
-                    if (scanOptions.SelectedRegion != null)
+                    if (scanOptions.ScanArea is RectScanArea rectScanRegionFlatbed)
                     {
                         try
                         {
-                            imageScanner.FlatbedConfiguration.SelectedScanRegion = new Windows.Foundation.Rect
-                            {
-                                X = scanOptions.SelectedRegion.Value.X,
-                                Y = scanOptions.SelectedRegion.Value.Y,
-                                Width = scanOptions.SelectedRegion.Value.Width,
-                                Height = scanOptions.SelectedRegion.Value.Height
-                            };
+                            imageScanner.FlatbedConfiguration.SelectedScanRegion = rectScanRegionFlatbed.GetRect(imageScanner.FlatbedConfiguration);
                         }
                         catch (Exception exc)
                         {
@@ -332,7 +339,7 @@ namespace Scanner.Models.ScanningDevices
                     }
                     else
                     {
-                        imageScanner.FlatbedConfiguration.SelectedScanRegion = new Windows.Foundation.Rect
+                        imageScanner.FlatbedConfiguration.SelectedScanRegion = new Rect
                         {
                             X = 0,
                             Y = 0,
@@ -358,6 +365,29 @@ namespace Scanner.Models.ScanningDevices
                     // auto crop mode
                     if (IsFeederAutoCropAllowed)
                         imageScanner.FeederConfiguration.AutoCroppingMode = scanOptions.GetAutoCropModeForScanner();
+
+                    // scan region
+                    if (scanOptions.ScanArea is RectScanArea rectScanRegionFeeder)
+                    {
+                        try
+                        {
+                            imageScanner.FeederConfiguration.SelectedScanRegion = rectScanRegionFeeder.GetRect(imageScanner.FeederConfiguration);
+                        }
+                        catch (Exception exc)
+                        {
+                            throw new ArgumentException("Selected scan region is invalid", exc);
+                        }
+                    }
+                    else
+                    {
+                        imageScanner.FeederConfiguration.SelectedScanRegion = new Rect
+                        {
+                            X = 0,
+                            Y = 0,
+                            Width = imageScanner.FeederConfiguration.PageSizeDimensions.Width,
+                            Height = imageScanner.FeederConfiguration.PageSizeDimensions.Height
+                        };
+                    }
 
                     // multiple pages
                     if (scanOptions.ScanMultiplePages)

@@ -38,6 +38,7 @@ namespace Scanner.Services
         private const string ChangesFolderName = "Changes";
         private const string PreviewFolderName = "Preview";
         private const string PdfOutputFolderName = "PdfOutput";
+        private const string PreviewScanFolderName = "PreviewScan";
         private const string UndoFolderName = "Undo";
         private const string RedoFolderName = "Redo";
 
@@ -48,6 +49,7 @@ namespace Scanner.Services
         public StorageFolder PreviewFolder { get; private set; }
         public StorageFolder EffectsAppliedForPdfFolder { get; private set; }
         public StorageFolder PdfOutputFolder { get; private set; }
+        public StorageFolder PreviewScanFolder { get; private set; }
         public StorageFolder UndoFolder { get; private set; }
         public StorageFolder RedoFolder { get; private set; }
 
@@ -94,6 +96,7 @@ namespace Scanner.Services
             ChangesFolder = await CreateOrReplaceFolderAsync(ChangesFolderName);
             PreviewFolder = await CreateOrReplaceFolderAsync(PreviewFolderName);
             PdfOutputFolder = await CreateOrReplaceFolderAsync(PdfOutputFolderName);
+            PreviewScanFolder = await CreateOrReplaceFolderAsync(PreviewScanFolderName);
             UndoFolder = await CreateOrReplaceFolderAsync(UndoFolderName);
             RedoFolder = await CreateOrReplaceFolderAsync(RedoFolderName);
 
@@ -146,6 +149,10 @@ namespace Scanner.Services
             else if (folder == PdfOutputFolder)
             {
                 return Path.Combine("ms-appdata:///temp/", PdfOutputFolderName, fileName);
+            }
+            else if (folder == PreviewScanFolder)
+            {
+                return Path.Combine("ms-appdata:///temp/", PreviewScanFolderName, fileName);
             }
             else
             {

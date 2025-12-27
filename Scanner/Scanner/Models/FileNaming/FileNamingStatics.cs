@@ -117,7 +117,7 @@ namespace Scanner.Models.FileNaming
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////        
         public static ScanOptions GetPreviewScanOptions(IScanningDevice? scanner)
         {
-            return new ScanOptions(scanner ?? PreviewScanner)
+            return new ScanOptions(scanner ?? PreviewScanner, false)
             {
                 Brightness = -20,
                 Contrast = 5,

@@ -33,7 +33,6 @@ namespace Scanner.Helpers
             { PaperSize.Kai8, new(0 , 0, 260, 370) },
             { PaperSize.Kai16, new(0 , 0, 185, 260) },
             { PaperSize.Kai32, new(0 , 0, 130, 185) },
-            { PaperSize.Letter, new(0 , 0, 216, 279) },
             { PaperSize.Legal, new(0 , 0, 216, 356) },
         };
 
@@ -61,14 +60,13 @@ namespace Scanner.Helpers
         DinA3 = 1,
         DinA4 = 2,
         DinA5 = 3,
-        AnsiA = 5,
-        AnsiB = 6,
-        AnsiC = 7,
-        Kai8 = 8,
-        Kai16 = 9,
-        Kai32 = 10,
-        Letter = 11,
-        Legal = 12,
+        AnsiA = 4,
+        AnsiB = 5,
+        AnsiC = 6,
+        Kai8 = 7,
+        Kai16 = 8,
+        Kai32 = 9,
+        Legal = 10,
     }
 
     public enum AspectRatio

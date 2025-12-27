@@ -13,6 +13,7 @@ using System.ComponentModel.DataAnnotations;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Windows.Devices.Scanners;
 using Windows.Storage;
+using Windows.Foundation;
 
 namespace Scanner.Models.Interfaces
 {
@@ -48,6 +49,9 @@ namespace Scanner.Models.Interfaces
         public bool IsFlatbedAutoCropSupported => IsFlatbedAutoCropSingleRegionAllowed || IsFlatbedAutoCropMultiRegionAllowed;
 
         public List<ScanResolution> FlatbedResolutions { get; }
+
+        public Size FlatbedMinScanArea { get; }
+        public Size FlatbedMaxScanArea { get; }
         #endregion
 
         #region Feeder
@@ -68,6 +72,9 @@ namespace Scanner.Models.Interfaces
         public bool IsFeederDuplexSupported { get; }
 
         public List<ScanResolution> FeederResolutions { get; }
+
+        public Size FeederMinScanArea { get; }
+        public Size FeederMaxScanArea { get; }
         #endregion
 
         #region Scan properties overview

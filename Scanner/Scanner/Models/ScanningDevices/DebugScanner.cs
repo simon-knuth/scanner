@@ -62,6 +62,9 @@ namespace Scanner.Models.ScanningDevices
         public bool IsFlatbedAutoCropMultiRegionAllowed { get; private set; }
 
         public List<ScanResolution> FlatbedResolutions { get; private set; }
+
+        public Size FlatbedMinScanArea { get; private set; } = new Size(1, 1);
+        public Size FlatbedMaxScanArea { get; private set; } = new Size(13, 9);
         #endregion
 
         #region Feeder
@@ -81,6 +84,9 @@ namespace Scanner.Models.ScanningDevices
         public bool IsFeederDuplexSupported { get; private set; }
 
         public List<ScanResolution> FeederResolutions { get; private set; }
+
+        public Size FeederMinScanArea { get; } = new Size(3, 3);
+        public Size FeederMaxScanArea { get; } = new Size(9, 13);
         #endregion
 
 

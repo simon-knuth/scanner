@@ -1848,6 +1848,45 @@ Fuzzy</comment>
   <data name="GiveFeedbackDialogInfoBody" xml:space="preserve">
     <value>This app is free and open-source, mostly built by a single developer. While you may not get a reply to your message, your feedback truly helps shape the future of this project. Thank you for being part of it.</value>
   </data>
+  <data name="ProjectActionApplyOrderToPages" xml:space="preserve">
+    <value>Reorder pages</value>
+  </data>
+  <data name="ExportInProgress" xml:space="preserve">
+    <value>Export in progress...</value>
+  </data>
+  <data name="FileFormatSinglePagePDF" xml:space="preserve">
+    <value>Single-page PDF</value>
+  </data>
+  <data name="FileFormatDescriptionSinglePagePDF" xml:space="preserve">
+    <value>One PDF file per page. Viewable on any device, but difficult to edit later.</value>
+  </data>
+  <data name="PaperSizeInternationalDINA3" xml:space="preserve">
+    <value>DIN A3</value>
+  </data>
+  <data name="PaperSizeInternationalDINA4" xml:space="preserve">
+    <value>DIN A4</value>
+  </data>
+  <data name="PaperSizeInternationalDINA5" xml:space="preserve">
+    <value>DIN A5</value>
+  </data>
+  <data name="ScanAreaAlignmentBody" xml:space="preserve">
+    <value>Select the corner in which documents are placed. Use the button below to scan a preview, which can help you select the right corner.</value>
+  </data>
+  <data name="OrientationPortrait" xml:space="preserve">
+    <value>Portrait</value>
+  </data>
+  <data name="OrientationLandscape" xml:space="preserve">
+    <value>Landscape</value>
+  </data>
+  <data name="Tip" xml:space="preserve">
+    <value>Tip</value>
+  </data>
+  <data name="ScanAreaAlignmentTip" xml:space="preserve">
+    <value>Keep the flatbed cover open during the preview scan</value>
+  </data>
+  <data name="ScanAlignmentPreview" xml:space="preserve">
+    <value>Scan alignment preview</value>
+  </data>
   <data name="SettingsFileNamingCustomPatternExplanation" xml:space="preserve">
     <value>Drag and drop blocks to build your own dynamic file naming pattern. Select a block to modify its output or drag it into the bin to remove it.</value>
     <comment>The description for the custom file naming dialog.</comment>
@@ -1865,28 +1904,22 @@ Fuzzy</comment>
   <data name="ProjectActionSetContrast" xml:space="preserve">
     <value>Change contrast</value>
   </data>
-  <data name="ProjectActionApplyOrderToPages" xml:space="preserve">
-    <value>Reorder pages</value>
-  </data>
   <data name="ExportSelectedPagesAsSeparatePDF" xml:space="preserve">
     <value>Export selected pages as separate PDF...</value>
   </data>
   <data name="ExportAllPagesAsSeparatePDFs" xml:space="preserve">
     <value>Export all pages as separate PDFs...</value>
   </data>
-  <data name="ExportInProgress" xml:space="preserve">
-    <value>Export in progress...</value>
-  </data>
-  <data name="FileFormatSinglePagePDF" xml:space="preserve">
-    <value>Single-page PDF</value>
-  </data>
-  <data name="FileFormatDescriptionSinglePagePDF" xml:space="preserve">
-    <value>One PDF file per page. Viewable on any device, but difficult to edit later.</value>
-  </data>
   <data name="SearchingKnownScanners" xml:space="preserve">
     <value>Searching known scanners...</value>
   </data>
   <data name="ManageScanners" xml:space="preserve">
     <value>Manage scanners</value>
+  </data>
+  <data name="ScanAreaHeading" xml:space="preserve">
+    <value>Scan area</value>
+  </data>
+  <data name="ScanAreaAlignmentHeading" xml:space="preserve">
+    <value>Scan area alignment</value>
   </data>
 </root>

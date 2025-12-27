@@ -1590,6 +1590,33 @@ Fuzzy</comment>
   <data name="GiveFeedback" xml:space="preserve">
     <value />
   </data>
+  <data name="PaperSizeInternationalDINA3" xml:space="preserve">
+    <value>DIN A3</value>
+  </data>
+  <data name="PaperSizeInternationalDINA4" xml:space="preserve">
+    <value>DIN A4</value>
+  </data>
+  <data name="PaperSizeInternationalDINA5" xml:space="preserve">
+    <value>DIN A5</value>
+  </data>
+  <data name="ScanAreaAlignmentBody" xml:space="preserve">
+    <value />
+  </data>
+  <data name="OrientationPortrait" xml:space="preserve">
+    <value />
+  </data>
+  <data name="OrientationLandscape" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Tip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="ScanAreaAlignmentTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="ScanAlignmentPreview" xml:space="preserve">
+    <value />
+  </data>
   <data name="SettingsFileNamingCustomPatternExplanation" xml:space="preserve">
     <value>Ziehen und platzieren Sie Blöcke um Ihr eigenes dynamisches Dateinamenmuster zu bauen. Wählen Sie einen Block um seine Ausgabe anzupassen, oder ziehen Sie ihn den Mülleimer, um ihn zu löschen.</value>
     <comment>The description for the custom file naming dialog.</comment>

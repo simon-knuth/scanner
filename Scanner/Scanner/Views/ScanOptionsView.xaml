@@ -14,6 +14,10 @@
     xmlns:ui="using:CommunityToolkit.WinUI"
     xmlns:media="using:CommunityToolkit.WinUI.Media"
     xmlns:strings="using:Scanner.Resources.Strings"
+    xmlns:helpers="using:Scanner.Helpers"
+    xmlns:labs="using:CommunityToolkit.Labs.WinUI"
+    xmlns:models="using:Scanner.Models"
+    xmlns:customcontrols="using:Scanner.Controls"
     mc:Ignorable="d">
 
     <Page.DataContext>
@@ -60,6 +64,7 @@
             </DataTemplate>
 
             <!-- XAML Converters -->
+            <converters:EnumStringVisibilityConverter x:Key="EnumStringVisibilityConverter" />
             <converters:NegativeBoolConverter x:Key="NegativeBoolConverter" />
             <converters:NotNullBoolConverter x:Key="NotNullBoolConverter" />
         </ResourceDictionary>
@@ -151,7 +156,7 @@
                         <!-- File format -->
                         <StackPanel Orientation="Vertical" Spacing="12" Margin="0,12,0,0">
                             <TextBlock Text="{x:Bind strings:Resources.FileFormatHeading}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Style="{StaticResource BaseTextBlockStyle}" />
-                            <ComboBox x:Name="ComboBoxFileFormats" MaxDropDownHeight="800" HorizontalAlignment="Stretch" Padding="12,6,28,6" Height="32" SelectedIndex="{x:Bind TargetFormat, Mode=TwoWay}" SizeChanged="ComboBoxFileFormats_SizeChanged">
+                            <ComboBox x:Name="ComboBoxFileFormats" MaxDropDownHeight="800" HorizontalAlignment="Stretch" Padding="12,6,28,6" Height="32" SelectedIndex="{x:Bind TargetFormat, Mode=TwoWay}">
                                 <ComboBox.Items>
                                     <ComboBoxItem Content="{x:Bind strings:Resources.MultiPageFormats}" Padding="8,4,8,4" FontSize="12" IsEnabled="False" />
                                     <ComboBoxItem FontWeight="SemiBold">
@@ -300,28 +305,223 @@
                             <ComboBox x:Name="ComboBoxResolution" HorizontalAlignment="Stretch" IsEditable="True" SelectedItem="{x:Bind SelectedResolution, Mode=OneWay}" ItemsSource="{x:Bind Resolutions, Mode=OneWay}" TextSubmitted="ComboBoxResolution_TextSubmitted" SelectionChanged="ComboBoxResolution_SelectionChanged" />
                         </StackPanel>
 
-                        <!-- Duplex -->
-                        <StackPanel x:Name="StackPanelDuplex" Orientation="Vertical" Spacing="12" Margin="0,12,0,0" x:Load="{x:Bind IsDuplexVisible, Mode=OneWay}">
-                            <TextBlock Text="{x:Bind strings:Resources.FeederOptionsHeading}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Style="{StaticResource BaseTextBlockStyle}" />
-                            <StackPanel Orientation="Vertical" Spacing="4">
-                                <CheckBox Content="{x:Bind strings:Resources.ScanMultiplePages}" IsChecked="{x:Bind ViewModel.ScanOptions.ScanMultiplePages, Mode=TwoWay}" />
-                                <CheckBox Content="{x:Bind strings:Resources.Duplex}" IsChecked="{x:Bind ViewModel.ScanOptions.Duplex, Mode=TwoWay}" />
-                            </StackPanel>
+                        <!-- Scan area -->
+                        <StackPanel x:Name="StackPanelScanArea" Orientation="Vertical" Spacing="12" Margin="0,12,0,0" x:Load="{x:Bind IsScanAreaSelectionVisible, Mode=OneWay}">
+                            <TextBlock Text="{x:Bind strings:Resources.ScanAreaHeading}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Style="{StaticResource BaseTextBlockStyle}" />
+                            <Grid>
+                                <ComboBox x:Name="ComboBoxScanArea" MaxDropDownHeight="800" Padding="12,5,68,7" HorizontalAlignment="Stretch" SelectionChanged="ComboBoxScanArea_SelectionChanged" Loading="ComboBoxScanArea_Loading">
+                                    <ComboBox.Items>
+                                        <ComboBoxItem x:Name="ComboBoxItemScanEverything">
+                                            <Grid ColumnSpacing="12">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="16" />
+                                                    <ColumnDefinition Width="1*" />
+                                                </Grid.ColumnDefinitions>
+
+                                                <FontIcon Grid.Column="0" Glyph="&#xE9A6;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                                <TextBlock Grid.Column="1" Text="Everything" />
+                                            </Grid>
+                                        </ComboBoxItem>
+                                        <ComboBoxItem IsEnabled="False" Margin="-16,0,-16,0" Height="36">
+                                            <MenuFlyoutSeparator />
+                                        </ComboBoxItem>
+                                        <ComboBoxItem Content="{x:Bind strings:Resources.AspectRatioInternationalHeading}" Height="36" Padding="8,4,8,4" FontSize="12" IsEnabled="False" />
+                                        <ComboBoxItem Content="{x:Bind strings:Resources.PaperSizeInternationalDINA3}" Tag="{x:Bind helpers:PaperSize.DinA3}"/>
+                                        <ComboBoxItem Content="{x:Bind strings:Resources.PaperSizeInternationalDINA4}" Tag="{x:Bind helpers:PaperSize.DinA4}"/>
+                                        <ComboBoxItem Content="{x:Bind strings:Resources.PaperSizeInternationalDINA5}" Tag="{x:Bind helpers:PaperSize.DinA5}"/>
+                                        <ComboBoxItem Content="{x:Bind strings:Resources.AspectRatioNAHeading}" Height="36" Padding="8,4,8,4" FontSize="12" IsEnabled="False" />
+                                        <ComboBoxItem Content="{x:Bind strings:Resources.AspectRatioNAANSIA}" Tag="{x:Bind helpers:PaperSize.AnsiA}" />
+                                        <ComboBoxItem Content="{x:Bind strings:Resources.AspectRatioNAANSIB}" Tag="{x:Bind helpers:PaperSize.AnsiB}" />
+                                        <ComboBoxItem Content="{x:Bind strings:Resources.AspectRatioNAANSIC}" Tag="{x:Bind helpers:PaperSize.AnsiC}" />
+                                        <ComboBoxItem Content="{x:Bind strings:Resources.AspectRatioNALegal}"  Tag="{x:Bind helpers:PaperSize.Legal}" />
+                                        <ComboBoxItem Content="{x:Bind strings:Resources.AspectRatioChineseHeading}" Height="36" Padding="8,4,8,4" FontSize="12" IsEnabled="False" />
+                                        <ComboBoxItem Content="{x:Bind strings:Resources.AspectRatioChineseKai8}" Tag="{x:Bind helpers:PaperSize.Kai8}" />
+                                        <ComboBoxItem Content="{x:Bind strings:Resources.AspectRatioChineseKai16}" Tag="{x:Bind helpers:PaperSize.Kai16}" />
+                                        <ComboBoxItem Content="{x:Bind strings:Resources.AspectRatioChineseKai32}" Tag="{x:Bind helpers:PaperSize.Kai32}" />
+                                        <ComboBoxItem x:Name="ComboBoxItemSeparatorAutoCrop" IsEnabled="False" Margin="-16,0,-16,0" Height="36" x:Load="{x:Bind IsAutoCropVisible, Mode=OneWay}">
+                                            <MenuFlyoutSeparator />
+                                        </ComboBoxItem>
+                                        <ComboBoxItem x:Name="ComboBoxItemAutoCropHeading" Content="{x:Bind strings:Resources.AutoCropHeading}" FontSize="12" IsEnabled="False" x:Load="{x:Bind IsAutoCropVisible, Mode=OneWay}" />
+                                        <ComboBoxItem x:Name="ComboBoxItemAutoCropSingle" IsEnabled="{x:Bind IsAutoCropSingleSupported, Mode=OneWay}" x:Load="{x:Bind IsAutoCropVisible, Mode=OneWay}">
+                                            <Grid ColumnSpacing="12">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="16" />
+                                                    <ColumnDefinition Width="1*" />
+                                                </Grid.ColumnDefinitions>
+
+                                                <TextBlock Grid.Column="0" Text="1" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="12" />
+                                                <TextBlock Grid.Column="1" Text="{x:Bind strings:Resources.AutoCropSingle}" MaxLines="1" />
+                                            </Grid>
+                                        </ComboBoxItem>
+                                        <ComboBoxItem x:Name="ComboBoxItemAutoCropMulti" IsEnabled="{x:Bind IsAutoCropSingleSupported, Mode=OneWay}" x:Load="{x:Bind IsAutoCropVisible, Mode=OneWay}">
+                                            <Grid ColumnSpacing="12">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="16" />
+                                                    <ColumnDefinition Width="1*" />
+                                                </Grid.ColumnDefinitions>
+
+                                                <TextBlock Grid.Column="0" Text="1+" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="12" />
+                                                <TextBlock Grid.Column="1" Text="{x:Bind strings:Resources.AutoCropMultiple}" MaxLines="1" />
+                                            </Grid>
+                                        </ComboBoxItem>
+                                        <ComboBoxItem IsEnabled="False" Margin="-16,0,-16,0" Height="36">
+                                            <MenuFlyoutSeparator />
+                                        </ComboBoxItem>
+                                        <ComboBoxItem x:Name="ComboBoxItemPreviewSelection" x:Load="{x:Bind CanPreviewScan, Mode=OneWay}">
+                                            <Grid ColumnSpacing="12">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="16" />
+                                                    <ColumnDefinition Width="1*" />
+                                                </Grid.ColumnDefinitions>
+
+                                                <FontIcon Grid.Column="0" Glyph="&#xEF20;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                                <TextBlock Grid.Column="1" Text="Preview selection" MaxLines="1" />
+                                            </Grid>
+                                        </ComboBoxItem>
+                                    </ComboBox.Items>
+                                </ComboBox>
+                                <Button x:Name="ButtonScanAreaAlignment" Margin="0,1,40,1" Padding="8,4,8,4" Style="{StaticResource MutedButtonStyle}" ToolTipService.ToolTip="{x:Bind strings:Resources.ScanAreaAlignmentHeading}" HorizontalAlignment="Right" VerticalAlignment="Stretch" CornerRadius="0" HorizontalContentAlignment="Stretch" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Background="{ThemeResource SubtleFillColorTertiaryBrush}" BorderBrush="{ThemeResource ControlStrokeColorDefaultBrush}" BorderThickness="1,0,1,0" x:Load="{x:Bind IsScanAreaAlignmentVisible, Mode=OneWay}">
+                                    <Grid ColumnSpacing="12">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+
+                                        <FontIcon Grid.Column="0" Glyph="&#xE7C3;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" Visibility="{x:Bind SelectedOrientation, Mode=OneWay, Converter={StaticResource EnumStringVisibilityConverter}, ConverterParameter=Portrait}" />
+                                        <FontIcon Grid.Column="0" Glyph="&#xE7C3;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" Visibility="{x:Bind SelectedOrientation, Mode=OneWay, Converter={StaticResource EnumStringVisibilityConverter}, ConverterParameter=Landscape}" RenderTransformOrigin="0.5,0.5">
+                                            <FontIcon.RenderTransform>
+                                                <RotateTransform Angle="270" />
+                                            </FontIcon.RenderTransform>
+                                        </FontIcon>
+
+                                        <FontIcon Grid.Column="1" Glyph="&#xE744;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" Visibility="{x:Bind IsTopLeftScanCornerSelected, Mode=OneWay}" RenderTransformOrigin="0.5,0.5">
+                                            <FontIcon.RenderTransform>
+                                                <RotateTransform Angle="90" />
+                                            </FontIcon.RenderTransform>
+                                        </FontIcon>
+                                        <FontIcon Grid.Column="1" Glyph="&#xE744;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" Visibility="{x:Bind IsTopRightScanCornerSelected, Mode=OneWay}" RenderTransformOrigin="0.5,0.5">
+                                            <FontIcon.RenderTransform>
+                                                <RotateTransform Angle="180" />
+                                            </FontIcon.RenderTransform>
+                                        </FontIcon>
+                                        <FontIcon Grid.Column="1" Glyph="&#xE744;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" Visibility="{x:Bind IsBottomRightScanCornerSelected, Mode=OneWay}" RenderTransformOrigin="0.5,0.5">
+                                            <FontIcon.RenderTransform>
+                                                <RotateTransform Angle="270" />
+                                            </FontIcon.RenderTransform>
+                                        </FontIcon>
+                                        <FontIcon Grid.Column="1" Glyph="&#xE744;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" Visibility="{x:Bind IsBottomLeftScanCornerSelected, Mode=OneWay}" />
+                                    </Grid>
+
+                                    <Button.Flyout>
+                                        <Flyout x:Name="FlyoutScanAreaAlignment" Placement="Right">
+                                            <Flyout.FlyoutPresenterStyle>
+                                                <Style BasedOn="{StaticResource DefaultFlyoutPresenterStyle}" TargetType="FlyoutPresenter">
+                                                    <Setter Property="ScrollViewer.HorizontalScrollMode" Value="Disabled" />
+                                                    <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled" />
+                                                    <Setter Property="ScrollViewer.VerticalScrollMode" Value="Disabled" />
+                                                    <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Disabled" />
+                                                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                                    <Setter Property="VerticalContentAlignment" Value="Stretch" />
+                                                </Style>
+                                            </Flyout.FlyoutPresenterStyle>
+
+                                            <Grid RowSpacing="12">
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="Auto" />
+                                                    <RowDefinition Height="32" />
+                                                    <RowDefinition Height="Auto" />
+                                                    <RowDefinition Height="Auto" />
+                                                </Grid.RowDefinitions>
+
+                                                <Grid.Resources>
+                                                    <ResourceDictionary>
+                                                        <ResourceDictionary.ThemeDictionaries>
+                                                            <ResourceDictionary x:Key="Default">
+                                                                <StaticResource x:Key="ToggleButtonBackgroundPointerOver" ResourceKey="AcrylicInAppFillColorDefaultBrush" />
+                                                                <StaticResource x:Key="ToggleButtonBackgroundPressed" ResourceKey="AcrylicInAppFillColorBaseBrush" />
+                                                            </ResourceDictionary>
+                                                            <ResourceDictionary x:Key="Light">
+                                                                <StaticResource x:Key="ToggleButtonBackgroundPointerOver" ResourceKey="AcrylicInAppFillColorDefaultBrush" />
+                                                                <StaticResource x:Key="ToggleButtonBackgroundPressed" ResourceKey="AcrylicInAppFillColorBaseBrush" />
+                                                            </ResourceDictionary>
+                                                        </ResourceDictionary.ThemeDictionaries>
+                                                    </ResourceDictionary>
+                                                </Grid.Resources>
+
+                                                <StackPanel Grid.Row="0" Orientation="Vertical" Spacing="4" CornerRadius="7,7,0,0" Background="{ThemeResource LayerOnAcrylicFillColorDefaultBrush}" Margin="-16,-16,-16,0" Padding="16" BorderBrush="{ThemeResource DividerStrokeColorDefaultBrush}" BorderThickness="0,0,0,1">
+                                                    <TextBlock Text="{x:Bind strings:Resources.ScanAreaAlignmentHeading}" Style="{StaticResource BaseTextBlockStyle}" />
+                                                    <TextBlock Text="{x:Bind strings:Resources.ScanAreaAlignmentBody}" Style="{StaticResource BodyTextBlockStyle}" />
+                                                </StackPanel>
+                                                <labs:Segmented x:Name="SegmentedPaperSizeAreaOrientation" Grid.Row="1" SelectedIndex="{x:Bind SelectedOrientationInt, Mode=TwoWay}" HorizontalAlignment="Stretch" MinWidth="248">
+                                                    <labs:Segmented.Items>
+                                                        <labs:SegmentedItem>
+                                                            <Grid ColumnSpacing="8">
+                                                                <Grid.ColumnDefinitions>
+                                                                    <ColumnDefinition Width="Auto" />
+                                                                    <ColumnDefinition Width="1*" />
+                                                                </Grid.ColumnDefinitions>
+
+                                                                <FontIcon Grid.Column="0" Glyph="&#xE7C3;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                                                <TextBlock Grid.Column="1" Text="{x:Bind strings:Resources.OrientationPortrait}" />
+                                                            </Grid>
+                                                        </labs:SegmentedItem>
+                                                        <labs:SegmentedItem>
+                                                            <Grid ColumnSpacing="8">
+                                                                <Grid.ColumnDefinitions>
+                                                                    <ColumnDefinition Width="Auto" />
+                                                                    <ColumnDefinition Width="1*" />
+                                                                </Grid.ColumnDefinitions>
+
+                                                                <FontIcon Grid.Column="0" Glyph="&#xE7C3;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" RenderTransformOrigin="0.5,0.5">
+                                                                    <FontIcon.RenderTransform>
+                                                                        <RotateTransform Angle="270" />
+                                                                    </FontIcon.RenderTransform>
+                                                                </FontIcon>
+                                                                <TextBlock Grid.Column="1" Text="{x:Bind strings:Resources.OrientationLandscape}" />
+                                                            </Grid>
+                                                        </labs:SegmentedItem>
+                                                    </labs:Segmented.Items>
+                                                </labs:Segmented>
+
+                                                <customcontrols:ScanAreaAlignmentControl Grid.Row="2" LongestSide="400" MaxScanArea="{x:Bind MaxScanArea, Mode=OneWay}" PaperSize="{x:Bind SelectedPaperSize, Mode=OneWay}" PreviewBitmapUri="{x:Bind ViewModel.ScanAreaAlignmentBitmapUri, Mode=OneWay}" SelectedOrientation="{x:Bind SelectedOrientation, Mode=OneWay}" SelectedCorner="{x:Bind SelectedCorner, Mode=TwoWay}" />
+
+                                                <StackPanel Grid.Row="3" Orientation="Vertical" Spacing="4" CornerRadius="0,0,7,7" Background="{ThemeResource LayerOnAcrylicFillColorDefaultBrush}" Margin="-16,0,-16,-16" Padding="16" BorderBrush="{ThemeResource DividerStrokeColorDefaultBrush}" BorderThickness="0,1,0,0">
+                                                    <Button Style="{StaticResource AccentButtonStyle}" HorizontalAlignment="Stretch" Command="{x:Bind ViewModel.UpdateScanAreaAlignmentBitmapAsyncCommand}">
+                                                        <StackPanel Orientation="Horizontal" Spacing="12">
+                                                            <FontIcon Glyph="&#xE773;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" VerticalAlignment="Center" />
+                                                            <TextBlock Text="{x:Bind strings:Resources.ScanAlignmentPreview}" VerticalAlignment="Center" />
+                                                        </StackPanel>
+                                                    </Button>
+
+                                                    <Grid ColumnSpacing="8" Margin="0,12,0,0">
+                                                        <Grid.RowDefinitions>
+                                                            <RowDefinition Height="Auto" />
+                                                            <RowDefinition Height="Auto" />
+                                                        </Grid.RowDefinitions>
+
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="Auto" />
+                                                            <ColumnDefinition Width="1*" />
+                                                        </Grid.ColumnDefinitions>
+
+                                                        <FontIcon Grid.Row="0" Grid.Column="0" Glyph="&#xF167;" FontSize="16" Foreground="DeepSkyBlue" FontFamily="{StaticResource SymbolThemeFontFamily}" VerticalAlignment="Center" />
+                                                        <TextBlock Grid.Row="0" Grid.Column="1" Text="{x:Bind strings:Resources.Tip}" FontWeight="SemiBold" Style="{StaticResource CaptionTextBlockStyle}" VerticalAlignment="Center" />
+                                                        <TextBlock Grid.Row="1" Grid.Column="1" Text="{x:Bind strings:Resources.ScanAreaAlignmentTip}" Style="{StaticResource CaptionTextBlockStyle}" />
+                                                    </Grid>
+                                                </StackPanel>
+                                            </Grid>
+                                        </Flyout>
+                                    </Button.Flyout>
+                                </Button>
+                            </Grid>
                         </StackPanel>
 
-                        <!-- Auto crop -->
-                        <StackPanel x:Name="StackPanelAutoCrop" Orientation="Vertical" Spacing="12" Margin="0,12,0,0" x:Load="{x:Bind IsAutoCropVisible, Mode=OneWay}">
-                            <TextBlock Text="{x:Bind strings:Resources.AutoCropHeading}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Style="{StaticResource BaseTextBlockStyle}" />
+                        <!-- Feeder options -->
+                        <StackPanel x:Name="StackPanelFeederOptions" Orientation="Vertical" Spacing="12" Margin="0,12,0,0" x:Load="{x:Bind IsDuplexVisible, Mode=OneWay}">
+                            <TextBlock Text="{x:Bind strings:Resources.FeederOptionsHeading}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Style="{StaticResource BaseTextBlockStyle}" />
                             <StackPanel Orientation="Vertical" Spacing="4">
-                                <RadioButton HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" IsChecked="{x:Bind IsAutoCropDisabled, Mode=TwoWay}">
-                                    <TextBlock Text="{x:Bind strings:Resources.AutoCropDisabled}" Margin="4,0,0,0" />
-                                </RadioButton>
-                                <RadioButton HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" IsChecked="{x:Bind IsAutoCropSingle, Mode=TwoWay}" Visibility="{x:Bind IsAutoCropSingleSupported, Mode=OneWay}">
-                                    <TextBlock Text="{x:Bind strings:Resources.AutoCropSingle}" Margin="4,0,0,0" />
-                                </RadioButton>
-                                <RadioButton HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" IsChecked="{x:Bind IsAutoCropMulti, Mode=TwoWay}" Visibility="{x:Bind IsAutoCropMultiSupported, Mode=OneWay}">
-                                    <TextBlock Text="{x:Bind strings:Resources.AutoCropMultiple}" Margin="4,0,0,0" />
-                                </RadioButton>
+                                <CheckBox Content="{x:Bind strings:Resources.ScanMultiplePages}" IsChecked="{x:Bind ViewModel.ScanOptions.ScanMultiplePages, Mode=TwoWay}"  HorizontalAlignment="Stretch" />
+                                <CheckBox Content="{x:Bind strings:Resources.Duplex}" IsChecked="{x:Bind ViewModel.ScanOptions.Duplex, Mode=TwoWay}" HorizontalAlignment="Stretch" />
                             </StackPanel>
                         </StackPanel>
 
@@ -362,8 +562,8 @@
                 </ScrollViewer>
                 
                 <Grid Grid.Row="0" Padding="16,4,16,0">
-                    <Frame Margin="-8,0,-8,0" IsEnabled="{x:Bind ViewModel.ProjectService.IsScanProcessRunning, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}" ui:Effects.Shadow="{ThemeResource ShadowScannersComboBox}">
-                        <ComboBox x:Name="ComboBoxScanners" Padding="14,11,28,11" CornerRadius="8" HorizontalAlignment="Stretch" SelectedIndex="0" SelectionChanged="ComboBoxScanners_SelectionChanged" RightTapped="ComboBoxScanners_RightTapped" SizeChanged="ComboBoxScanners_SizeChanged">
+                    <Frame x:Name="FrameComboBoxScanners" Margin="-8,0,-8,0" IsEnabled="{x:Bind ViewModel.ProjectService.IsScanProcessRunning, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}" ui:Effects.Shadow="{ThemeResource ShadowScannersComboBox}" SizeChanged="FrameComboBoxScanners_SizeChanged">
+                        <ComboBox x:Name="ComboBoxScanners" Padding="14,11,28,11" MaxDropDownHeight="800" CornerRadius="8" HorizontalAlignment="Stretch" SelectedIndex="0" SelectionChanged="ComboBoxScanners_SelectionChanged" RightTapped="ComboBoxScanners_RightTapped">
                             <ComboBox.Items>
                                 <ComboBoxItem IsEnabled="False">
                                     <StackPanel Orientation="Horizontal" Spacing="12">
@@ -462,7 +662,7 @@
                             </FlyoutBase.AttachedFlyout>
                         </ComboBox>
                     </Frame>
-                    <InfoBadge IsHitTestVisible="False" Margin="0,0,36,0" HorizontalAlignment="Right" Style="{StaticResource InformationalValueInfoBadgeStyle}" Value="{x:Bind ScannerCount, Mode=OneWay}" />
+                    <InfoBadge IsHitTestVisible="False" Margin="0,0,32,0" HorizontalAlignment="Right" Style="{StaticResource InformationalValueInfoBadgeStyle}" Value="{x:Bind ScannerCount, Mode=OneWay}" />
                 </Grid>
             </Grid>
         </Grid>

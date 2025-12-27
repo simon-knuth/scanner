@@ -13,6 +13,8 @@ using Windows.Devices.Scanners;
 using Windows.Foundation;
 using Scanner.Models.Interfaces;
 using static Scanner.Helpers.Helpers;
+using Scanner.Services.Interfaces;
+using CommunityToolkit.Mvvm.DependencyInjection;
 
 namespace Scanner.Models
 {
@@ -21,6 +23,10 @@ namespace Scanner.Models
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////                
+        #region Services
+        private readonly ISettingsService SettingsService = Ioc.Default.GetRequiredService<ISettingsService>();
+        #endregion
+
         [ObservableProperty]
         private IScanningDevice? scanner;
 
@@ -40,7 +46,7 @@ namespace Scanner.Models
         private ScanResolution resolution;
 
         [ObservableProperty]
-        private ScannerAutoCropMode autoCropMode;
+        private ScanArea? scanArea;
 
         [ObservableProperty]
         private bool duplex;
@@ -54,8 +60,6 @@ namespace Scanner.Models
         [ObservableProperty]
         private int contrast = AppConfig.DefaultContrast;
 
-        public Rect? SelectedRegion { get; set; }
-
         public ScanMergeConfig? ScanMergeConfig { get; set; }
 
         public DateTime ScanTime { get; set; } = DateTime.MinValue;
@@ -64,9 +68,9 @@ namespace Scanner.Models
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public ScanOptions(IScanningDevice? scanner)
+        public ScanOptions(IScanningDevice? scanner, bool restoreFromDatabase, ScannerSource? forceSourceMode = null)
         {
-            SetScanOptionsForScanner(scanner);
+            SetScanOptionsForScanner(scanner, restoreFromDatabase, forceSourceMode);
         }
 
 
@@ -185,31 +189,38 @@ namespace Scanner.Models
 
         public ImageScannerAutoCroppingMode GetAutoCropModeForScanner()
         {
-            switch (AutoCropMode)
+            if (ScanArea is AutoCropArea autoCropRegion)
             {
-                case ScannerAutoCropMode.Disabled:
-                    return ImageScannerAutoCroppingMode.Disabled;
-                case ScannerAutoCropMode.SingleRegion:
-                    return ImageScannerAutoCroppingMode.SingleRegion;
-                case ScannerAutoCropMode.MultipleRegions:
-                    return ImageScannerAutoCroppingMode.MultipleRegion;
-                case ScannerAutoCropMode.None:
-                default:
-                    throw new ArgumentException(String.Format("Can't convert {0} to ImageScannerAutoCroppingMode.", AutoCropMode));
+                switch (autoCropRegion.AutoCropMode)
+                {
+                    case ScannerAutoCropMode.Disabled:
+                        return ImageScannerAutoCroppingMode.Disabled;
+                    case ScannerAutoCropMode.SingleRegion:
+                        return ImageScannerAutoCroppingMode.SingleRegion;
+                    case ScannerAutoCropMode.MultipleRegions:
+                        return ImageScannerAutoCroppingMode.MultipleRegion;
+                    case ScannerAutoCropMode.None:
+                    default:
+                        throw new ArgumentException(String.Format("Can't convert {0} to ImageScannerAutoCroppingMode.", autoCropRegion.AutoCropMode));
+                }
+            }
+            else
+            {
+                return ImageScannerAutoCroppingMode.Disabled;
             }
         }
 
-        private void SetScanOptionsForScanner(IScanningDevice? scanner)
+        private void SetScanOptionsForScanner(IScanningDevice? scanner, bool restoreFromDatabase, ScannerSource? forceSourceMode)
         {
             Scanner = scanner;
             if (Scanner == null) return;
 
             // source mode
-            if (Scanner.IsAutoAllowed)
+            if (Scanner.IsAutoAllowed && forceSourceMode is null or ScannerSource.Auto)
             {
                 SourceMode = ScannerSource.Auto;
             }
-            else if (Scanner.IsFlatbedAllowed)
+            else if (Scanner.IsFlatbedAllowed && forceSourceMode is null or ScannerSource.Flatbed)
             {
                 SourceMode = ScannerSource.Flatbed;
 
@@ -234,17 +245,10 @@ namespace Scanner.Models
                 // resolution
                 SetDefaultResolution(Scanner.FlatbedResolutions);
 
-                // auto crop mode
-                if (Scanner.IsFlatbedAutoCropSupported)
-                {
-                    AutoCropMode = ScannerAutoCropMode.Disabled;
-                }
-                else
-                {
-                    AutoCropMode = ScannerAutoCropMode.None;
-                }
+                // scan area
+                ScanArea = null;
             }
-            else if (Scanner.IsFeederAllowed)
+            else if (Scanner.IsFeederAllowed && forceSourceMode is null or ScannerSource.Feeder)
             {
                 SourceMode = ScannerSource.Feeder;
 
@@ -269,15 +273,8 @@ namespace Scanner.Models
                 // resolution
                 SetDefaultResolution(Scanner.FeederResolutions);
 
-                // auto crop mode
-                if (Scanner.IsFeederAutoCropSupported)
-                {
-                    AutoCropMode = ScannerAutoCropMode.Disabled;
-                }
-                else
-                {
-                    AutoCropMode = ScannerAutoCropMode.None;
-                }
+                // scan area
+                ScanArea = null;
 
                 // duplex
                 ScanMultiplePages = true;
