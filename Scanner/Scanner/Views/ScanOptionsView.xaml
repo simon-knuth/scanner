@@ -67,6 +67,7 @@
             <converters:EnumStringVisibilityConverter x:Key="EnumStringVisibilityConverter" />
             <converters:NegativeBoolConverter x:Key="NegativeBoolConverter" />
             <converters:NotNullBoolConverter x:Key="NotNullBoolConverter" />
+            <converters:PaperSizeMeasurementsConverter x:Key="PaperSizeMeasurementsConverter" />
         </ResourceDictionary>
     </Page.Resources>
 
@@ -326,14 +327,84 @@
                                             <MenuFlyoutSeparator />
                                         </ComboBoxItem>
                                         <ComboBoxItem Content="{x:Bind strings:Resources.AspectRatioInternationalHeading}" Height="36" Padding="8,4,8,4" FontSize="12" IsEnabled="False" />
-                                        <ComboBoxItem Content="{x:Bind strings:Resources.PaperSizeInternationalDINA3}" Tag="{x:Bind helpers:PaperSize.DinA3}"/>
-                                        <ComboBoxItem Content="{x:Bind strings:Resources.PaperSizeInternationalDINA4}" Tag="{x:Bind helpers:PaperSize.DinA4}"/>
-                                        <ComboBoxItem Content="{x:Bind strings:Resources.PaperSizeInternationalDINA5}" Tag="{x:Bind helpers:PaperSize.DinA5}"/>
+                                        <ComboBoxItem Tag="{x:Bind helpers:PaperSize.DinA3}">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="1*" />
+                                                </Grid.ColumnDefinitions>
+
+                                                <TextBlock Grid.Column="0" Text="{x:Bind strings:Resources.PaperSizeInternationalDINA3}" VerticalAlignment="Center" />
+                                                <TextBlock Grid.Column="1" Text="{x:Bind helpers:PaperSize.DinA3, Converter={StaticResource PaperSizeMeasurementsConverter}}" HorizontalAlignment="Right" VerticalAlignment="Center" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorTertiaryBrush}" Visibility="{Binding ElementName=ComboBoxScanArea, Path=IsDropDownOpen, Mode=OneWay}" />
+                                            </Grid>
+                                        </ComboBoxItem>
+                                        <ComboBoxItem Tag="{x:Bind helpers:PaperSize.DinA4}">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="1*" />
+                                                </Grid.ColumnDefinitions>
+
+                                                <TextBlock Grid.Column="0" Text="{x:Bind strings:Resources.PaperSizeInternationalDINA4}" VerticalAlignment="Center" />
+                                                <TextBlock Grid.Column="1" Text="{x:Bind helpers:PaperSize.DinA4, Converter={StaticResource PaperSizeMeasurementsConverter}}" HorizontalAlignment="Right" VerticalAlignment="Center" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorTertiaryBrush}" Visibility="{Binding ElementName=ComboBoxScanArea, Path=IsDropDownOpen, Mode=OneWay}" />
+                                            </Grid>
+                                        </ComboBoxItem>
+                                        <ComboBoxItem Tag="{x:Bind helpers:PaperSize.DinA5}">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="1*" />
+                                                </Grid.ColumnDefinitions>
+
+                                                <TextBlock Grid.Column="0" Text="{x:Bind strings:Resources.PaperSizeInternationalDINA5}" VerticalAlignment="Center" />
+                                                <TextBlock Grid.Column="1" Text="{x:Bind helpers:PaperSize.DinA5, Converter={StaticResource PaperSizeMeasurementsConverter}}" HorizontalAlignment="Right" VerticalAlignment="Center" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorTertiaryBrush}" Visibility="{Binding ElementName=ComboBoxScanArea, Path=IsDropDownOpen, Mode=OneWay}" />
+                                            </Grid>
+                                        </ComboBoxItem>
                                         <ComboBoxItem Content="{x:Bind strings:Resources.AspectRatioNAHeading}" Height="36" Padding="8,4,8,4" FontSize="12" IsEnabled="False" />
-                                        <ComboBoxItem Content="{x:Bind strings:Resources.AspectRatioNAANSIA}" Tag="{x:Bind helpers:PaperSize.AnsiA}" />
-                                        <ComboBoxItem Content="{x:Bind strings:Resources.AspectRatioNAANSIB}" Tag="{x:Bind helpers:PaperSize.AnsiB}" />
-                                        <ComboBoxItem Content="{x:Bind strings:Resources.AspectRatioNAANSIC}" Tag="{x:Bind helpers:PaperSize.AnsiC}" />
-                                        <ComboBoxItem Content="{x:Bind strings:Resources.AspectRatioNALegal}"  Tag="{x:Bind helpers:PaperSize.Legal}" />
+                                        <ComboBoxItem Tag="{x:Bind helpers:PaperSize.AnsiA}">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="1*" />
+                                                </Grid.ColumnDefinitions>
+
+                                                <TextBlock Grid.Column="0" Text="{x:Bind strings:Resources.AspectRatioNAANSIA}" VerticalAlignment="Center" />
+                                                <TextBlock Grid.Column="1" Text="{x:Bind helpers:PaperSize.AnsiA, Converter={StaticResource PaperSizeMeasurementsConverter}}" HorizontalAlignment="Right" VerticalAlignment="Center" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorTertiaryBrush}" Visibility="{Binding ElementName=ComboBoxScanArea, Path=IsDropDownOpen, Mode=OneWay}" />
+                                            </Grid>
+                                        </ComboBoxItem>
+                                        <ComboBoxItem Tag="{x:Bind helpers:PaperSize.AnsiB}">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="1*" />
+                                                </Grid.ColumnDefinitions>
+
+                                                <TextBlock Grid.Column="0" Text="{x:Bind strings:Resources.AspectRatioNAANSIB}" VerticalAlignment="Center" />
+                                                <TextBlock Grid.Column="1" Text="{x:Bind helpers:PaperSize.AnsiB, Converter={StaticResource PaperSizeMeasurementsConverter}}" HorizontalAlignment="Right" VerticalAlignment="Center" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorTertiaryBrush}" Visibility="{Binding ElementName=ComboBoxScanArea, Path=IsDropDownOpen, Mode=OneWay}" />
+                                            </Grid>
+                                        </ComboBoxItem>
+                                        <ComboBoxItem Tag="{x:Bind helpers:PaperSize.AnsiC}">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="1*" />
+                                                </Grid.ColumnDefinitions>
+
+                                                <TextBlock Grid.Column="0" Text="{x:Bind strings:Resources.AspectRatioNAANSIC}" VerticalAlignment="Center" />
+                                                <TextBlock Grid.Column="1" Text="{x:Bind helpers:PaperSize.AnsiC, Converter={StaticResource PaperSizeMeasurementsConverter}}" HorizontalAlignment="Right" VerticalAlignment="Center" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorTertiaryBrush}" Visibility="{Binding ElementName=ComboBoxScanArea, Path=IsDropDownOpen, Mode=OneWay}" />
+                                            </Grid>
+                                        </ComboBoxItem>
+                                        <ComboBoxItem Tag="{x:Bind helpers:PaperSize.Legal}">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="1*" />
+                                                </Grid.ColumnDefinitions>
+
+                                                <TextBlock Grid.Column="0" Text="{x:Bind strings:Resources.AspectRatioNALegal}" VerticalAlignment="Center" />
+                                                <TextBlock Grid.Column="1" Text="{x:Bind helpers:PaperSize.Legal, Converter={StaticResource PaperSizeMeasurementsConverter}}" HorizontalAlignment="Right" VerticalAlignment="Center" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorTertiaryBrush}" Visibility="{Binding ElementName=ComboBoxScanArea, Path=IsDropDownOpen, Mode=OneWay}" />
+                                            </Grid>
+                                        </ComboBoxItem>
                                         <ComboBoxItem x:Name="ComboBoxItemSeparatorAutoCrop" IsEnabled="False" Margin="-16,0,-16,0" Height="36" x:Load="{x:Bind IsAutoCropVisible, Mode=OneWay}">
                                             <MenuFlyoutSeparator />
                                         </ComboBoxItem>

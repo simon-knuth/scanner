@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.DependencyInjection;
 using Microsoft.UI;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml.Media;
@@ -20,6 +21,10 @@ namespace Scanner.Models
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        #region Services
+        private ISettingsService SettingsService = Ioc.Default.GetRequiredService<ISettingsService>();
+        #endregion
+
         private double inches;
 
 
@@ -53,6 +58,19 @@ namespace Scanner.Models
         public double GetCentimeters()
         {
             return inches * 2.54;
+        }
+
+        public override string ToString()
+        {
+            switch (SettingsService.SettingMeasurementUnits)
+            {
+                default:
+                case SettingMeasurementUnits.Metric:
+                    return $"{GetCentimeters():0.##} cm";
+                case SettingMeasurementUnits.ImperialUS:
+                    return $"{GetInches():0.##} in";
+            }
+
         }
     }
 }
