@@ -12,6 +12,7 @@ using System.ComponentModel.DataAnnotations;
 using Windows.Devices.Scanners;
 using Scanner.Helpers;
 using Windows.Foundation;
+using Scanner.Extensions;
 
 namespace Scanner.Models
 {
@@ -82,7 +83,7 @@ namespace Scanner.Models
 
         internal override Rect GetRect(double minX, double maxX, double minY, double MaxY, double minWidth, double maxWidth, double minHeight, double maxHeight)
         {
-            Rect rect = PageDimensionsHelper.PaperSizes[PaperSize];
+            Rect rect = PaperSize.ToRect();
 
             double width = Measurement.FromCentimeters(rect.Width / 10).GetInches();
             double height = Measurement.FromCentimeters(rect.Height / 10).GetInches();

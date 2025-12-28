@@ -334,10 +334,6 @@
                                         <ComboBoxItem Content="{x:Bind strings:Resources.AspectRatioNAANSIB}" Tag="{x:Bind helpers:PaperSize.AnsiB}" />
                                         <ComboBoxItem Content="{x:Bind strings:Resources.AspectRatioNAANSIC}" Tag="{x:Bind helpers:PaperSize.AnsiC}" />
                                         <ComboBoxItem Content="{x:Bind strings:Resources.AspectRatioNALegal}"  Tag="{x:Bind helpers:PaperSize.Legal}" />
-                                        <ComboBoxItem Content="{x:Bind strings:Resources.AspectRatioChineseHeading}" Height="36" Padding="8,4,8,4" FontSize="12" IsEnabled="False" />
-                                        <ComboBoxItem Content="{x:Bind strings:Resources.AspectRatioChineseKai8}" Tag="{x:Bind helpers:PaperSize.Kai8}" />
-                                        <ComboBoxItem Content="{x:Bind strings:Resources.AspectRatioChineseKai16}" Tag="{x:Bind helpers:PaperSize.Kai16}" />
-                                        <ComboBoxItem Content="{x:Bind strings:Resources.AspectRatioChineseKai32}" Tag="{x:Bind helpers:PaperSize.Kai32}" />
                                         <ComboBoxItem x:Name="ComboBoxItemSeparatorAutoCrop" IsEnabled="False" Margin="-16,0,-16,0" Height="36" x:Load="{x:Bind IsAutoCropVisible, Mode=OneWay}">
                                             <MenuFlyoutSeparator />
                                         </ComboBoxItem>

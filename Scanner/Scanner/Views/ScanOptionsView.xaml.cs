@@ -931,7 +931,7 @@ namespace Scanner.Views
             
             if (item == ComboBoxItemScanEverything)
             {
-                IsAutoCropDisabled = true;
+                ScanOptions.ScanArea = null;
             }
             else if (item == ComboBoxItemAutoCropSingle)
             {

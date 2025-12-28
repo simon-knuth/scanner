@@ -10,6 +10,7 @@ using Microsoft.UI.Xaml.Controls.Primitives;
 using Scanner.Services.Interfaces;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using Scanner.Helpers;
+using Scanner.Extensions;
 
 namespace Scanner.Controls
 {
@@ -222,7 +223,7 @@ namespace Scanner.Controls
             }
 
             // selected scan area
-            Rect paperSizeRect = PageDimensionsHelper.PaperSizes[PaperSize];
+            Rect paperSizeRect = PaperSize.ToRect();
             double widthIn = Measurement.FromCentimeters(paperSizeRect.Width / 10).GetInches();
             double heightIn = Measurement.FromCentimeters(paperSizeRect.Height / 10).GetInches();
             switch (SelectedOrientation)

@@ -4,6 +4,8 @@ using Microsoft.UI;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
+using Scanner.Extensions;
+using Scanner.Helpers;
 using Scanner.Models.Interfaces;
 using Scanner.Services;
 using Scanner.Services.Interfaces;
@@ -325,7 +327,7 @@ namespace Scanner.Models.ScanningDevices
                     if (IsFlatbedAutoCropAllowed)
                         imageScanner.FlatbedConfiguration.AutoCroppingMode = scanOptions.GetAutoCropModeForScanner();
 
-                    // scan region
+                    // scan area
                     if (scanOptions.ScanArea is RectScanArea rectScanRegionFlatbed)
                     {
                         try
@@ -334,7 +336,7 @@ namespace Scanner.Models.ScanningDevices
                         }
                         catch (Exception exc)
                         {
-                            throw new ArgumentException("Selected scan region is invalid", exc);
+                            throw new ArgumentException("Selected scan area is invalid", exc);
                         }
                     }
                     else
@@ -366,8 +368,19 @@ namespace Scanner.Models.ScanningDevices
                     if (IsFeederAutoCropAllowed)
                         imageScanner.FeederConfiguration.AutoCroppingMode = scanOptions.GetAutoCropModeForScanner();
 
-                    // scan region
-                    if (scanOptions.ScanArea is RectScanArea rectScanRegionFeeder)
+                    // scan area
+                    if (scanOptions.ScanArea is PaperSizeArea paperSizeArea)
+                    {
+                        try
+                        {
+                            imageScanner.FeederConfiguration.PageSize = paperSizeArea.PaperSize.ToPrintMediaSize();
+                        }
+                        catch (Exception exc)
+                        {
+                            throw new ArgumentException("Selected scan area is invalid", exc);
+                        }
+                    }
+                    else if (scanOptions.ScanArea is RectScanArea rectScanRegionFeeder)
                     {
                         try
                         {
@@ -375,7 +388,7 @@ namespace Scanner.Models.ScanningDevices
                         }
                         catch (Exception exc)
                         {
-                            throw new ArgumentException("Selected scan region is invalid", exc);
+                            throw new ArgumentException("Selected scan area is invalid", exc);
                         }
                     }
                     else
@@ -391,7 +404,7 @@ namespace Scanner.Models.ScanningDevices
 
                     // multiple pages
                     if (scanOptions.ScanMultiplePages)
-                        imageScanner.FeederConfiguration.MaxNumberOfPages = uint.MaxValue;
+                        imageScanner.FeederConfiguration.MaxNumberOfPages = 0;
                     else
                         imageScanner.FeederConfiguration.MaxNumberOfPages = 1;
 
