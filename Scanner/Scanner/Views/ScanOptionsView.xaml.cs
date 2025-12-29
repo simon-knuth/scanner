@@ -498,8 +498,6 @@ namespace Scanner.Views
             && ViewModel.ScanOptions?.SourceMode == ScannerSource.Feeder
             && ViewModel.SelectedScanner.IsFeederDuplexSupported;
 
-        public bool CanPreviewScan => ScanOptions?.Scanner != null && ScanOptions.Scanner.IsPreviewSupported(ScanOptions.SourceMode);
-
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
@@ -602,7 +600,6 @@ namespace Scanner.Views
                         OnPropertyChanged(nameof(IsAutoCropMulti));
                         OnPropertyChanged(nameof(IsAutoCropMultiSupported));
                         OnPropertyChanged(nameof(IsDuplexVisible));
-                        OnPropertyChanged(nameof(CanPreviewScan));
                         OnPropertyChanged(nameof(MaxScanArea));
                         OnPropertyChanged(nameof(IsPaperSizeAreaSelected));
                         OnPropertyChanged(nameof(IsScanAreaSelectionVisible));
@@ -652,7 +649,6 @@ namespace Scanner.Views
                         OnPropertyChanged(nameof(IsAutoCropSingle));
                         OnPropertyChanged(nameof(IsAutoCropMulti));
                         OnPropertyChanged(nameof(IsDuplexVisible));
-                        OnPropertyChanged(nameof(CanPreviewScan));
                         OnPropertyChanged(nameof(MaxScanArea));
                         OnPropertyChanged(nameof(IsScanAreaSelectionVisible));
                         OnPropertyChanged(nameof(IsScanAreaAlignmentVisible));

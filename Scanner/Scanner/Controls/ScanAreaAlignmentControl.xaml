@@ -23,7 +23,7 @@
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
     <UserControl.Resources>
         <ResourceDictionary>
-            <ui:AttachedDropShadow x:Key="ShadowCorner" Offset="0,0" BlurRadius="12" Color="Black" Opacity="0.15" CastTo="{x:Bind GridContent}" />
+            <media:AttachedCardShadow x:Key="ShadowCorner" Offset="0,0" BlurRadius="12" CornerRadius="12" Color="Black" Opacity="0.15" />
             
             <!-- Styles -->
             <Style x:Key="CornerToggleButtonStyle" BasedOn="{StaticResource DefaultToggleButtonStyle}" TargetType="ToggleButton">

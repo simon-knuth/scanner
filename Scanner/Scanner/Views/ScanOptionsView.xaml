@@ -119,39 +119,9 @@
                     <StackPanel x:Name="StackPanelContent" Orientation="Vertical" Spacing="24" Padding="20,12,20,48" SizeChanged="StackPanelContent_SizeChanged">
                         <!-- Source -->
                         <StackPanel Orientation="Vertical" Spacing="4">
-                            <RadioButton x:Name="RadioButtonSourceAutomatic" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" IsChecked="{x:Bind IsSourceModeAutomatic, Mode=TwoWay}" IsEnabled="{x:Bind ViewModel.SelectedScanner.IsAutoAllowed, Mode=OneWay}">
-                                <Grid Padding="4,0,0,0">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="1*" />
-                                        <ColumnDefinition Width="24" />
-                                    </Grid.ColumnDefinitions>
-
-                                    <TextBlock Grid.Column="0" Text="{x:Bind strings:Resources.SourceAuto}" />
-                                    <FontIcon x:Name="FontIconSourceAutomaticPreview" Grid.Column="1" Glyph="&#xE773;" FontSize="16" Foreground="{ThemeResource TextFillColorTertiaryBrush}" FontFamily="{StaticResource SymbolThemeFontFamily}" ToolTipService.ToolTip="{x:Bind strings:Resources.SourcePreviewSupportedToolTip}" x:Load="{x:Bind ViewModel.SelectedScanner.IsAutoPreviewAllowed, Mode=OneWay}" />
-                                </Grid>
-                            </RadioButton>
-                            <RadioButton x:Name="RadioButtonSourceFlatbed" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" IsChecked="{x:Bind IsSourceModeFlatbed, Mode=TwoWay}" IsEnabled="{x:Bind ViewModel.SelectedScanner.IsFlatbedAllowed, Mode=OneWay}">
-                                <Grid Padding="4,0,0,0">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="1*" />
-                                        <ColumnDefinition Width="24" />
-                                    </Grid.ColumnDefinitions>
-
-                                    <TextBlock Grid.Column="0" Text="{x:Bind strings:Resources.SourceFlatbed}" />
-                                    <FontIcon x:Name="FontIconSourceFlatbedPreview" Grid.Column="1" Glyph="&#xE773;" FontSize="16" Foreground="{ThemeResource TextFillColorTertiaryBrush}" FontFamily="{StaticResource SymbolThemeFontFamily}" ToolTipService.ToolTip="{x:Bind strings:Resources.SourcePreviewSupportedToolTip}" x:Load="{x:Bind ViewModel.SelectedScanner.IsFlatbedPreviewAllowed, Mode=OneWay}" />
-                                </Grid>
-                            </RadioButton>
-                            <RadioButton x:Name="RadioButtonSourceFeeder" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" IsChecked="{x:Bind IsSourceModeFeeder, Mode=TwoWay}" IsEnabled="{x:Bind ViewModel.SelectedScanner.IsFeederAllowed, Mode=OneWay}">
-                                <Grid Padding="4,0,0,0">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="1*" />
-                                        <ColumnDefinition Width="24" />
-                                    </Grid.ColumnDefinitions>
-
-                                    <TextBlock Grid.Column="0" Text="{x:Bind strings:Resources.SourceFeeder}" />
-                                    <FontIcon x:Name="FontIconSourceFeederPreview" Grid.Column="1" Glyph="&#xE773;" FontSize="16" Foreground="{ThemeResource TextFillColorTertiaryBrush}" FontFamily="{StaticResource SymbolThemeFontFamily}" ToolTipService.ToolTip="{x:Bind strings:Resources.SourcePreviewSupportedToolTip}" x:Load="{x:Bind ViewModel.SelectedScanner.IsFeederPreviewAllowed, Mode=OneWay}" />
-                                </Grid>
-                            </RadioButton>
+                            <RadioButton x:Name="RadioButtonSourceAutomatic" Content="{x:Bind strings:Resources.SourceAuto}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" IsChecked="{x:Bind IsSourceModeAutomatic, Mode=TwoWay}" IsEnabled="{x:Bind ViewModel.SelectedScanner.IsAutoAllowed, Mode=OneWay}" />
+                            <RadioButton x:Name="RadioButtonSourceFlatbed" Content="{x:Bind strings:Resources.SourceFlatbed}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" IsChecked="{x:Bind IsSourceModeFlatbed, Mode=TwoWay}" IsEnabled="{x:Bind ViewModel.SelectedScanner.IsFlatbedAllowed, Mode=OneWay}" />
+                            <RadioButton x:Name="RadioButtonSourceFeeder" Content="{x:Bind strings:Resources.SourceFeeder}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" IsChecked="{x:Bind IsSourceModeFeeder, Mode=TwoWay}" IsEnabled="{x:Bind ViewModel.SelectedScanner.IsFeederAllowed, Mode=OneWay}" />
                         </StackPanel>
 
                         <!-- File format -->
@@ -323,10 +293,11 @@
                                                 <TextBlock Grid.Column="1" Text="Everything" />
                                             </Grid>
                                         </ComboBoxItem>
-                                        <ComboBoxItem IsEnabled="False" Margin="-16,0,-16,0" Height="36">
-                                            <MenuFlyoutSeparator />
+                                        <ComboBoxItem IsEnabled="False" Margin="-16,0,-16,0" Padding="0" Height="36" VerticalContentAlignment="Stretch">
+                                            <Border Padding="24,0,24,0" BorderBrush="{ThemeResource DividerStrokeColorDefaultBrush}" BorderThickness="0,1,0,0">
+                                                <TextBlock Text="{x:Bind strings:Resources.AspectRatioInternationalHeading}" VerticalAlignment="Center" Style="{StaticResource CaptionTextBlockStyle}" />
+                                            </Border>
                                         </ComboBoxItem>
-                                        <ComboBoxItem Content="{x:Bind strings:Resources.AspectRatioInternationalHeading}" Height="36" Padding="8,4,8,4" FontSize="12" IsEnabled="False" />
                                         <ComboBoxItem Tag="{x:Bind helpers:PaperSize.DinA3}">
                                             <Grid>
                                                 <Grid.ColumnDefinitions>
@@ -360,7 +331,9 @@
                                                 <TextBlock Grid.Column="1" Text="{x:Bind helpers:PaperSize.DinA5, Converter={StaticResource PaperSizeMeasurementsConverter}}" HorizontalAlignment="Right" VerticalAlignment="Center" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorTertiaryBrush}" Visibility="{Binding ElementName=ComboBoxScanArea, Path=IsDropDownOpen, Mode=OneWay}" />
                                             </Grid>
                                         </ComboBoxItem>
-                                        <ComboBoxItem Content="{x:Bind strings:Resources.AspectRatioNAHeading}" Height="36" Padding="8,4,8,4" FontSize="12" IsEnabled="False" />
+                                        <ComboBoxItem IsEnabled="False" Height="36" VerticalContentAlignment="Stretch">
+                                            <TextBlock Text="{x:Bind strings:Resources.AspectRatioNAHeading}" VerticalAlignment="Center" Style="{StaticResource CaptionTextBlockStyle}" />
+                                        </ComboBoxItem>
                                         <ComboBoxItem Tag="{x:Bind helpers:PaperSize.AnsiA}">
                                             <Grid>
                                                 <Grid.ColumnDefinitions>
@@ -405,10 +378,11 @@
                                                 <TextBlock Grid.Column="1" Text="{x:Bind helpers:PaperSize.Legal, Converter={StaticResource PaperSizeMeasurementsConverter}}" HorizontalAlignment="Right" VerticalAlignment="Center" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorTertiaryBrush}" Visibility="{Binding ElementName=ComboBoxScanArea, Path=IsDropDownOpen, Mode=OneWay}" />
                                             </Grid>
                                         </ComboBoxItem>
-                                        <ComboBoxItem x:Name="ComboBoxItemSeparatorAutoCrop" IsEnabled="False" Margin="-16,0,-16,0" Height="36" x:Load="{x:Bind IsAutoCropVisible, Mode=OneWay}">
-                                            <MenuFlyoutSeparator />
+                                        <ComboBoxItem IsEnabled="False" Margin="-16,0,-16,0" Padding="0" Height="36" VerticalContentAlignment="Stretch">
+                                            <Border Padding="24,0,24,0" BorderBrush="{ThemeResource DividerStrokeColorDefaultBrush}" BorderThickness="0,1,0,0">
+                                                <TextBlock Text="{x:Bind strings:Resources.AutoCropHeading}" VerticalAlignment="Center" Style="{StaticResource CaptionTextBlockStyle}" />
+                                            </Border>
                                         </ComboBoxItem>
-                                        <ComboBoxItem x:Name="ComboBoxItemAutoCropHeading" Content="{x:Bind strings:Resources.AutoCropHeading}" FontSize="12" IsEnabled="False" x:Load="{x:Bind IsAutoCropVisible, Mode=OneWay}" />
                                         <ComboBoxItem x:Name="ComboBoxItemAutoCropSingle" IsEnabled="{x:Bind IsAutoCropSingleSupported, Mode=OneWay}" x:Load="{x:Bind IsAutoCropVisible, Mode=OneWay}">
                                             <Grid ColumnSpacing="12">
                                                 <Grid.ColumnDefinitions>
@@ -431,10 +405,12 @@
                                                 <TextBlock Grid.Column="1" Text="{x:Bind strings:Resources.AutoCropMultiple}" MaxLines="1" />
                                             </Grid>
                                         </ComboBoxItem>
-                                        <ComboBoxItem IsEnabled="False" Margin="-16,0,-16,0" Height="36">
-                                            <MenuFlyoutSeparator />
+                                        <ComboBoxItem IsEnabled="False" Margin="-16,0,-16,0" Padding="0" Height="36" VerticalContentAlignment="Stretch">
+                                            <Border Padding="24,0,24,0" BorderBrush="{ThemeResource DividerStrokeColorDefaultBrush}" BorderThickness="0,1,0,0">
+                                                <TextBlock Text="{x:Bind strings:Resources.PreviewHeading}" VerticalAlignment="Center" Style="{StaticResource CaptionTextBlockStyle}" />
+                                            </Border>
                                         </ComboBoxItem>
-                                        <ComboBoxItem x:Name="ComboBoxItemPreviewSelection" x:Load="{x:Bind CanPreviewScan, Mode=OneWay}">
+                                        <ComboBoxItem x:Name="ComboBoxItemPreviewSelection">
                                             <Grid ColumnSpacing="12">
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition Width="16" />
