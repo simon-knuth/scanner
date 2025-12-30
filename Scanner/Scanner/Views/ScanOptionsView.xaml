@@ -293,13 +293,18 @@
                                                 <TextBlock Grid.Column="1" Text="Everything" />
                                             </Grid>
                                         </ComboBoxItem>
-                                        <ComboBoxItem IsEnabled="False" Margin="-16,0,-16,0" Padding="0" Height="36" VerticalContentAlignment="Stretch">
-                                            <Border Padding="24,0,24,0" BorderBrush="{ThemeResource DividerStrokeColorDefaultBrush}" BorderThickness="0,1,0,0">
+                                        <ComboBoxItem IsEnabled="False" Margin="-16,0,-16,0" Height="36" VerticalContentAlignment="Stretch">
+                                            <ComboBoxItem.Resources>
+                                                <Thickness x:Key="ComboBoxItemThemePadding">11,0,11,0</Thickness>
+                                                <Thickness x:Key="ComboBoxItemThemeTouchPadding">11,0,11,0</Thickness>
+                                            </ComboBoxItem.Resources>
+                                            
+                                            <Border Padding="16,0,16,0" BorderBrush="{ThemeResource DividerStrokeColorDefaultBrush}" BorderThickness="0,1,0,0">
                                                 <TextBlock Text="{x:Bind strings:Resources.AspectRatioInternationalHeading}" VerticalAlignment="Center" Style="{StaticResource CaptionTextBlockStyle}" />
                                             </Border>
                                         </ComboBoxItem>
                                         <ComboBoxItem Tag="{x:Bind helpers:PaperSize.DinA3}">
-                                            <Grid>
+                                            <Grid ColumnSpacing="8">
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition Width="Auto" />
                                                     <ColumnDefinition Width="1*" />
@@ -310,7 +315,7 @@
                                             </Grid>
                                         </ComboBoxItem>
                                         <ComboBoxItem Tag="{x:Bind helpers:PaperSize.DinA4}">
-                                            <Grid>
+                                            <Grid ColumnSpacing="8">
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition Width="Auto" />
                                                     <ColumnDefinition Width="1*" />
@@ -321,7 +326,7 @@
                                             </Grid>
                                         </ComboBoxItem>
                                         <ComboBoxItem Tag="{x:Bind helpers:PaperSize.DinA5}">
-                                            <Grid>
+                                            <Grid ColumnSpacing="8">
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition Width="Auto" />
                                                     <ColumnDefinition Width="1*" />
@@ -332,10 +337,15 @@
                                             </Grid>
                                         </ComboBoxItem>
                                         <ComboBoxItem IsEnabled="False" Height="36" VerticalContentAlignment="Stretch">
+                                            <ComboBoxItem.Resources>
+                                                <Thickness x:Key="ComboBoxItemThemePadding">11,0,11,0</Thickness>
+                                                <Thickness x:Key="ComboBoxItemThemeTouchPadding">11,0,11,0</Thickness>
+                                            </ComboBoxItem.Resources>
+
                                             <TextBlock Text="{x:Bind strings:Resources.AspectRatioNAHeading}" VerticalAlignment="Center" Style="{StaticResource CaptionTextBlockStyle}" />
                                         </ComboBoxItem>
                                         <ComboBoxItem Tag="{x:Bind helpers:PaperSize.AnsiA}">
-                                            <Grid>
+                                            <Grid ColumnSpacing="8">
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition Width="Auto" />
                                                     <ColumnDefinition Width="1*" />
@@ -346,7 +356,7 @@
                                             </Grid>
                                         </ComboBoxItem>
                                         <ComboBoxItem Tag="{x:Bind helpers:PaperSize.AnsiB}">
-                                            <Grid>
+                                            <Grid ColumnSpacing="8">
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition Width="Auto" />
                                                     <ColumnDefinition Width="1*" />
@@ -357,7 +367,7 @@
                                             </Grid>
                                         </ComboBoxItem>
                                         <ComboBoxItem Tag="{x:Bind helpers:PaperSize.AnsiC}">
-                                            <Grid>
+                                            <Grid ColumnSpacing="8">
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition Width="Auto" />
                                                     <ColumnDefinition Width="1*" />
@@ -368,7 +378,7 @@
                                             </Grid>
                                         </ComboBoxItem>
                                         <ComboBoxItem Tag="{x:Bind helpers:PaperSize.Legal}">
-                                            <Grid>
+                                            <Grid ColumnSpacing="8">
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition Width="Auto" />
                                                     <ColumnDefinition Width="1*" />
@@ -378,8 +388,13 @@
                                                 <TextBlock Grid.Column="1" Text="{x:Bind helpers:PaperSize.Legal, Converter={StaticResource PaperSizeMeasurementsConverter}}" HorizontalAlignment="Right" VerticalAlignment="Center" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorTertiaryBrush}" Visibility="{Binding ElementName=ComboBoxScanArea, Path=IsDropDownOpen, Mode=OneWay}" />
                                             </Grid>
                                         </ComboBoxItem>
-                                        <ComboBoxItem IsEnabled="False" Margin="-16,0,-16,0" Padding="0" Height="36" VerticalContentAlignment="Stretch">
-                                            <Border Padding="24,0,24,0" BorderBrush="{ThemeResource DividerStrokeColorDefaultBrush}" BorderThickness="0,1,0,0">
+                                        <ComboBoxItem x:Name="ComboBoxItemAutoCropHeading" IsEnabled="False" Margin="-16,0,-16,0" Height="36" VerticalContentAlignment="Stretch" x:Load="{x:Bind IsAutoCropVisible, Mode=OneWay}">
+                                            <ComboBoxItem.Resources>
+                                                <Thickness x:Key="ComboBoxItemThemePadding">11,0,11,0</Thickness>
+                                                <Thickness x:Key="ComboBoxItemThemeTouchPadding">11,0,11,0</Thickness>
+                                            </ComboBoxItem.Resources>
+
+                                            <Border Padding="16,0,16,0" BorderBrush="{ThemeResource DividerStrokeColorDefaultBrush}" BorderThickness="0,1,0,0">
                                                 <TextBlock Text="{x:Bind strings:Resources.AutoCropHeading}" VerticalAlignment="Center" Style="{StaticResource CaptionTextBlockStyle}" />
                                             </Border>
                                         </ComboBoxItem>
@@ -405,8 +420,13 @@
                                                 <TextBlock Grid.Column="1" Text="{x:Bind strings:Resources.AutoCropMultiple}" MaxLines="1" />
                                             </Grid>
                                         </ComboBoxItem>
-                                        <ComboBoxItem IsEnabled="False" Margin="-16,0,-16,0" Padding="0" Height="36" VerticalContentAlignment="Stretch">
-                                            <Border Padding="24,0,24,0" BorderBrush="{ThemeResource DividerStrokeColorDefaultBrush}" BorderThickness="0,1,0,0">
+                                        <ComboBoxItem IsEnabled="False" Margin="-16,0,-16,0" Height="36" VerticalContentAlignment="Stretch" >
+                                            <ComboBoxItem.Resources>
+                                                <Thickness x:Key="ComboBoxItemThemePadding">11,0,11,0</Thickness>
+                                                <Thickness x:Key="ComboBoxItemThemeTouchPadding">11,0,11,0</Thickness>
+                                            </ComboBoxItem.Resources>
+
+                                            <Border Padding="16,0,16,0" BorderBrush="{ThemeResource DividerStrokeColorDefaultBrush}" BorderThickness="0,1,0,0">
                                                 <TextBlock Text="{x:Bind strings:Resources.PreviewHeading}" VerticalAlignment="Center" Style="{StaticResource CaptionTextBlockStyle}" />
                                             </Border>
                                         </ComboBoxItem>

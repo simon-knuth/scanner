@@ -38,6 +38,7 @@ namespace Scanner.Views
             ViewModel.AccessibilityService.InvertedFlowDirection : ViewModel.AccessibilityService.DefaultFlowDirection;
 
         public bool ShowExpandButtonInProjectView => VisualStateGroup.CurrentState == VisualStateNarrow && !ProjectView.IsExpanded;
+        public bool ShowAllMoreMenuItems => VisualStateGroup.CurrentState == VisualStateNarrow || VisualStateGroup.CurrentState == VisualStateNarrowNoProject;
 
         public bool ShowScanActionsDivider => ScanActionsView.AreScanOptionsVisible || ScanOptionsView.CanScroll || ViewModel.ProjectService.IsScanProcessRunning;
 
@@ -326,6 +327,7 @@ namespace Scanner.Views
         private void VisualStateGroup_CurrentStateChanged(object sender, VisualStateChangedEventArgs e)
         {
             OnPropertyChanged(nameof(ShowExpandButtonInProjectView));
+            OnPropertyChanged(nameof(ShowAllMoreMenuItems));
         }
 
         private void ProjectView_IsExpandedChanged(object sender, EventArgs e)
@@ -372,13 +374,6 @@ namespace Scanner.Views
         private void ViewModel_ScanMergeDialogRequested(object? sender, EventArgs e)
         {
             ShowScanMergeDialog();
-        }
-
-        private void ButtonSettings_RightTapped(object sender, RightTappedRoutedEventArgs e)
-        {
-#if DEBUG
-            FlyoutBase.ShowAttachedFlyout(ButtonSettings);
-#endif
         }
 
         private void SettingsCardDebugDialogSaveChanges_Click(object sender, RoutedEventArgs e)
@@ -645,6 +640,13 @@ namespace Scanner.Views
         private async void Page_Loading(FrameworkElement sender, object args)
         {
             await ViewModel.AccessibilityService.InitializeForLanguageTagAsync(this.DispatcherQueue, sender.Language);
+        }
+
+        private void ButtonTitlebarMore_RightTapped(object sender, RightTappedRoutedEventArgs e)
+        {
+#if DEBUG
+            FlyoutBase.ShowAttachedFlyout(ButtonTitlebarMore);
+#endif
         }
     }
 }

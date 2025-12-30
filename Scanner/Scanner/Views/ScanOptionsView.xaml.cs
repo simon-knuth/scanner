@@ -721,11 +721,6 @@ namespace Scanner.Views
             OnPropertyChanged(nameof(SelectedOrientationInt));
         }
 
-        private void GridContent_SizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            ComboBoxFileFormats.MaxWidth = Math.Max(0, e.NewSize.Width - 40);
-        }
-
         private void ButtonPageList_Click(object sender, RoutedEventArgs e)
         {
             ExpandPageListRequested?.Invoke(this, EventArgs.Empty);
@@ -1001,6 +996,15 @@ namespace Scanner.Views
         private void ComboBoxScanArea_Loading(FrameworkElement sender, object args)
         {
             ApplyScanAreaToComboBox(ViewModel.ScanOptions.ScanArea);
+        }
+
+        private void GridContent_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            ComboBoxFileFormats.MaxWidth = e.NewSize.Width - 40;
+            foreach (ComboBoxItem item in ComboBoxFileFormats.Items)
+            {
+                item.MaxWidth = e.NewSize.Width - 40;
+            }
         }
     }
 }
