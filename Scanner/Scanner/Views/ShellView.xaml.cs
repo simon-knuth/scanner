@@ -34,6 +34,14 @@ namespace Scanner.Views
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        #region Constants
+        private const double ScanOptionsPaneMaxWidth = 348;
+        private const double ProjectViewPaneMaxWidth = 452;
+        #endregion
+
+        private double LeftPaneMaxWidth = ScanOptionsPaneMaxWidth;
+        private double RightPaneMaxWidth = ProjectViewPaneMaxWidth;
+        
         private FlowDirection LayoutFlowDirection => ViewModel.SettingsService.SettingMirrorAppLayout ?
             ViewModel.AccessibilityService.InvertedFlowDirection : ViewModel.AccessibilityService.DefaultFlowDirection;
 
@@ -62,6 +70,12 @@ namespace Scanner.Views
         public ShellView()
         {
             this.InitializeComponent();
+
+            if (ViewModel.SettingsService.SettingMirrorAppLayout)
+            {
+                LeftPaneMaxWidth = ProjectViewPaneMaxWidth;
+                RightPaneMaxWidth = ProjectViewPaneMaxWidth;
+            }
 
             ViewModel.PropertyChanged += ViewModel_PropertyChanged;
             ViewModel.SaveChangesDialogRequested += ViewModel_SaveChangesDialogRequested;

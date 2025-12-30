@@ -486,6 +486,9 @@ namespace Scanner.Views
         public bool CanResetContrast => ViewModel.ScanOptions.Contrast != 0;
         #endregion
 
+        [ObservableProperty]
+        private bool isScanAreaAlignmentFlyoutOpen;
+
         public bool CanScroll => ScrollViewerContent.ScrollableHeight > 0
             && ScrollViewerContent.VerticalOffset + 8 < ScrollViewerContent.ScrollableHeight;
 
@@ -1005,6 +1008,16 @@ namespace Scanner.Views
             {
                 item.MaxWidth = e.NewSize.Width - 40;
             }
+        }
+
+        private void FlyoutScanAreaAlignment_Opening(object sender, object e)
+        {
+            IsScanAreaAlignmentFlyoutOpen = true;
+        }
+
+        private void FlyoutScanAreaAlignment_Closed(object sender, object e)
+        {
+            IsScanAreaAlignmentFlyoutOpen = false;
         }
     }
 }

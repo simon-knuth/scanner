@@ -52,7 +52,7 @@
                             <Run FontWeight="SemiBold">Scanner</Run>
                             <LineBreak /><Run>Version</Run>
                             <Run Text="{x:Bind ViewModel.CurrentVersion}"/>
-                            <LineBreak />Copyright © 2025 <Hyperlink x:Name="HyperlinkSimonKnuth" UnderlineStyle="None">Simon Knuth</Hyperlink>
+                            <LineBreak />Copyright © 2026 <Hyperlink x:Name="HyperlinkSimonKnuth" UnderlineStyle="None">Simon Knuth</Hyperlink>
                         </Span>
                     </TextBlock>
                     <StackPanel Grid.Column="2" Orientation="Vertical">

@@ -71,6 +71,10 @@
                         <Setter Target="StackPanelTitlebarButtonsRightExpanded.Visibility" Value="Collapsed" />
                         <Setter Target="ColumnDefinitionFirst.MaxWidth" Value="2000" />
                         <Setter Target="ColumnDefinitionMiddle.Width" Value="0" />
+                        <Setter Target="ColumnDefinitionLast.Width" Value="0" />
+                        <Setter Target="ColumnDefinitionLast.MinWidth" Value="0" />
+                        <Setter Target="ColumnDefinitionLast.MaxWidth" Value="0" />
+                        <Setter Target="GridSplitterMiddle.Visibility" Value="Collapsed" />
                         <Setter Target="ScanOptionsView.CanExpandPageList" Value="False" />
                         <Setter Target="BorderScanOptions.Margin" Value="0,152,0,0" />
                         <Setter Target="BorderScanOptions.Padding" Value="0,0,0,0" />
@@ -97,6 +101,10 @@
                         <Setter Target="StackPanelTitlebarButtonsRightExpanded.Visibility" Value="Collapsed" />
                         <Setter Target="ColumnDefinitionFirst.MaxWidth" Value="2000" />
                         <Setter Target="ColumnDefinitionMiddle.Width" Value="0" />
+                        <Setter Target="ColumnDefinitionLast.Width" Value="0" />
+                        <Setter Target="ColumnDefinitionLast.MinWidth" Value="0" />
+                        <Setter Target="ColumnDefinitionLast.MaxWidth" Value="0" />
+                        <Setter Target="GridSplitterMiddle.Visibility" Value="Collapsed" />
                         <Setter Target="BorderProjectView.Visibility" Value="Collapsed" />
                         <Setter Target="ScanOptionsView.CanExpandPageList" Value="False" />
                         <Setter Target="BorderScanOptions.Padding" Value="0,8,0,0" />
@@ -120,7 +128,9 @@
                     </Storyboard>
 
                     <VisualState.Setters>
-
+                        <Setter Target="ColumnDefinitionLast.Width" Value="0" />
+                        <Setter Target="ColumnDefinitionLast.MinWidth" Value="0" />
+                        <Setter Target="ColumnDefinitionLast.MaxWidth" Value="0" />
                     </VisualState.Setters>
                 </VisualState>
 
@@ -134,6 +144,9 @@
                     </Storyboard>
 
                     <VisualState.Setters>
+                        <Setter Target="ColumnDefinitionLast.Width" Value="0" />
+                        <Setter Target="ColumnDefinitionLast.MinWidth" Value="0" />
+                        <Setter Target="ColumnDefinitionLast.MaxWidth" Value="0" />
                         <Setter Target="BorderProjectView.Visibility" Value="Collapsed" />
                         <Setter Target="BorderScanOptions.Visibility" Value="Visible" />
                         <Setter Target="BorderScanOptions.Padding" Value="0,8,0,0" />
@@ -153,6 +166,9 @@
 
                     <VisualState.Setters>
                         <Setter Target="ColumnDefinitionLast.Width" Value="348" />
+                        <Setter Target="ColumnDefinitionLast.MinWidth" Value="300" />
+                        <Setter Target="ColumnDefinitionLast.MaxWidth" Value="{x:Bind RightPaneMaxWidth}" />
+                        <Setter Target="GridSplitterLast.Visibility" Value="Visible" />
                         <Setter Target="BorderProjectView.(Grid.Column)" Value="2" />
                         <Setter Target="BorderProjectView.(Grid.RowSpan)" Value="2" />
                         <Setter Target="ProjectView.IsExpanded" Value="True" />
@@ -394,7 +410,7 @@
                 </Grid.RowDefinitions>
 
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition x:Name="ColumnDefinitionFirst" Width="4*" MaxWidth="348" />
+                    <ColumnDefinition x:Name="ColumnDefinitionFirst" Width="4*" MinWidth="300" MaxWidth="348" />
                     <ColumnDefinition x:Name="ColumnDefinitionMiddle" Width="6*" />
                     <ColumnDefinition x:Name="ColumnDefinitionLast" Width="0" />
                 </Grid.ColumnDefinitions>
@@ -415,6 +431,7 @@
 
                     <views:ScanOptionsView x:Name="ScanOptionsView" CanExpandPageList="True" FlowDirection="{x:Bind ViewModel.AccessibilityService.DefaultFlowDirection, Mode=OneWay}" ExpandPageListRequested="ExpandPageListRequested" PropertyChanged="ScanOptionsView_PropertyChanged" />
                 </Border>
+
                 <Border x:Name="BorderScanActionsView" Grid.Row="1" Grid.Column="0">
                     <views:ScanActionsView x:Name="ScanActionsView" Height="72" ScanOptions="{x:Bind ScanOptionsView.ScanOptions, Mode=OneWay}" FlowDirection="{x:Bind ViewModel.AccessibilityService.DefaultFlowDirection, Mode=OneWay}" ExpandScanOptionsRequested="ScanActionsView_ExpandScanOptionsRequested" AreScanOptionsVisibleChanged="ScanActionsView_AreScanOptionsVisibleChanged" />
                 </Border>
@@ -423,6 +440,9 @@
                 <Border x:Name="BorderEditor" Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" Background="{ThemeResource LayerFillColorDefaultBrush}" BorderBrush="{ThemeResource DividerStrokeColorDefaultBrush}" BorderThickness="1,1,0,0" CornerRadius="8,0,0,0">
                     <views:EditorView FlowDirection="{x:Bind ViewModel.AccessibilityService.DefaultFlowDirection, Mode=OneWay}" />
                 </Border>
+
+                <controls:GridSplitter x:Name="GridSplitterMiddle" Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" Width="12" CornerRadius="4,4,0,0" Margin="-6,8,0,0" HorizontalAlignment="Left" ResizeBehavior="PreviousAndCurrent" ResizeDirection="Columns" IsThumbVisible="False" />
+                <controls:GridSplitter x:Name="GridSplitterLast" Grid.Row="0" Grid.RowSpan="2" Grid.Column="2" Width="12" CornerRadius="4,4,0,0" Margin="-6,8,0,0" HorizontalAlignment="Left" ResizeBehavior="BasedOnAlignment" ResizeDirection="Columns" IsThumbVisible="False" Visibility="Collapsed" />
             </Grid>
             
             <!-- Notifications -->

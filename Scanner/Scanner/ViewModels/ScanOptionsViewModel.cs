@@ -17,7 +17,6 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Windows.ApplicationModel.Appointments.AppointmentsProvider;
 using Windows.Devices.Scanners;
 using Windows.Storage;
 using Windows.UI.WebUI;
@@ -210,8 +209,12 @@ namespace Scanner.ViewModels
 
         private async Task CleanUpScanAreaAlignmentBitmapAsync()
         {
-            StorageFile? file = ScanAreaAlignmentBitmap;
-            Task.Run(async () => await file?.DeleteAsync(StorageDeleteOption.PermanentDelete));
+            if (ScanAreaAlignmentBitmap == null)
+                return;
+
+            StorageFile file = ScanAreaAlignmentBitmap;
+            await Task.Run(async () => await file.DeleteAsync(StorageDeleteOption.PermanentDelete));
+
             ScanAreaAlignmentBitmap = null;
         }
 
@@ -448,48 +451,12 @@ namespace Scanner.ViewModels
 
         private async Task UpdateScanAreaAlignmentBitmapAsync()
         {
+            await CleanUpScanAreaAlignmentBitmapAsync();
+
             if (SelectedScanner == null)
                 return;
 
-            // construct low-res scan options
-            ScanOptions scanOptions = new(SelectedScanner, false, ScanOptions.SourceMode);
-            scanOptions.SourceMode = ScanOptions.SourceMode;
-
-            List<ImageScannerFormat> formats;
-            switch (scanOptions.SourceMode)
-            {
-                case ScannerSource.Flatbed:
-                    scanOptions.Resolution = SelectedScanner.FlatbedResolutions.OrderBy(x => x.Resolution.DpiX).First();
-                    formats = SelectedScanner.FlatbedFormats;
-                    break;
-                case ScannerSource.Feeder:
-                    scanOptions.Resolution = SelectedScanner.FeederResolutions.OrderBy(x => x.Resolution.DpiX).First();
-                    formats = SelectedScanner.FeederFormats;
-                    scanOptions.ScanMultiplePages = false;
-                    break;
-                default:
-                    LogService?.Log.Error("Can't select resolution for source mode " + ScanOptions.SourceMode);
-                    throw new ApplicationException("Failed to select resolution for source mode " + ScanOptions.SourceMode);
-            }
-
-            if (formats.Contains(ImageScannerFormat.Jpeg))
-                scanOptions.TargetFormat = TargetFormat.JPG;
-            else if (formats.Contains(ImageScannerFormat.Png))
-                scanOptions.TargetFormat = TargetFormat.PNG;
-            else
-                scanOptions.TargetFormat = TargetFormat.BMP;
-
-            // scan the alignment image
-            IReadOnlyList<StorageFile>? files = null;
-            await Task.Run(async () =>
-            {
-                files = await SelectedScanner.GetScanAsync(scanOptions, AppDataService.PreviewScanFolder);
-            });
-            if (files == null || files.Count == 0)
-                return;
-
-            await CleanUpScanAreaAlignmentBitmapAsync();
-            ScanAreaAlignmentBitmap = files[0];
+            ScanAreaAlignmentBitmap = await SelectedScanner.ScanPreviewAsync(ScanOptions.SourceMode, AppDataService.PreviewScanFolder, true, viewDispatcherQueue);
         }
     }
 }

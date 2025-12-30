@@ -476,7 +476,7 @@
                                     </Grid>
 
                                     <Button.Flyout>
-                                        <Flyout x:Name="FlyoutScanAreaAlignment" Placement="Right">
+                                        <Flyout x:Name="FlyoutScanAreaAlignment" Placement="Right" Opening="FlyoutScanAreaAlignment_Opening" Closed="FlyoutScanAreaAlignment_Closed">
                                             <Flyout.FlyoutPresenterStyle>
                                                 <Style BasedOn="{StaticResource DefaultFlyoutPresenterStyle}" TargetType="FlyoutPresenter">
                                                     <Setter Property="ScrollViewer.HorizontalScrollMode" Value="Disabled" />
@@ -488,7 +488,7 @@
                                                 </Style>
                                             </Flyout.FlyoutPresenterStyle>
 
-                                            <Grid RowSpacing="12">
+                                            <Grid x:Name="GridFlyoutScanAreaAlignment" RowSpacing="12" x:Load="{x:Bind IsScanAreaAlignmentFlyoutOpen, Mode=OneWay}">
                                                 <Grid.RowDefinitions>
                                                     <RowDefinition Height="Auto" />
                                                     <RowDefinition Height="32" />
