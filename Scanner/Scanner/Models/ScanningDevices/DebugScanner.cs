@@ -24,6 +24,7 @@ using Windows.Storage;
 using Windows.UI.WindowManagement;
 using Microsoft.UI.Xaml;
 using Windows.Foundation;
+using Microsoft.UI.Dispatching;
 
 namespace Scanner.Models.ScanningDevices
 {
@@ -33,6 +34,7 @@ namespace Scanner.Models.ScanningDevices
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         #region Services
+        private IAppDataService AppDataService = Ioc.Default.GetRequiredService<IAppDataService>();
         private ILogService? LogService = Ioc.Default.GetService<ILogService>();
         #endregion
 
@@ -158,12 +160,43 @@ namespace Scanner.Models.ScanningDevices
             throw new NotImplementedException();
         }
 
-        public Task<BitmapImage> GetPreviewAsync()
+        public async Task<StorageFile?> GetPreviewScanAsync(ScannerSource sourceMode, StorageFolder targetFolder, bool clearTargetFolder, DispatcherQueue uiDispatcherQueue)
         {
-            throw new NotImplementedException();
+            // empty target folder
+            if (clearTargetFolder)
+                await AppDataService.EmptyFolderAsync(targetFolder);
+
+            IReadOnlyList<StorageFile> files = await PickInputFilesAsync(false);
+            if (files.Count == 0)
+                return null;
+
+            // copy to target folder
+            List<Task<StorageFile>> copytasks = new();
+            foreach (StorageFile file in files)
+            {
+                copytasks.Add(file.CopyAsync(targetFolder, file.Name, NameCollisionOption.GenerateUniqueName).AsTask());
+            }
+            StorageFile[] results = await Task.WhenAll(copytasks);
+
+            return results[0];
         }
 
         public async Task<IReadOnlyList<StorageFile>> GetScanAsync(ScanOptions scanOptions, StorageFolder targetFolder)
+        {
+            IReadOnlyList<StorageFile> files = await PickInputFilesAsync(scanOptions.SourceMode != ScannerSource.Flatbed);
+
+            // copy to target folder
+            List<Task<StorageFile>> copytasks = new(); 
+            foreach (StorageFile file in files)
+            {
+                copytasks.Add(file.CopyAsync(targetFolder, file.Name, NameCollisionOption.GenerateUniqueName).AsTask());
+            }
+            StorageFile[] results = await Task.WhenAll(copytasks);
+
+            return results;
+        }
+
+        private async Task<IReadOnlyList<StorageFile>> PickInputFilesAsync(bool allowMultipleFiles)
         {
             // select files to simulate scan
             FileOpenPicker picker = new();
@@ -184,17 +217,9 @@ namespace Scanner.Models.ScanningDevices
 
             // pick files
             IReadOnlyList<StorageFile> files = await picker.PickMultipleFilesAsync();
-            if (files == null || files.Count == 0) return new List<StorageFile>();
+            if (files == null || files.Count == 0) return [];
 
-            // copy to target folder
-            List<Task<StorageFile>> copytasks = new(); 
-            foreach (StorageFile file in files)
-            {
-                copytasks.Add(file.CopyAsync(targetFolder, file.Name, NameCollisionOption.GenerateUniqueName).AsTask());
-            }
-            StorageFile[] results = await Task.WhenAll(copytasks);
-
-            return results;
+            return files;
         }
 
         private List<ImageScannerFormat> GenerateFormats(IImageScannerFormatConfiguration config)

@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using Microsoft.UI;
+using Microsoft.UI.Dispatching;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
@@ -20,7 +21,9 @@ using Windows.Devices.Enumeration;
 using Windows.Devices.Scanners;
 using Windows.Foundation;
 using Windows.Foundation.Metadata;
+using Windows.Graphics.Imaging;
 using Windows.Storage;
+using Windows.Storage.Streams;
 using WinRT.Interop;
 
 namespace Scanner.Models.ScanningDevices
@@ -31,7 +34,12 @@ namespace Scanner.Models.ScanningDevices
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         #region Services
+        private IAppDataService AppDataService = Ioc.Default.GetRequiredService<IAppDataService>();
         private ILogService? LogService = Ioc.Default.GetService<ILogService>();
+        #endregion
+
+        #region Constants
+        private const double jpegQuality = 0.85;
         #endregion
 
         public string Id { get; private set; }
@@ -284,9 +292,109 @@ namespace Scanner.Models.ScanningDevices
             throw new NotImplementedException();
         }
 
-        public Task<BitmapImage> GetPreviewAsync()
+        public async Task<StorageFile?> GetPreviewScanAsync(ScannerSource sourceMode, StorageFolder targetFolder, bool emptyTargetFolder, DispatcherQueue uiDispatcherQueue)
         {
-            throw new NotImplementedException();
+            // empty target folder
+            if (emptyTargetFolder)
+                await AppDataService.EmptyFolderAsync(targetFolder);
+
+            bool supportsNativePreview;
+            switch (sourceMode)
+            {
+                case ScannerSource.Auto:
+                    supportsNativePreview = false;
+                    break;
+                case ScannerSource.Flatbed:
+                    supportsNativePreview = IsFlatbedPreviewAllowed;
+                    break;
+                case ScannerSource.Feeder:
+                    supportsNativePreview = IsFeederPreviewAllowed;
+                    break;
+                case ScannerSource.None:
+                default:
+                    LogService?.Log.Error("Can't determine preview type for source mode " + sourceMode);
+                    throw new ApplicationException("Failed to determine preview type for source mode " + sourceMode);
+            }
+
+            if (supportsNativePreview)
+            {
+                // use scanner's native preview capability
+                using IRandomAccessStream sourceStream = new InMemoryRandomAccessStream();
+                switch (sourceMode)
+                {
+                    case ScannerSource.Flatbed:
+                        await imageScanner.ScanPreviewToStreamAsync(ImageScannerScanSource.Flatbed, sourceStream);
+                        break;
+                    case ScannerSource.Feeder:
+                        await imageScanner.ScanPreviewToStreamAsync(ImageScannerScanSource.Feeder, sourceStream);
+                        break;
+                    case ScannerSource.Auto:
+                    case ScannerSource.None:
+                    default:
+                        LogService?.Log.Error("Can't scan preview to stream for source mode " + sourceMode);
+                        throw new ApplicationException("Failed to scan preview to stream for source mode " + sourceMode);
+                }
+
+                // convert to JPG and save to file
+                StorageFile targetFile = await targetFolder.CreateFileAsync("preview.jpg", CreationCollisionOption.GenerateUniqueName);
+
+                await uiDispatcherQueue.RunOnThreadAndWaitAsync(DispatcherQueuePriority.Low, async () =>
+                {
+                    BitmapDecoder decoder = await BitmapDecoder.CreateAsync(sourceStream);
+
+                    BitmapPropertySet propertySet = new BitmapPropertySet();
+                    propertySet.Add("ImageQuality", new BitmapTypedValue(jpegQuality, PropertyType.Single));
+
+                    using IRandomAccessStream targetStream = await targetFile.OpenAsync(FileAccessMode.ReadWrite);
+                    BitmapEncoder encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.JpegEncoderId, targetStream, propertySet);
+
+                    using SoftwareBitmap softwareBitmap = await decoder.GetSoftwareBitmapAsync();
+                    encoder.SetSoftwareBitmap(softwareBitmap);
+                    await encoder.FlushAsync();
+                });
+
+                return targetFile;
+            }
+            else
+            {
+                // scan low-res image and use it as preview
+                ScanOptions scanOptions = new(this, false, sourceMode);
+
+                List<ImageScannerFormat> formats;
+                switch (scanOptions.SourceMode)
+                {
+                    case ScannerSource.Flatbed:
+                        scanOptions.Resolution = FlatbedResolutions.OrderBy(x => x.Resolution.DpiX).First();
+                        formats = FlatbedFormats;
+                        break;
+                    case ScannerSource.Feeder:
+                        scanOptions.Resolution = FeederResolutions.OrderBy(x => x.Resolution.DpiX).First();
+                        formats = FeederFormats;
+                        scanOptions.ScanMultiplePages = false;
+                        break;
+                    default:
+                        LogService?.Log.Error("Can't select resolution for source mode " + sourceMode);
+                        throw new ApplicationException("Failed to select resolution for source mode " + sourceMode);
+                }
+
+                if (formats.Contains(ImageScannerFormat.Jpeg))
+                    scanOptions.TargetFormat = TargetFormat.JPG;
+                else if (formats.Contains(ImageScannerFormat.Png))
+                    scanOptions.TargetFormat = TargetFormat.PNG;
+                else
+                    scanOptions.TargetFormat = TargetFormat.BMP;
+
+                // scan preview
+                IReadOnlyList<StorageFile>? files = null;
+                await Task.Run(async () =>
+                {
+                    files = await GetScanAsync(scanOptions, targetFolder);
+                });
+                if (files == null || files.Count == 0)
+                    return null;
+
+                return files[0];
+            }
         }
 
         public async Task<IReadOnlyList<StorageFile>> GetScanAsync(ScanOptions scanOptions, StorageFolder targetFolder)
@@ -404,9 +512,16 @@ namespace Scanner.Models.ScanningDevices
 
                     // multiple pages
                     if (scanOptions.ScanMultiplePages)
+                    {
                         imageScanner.FeederConfiguration.MaxNumberOfPages = 0;
+
+                        if (imageScanner.FeederConfiguration.CanScanAhead)
+                            imageScanner.FeederConfiguration.ScanAhead = true;
+                    }
                     else
+                    {
                         imageScanner.FeederConfiguration.MaxNumberOfPages = 1;
+                    }
 
                     // duplex
                     imageScanner.FeederConfiguration.Duplex = scanOptions.Duplex;

@@ -456,7 +456,7 @@ namespace Scanner.ViewModels
             if (SelectedScanner == null)
                 return;
 
-            ScanAreaAlignmentBitmap = await SelectedScanner.ScanPreviewAsync(ScanOptions.SourceMode, AppDataService.PreviewScanFolder, true, viewDispatcherQueue);
+            ScanAreaAlignmentBitmap = await SelectedScanner.GetPreviewScanAsync(ScanOptions.SourceMode, AppDataService.PreviewScanFolder, true, viewDispatcherQueue);
         }
     }
 }
