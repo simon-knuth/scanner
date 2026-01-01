@@ -453,7 +453,7 @@ namespace Scanner.Models
 
                 // apply result
                 if (fileName != null)
-                    await FileNameInfo.UpdateNamesAsync(fileName, FileNameInfo.ActualName, true, uiDispatcherQueue);
+                    await FileNameInfo.UpdateNamesAsync(fileName + Helpers.Helpers.TargetFormatToFileExtension(Format), FileNameInfo.ActualName, true, uiDispatcherQueue);
             }
             finally
             {
