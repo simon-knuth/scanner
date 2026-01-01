@@ -111,9 +111,12 @@ namespace Scanner.Services
             get => selectedPages;
             set
             {
-                if (SetProperty(ref selectedPages, value) && value != null)
+                if (SetProperty(ref selectedPages, value))
                 {
-                    value.CollectionChanged += SelectedPages_CollectionChanged;
+                    OnPropertyChanged(nameof(SelectedPagesCount));
+
+                    if (value != null)
+                        value.CollectionChanged += SelectedPages_CollectionChanged;
                 }
             }
         }
