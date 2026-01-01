@@ -403,7 +403,7 @@ namespace Scanner.Models
             }
         }
 
-        public async Task<ImageBuffer> GetImageBufferForAIFileNameGenerationAsync(DispatcherQueue uiDispatcherQueue)
+        public async Task<SoftwareBitmap> GetSoftwareBitmapForAIFileNameGenerationAsync(DispatcherQueue uiDispatcherQueue)
         {
             // decode bitmap
             using IRandomAccessStream sourceFileStream = await Pages[0].PreviewFile.OpenReadAsync();
@@ -412,20 +412,17 @@ namespace Scanner.Models
             // scale down
             BitmapTransform transform = new BitmapTransform()
             {
-                ScaledWidth = decoder.PixelWidth / 4,
-                ScaledHeight = decoder.PixelHeight / 4
+                ScaledWidth = decoder.PixelWidth / 2,
+                ScaledHeight = decoder.PixelHeight / 2
             };
-            using SoftwareBitmap softwareBitmap = await decoder.GetSoftwareBitmapAsync(
+            SoftwareBitmap softwareBitmap = await decoder.GetSoftwareBitmapAsync(
                 BitmapPixelFormat.Bgra8,
                 BitmapAlphaMode.Premultiplied,
                 transform,
                 ExifOrientationMode.RespectExifOrientation,
                 ColorManagementMode.DoNotColorManage);
 
-            // generate ImageBuffer for AI
-            using ImageBuffer imageBuffer = ImageBuffer.CreateForSoftwareBitmap(softwareBitmap);
-
-            return imageBuffer;
+            return softwareBitmap;
         }
 
         public async Task GenerateFileNameWithAIAsync(DispatcherQueue uiDispatcherQueue)
@@ -434,8 +431,8 @@ namespace Scanner.Models
 
             try
             {
-                using ImageBuffer imageBuffer = await GetImageBufferForAIFileNameGenerationAsync(uiDispatcherQueue);
-                await GenerateFileNameWithAIAsync(imageBuffer, uiDispatcherQueue);
+                SoftwareBitmap softwareBitmap = await GetSoftwareBitmapForAIFileNameGenerationAsync(uiDispatcherQueue);
+                await GenerateFileNameWithAIAsync(softwareBitmap, uiDispatcherQueue);
             }
             finally
             {
@@ -443,7 +440,7 @@ namespace Scanner.Models
             }
         }
 
-        public async Task GenerateFileNameWithAIAsync(ImageBuffer imageBuffer, DispatcherQueue uiDispatcherQueue)
+        public async Task GenerateFileNameWithAIAsync(SoftwareBitmap bitmap, DispatcherQueue uiDispatcherQueue)
         {
             await uiDispatcherQueue.RunOnThreadAndWaitAsync(DispatcherQueuePriority.High, () => FileNameInfo.IsNameGenerationInProgress = true);
 
@@ -452,7 +449,7 @@ namespace Scanner.Models
                 // generate name
                 FileNameInfo.NameGenerationCts?.Cancel();
                 FileNameInfo.NameGenerationCts = new();
-                string? fileName = await CopilotRuntimeService.TryGenerateFileNameForImageAsync(imageBuffer, FileNameInfo.NameGenerationCts);
+                string? fileName = await CopilotRuntimeService.TryGenerateFileNameForImageAsync(bitmap, FileNameInfo.NameGenerationCts);
 
                 // apply result
                 if (fileName != null)
@@ -460,6 +457,7 @@ namespace Scanner.Models
             }
             finally
             {
+                bitmap.Dispose();
                 await uiDispatcherQueue.RunOnThreadAndWaitAsync(DispatcherQueuePriority.High, () => FileNameInfo.IsNameGenerationInProgress = false);
             }
         }

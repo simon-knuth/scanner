@@ -319,10 +319,10 @@ namespace Scanner.Services
                     if (CurrentProject is PdfProject pdfProject)
                     {
                         // load bitmap
-                        using ImageBuffer imageBuffer = await pdfProject.GetImageBufferForAIFileNameGenerationAsync(uiDispatcherQueue);
+                        SoftwareBitmap softwareBitmap = await pdfProject.GetSoftwareBitmapForAIFileNameGenerationAsync(uiDispatcherQueue);
 
                         // generate name in the background
-                        _ = Task.Run(async () => await pdfProject.GenerateFileNameWithAIAsync(imageBuffer, uiDispatcherQueue));
+                        _ = Task.Run(async () => await pdfProject.GenerateFileNameWithAIAsync(softwareBitmap, uiDispatcherQueue));
                     }
                     else if (CurrentProject is MultiFileProject imageProject)
                     {

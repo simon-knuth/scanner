@@ -76,23 +76,27 @@ namespace Scanner.Services
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public async Task<string?> TryGenerateFileNameForImageAsync(ImageBuffer imageBuffer, CancellationTokenSource cts)
+        public async Task<string?> TryGenerateFileNameForImageAsync(SoftwareBitmap bitmap, CancellationTokenSource cts)
         {
+            using var imageBuffer = ImageBuffer.CreateForSoftwareBitmap(bitmap);
+
             // image description
             ImageDescriptionResult descriptionResult;
+            if (!IsSupported || !AreModelsInstalled)
+                return null;
+
             try
             {
-                if (!IsSupported || !AreModelsInstalled)
-                    return null;
-
                 await fileNameModelsSemaphore.WaitAsync();
-                await LoadImageDescriptionModelsAsync(cts);
 
+                // load models
+                await LoadImageDescriptionModelsAsync(cts);
                 if (imageDescriptionGenerator == null)
                     return null;
 
+                // describe image
                 descriptionResult = await imageDescriptionGenerator.DescribeAsync(imageBuffer, ImageDescriptionKind.DiagramDescription, new ContentFilterOptions()).AsTask(cts.Token);
-                imageDescriptionGenerator.Dispose();
+                DisposeImageDescriptionGenerator();
             }
             catch (Exception exc)
             {
@@ -106,7 +110,7 @@ namespace Scanner.Services
 
             // name generation
             try
-            {                
+            {
                 string description = descriptionResult.Description.Trim();
 
                 // validate description (ignore ImageHasTooMuchText status)
@@ -233,8 +237,18 @@ namespace Scanner.Services
                 return;
 
             await fileNameModelsSemaphore.WaitAsync();
-            imageDescriptionGenerator?.Dispose();
+            DisposeImageDescriptionGenerator();
             fileNameModelsSemaphore.Release();
+        }
+
+        private void DisposeImageDescriptionGenerator()
+        {
+            if (imageDescriptionGenerator == null)
+                return;
+
+            ImageDescriptionGenerator generator = imageDescriptionGenerator;
+            imageDescriptionGenerator = null;
+            generator.Dispose();
         }
     }
 }

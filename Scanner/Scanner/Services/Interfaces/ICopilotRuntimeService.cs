@@ -52,6 +52,6 @@ namespace Scanner.Services.Interfaces
 
         Task PreheatFileNameGenerationModelsAsync();
         Task StopPreheatingFileNameGenerationModelsAsync();
-        Task<string?> TryGenerateFileNameForImageAsync(ImageBuffer imageBuffer, CancellationTokenSource cts);
+        Task<string?> TryGenerateFileNameForImageAsync(SoftwareBitmap bitmap, CancellationTokenSource cts);
     }
 }
