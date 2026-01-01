@@ -441,8 +441,8 @@
                     <views:EditorView FlowDirection="{x:Bind ViewModel.AccessibilityService.DefaultFlowDirection, Mode=OneWay}" />
                 </Border>
 
-                <controls:GridSplitter x:Name="GridSplitterMiddle" Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" Width="12" CornerRadius="4,4,0,0" Margin="-6,8,0,0" HorizontalAlignment="Left" ResizeBehavior="PreviousAndCurrent" ResizeDirection="Columns" IsThumbVisible="False" />
-                <controls:GridSplitter x:Name="GridSplitterLast" Grid.Row="0" Grid.RowSpan="2" Grid.Column="2" Width="12" CornerRadius="4,4,0,0" Margin="-6,8,0,0" HorizontalAlignment="Left" ResizeBehavior="BasedOnAlignment" ResizeDirection="Columns" IsThumbVisible="False" Visibility="Collapsed" />
+                <controls:GridSplitter x:Name="GridSplitterMiddle" Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" Width="8" CornerRadius="8,0,0,0" HorizontalAlignment="Left" ResizeBehavior="PreviousAndCurrent" ResizeDirection="Columns" IsThumbVisible="False" />
+                <controls:GridSplitter x:Name="GridSplitterLast" Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" Width="8" CornerRadius="0,8,0,0" HorizontalAlignment="Right" ResizeBehavior="BasedOnAlignment" ResizeDirection="Columns" IsThumbVisible="False" Visibility="Collapsed" />
             </Grid>
             
             <!-- Notifications -->

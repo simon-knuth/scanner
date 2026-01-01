@@ -134,6 +134,8 @@ namespace Scanner.Models
             AvailableFilters = GetAvailableFilters();
             Brightness = brightness;
             Contrast = contrast;
+            DisplayedBrightness = brightness;
+            DisplayedContrast = contrast;
             Width = width;
             Height = height;
         }
