@@ -112,7 +112,7 @@ namespace Scanner.Views
             // work around additional ComboBoxItems
             get
             {
-                if (ViewModel.ScanOptions.TargetFormat == Models.TargetFormat.None)
+                if (ViewModel.ScanOptions.TargetFormat == Models.TargetFormat.None || ViewModel.SelectedScanner == null)
                 {
                     return -1;
                 }
@@ -731,9 +731,16 @@ namespace Scanner.Views
 
         private async void ComboBoxScanners_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (e.AddedItems.Count == 0) return;
+            if (e.AddedItems.Count == 0 && e.RemovedItems.Count == 0)
+                return;
 
-            IScanningDevice? selectedDevice = ((ComboBoxItem)e.AddedItems[0]).Tag as IScanningDevice;
+            if (ComboBoxScanners.SelectedItem == null)
+            {
+                ViewModel.SelectedScanner = null;
+                return;
+            }
+
+            IScanningDevice? selectedDevice = ((ComboBoxItem)ComboBoxScanners.SelectedItem).Tag as IScanningDevice;
             if (selectedDevice != null)
             {
                 // apply scanner selection
