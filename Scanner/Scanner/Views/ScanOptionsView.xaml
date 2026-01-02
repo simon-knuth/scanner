@@ -138,7 +138,7 @@
                                             </Grid.RowDefinitions>
 
                                             <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="16" />
+                                                <ColumnDefinition Width="20" />
                                                 <ColumnDefinition Width="1*" />
                                             </Grid.ColumnDefinitions>
 
@@ -156,7 +156,7 @@
                                             </Grid.RowDefinitions>
 
                                             <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="16" />
+                                                <ColumnDefinition Width="20" />
                                                 <ColumnDefinition Width="1*" />
                                             </Grid.ColumnDefinitions>
 
@@ -173,7 +173,7 @@
                                             </Grid.RowDefinitions>
 
                                             <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="16" />
+                                                <ColumnDefinition Width="20" />
                                                 <ColumnDefinition Width="1*" />
                                             </Grid.ColumnDefinitions>
 
@@ -190,7 +190,7 @@
                                             </Grid.RowDefinitions>
 
                                             <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="16" />
+                                                <ColumnDefinition Width="20" />
                                                 <ColumnDefinition Width="1*" />
                                             </Grid.ColumnDefinitions>
 
@@ -207,7 +207,7 @@
                                             </Grid.RowDefinitions>
 
                                             <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="16" />
+                                                <ColumnDefinition Width="20" />
                                                 <ColumnDefinition Width="1*" />
                                             </Grid.ColumnDefinitions>
 
@@ -224,7 +224,7 @@
                                             </Grid.RowDefinitions>
 
                                             <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="16" />
+                                                <ColumnDefinition Width="20" />
                                                 <ColumnDefinition Width="1*" />
                                             </Grid.ColumnDefinitions>
 
@@ -241,7 +241,7 @@
                                             </Grid.RowDefinitions>
 
                                             <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="16" />
+                                                <ColumnDefinition Width="20" />
                                                 <ColumnDefinition Width="1*" />
                                             </Grid.ColumnDefinitions>
 
@@ -285,7 +285,7 @@
                                         <ComboBoxItem x:Name="ComboBoxItemScanEverything">
                                             <Grid ColumnSpacing="12">
                                                 <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="16" />
+                                                    <ColumnDefinition Width="20" />
                                                     <ColumnDefinition Width="1*" />
                                                 </Grid.ColumnDefinitions>
 
@@ -401,7 +401,7 @@
                                         <ComboBoxItem x:Name="ComboBoxItemAutoCropSingle" IsEnabled="{x:Bind IsAutoCropSingleSupported, Mode=OneWay}" x:Load="{x:Bind IsAutoCropVisible, Mode=OneWay}">
                                             <Grid ColumnSpacing="12">
                                                 <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="16" />
+                                                    <ColumnDefinition Width="20" />
                                                     <ColumnDefinition Width="1*" />
                                                 </Grid.ColumnDefinitions>
 
@@ -412,7 +412,7 @@
                                         <ComboBoxItem x:Name="ComboBoxItemAutoCropMulti" IsEnabled="{x:Bind IsAutoCropSingleSupported, Mode=OneWay}" x:Load="{x:Bind IsAutoCropVisible, Mode=OneWay}">
                                             <Grid ColumnSpacing="12">
                                                 <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="16" />
+                                                    <ColumnDefinition Width="20" />
                                                     <ColumnDefinition Width="1*" />
                                                 </Grid.ColumnDefinitions>
 
@@ -433,7 +433,7 @@
                                         <ComboBoxItem x:Name="ComboBoxItemPreviewSelection">
                                             <Grid ColumnSpacing="12">
                                                 <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="16" />
+                                                    <ColumnDefinition Width="20" />
                                                     <ColumnDefinition Width="1*" />
                                                 </Grid.ColumnDefinitions>
 

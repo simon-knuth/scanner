@@ -78,12 +78,16 @@ namespace Scanner.Views
         [ObservableProperty]
         private bool isHoveringCarousel;
 
+        public Thickness FileNameTextBoxPadding => ShowFileNameGenerationButton ? new Thickness(8, 4, 36, 4) : new Thickness(8, 4, 4, 4);
+
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(ShowFileNameGenerationButton))]
+        [NotifyPropertyChangedFor(nameof(FileNameTextBoxPadding))]
         private bool isFileNameTextBoxFocused;
 
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(ShowFileNameGenerationButton))]
+        [NotifyPropertyChangedFor(nameof(FileNameTextBoxPadding))]
         private bool isFileNameGenerationButtonFocused;
 
         public bool ShowFileNameGenerationButton => ViewModel.CurrentProject is PdfProject && ViewModel.CopilotRuntimeService.IsSupported &&
@@ -212,6 +216,7 @@ namespace Scanner.Views
                     {
                         OnPropertyChanged(nameof(ShowTextBlockTotalPages));
                         OnPropertyChanged(nameof(ShowFileNameGenerationButton));
+                        OnPropertyChanged(nameof(FileNameTextBoxPadding));
                         OnPropertyChanged(nameof(ShowActionExtentOptions));
                     });
 
@@ -231,6 +236,7 @@ namespace Scanner.Views
                             IsFileNameGenerationButtonFocused = false;
 
                         OnPropertyChanged(nameof(ShowFileNameGenerationButton));
+                        OnPropertyChanged(nameof(FileNameTextBoxPadding));
                     });
                     break;
             }
