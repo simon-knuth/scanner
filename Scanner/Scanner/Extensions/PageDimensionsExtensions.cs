@@ -108,5 +108,11 @@ namespace Scanner.Extensions
 
             throw new ArgumentException($"Can't convert {paperSize} to AspectRatio");
         }
+
+        public static string ToDimensionsString(this PaperSize paperSize)
+        {
+            Rect rect = paperSize.ToRect();
+            return $"{Measurement.FromCentimeters(rect.Width / 10)} × {Measurement.FromCentimeters(rect.Height / 10)}";
+        }
     }
 }

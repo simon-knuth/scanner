@@ -13,6 +13,7 @@ using Scanner.Helpers;
 using Scanner.Models;
 using Scanner.Models.Interfaces;
 using Scanner.Services;
+using Scanner.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -392,6 +393,14 @@ namespace Scanner.Views
                     paperSizeArea.Corner = ScanCorner.BottomLeft;
             }
         }
+
+        public string PaperSizeDinA3Dimensions => PaperSize.DinA3.ToDimensionsString();
+        public string PaperSizeDinA4Dimensions => PaperSize.DinA4.ToDimensionsString();
+        public string PaperSizeDinA5Dimensions => PaperSize.DinA5.ToDimensionsString();
+        public string PaperSizeAnsiADimensions => PaperSize.AnsiA.ToDimensionsString();
+        public string PaperSizeAnsiBDimensions => PaperSize.AnsiB.ToDimensionsString();
+        public string PaperSizeAnsiCDimensions => PaperSize.AnsiC.ToDimensionsString();
+        public string PaperSizeLegalDimensions => PaperSize.Legal.ToDimensionsString();
         #endregion
 
         #region Auto crop
@@ -512,6 +521,7 @@ namespace Scanner.Views
             ViewModel.PropertyChanging += ViewModel_PropertyChanging;
             ViewModel.PropertyChanged += ViewModel_PropertyChanged;
             ViewModel.Scanners.CollectionChanged += Scanners_CollectionChanged;
+            ViewModel.SettingsService.PropertyChanged += SettingsService_PropertyChanged;
 
             if (ViewModel.ScanOptions != null)
             {
@@ -620,6 +630,20 @@ namespace Scanner.Views
                     });
                     break;
             }
+        }
+
+        private void SettingsService_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName != nameof(ISettingsService.SettingMeasurementUnits))
+                return;
+
+            OnPropertyChanged(nameof(PaperSizeDinA3Dimensions));
+            OnPropertyChanged(nameof(PaperSizeDinA4Dimensions));
+            OnPropertyChanged(nameof(PaperSizeDinA5Dimensions));
+            OnPropertyChanged(nameof(PaperSizeAnsiADimensions));
+            OnPropertyChanged(nameof(PaperSizeAnsiBDimensions));
+            OnPropertyChanged(nameof(PaperSizeAnsiCDimensions));
+            OnPropertyChanged(nameof(PaperSizeLegalDimensions));
         }
 
         private void ScanOptions_PropertyChanging(object? sender, System.ComponentModel.PropertyChangingEventArgs e)

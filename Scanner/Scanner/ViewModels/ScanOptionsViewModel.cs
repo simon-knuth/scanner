@@ -33,6 +33,7 @@ namespace Scanner.ViewModels
         public readonly ILogService? LogService = Ioc.Default.GetService<ILogService>();
         public readonly IProjectService ProjectService = Ioc.Default.GetRequiredService<IProjectService>();
         private readonly IScannerDiscoveryService ScannerDiscoveryService = Ioc.Default.GetRequiredService<IScannerDiscoveryService>();
+        public readonly ISettingsService SettingsService = Ioc.Default.GetRequiredService<ISettingsService>();
         #endregion
 
         #region Commands
