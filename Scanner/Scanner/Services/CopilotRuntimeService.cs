@@ -20,9 +20,11 @@ using Serilog.Sinks.File;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Tesseract;
@@ -31,6 +33,7 @@ using Windows.Devices.Enumeration;
 using Windows.Graphics.Imaging;
 using Windows.Storage;
 using Windows.Storage.Streams;
+using Windows.System.UserProfile;
 using WinRT.Interop;
 
 namespace Scanner.Services
@@ -49,7 +52,7 @@ namespace Scanner.Services
         private const int minNameLengthAcceptanceThreshold = 8;
         private const int maxNameLengthAcceptanceThreshold = 40;
 
-        private const string nameGenerationPrompt = "Reply with a short heading for the following scanned document consisting of 4 words or less: ";
+        private const string nameGenerationPrompt = "You write short captions (4 words or less) for document descriptions. Do not reply with any extraneous content besides the caption itself. Only reply in {0}. The following text is the description: '{1}'";
         #endregion
 
         public bool IsSupported { get; private set; }
@@ -62,6 +65,9 @@ namespace Scanner.Services
 
         private ImageDescriptionGenerator? imageDescriptionGenerator;
         private SemaphoreSlim fileNameModelsSemaphore = new(1, 1);
+
+        [GeneratedRegex(@"(\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])", RegexOptions.Compiled)]
+        private static partial Regex EmojiRegex();
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -127,7 +133,7 @@ namespace Scanner.Services
 
                 // generate short name
                 using LanguageModel languageModel = await LanguageModel.CreateAsync().AsTask(cts.Token);
-                LanguageModelResponseResult languageModelResult = await languageModel.GenerateResponseAsync(nameGenerationPrompt + description, new LanguageModelOptions()).AsTask(cts.Token);
+                LanguageModelResponseResult languageModelResult = await languageModel.GenerateResponseAsync(string.Format(nameGenerationPrompt, CultureInfo.GetCultureInfo(GlobalizationPreferences.Languages[0]).EnglishName, description), new LanguageModelOptions()).AsTask(cts.Token);
 
                 // clean up name
                 string generatedName = languageModelResult.Text.Trim();
@@ -135,7 +141,12 @@ namespace Scanner.Services
                 {
                     generatedName = generatedName.Replace(invalidChar, ' ');
                 }
-                generatedName = generatedName.Trim([',', '.', '?', '!', '&', '%', '"']);
+                generatedName = generatedName.Trim([',', '.', '?', '!', '&', '%', '"', '\'']);
+                generatedName = EmojiRegex().Replace(generatedName, "");
+                while (generatedName.Contains("  "))
+                {
+                    generatedName = generatedName.Replace("  ", " ");
+                }
                 generatedName = generatedName.Trim();
 
                 // validate name
@@ -144,12 +155,12 @@ namespace Scanner.Services
                     LogService?.Log.Warning("CopilotRuntimeService - Name generation failed with {Status} and {Error}", languageModelResult.Status, languageModelResult.ExtendedError);
                     return null;
                 }
-                if (languageModelResult.Text.Length < minNameLengthAcceptanceThreshold)
+                if (generatedName.Length < minNameLengthAcceptanceThreshold)
                 {
                     LogService?.Log.Warning("CopilotRuntimeService - Name generation {Length} is below threshold", languageModelResult.Text.Length);
                     return null;
                 }
-                if (languageModelResult.Text.Length > maxNameLengthAcceptanceThreshold)
+                if (generatedName.Length > maxNameLengthAcceptanceThreshold)
                 {
                     LogService?.Log.Warning("CopilotRuntimeService - Name generation {Length} is above threshold", languageModelResult.Text.Length);
                     return null;
