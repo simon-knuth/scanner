@@ -314,15 +314,7 @@ namespace Scanner.Views
 
         public bool IsPaperSizeAreaSelected => ViewModel.ScanOptions.ScanArea is PaperSizeArea;
 
-        public PaperSize SelectedPaperSize
-        {
-            get => ScanOptions.ScanArea is PaperSizeArea paperSizeArea ? paperSizeArea.PaperSize : PaperSize.DinA4;
-            set
-            {
-                if (ScanOptions.ScanArea is PaperSizeArea paperSizeArea)
-                    paperSizeArea.PaperSize = value;
-            }
-        }
+        public PaperSize SelectedPaperSize => ScanOptions.ScanArea is PaperSizeArea paperSizeArea ? paperSizeArea.PaperSize : PaperSize.DinA4;
 
         public int SelectedOrientationInt
         {
@@ -729,6 +721,7 @@ namespace Scanner.Views
                         OnPropertyChanged(nameof(IsBottomRightScanCornerSelected));
                         OnPropertyChanged(nameof(SelectedOrientation));
                         OnPropertyChanged(nameof(SelectedOrientationInt));
+                        OnPropertyChanged(nameof(SelectedPaperSize));
                         ApplyScanAreaToComboBox(ScanOptions.ScanArea);
                     });
                     
@@ -980,6 +973,8 @@ namespace Scanner.Views
                     };
                 }
             }
+
+            OnPropertyChanged(nameof(SelectedPaperSize));
         }
 
         private void FrameComboBoxScanners_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -1021,7 +1016,7 @@ namespace Scanner.Views
                     if (item.Tag is PaperSize paperSize && paperSize == paperSizeArea.PaperSize)
                     {
                         ComboBoxScanArea.SelectedItem = item;
-                        return;
+                        break;
                     }
                 }
             }
