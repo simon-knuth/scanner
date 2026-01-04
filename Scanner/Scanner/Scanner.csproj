@@ -102,6 +102,9 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Page Update="Controls\AIProcessingBorder.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="Views\Dialogs\OtherAppsDialogView.xaml">
       <SubType>Designer</SubType>
     </Page>

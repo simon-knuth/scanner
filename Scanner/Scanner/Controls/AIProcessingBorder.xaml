@@ -1,0 +1,65 @@
+﻿<UserControl
+    x:Name="Root"
+    x:Class="Scanner.Controls.AIProcessingBorder"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:core="using:Microsoft.Xaml.Interactivity"
+    xmlns:converters="using:Scanner.Views.Converters"
+    xmlns:strings="using:Scanner.Resources.Strings"
+    xmlns:models="using:Scanner.Models"
+    xmlns:ui="using:CommunityToolkit.WinUI"
+    xmlns:media="using:CommunityToolkit.WinUI.Media"
+    xmlns:animations="using:CommunityToolkit.WinUI.Animations"
+    mc:Ignorable="d"
+    IsHitTestVisible="False"
+    HighContrastAdjustment="None"
+    BorderThickness="8"
+    CornerRadius="4"
+    Loaded="Root_Loaded"
+    Unloaded="Root_Unloaded">
+
+
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <!-- - - - - - - - - - - - - - - - -  RESOURCES  - - - - - - - - - - - - - - - - -->
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <Storyboard x:Name="StoryboardGradient">
+                <PointAnimationUsingKeyFrames Storyboard.TargetProperty="Center" Storyboard.TargetName="GradientBrush" Duration="0:0:2" RepeatBehavior="Forever" EnableDependentAnimation="True">
+                    <PointAnimationUsingKeyFrames.KeyFrames>
+                        <LinearPointKeyFrame KeyTime="0:0:0.5" Value="1,0" />
+                        <LinearPointKeyFrame KeyTime="0:0:1.0" Value="1,1" />
+                        <LinearPointKeyFrame KeyTime="0:0:1.5" Value="0,1" />
+                        <LinearPointKeyFrame KeyTime="0:0:2.0" Value="0,0" />
+                    </PointAnimationUsingKeyFrames.KeyFrames>
+                </PointAnimationUsingKeyFrames>
+                <PointAnimationUsingKeyFrames Storyboard.TargetProperty="GradientOrigin" Storyboard.TargetName="GradientBrush" Duration="0:0:2" RepeatBehavior="Forever" EnableDependentAnimation="True">
+                    <PointAnimationUsingKeyFrames.KeyFrames>
+                        <LinearPointKeyFrame KeyTime="0:0:0.5" Value="1,0" />
+                        <LinearPointKeyFrame KeyTime="0:0:1.0" Value="1,1" />
+                        <LinearPointKeyFrame KeyTime="0:0:1.5" Value="0,1" />
+                        <LinearPointKeyFrame KeyTime="0:0:2.0" Value="0,0" />
+                    </PointAnimationUsingKeyFrames.KeyFrames>
+                </PointAnimationUsingKeyFrames>
+            </Storyboard>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+
+    <!-- - - - - - - - - - - - - - - - - - - -  - - - - - - - - - - - - - - - - - - - - -->
+    <!-- - - - - - - - - - - - - - - -   CONTROL CONTENT  - - - - - - - - - - - - - - - -->
+    <!-- - - - - - - - - - - - - - - - - - - -  - - - - - - - - - - - - - - - - - - - - -->
+    <Border x:Name="BorderContent" BorderThickness="{x:Bind Root.BorderThickness, Mode=OneWay}" CornerRadius="{x:Bind Root.CornerRadius, Mode=OneWay}">
+        <Border.BorderBrush>
+            <RadialGradientBrush x:Name="GradientBrush" Center="0,0" GradientOrigin="0,0" RadiusX="1" RadiusY="1">
+                <GradientStop Color="#4950EE" Offset="0" />
+                <GradientStop Color="#B15CFD" Offset="0.5" />
+                <GradientStop Color="#FC747D" Offset="1.2" />
+            </RadialGradientBrush>
+        </Border.BorderBrush>
+    </Border>
+</UserControl>

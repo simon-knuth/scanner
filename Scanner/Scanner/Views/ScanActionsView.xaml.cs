@@ -67,7 +67,7 @@ namespace Scanner.Views
         private bool isHoveringCancelButton;
 
         public bool IsTemplatesButtonVisible => !AreScanOptionsVisible || GridRoot.ActualWidth > 400;
-        public bool IsPreviewButtonVisible => !AreScanOptionsVisible || GridRoot.ActualWidth > 500;
+        public bool IsPreviewButtonVisible => (!ViewModel.IsScanning && !AreScanOptionsVisible) || GridRoot.ActualWidth > 500;
 
         private bool showEntranceAnimations;
 
@@ -78,12 +78,22 @@ namespace Scanner.Views
         public ScanActionsView()
         {
             this.InitializeComponent();
+
+            ViewModel.PropertyChanged += ViewModel_PropertyChanged;
         }
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        private void ViewModel_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName != nameof(ViewModel.IsScanning))
+                return;
+
+            OnPropertyChanged(nameof(IsPreviewButtonVisible));
+        }
+
         private void ButtonScanMode_Click(object sender, RoutedEventArgs e)
         {
             ViewModel.AddToProject = !ViewModel.AddToProject;
