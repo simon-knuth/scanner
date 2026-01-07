@@ -88,6 +88,7 @@ namespace Scanner.Views
             ViewModel.ScanMergeDialogRequested += ViewModel_ScanMergeDialogRequested;
             ViewModel.ShowNotificationRequested += ViewModel_ShowNotificationRequested;
             ViewModel.ProjectService.PropertyChanged += ProjectService_PropertyChanged;
+            this.AddHandler(UIElement.KeyDownEvent, new KeyEventHandler(Page_KeyDown), true);
         }
 
 

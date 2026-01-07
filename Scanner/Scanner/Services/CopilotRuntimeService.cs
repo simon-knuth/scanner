@@ -148,6 +148,9 @@ namespace Scanner.Services
                     generatedName = generatedName.Replace("  ", " ");
                 }
                 generatedName = generatedName.Trim();
+                
+                if (cts.IsCancellationRequested)
+                    return null;
 
                 // validate name
                 if (languageModelResult.Status != LanguageModelResponseStatus.Complete)

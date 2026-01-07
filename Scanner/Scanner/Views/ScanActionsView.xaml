@@ -15,7 +15,8 @@
     xmlns:customcontrols="using:Scanner.Controls"
     xmlns:strings="using:Scanner.Resources.Strings"
     mc:Ignorable="d"
-    Loaded="Page_Loaded">
+    Loaded="Page_Loaded"
+    Unloaded="Page_Unloaded">
 
     <Page.DataContext>
         <viewModels:ScanActionsViewModel x:Name="ViewModel"/>
@@ -228,12 +229,20 @@
                     </TextBlock>
                 </Grid>
 
+                <SplitButton.KeyboardAccelerators>
+                    <KeyboardAccelerator Key="F5" />
+                </SplitButton.KeyboardAccelerators>
+
                 <SplitButton.Flyout>
                     <MenuFlyout Placement="BottomEdgeAlignedRight">
                         <MenuFlyoutItem x:Name="MenuFlyoutItemAddToProject" Text="{x:Bind strings:Resources.ScanActionAddToProject}" IsEnabled="{x:Bind ViewModel.CanAddToProject, Mode=OneWay}" Command="{x:Bind ViewModel.ScanCommand}" Loading="MenuFlyoutItemAddToProject_Loading">
                             <MenuFlyoutItem.Icon>
                                 <FontIcon Glyph="&#xE710;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                             </MenuFlyoutItem.Icon>
+
+                            <MenuFlyoutItem.KeyboardAccelerators>
+                                <KeyboardAccelerator Modifiers="Shift" Key="F5" />
+                            </MenuFlyoutItem.KeyboardAccelerators>
 
                             <MenuFlyoutItem.CommandParameter>
                                 <x:Boolean>True</x:Boolean>
@@ -243,6 +252,10 @@
                             <MenuFlyoutItem.Icon>
                                 <FontIcon Glyph="&#xE8A5;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                             </MenuFlyoutItem.Icon>
+
+                            <MenuFlyoutItem.KeyboardAccelerators>
+                                <KeyboardAccelerator Modifiers="Control" Key="F5" />
+                            </MenuFlyoutItem.KeyboardAccelerators>
 
                             <MenuFlyoutItem.CommandParameter>
                                 <x:Boolean>False</x:Boolean>

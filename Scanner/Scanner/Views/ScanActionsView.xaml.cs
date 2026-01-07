@@ -127,8 +127,21 @@ namespace Scanner.Views
 
         private async void Page_Loaded(object sender, RoutedEventArgs e)
         {
+            ((App)Application.Current).KeyDown += App_KeyDown;
+
             await Task.Delay(500);
             showEntranceAnimations = true;
+        }
+
+        private async void App_KeyDown(object? sender, KeyRoutedEventArgs e)
+        {
+            if (e.Key == Windows.System.VirtualKey.F5)
+            {
+                if (Microsoft.UI.Input.InputKeyboardSource.GetKeyStateForCurrentThread(Windows.System.VirtualKey.Shift) == Windows.UI.Core.CoreVirtualKeyStates.Down)
+                    await ViewModel.ScanCommand.ExecuteAsync(true);
+                else if (Microsoft.UI.Input.InputKeyboardSource.GetKeyStateForCurrentThread(Windows.System.VirtualKey.Control) == Windows.UI.Core.CoreVirtualKeyStates.Down)
+                    await ViewModel.ScanCommand.ExecuteAsync(false);
+            }
         }
 
         private void ShowTemplates()
@@ -202,6 +215,11 @@ namespace Scanner.Views
             {
                 ((MenuFlyoutItem)sender).FontWeight = FontWeights.Normal;
             }
+        }
+
+        private void Page_Unloaded(object sender, RoutedEventArgs e)
+        {
+            ((App)Application.Current).KeyDown -= App_KeyDown;
         }
     }
 }

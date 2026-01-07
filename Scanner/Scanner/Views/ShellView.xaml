@@ -18,7 +18,6 @@
     xmlns:strings="using:Scanner.Resources.Strings"
     mc:Ignorable="d"
     FlowDirection="{x:Bind ViewModel.AccessibilityService.DefaultFlowDirection, Mode=OneWay}"
-    KeyDown="Page_KeyDown"
     Loading="Page_Loading">
 
     <Page.DataContext>

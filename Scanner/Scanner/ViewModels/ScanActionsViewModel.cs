@@ -26,7 +26,7 @@ namespace Scanner.ViewModels
         #endregion
 
         #region Commands
-        public AsyncRelayCommand<bool> ScanCommand => new AsyncRelayCommand<bool>(ScanAsync);
+        public AsyncRelayCommand<bool> ScanCommand;
         public RelayCommand ShowScanMergeDialogCommand => new RelayCommand(() => Messenger.Send(new ShowScanMergeDialogMessage()));
         public RelayCommand ShowSettingsCommand => new RelayCommand(ShowSettings);
 
@@ -107,6 +107,8 @@ namespace Scanner.ViewModels
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public ScanActionsViewModel()
         {
+            ScanCommand = new(ScanAsync, canExecute: x => ScanOptions != null && (!x || ScanOptions.TargetFormat == CurrentProject?.Format));
+
             PropertyChanged += ScanActionsViewModel_PropertyChanged;
             ProjectService.PropertyChanged += ProjectService_PropertyChanged;
             CurrentProject = ProjectService.CurrentProject;
@@ -141,7 +143,8 @@ namespace Scanner.ViewModels
 
         private async Task ScanAsync(bool addToProject)
         {
-            if (ScanOptions == null) return;
+            if (ScanOptions == null)
+                return;
 
             await viewLoading.Task;
 
