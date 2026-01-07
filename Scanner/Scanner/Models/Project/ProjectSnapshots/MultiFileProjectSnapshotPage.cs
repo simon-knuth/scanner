@@ -31,7 +31,7 @@ namespace Scanner.Models
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public StorageFile SourceFile { get; }
 
-        public StorageFile? TargetFile { get; }
+        public TargetFile? TargetFile { get; }
         public StorageFolder? TargetFolder { get; }
 
         public string? DesiredFileName { get; }
@@ -45,7 +45,7 @@ namespace Scanner.Models
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public MultiFileProjectSnapshotPage(StorageFile sourceFile, StorageFile? targetFile, StorageFolder targetFolder,
+        public MultiFileProjectSnapshotPage(StorageFile sourceFile, TargetFile? targetFile, StorageFolder targetFolder,
             string? desiredFileName, ImageFilter filter, int brightness, int contrast)
         {
             SourceFile = sourceFile;

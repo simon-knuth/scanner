@@ -33,7 +33,7 @@ namespace Scanner.Models.Interfaces
         /// <summary>
         /// The file to save changes to, including destructive effects.
         /// </summary>
-        StorageFile? TargetFile { get; set; }
+        TargetFile? TargetFile { get; set; }
 
         /// <summary>
         /// The file used for preview generation. Usually the same as <see cref="SourceFile"/>, unless a destructive effect is applied.

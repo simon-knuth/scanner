@@ -132,7 +132,7 @@ namespace Scanner.Services
         }
 
         public async Task<SaveOptions?> GetSaveOptionsAsync(DispatcherQueue uiDispatcherQueue, Window window, ScanOptions scanOptions,
-            ProjectBase? existingProject, bool forceTargetFolder, bool saveAs = false, string? desiredFileDisplayName = null)
+            ProjectBase? existingProject, bool forceTargetFolder, bool forceDialog = false, string? desiredFileDisplayName = null)
         {
             // generate default file name
             string fileName;
@@ -151,7 +151,7 @@ namespace Scanner.Services
             }
 
             // show save dialog if forced
-            if (saveAs)
+            if (forceDialog)
             {
                 SaveOptions? result = await Messenger.Send(new ShowSaveOptionsDialogMessage(scanOptions, existingProject, desiredFileDisplayName)).Response;
                 if (result?.TargetFolder != null)

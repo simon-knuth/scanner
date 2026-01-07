@@ -38,7 +38,7 @@ namespace Scanner.Models
 
         public StorageFolder? TargetFolder;
 
-        public StorageFile? TargetFile;
+        public TargetFile? TargetFile;
 
         public FileNameInfo FileNameInfo { get; private set; }
 
@@ -96,7 +96,10 @@ namespace Scanner.Models
             {
                 if (TargetFile != null)
                 {
-                    await TargetFile.DeleteAsync(StorageDeleteOption.PermanentDelete);
+                    TargetFile targetFile = TargetFile;
+                    TargetFile = null;
+                    targetFile.FileStream.Dispose();
+                    await targetFile.File.DeleteAsync(StorageDeleteOption.PermanentDelete);
                 }
             }
             catch (Exception exc)
@@ -156,7 +159,11 @@ namespace Scanner.Models
                             return;
 
                         if (saveAs)
+                        {
+                            TargetFile? targetFile = TargetFile;
                             TargetFile = null;
+                            targetFile?.FileStream.Dispose();
+                        }
 
                         TargetFolder = saveOptions.TargetFolder;
                         await FileNameInfo.UpdateNamesAsync(saveOptions.FileName, null, false, uiDispatcherQueue);
@@ -217,7 +224,7 @@ namespace Scanner.Models
                         changesFolderSemaphore.Release();
 
                         // save
-                        Dictionary<IProjectPage, StorageFile?> pageSaves = await snapshot.TrySaveAsync(uiDispatcherQueue);
+                        Dictionary<IProjectPage, TargetFile?> pageSaves = await snapshot.TrySaveAsync(uiDispatcherQueue);
 
                         // process save result
                         if (pageSaves.Count == 0) throw new ApplicationException("Failed to save Project (no files saved)");
@@ -228,7 +235,7 @@ namespace Scanner.Models
                         projectObjectSemaphore.Release();
 
                         // update file name
-                        await FileNameInfo!.UpdateNamesAsync(FileNameInfo!.DesiredName, pageSaves.Values.First()!.Name, false, uiDispatcherQueue);
+                        await FileNameInfo!.UpdateNamesAsync(FileNameInfo!.DesiredName, TargetFile.File.Name, false, uiDispatcherQueue);
 
                         projectFolderSemaphore.Release();
                     }
@@ -236,10 +243,12 @@ namespace Scanner.Models
                     // apply file name
                     await uiDispatcherQueue.RunOnThreadAndWaitAsync(DispatcherQueuePriority.Low, async () =>
                     {
-                        if (TargetFile!.Name != FileNameInfo!.DesiredName)
+                        if (TargetFile.File.Name != FileNameInfo!.DesiredName)
                         {
-                            await TargetFile.RenameAsync(FileNameInfo!.DesiredName, NameCollisionOption.GenerateUniqueName);
-                            await FileNameInfo!.UpdateNamesAsync(TargetFile.Name, TargetFile.Name, false, uiDispatcherQueue);
+                            TargetFile.FileStream.Dispose();
+                            await TargetFile.File.RenameAsync(FileNameInfo!.DesiredName, NameCollisionOption.GenerateUniqueName);
+                            TargetFile = new(TargetFile.File, await TargetFile.File.OpenAsync(FileAccessMode.ReadWrite, StorageOpenOptions.AllowOnlyReaders));
+                            await FileNameInfo!.UpdateNamesAsync(TargetFile.File.Name, TargetFile.File.Name, false, uiDispatcherQueue);
                             hasFileNameBeenApplied = true;
                         }
                     });
@@ -287,7 +296,7 @@ namespace Scanner.Models
                 {
                     DataPackage dataPackage = new DataPackage();
                     dataPackage.RequestedOperation = DataPackageOperation.Copy;
-                    dataPackage.SetStorageItems([TargetFile], true);
+                    dataPackage.SetStorageItems([TargetFile.File], true);
                     Clipboard.SetContent(dataPackage);
                 }
                 else
@@ -349,7 +358,7 @@ namespace Scanner.Models
                 }
 
                 // open with
-                await Windows.System.Launcher.LaunchFileAsync(TargetFile, options);
+                await Windows.System.Launcher.LaunchFileAsync(TargetFile.File, options);
             }
             catch (Exception exc)
             {
@@ -387,7 +396,7 @@ namespace Scanner.Models
                 }
 
                 // set file for sharing
-                Messenger.Send(new SetShareFilesMessage([TargetFile]));
+                Messenger.Send(new SetShareFilesMessage([TargetFile.File]));
 
                 // invoke share UI
                 Messenger.Send(new InvokeShareUIMessage());
@@ -467,10 +476,9 @@ namespace Scanner.Models
             hasFileNameBeenApplied = FileNameInfo!.DesiredName == FileNameInfo.ActualName;
         }
 
-        public static async Task<Dictionary<IProjectPage, StorageFile?>> CreatePdfFromPagesAsync(Dictionary<IProjectPage, IProjectSnapshotPage> pages, StorageFile? targetFile, string? desiredFileName, StorageFolder? targetFolder, bool ocr, DispatcherQueue uiDispatcherQueue)
+        public static async Task<Dictionary<IProjectPage, TargetFile?>> CreatePdfFromPagesAsync(Dictionary<IProjectPage, IProjectSnapshotPage> pages, TargetFile? targetFile, string? desiredFileName, StorageFolder? targetFolder, bool ocr, DispatcherQueue uiDispatcherQueue)
         {
-            Dictionary<IProjectPage, StorageFile?> result = new();
-            List<StorageFile> files = [];
+            Dictionary<IProjectPage, TargetFile?> result = new();
             string pdfGenerationFilePath = Path.Combine(AppDataService.PdfOutputFolder.Path, pdfOutputFileDisplayName);
 
             // generate PDF
@@ -479,11 +487,11 @@ namespace Scanner.Models
                 if (ocr)
                 {
                     await OcrService.GenerateOcrPdfAsync([.. pages.Values], pdfGenerationFilePath, uiDispatcherQueue);
-                    await CreatePdfFromImageAsync(pdfGenerationFilePath + ".pdf", [.. pages.Values], uiDispatcherQueue, pdfGenerationFilePath + ".pdf");
+                    await CreatePdfFromSnapshotPagesAsync(pdfGenerationFilePath + ".pdf", [.. pages.Values], uiDispatcherQueue, pdfGenerationFilePath + ".pdf");
                 }
                 else
                 {
-                    await CreatePdfFromImageAsync(pdfGenerationFilePath + ".pdf", [.. pages.Values], uiDispatcherQueue);
+                    await CreatePdfFromSnapshotPagesAsync(pdfGenerationFilePath + ".pdf", [.. pages.Values], uiDispatcherQueue);
                 }
             }
             catch (Exception exc)
@@ -498,7 +506,8 @@ namespace Scanner.Models
                 StorageFile generatedFile = await AppDataService.PdfOutputFolder.GetFileAsync($"{pdfOutputFileDisplayName}.pdf");
                 if (targetFile != null)
                 {
-                    await generatedFile.MoveAndReplaceAsync(targetFile);
+                    targetFile.FileStream.Dispose();
+                    await generatedFile.MoveAndReplaceAsync(targetFile.File);
 
                     if (generatedFile.Name != desiredFileName)
                     {
@@ -509,7 +518,7 @@ namespace Scanner.Models
                 {
                     await generatedFile.MoveAsync(targetFolder, desiredFileName, NameCollisionOption.GenerateUniqueName);
                 }
-                result.Add(pages.Keys.First(), generatedFile);
+                result.Add(pages.Keys.First(), new(generatedFile, await generatedFile.OpenAsync(FileAccessMode.ReadWrite, StorageOpenOptions.AllowOnlyReaders)));
             }
             catch (Exception exc)
             {
@@ -519,7 +528,7 @@ namespace Scanner.Models
             return result;
         }
 
-        private static async Task CreatePdfFromImageAsync(string targetPdfPath, List<IProjectSnapshotPage> snapshotPages, DispatcherQueue uiDispatcherQueue, string? ocrPdfPath = null)
+        private static async Task CreatePdfFromSnapshotPagesAsync(string targetPdfPath, List<IProjectSnapshotPage> snapshotPages, DispatcherQueue uiDispatcherQueue, string? ocrPdfPath = null)
         {
             using PdfDocument document = new();
 

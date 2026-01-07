@@ -100,7 +100,10 @@ namespace Scanner.Models
                 {
                     if (page.TargetFile != null)
                     {
-                        await page.TargetFile.DeleteAsync(StorageDeleteOption.PermanentDelete);
+                        TargetFile targetFile = page.TargetFile;
+                        page.TargetFile = null;
+                        targetFile.FileStream.Dispose();
+                        await targetFile.File.DeleteAsync(StorageDeleteOption.PermanentDelete);
                     }
                 }
             }
@@ -254,25 +257,25 @@ namespace Scanner.Models
                         changesFolderSemaphore.Release();
 
                         // save
-                        Dictionary<IProjectPage, StorageFile?> pageSaves = await snapshot.TrySaveAsync(uiDispatcherQueue);
+                        Dictionary<IProjectPage, TargetFile?> pageSaves = await snapshot.TrySaveAsync(uiDispatcherQueue);
 
                         // process save result
                         if (pageSaves.Count == 0) throw new ApplicationException("Failed to save project (no files saved)");
 
                         // update target files
                         await projectObjectSemaphore.WaitAsync();
-                        foreach (KeyValuePair<IProjectPage, StorageFile?> pageSave in pageSaves)
+                        foreach (KeyValuePair<IProjectPage, TargetFile?> pageSave in pageSaves)
                         {
                             pageSave.Key.TargetFile = pageSave.Value;
                         }
                         projectObjectSemaphore.Release();
 
                         // update file names
-                        foreach (KeyValuePair<IProjectPage, StorageFile?> pageSave in pageSaves)
+                        foreach (KeyValuePair<IProjectPage, TargetFile?> pageSave in pageSaves)
                         {
                             if (pageSave.Key is ImagePage imagePage && imagePage.FileNameInfo != null)
                             {
-                                await imagePage.FileNameInfo.UpdateNamesAsync(imagePage.FileNameInfo.DesiredName, imagePage.TargetFile!.Name, false, uiDispatcherQueue);
+                                await imagePage.FileNameInfo.UpdateNamesAsync(imagePage.FileNameInfo.DesiredName, imagePage.TargetFile!.File.Name, false, uiDispatcherQueue);
                             }
                         }
 
@@ -290,8 +293,10 @@ namespace Scanner.Models
                             {
                                 if (imagePage.FileNameInfo!.DesiredName != imagePage.FileNameInfo.ActualName)
                                 {
-                                    await imagePage.TargetFile!.RenameAsync(imagePage.FileNameInfo.DesiredName, NameCollisionOption.GenerateUniqueName);
-                                    await imagePage.FileNameInfo.UpdateNamesAsync(imagePage.TargetFile.Name, imagePage.TargetFile.Name, false, uiDispatcherQueue);
+                                    imagePage.TargetFile!.FileStream.Dispose();
+                                    await imagePage.TargetFile.File.RenameAsync(imagePage.FileNameInfo.DesiredName, NameCollisionOption.GenerateUniqueName);
+                                    imagePage.TargetFile = new(imagePage.TargetFile.File, await imagePage.TargetFile.File.OpenAsync(FileAccessMode.ReadWrite, StorageOpenOptions.AllowOnlyReaders));
+                                    await imagePage.FileNameInfo.UpdateNamesAsync(imagePage.TargetFile.File.Name, imagePage.TargetFile.File.Name, false, uiDispatcherQueue);
                                     hasFileNameBeenApplied = true;
                                 }
                             }
@@ -345,7 +350,7 @@ namespace Scanner.Models
                     {
                         if (page is ImagePage imagePage)
                         {
-                            files.Add(imagePage.TargetFile!);
+                            files.Add(imagePage.TargetFile!.File);
                         }
                     }
 
@@ -415,7 +420,7 @@ namespace Scanner.Models
                 }
 
                 // open with
-                await Windows.System.Launcher.LaunchFileAsync(page.TargetFile, options);
+                await Windows.System.Launcher.LaunchFileAsync(page.TargetFile.File, options);
             }
             catch (Exception exc)
             {
@@ -450,7 +455,7 @@ namespace Scanner.Models
                         if (page.TargetFile == null)
                             throw new ActionFailedAndRolledBackException("Failed to collect files for sharing");
 
-                        files.Add(page.TargetFile);
+                        files.Add(page.TargetFile.File);
                     }
 
                     // set share files

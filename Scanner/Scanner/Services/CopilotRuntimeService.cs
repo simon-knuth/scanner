@@ -52,7 +52,7 @@ namespace Scanner.Services
         private const int minNameLengthAcceptanceThreshold = 8;
         private const int maxNameLengthAcceptanceThreshold = 40;
 
-        private const string nameGenerationPrompt = "You write short captions (4 words or less) for document descriptions. Do not reply with any extraneous content besides the caption itself. Only reply in {0}. The following text is the description: '{1}'";
+        private const string nameGenerationPrompt = "You write short captions (4 words or less) for document descriptions. Do not reply with any extraneous content besides the caption itself. Do not include the word 'Caption'. Only reply in {0}. The following text is the description: '{1}'";
         #endregion
 
         public bool IsSupported { get; private set; }

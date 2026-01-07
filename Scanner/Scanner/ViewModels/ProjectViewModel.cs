@@ -681,7 +681,7 @@ namespace Scanner.ViewModels
             {
                 // get save options
                 SaveOptions? saveOptions = await SaveLocationService.GetSaveOptionsAsync(viewDispatcherQueue!, ((App)Application.Current).MainWindow, CurrentProject.InitialScanOptions,
-                    CurrentProject, true, false, pdfProject.FileNameInfo.DesiredDisplayName);
+                    CurrentProject, true, true, pdfProject.FileNameInfo.DesiredDisplayName);
                 if (saveOptions == null)
                     return;
 

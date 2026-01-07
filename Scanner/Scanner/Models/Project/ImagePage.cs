@@ -21,6 +21,9 @@ using WinRT.Interop;
 
 namespace Scanner.Models
 {
+    /// <summary>
+    /// An <see cref="IProjectPage"/> created from an image file.
+    /// </summary>
     public partial class ImagePage : ObservableObject, IProjectPage
     {
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -56,7 +59,7 @@ namespace Scanner.Models
         public StorageFile? OutOfDateSourceFile {  get; private set; }
         public bool CommitNeeded => Path.GetDirectoryName(SourceFile.Path) == AppDataService.ChangesFolder.Path;
 
-        public StorageFile? TargetFile { get; set; }
+        public TargetFile? TargetFile { get; set; }
 
         public StorageFolder? TargetFolder { get; set; }
 

@@ -71,7 +71,7 @@ namespace Scanner.Models
             {
                 if (page is ImagePage imagePage)
                 {
-                    Pages.Add(new PageCreationData(imagePage.SourceFile, imagePage.TargetFile?.Name, imagePage.TargetFolder,
+                    Pages.Add(new PageCreationData(imagePage.SourceFile, imagePage.TargetFile?.File.Name, imagePage.TargetFolder,
                         imagePage.BaseFilter, imagePage.Filter, imagePage.Brightness, imagePage.Contrast));
                 }
             }

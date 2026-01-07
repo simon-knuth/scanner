@@ -670,9 +670,24 @@ namespace Scanner.Services
 
             // close project
             ObservableCollection<IProjectPage> pages = CurrentProject.Pages;
+            ProjectBase project = CurrentProject;
             CurrentProject = null;
             SelectedPage = null;
             await AppDataService.EmptyFolderAsync(AppDataService.IncomingFolder);
+
+            // release files
+            if (project is PdfProject pdfProject && pdfProject.TargetFile != null)
+            {
+                pdfProject.TargetFile.FileStream.Dispose();
+            }
+            else
+            {
+                foreach (IProjectPage page in pages)
+                {
+                    if (page is ImagePage imagePage && imagePage.TargetFile != null)
+                        imagePage.TargetFile.FileStream.Dispose();
+                }
+            }
 
             if (preserveSourceFilesInIncomingFolder)
             {

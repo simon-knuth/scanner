@@ -69,16 +69,16 @@ namespace Scanner.Models
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public async Task<Dictionary<IProjectPage, StorageFile?>> TrySaveAsync(DispatcherQueue uiDispatcherQueue)
+        public async Task<Dictionary<IProjectPage, TargetFile?>> TrySaveAsync(DispatcherQueue uiDispatcherQueue)
         {
-            Dictionary<IProjectPage, StorageFile?> result = new();
+            Dictionary<IProjectPage, TargetFile?> result = new();
 
             // save images to target folders
             try
             {
                 foreach (KeyValuePair<IProjectPage, MultiFileProjectSnapshotPage> page in Pages)
                 {
-                    StorageFile generatedFile;
+                    TargetFile generatedTargetFile;
                     if (Format == TargetFormat.SinglePagePDF)
                     {
                         // need to generate PDF file
@@ -86,26 +86,26 @@ namespace Scanner.Models
                         {
                             { page.Key, page.Value }
                         };
-                        Dictionary<IProjectPage, StorageFile?> pdfResult = await PdfProject.CreatePdfFromPagesAsync(pdfPages, page.Value.TargetFile, page.Value.DesiredFileName, page.Value.TargetFolder, SettingsService.SettingOcrPdfs, uiDispatcherQueue);
-                        generatedFile = pdfResult[page.Key];
+                        Dictionary<IProjectPage, TargetFile?> pdfResult = await PdfProject.CreatePdfFromPagesAsync(pdfPages, page.Value.TargetFile, page.Value.DesiredFileName, page.Value.TargetFolder, SettingsService.SettingOcrPdfs, uiDispatcherQueue);
+                        generatedTargetFile = pdfResult[page.Key];
                     }
                     else if (page.Value.Filter != ImageFilter.None || FileExtensionToTargetFormat(page.Value.SourceFile.FileType) != Format)
                     {
                         // encoding necessary ~> prepare file
                         if (page.Value.TargetFile == null)
                         {
-                            generatedFile = await page.Value.TargetFolder.CreateFileAsync(page.Value.DesiredFileName, CreationCollisionOption.GenerateUniqueName);
+                            StorageFile file = await page.Value.TargetFolder.CreateFileAsync(page.Value.DesiredFileName, CreationCollisionOption.GenerateUniqueName);
+                            generatedTargetFile = new(file, await file.OpenAsync(FileAccessMode.ReadWrite, StorageOpenOptions.AllowOnlyReaders));
                         }
                         else
                         {
-                            generatedFile = page.Value.TargetFile;
+                            generatedTargetFile = page.Value.TargetFile;
                         }
 
                         // perform decoding and encoding
                         await uiDispatcherQueue.RunOnThreadAndWaitAsync(DispatcherQueuePriority.Low, async () =>
                         {
                             using (IRandomAccessStream sourceStream = await page.Value.SourceFile.OpenAsync(FileAccessMode.Read))
-                            using (IRandomAccessStream targetStream = await generatedFile.OpenAsync(FileAccessMode.ReadWrite))
                             {
                                 BitmapPropertySet propertySet = new BitmapPropertySet();
                                 if (Format == TargetFormat.JPG)
@@ -114,7 +114,7 @@ namespace Scanner.Models
                                     propertySet.Add("ImageQuality", new BitmapTypedValue(jpegQuality, Windows.Foundation.PropertyType.Single));
                                 }
 
-                                BitmapEncoder encoder = await BitmapEncoder.CreateAsync(ProjectBase.GetBitmapEncoderIdForFile(generatedFile), targetStream, propertySet);
+                                BitmapEncoder encoder = await BitmapEncoder.CreateAsync(ProjectBase.GetBitmapEncoderIdForFile(generatedTargetFile.File), generatedTargetFile.FileStream, propertySet);
 
                                 if (page.Value.Filter != ImageFilter.None)
                                 {
@@ -137,19 +137,20 @@ namespace Scanner.Models
                         // correct format, just copy
                         if (page.Value.TargetFile != null)
                         {
-                            generatedFile = await page.Value.SourceFile.CopyAsync(page.Value.TargetFolder, page.Value.TargetFile.Name, NameCollisionOption.ReplaceExisting);
+                            StorageFile file = await page.Value.SourceFile.CopyAsync(page.Value.TargetFolder, page.Value.TargetFile.File.Name, NameCollisionOption.ReplaceExisting);
 
-                            if (generatedFile.Name != page.Value.DesiredFileName)
-                            {
-                                await generatedFile.RenameAsync(page.Value.DesiredFileName, NameCollisionOption.GenerateUniqueName);
-                            }
+                            if (file.Name != page.Value.DesiredFileName)
+                                await file.RenameAsync(page.Value.DesiredFileName, NameCollisionOption.GenerateUniqueName);
+
+                            generatedTargetFile = new(file, await file.OpenAsync(FileAccessMode.ReadWrite, StorageOpenOptions.AllowOnlyReaders));
                         }
                         else
                         {
-                            generatedFile = await page.Value.SourceFile.CopyAsync(page.Value.TargetFolder, page.Value.DesiredFileName, NameCollisionOption.GenerateUniqueName);
+                            StorageFile file = await page.Value.SourceFile.CopyAsync(page.Value.TargetFolder, page.Value.DesiredFileName, NameCollisionOption.GenerateUniqueName);
+                            generatedTargetFile = new(file, await file.OpenAsync(FileAccessMode.ReadWrite, StorageOpenOptions.AllowOnlyReaders));
                         }
                     }
-                    result.Add(page.Key, generatedFile);
+                    result.Add(page.Key, generatedTargetFile);
                 }
             }
             catch (Exception exc)

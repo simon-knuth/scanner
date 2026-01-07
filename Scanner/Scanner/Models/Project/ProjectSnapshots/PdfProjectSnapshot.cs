@@ -37,7 +37,7 @@ namespace Scanner.Models
 
         public string? DesiredFileName { get; private set; }
         public StorageFolder? TargetFolder { get; private set; }
-        public StorageFile? TargetFile { get; private set; }
+        public TargetFile? TargetFile { get; private set; }
 
         /// <remarks>
         /// Editing the <see cref="IProjectPage"/> references from the snapshot is not allowed.
@@ -71,7 +71,7 @@ namespace Scanner.Models
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public Task<Dictionary<IProjectPage, StorageFile?>> TrySaveAsync(DispatcherQueue uiDispatcherQueue)
+        public Task<Dictionary<IProjectPage, TargetFile?>> TrySaveAsync(DispatcherQueue uiDispatcherQueue)
         {
             Dictionary<IProjectPage, IProjectSnapshotPage> pdfPages = Pages.ToDictionary(
                 x => x.Key,

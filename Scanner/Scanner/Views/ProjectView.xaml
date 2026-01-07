@@ -149,7 +149,7 @@
                                 </Grid>
                             </Grid>
                         </Button>
-                        <customcontrols:AIProcessingBorder x:Name="AIProcessingBorderFileNameGeneration" BorderThickness="4" CornerRadius="4" Margin="0,4,0,4" x:Load="{x:Bind ViewModel.IsFileNameGenerationInProgress, Mode=OneWay}" />
+                        <customcontrols:AIProcessingBorder x:Name="AIProcessingBorderFileNameGeneration" BorderThickness="4" CornerRadius="4" Margin="2,4,2,4" x:Load="{x:Bind ViewModel.IsFileNameGenerationInProgress, Mode=OneWay}" />
                     </Grid>
                     <TextBlock x:Name="TextBlockSelectedPagesCount" Grid.Row="0" Grid.Column="0" FontSize="16" Style="{StaticResource BaseTextBlockStyle}" Text="{x:Bind SelectedPagesString, Mode=OneWay}" VerticalAlignment="Center" Typography.NumeralAlignment="Tabular" x:Load="{x:Bind ViewModel.ProjectService.SelectedPages, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}}">
                         <animations:Implicit.ShowAnimations>
