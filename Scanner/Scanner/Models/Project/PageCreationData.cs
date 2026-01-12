@@ -30,6 +30,7 @@ namespace Scanner.Models.Project
         public StorageFile File { get; }
 
         public string? TargetFileName { get; }
+        public StorageFile? TargetFile { get; }
         public StorageFolder? TargetFolder { get; }
 
         public ImageFilter BaseFilter { get; }
@@ -42,11 +43,12 @@ namespace Scanner.Models.Project
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public PageCreationData(StorageFile file, string? targetFileName, StorageFolder? targetFolder,
+        public PageCreationData(StorageFile file, string? targetFileName, StorageFile? targetFile, StorageFolder? targetFolder,
             ImageFilter baseFilter, ImageFilter filter, int brightness, int contrast)
         {
             File = file;
             TargetFileName = targetFileName;
+            TargetFile = targetFile;
             TargetFolder = targetFolder;
             BaseFilter = baseFilter;
             Filter = filter;

@@ -202,7 +202,7 @@ namespace Scanner.Services
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public async Task TryCreateProjectAsync(IProjectCreationData creationData, DispatcherQueue uiDispatcherQueue)
+        public async Task TryCreateProjectAsync(IProjectCreationData creationData, bool keepSourceFiles, DispatcherQueue uiDispatcherQueue)
         {
             try
             {
@@ -214,7 +214,7 @@ namespace Scanner.Services
                 ProjectBase? project = null;
                 await Task.Run(async () =>
                 {
-                    project = await creationData.CreateProjectAsync(false, uiDispatcherQueue);
+                    project = await creationData.CreateProjectAsync(keepSourceFiles, uiDispatcherQueue);
                 });
                 CurrentProject = project;
 
@@ -265,7 +265,7 @@ namespace Scanner.Services
                 IsScanProcessRunning = true;
                 await AppDataService.EmptyFolderAsync(AppDataService.IncomingFolder);
                 IReadOnlyList<StorageFile> files = [];
-                await Task.Run(async () => files = await scanOptions.Scanner.GetScanAsync(scanOptions, AppDataService.IncomingFolder));
+                await Task.Run(async () => files = await scanOptions.Scanner.GetScanAsync(scanOptions, AppDataService.IncomingFolder, uiDispatcherQueue));
 
                 if (files.Count == 0)
                     return;
@@ -304,7 +304,13 @@ namespace Scanner.Services
                         case TargetFormat.SinglePagePDF:
                         case TargetFormat.TIFF:
                         case TargetFormat.RAW:
-                            MultiFileProjectCreationData imageCreationData = new(files, scanOptions.TargetFormat, saveOptions.FileName, saveOptions.TargetFolder, scanOptions);
+                            List<(StorageFile SourceFile, string? TargetFileName, StorageFile? TargetFile)> fileData = [];
+                            foreach (StorageFile file in files)
+                            {
+                                fileData.Add((file, saveOptions.FileName, file));
+                            }
+
+                            MultiFileProjectCreationData imageCreationData = new(fileData, scanOptions.TargetFormat, saveOptions.TargetFolder, scanOptions, false);
                             project = await imageCreationData.CreateProjectAsync(false, uiDispatcherQueue);
                             break;
                         default:
@@ -364,7 +370,7 @@ namespace Scanner.Services
             }
         }
 
-        public async Task TryScanToProjectAsync(ScanOptions scanOptions)
+        public async Task TryScanToProjectAsync(ScanOptions scanOptions, DispatcherQueue uiDispatcherQueue)
         {
             try
             {
@@ -386,7 +392,7 @@ namespace Scanner.Services
                 IsScanProcessRunning = true;
                 await AppDataService.EmptyFolderAsync(AppDataService.IncomingFolder);
                 IReadOnlyList<StorageFile> files = [];
-                await Task.Run(async () => files = await scanOptions.Scanner.GetScanAsync(scanOptions, AppDataService.IncomingFolder));
+                await Task.Run(async () => files = await scanOptions.Scanner.GetScanAsync(scanOptions, AppDataService.IncomingFolder, uiDispatcherQueue));
 
                 // automatic rotation
                 if (SettingsService.SettingAutoRotate)
@@ -958,9 +964,9 @@ namespace Scanner.Services
                     case TargetFormat.TIFF:
                     case TargetFormat.RAW:
                         if (CurrentProject is MultiFileProject imageProject)
-                            creationData = new MultiFileProjectCreationData(CurrentProject.Pages, targetFormat, null, CurrentProject.InitialScanOptions);
+                            creationData = new MultiFileProjectCreationData(CurrentProject.Pages, targetFormat, null, CurrentProject.InitialScanOptions, false);
                         else if (CurrentProject is PdfProject pdfProject)
-                            creationData = new MultiFileProjectCreationData(CurrentProject.Pages, targetFormat, pdfProject.FileNameInfo.DesiredDisplayName + TargetFormatToFileExtension(targetFormat), CurrentProject.InitialScanOptions);
+                            creationData = new MultiFileProjectCreationData(CurrentProject.Pages, targetFormat, pdfProject.FileNameInfo.DesiredDisplayName + TargetFormatToFileExtension(targetFormat), CurrentProject.InitialScanOptions, false);
                         break;
                     default:
                         throw new ArgumentException("Can't convert project to " + targetFormat.ToString());
@@ -974,7 +980,7 @@ namespace Scanner.Services
                     return false;
 
                 // create new project from preserved files
-                Task createProjectTask = TryCreateProjectAsync(creationData, uiDispatcherQueue);
+                Task createProjectTask = TryCreateProjectAsync(creationData, false, uiDispatcherQueue);
                 Messenger.Send(new ShowIndeterminateProgressDialogMessage(Resources.Strings.Resources.ApplyingChanges, createProjectTask));
                 await createProjectTask;
             }

@@ -68,7 +68,7 @@ namespace Scanner.Models
             for (int i = 0; i < creationData.Pages.Count; i++)
             {
                 PageCreationData pageData = creationData.Pages[i];
-                pages.Add(await CreatePageFromFileAsync(pageData.File, i, null, pageData.TargetFolder, keepSourceFiles, AppDataService.ProjectFolder, pageData.BaseFilter, pageData.Filter, pageData.Brightness, pageData.Contrast));
+                pages.Add(await CreatePageFromFileAsync(pageData.File, i, null, null, pageData.TargetFolder, keepSourceFiles, AppDataService.ProjectFolder, pageData.BaseFilter, pageData.Filter, pageData.Brightness, pageData.Contrast));
             }
 
             // create project and update previews

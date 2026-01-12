@@ -1,30 +1,31 @@
-﻿using Microsoft.UI.Windowing;
-using Microsoft.UI.Xaml.Media;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.DependencyInjection;
 using Microsoft.UI;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using WinRT.Interop;
-using CommunityToolkit.Mvvm.ComponentModel;
-using Scanner.Models.Interfaces;
-using Windows.Devices.Scanners;
+using Microsoft.UI.Dispatching;
+using Microsoft.UI.Windowing;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
-using Windows.Devices.Enumeration;
+using Microsoft.Windows.Storage.Pickers;
+using Scanner.AppWindows;
+using Scanner.Models.Interfaces;
 using Scanner.Services;
 using Scanner.Services.Interfaces;
-using CommunityToolkit.Mvvm.DependencyInjection;
+using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using Windows.Foundation.Metadata;
-using Scanner.AppWindows;
+using System.Linq;
 using System.Security.Principal;
-using Windows.Storage.Pickers;
-using Windows.Storage;
-using Windows.UI.WindowManagement;
-using Microsoft.UI.Xaml;
+using System.Text;
+using System.Threading.Tasks;
+using Windows.Devices.Enumeration;
+using Windows.Devices.Scanners;
 using Windows.Foundation;
-using Microsoft.UI.Dispatching;
+using Windows.Foundation.Metadata;
+using Windows.Storage;
+using Windows.Storage.Pickers;
+using Windows.UI.WindowManagement;
+using WinRT.Interop;
 
 namespace Scanner.Models.ScanningDevices
 {
@@ -166,9 +167,14 @@ namespace Scanner.Models.ScanningDevices
             if (clearTargetFolder)
                 await AppDataService.EmptyFolderAsync(targetFolder);
 
-            IReadOnlyList<StorageFile> files = await PickInputFilesAsync(false);
-            if (files.Count == 0)
-                return null;
+            IReadOnlyList<PickFileResult> pickerResults = await Helpers.Helpers.PickInputFilesAsync(false, uiDispatcherQueue);
+
+            // get files
+            StorageFile[] files = new StorageFile[pickerResults.Count];
+            for (int i = 0; i < pickerResults.Count; i++)
+            {
+                files[i] = await StorageFile.GetFileFromPathAsync(pickerResults[i].Path);
+            }
 
             // copy to target folder
             List<Task<StorageFile>> copytasks = new();
@@ -181,45 +187,26 @@ namespace Scanner.Models.ScanningDevices
             return results[0];
         }
 
-        public async Task<IReadOnlyList<StorageFile>> GetScanAsync(ScanOptions scanOptions, StorageFolder targetFolder)
+        public async Task<IReadOnlyList<StorageFile>> GetScanAsync(ScanOptions scanOptions, StorageFolder targetFolder, DispatcherQueue uiDispatcherQueue)
         {
-            IReadOnlyList<StorageFile> files = await PickInputFilesAsync(scanOptions.SourceMode != ScannerSource.Flatbed);
+            IReadOnlyList<PickFileResult> pickerResults = await Helpers.Helpers.PickInputFilesAsync(scanOptions.SourceMode != ScannerSource.Flatbed, uiDispatcherQueue);
+
+            // get files
+            StorageFile[] files = new StorageFile[pickerResults.Count];
+            for (int i = 0; i < pickerResults.Count; i++)
+            {
+                files[i] = await StorageFile.GetFileFromPathAsync(pickerResults[i].Path);
+            }
 
             // copy to target folder
-            List<Task<StorageFile>> copytasks = new(); 
+            List<Task<StorageFile>> copyTasks = [];
             foreach (StorageFile file in files)
             {
-                copytasks.Add(file.CopyAsync(targetFolder, file.Name, NameCollisionOption.GenerateUniqueName).AsTask());
+                copyTasks.Add(file.CopyAsync(targetFolder, file.Name, NameCollisionOption.GenerateUniqueName).AsTask());
             }
-            StorageFile[] results = await Task.WhenAll(copytasks);
+            StorageFile[] results = await Task.WhenAll(copyTasks);
 
             return results;
-        }
-
-        private async Task<IReadOnlyList<StorageFile>> PickInputFilesAsync(bool allowMultipleFiles)
-        {
-            // select files to simulate scan
-            FileOpenPicker picker = new();
-
-            // connect picker to window
-            IntPtr hwnd = WindowNative.GetWindowHandle(((App)Application.Current).MainWindow);
-            InitializeWithWindow.Initialize(picker, hwnd);
-
-            // set picker properties
-            picker.ViewMode = PickerViewMode.Thumbnail;
-            picker.SuggestedStartLocation = PickerLocationId.PicturesLibrary;
-            picker.FileTypeFilter.Add(".jpg");
-            picker.FileTypeFilter.Add(".jpeg");
-            picker.FileTypeFilter.Add(".png");
-            picker.FileTypeFilter.Add(".bmp");
-            picker.FileTypeFilter.Add(".tif");
-            picker.FileTypeFilter.Add(".tiff");
-
-            // pick files
-            IReadOnlyList<StorageFile> files = await picker.PickMultipleFilesAsync();
-            if (files == null || files.Count == 0) return [];
-
-            return files;
         }
 
         private List<ImageScannerFormat> GenerateFormats(IImageScannerFormatConfiguration config)

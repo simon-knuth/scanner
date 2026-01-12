@@ -1,13 +1,17 @@
-﻿using Microsoft.UI.Xaml;
+﻿using Microsoft.UI.Dispatching;
+using Microsoft.UI.Xaml;
 using Microsoft.Windows.ApplicationModel.Resources;
+using Microsoft.Windows.Storage.Pickers;
+using Scanner.Extensions;
 using Scanner.Models;
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.Services.Store;
-using Windows.System;
+using Windows.Storage;
 using WinRT.Interop;
 
 namespace Scanner.Helpers
@@ -180,6 +184,32 @@ namespace Scanner.Helpers
             if (fileName.IndexOfAny(Path.GetInvalidFileNameChars()) >= 0) return false;
             if (fileName.Length > 255) return false;
             return true;
+        }
+
+        public static async Task<IReadOnlyList<PickFileResult>> PickInputFilesAsync(bool allowMultipleFiles, DispatcherQueue uiDispatcherQueue)
+        {
+            IReadOnlyList<PickFileResult> result = [];
+            await uiDispatcherQueue.RunOnThreadAndWaitAsync(DispatcherQueuePriority.High, async () =>
+            {
+                // prepare picker
+                FileOpenPicker picker = new(((App)Application.Current).MainWindow.AppWindow.Id);
+                picker.ViewMode = PickerViewMode.Thumbnail;
+                picker.SuggestedStartLocation = PickerLocationId.PicturesLibrary;
+                picker.FileTypeFilter.Add(".jpg");
+                picker.FileTypeFilter.Add(".jpeg");
+                picker.FileTypeFilter.Add(".png");
+                picker.FileTypeFilter.Add(".bmp");
+                picker.FileTypeFilter.Add(".tif");
+                picker.FileTypeFilter.Add(".tiff");
+
+                // pick files
+                if (allowMultipleFiles)
+                    result = await picker.PickMultipleFilesAsync();
+                else
+                    result = [await picker.PickSingleFileAsync()];
+            });
+
+            return result;
         }
     }
 }

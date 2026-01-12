@@ -388,7 +388,7 @@ namespace Scanner.Models.ScanningDevices
                 IReadOnlyList<StorageFile>? files = null;
                 await Task.Run(async () =>
                 {
-                    files = await GetScanAsync(scanOptions, targetFolder);
+                    files = await GetScanAsync(scanOptions, targetFolder, uiDispatcherQueue);
                 });
                 if (files == null || files.Count == 0)
                     return null;
@@ -397,7 +397,7 @@ namespace Scanner.Models.ScanningDevices
             }
         }
 
-        public async Task<IReadOnlyList<StorageFile>> GetScanAsync(ScanOptions scanOptions, StorageFolder targetFolder)
+        public async Task<IReadOnlyList<StorageFile>> GetScanAsync(ScanOptions scanOptions, StorageFolder targetFolder, DispatcherQueue uiDispatcherQueue)
         {
             // apply scan options
             ApplyScanOptions(scanOptions);

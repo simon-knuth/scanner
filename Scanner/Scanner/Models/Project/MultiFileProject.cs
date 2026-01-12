@@ -56,7 +56,7 @@ namespace Scanner.Models
             }
         }
 
-        public static async Task<ProjectBase> CreateAsync(MultiFileProjectCreationData creationData, bool keepSourceFiles, DispatcherQueue uiDispatcherQueue)
+        public static async Task<ProjectBase> CreateAsync(MultiFileProjectCreationData creationData, bool keepSourceFiles, bool isAlreadySaved, DispatcherQueue uiDispatcherQueue)
         {
             // empty project folders
             await AppDataService.EmptyFolderAsync(AppDataService.ProjectFolder);
@@ -69,12 +69,16 @@ namespace Scanner.Models
             for (int i = 0; i < creationData.Pages.Count; i++)
             {
                 PageCreationData pageData = creationData.Pages[i];
-                pages.Add(await CreatePageFromFileAsync(pageData.File, i, pageData.TargetFileName, pageData.TargetFolder, keepSourceFiles, AppDataService.ProjectFolder, pageData.BaseFilter, pageData.Filter, pageData.Brightness, pageData.Contrast));
+                pages.Add(await CreatePageFromFileAsync(pageData.File, i, pageData.TargetFileName, pageData.TargetFile, pageData.TargetFolder, keepSourceFiles, AppDataService.ProjectFolder, pageData.BaseFilter, pageData.Filter, pageData.Brightness, pageData.Contrast));
             }
 
             // create project and update previews
             MultiFileProject project = new MultiFileProject(pages, creationData.Format, creationData.InitialScanOptions);
             await project.GeneratePagePreviewsAsync(pages.OfType<ImagePage>().ToList(), uiDispatcherQueue);
+
+            if (isAlreadySaved)
+                project.areFilesSaved = true;
+
             return project;
         }
 

@@ -6,8 +6,10 @@ using CommunityToolkit.WinUI.Behaviors;
 using Microsoft.UI.Dispatching;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Documents;
+using Microsoft.Windows.Storage.Pickers;
 using Scanner.AppWindows;
 using Scanner.Extensions;
+using Scanner.Helpers;
 using Scanner.Messages;
 using Scanner.Models;
 using Scanner.Models.Interfaces;
@@ -16,10 +18,12 @@ using Scanner.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Windows.Storage;
 
 namespace Scanner.ViewModels
 {
@@ -59,6 +63,7 @@ namespace Scanner.ViewModels
         public AsyncRelayCommand SaveAsyncCommand;
         public AsyncRelayCommand SaveAsAsyncCommand;
         public AsyncRelayCommand SaveAsCurrentPageAsyncCommand;
+        public AsyncRelayCommand OpenFilesAsyncCommand => new AsyncRelayCommand(OpenFilesAsync);
         public RelayCommand<DispatcherQueue> ViewLoadingCommand => new RelayCommand<DispatcherQueue>(ViewLoading);
         public RelayCommand DisposeCommand => new RelayCommand(Dispose);
         #endregion
@@ -302,6 +307,43 @@ namespace Scanner.ViewModels
         private void ShowScanMergeDialog()
         {
             ScanMergeDialogRequested?.Invoke(this, EventArgs.Empty);
+        }
+
+        private async Task OpenFilesAsync()
+        {
+            IReadOnlyList<PickFileResult> pickerResults = await Helpers.Helpers.PickInputFilesAsync(true, viewDispatcherQueue!);
+            if (pickerResults.Count == 0)
+                return;
+
+            // ensure single file type
+            string extension = Path.GetExtension(pickerResults[0].Path).ToLowerInvariant();
+            if (pickerResults.Any(f => Path.GetExtension(f.Path).ToLowerInvariant() != extension))
+            {
+                Messenger.Send(new ShowNotificationMessage(new Notification
+                {
+                    Title = "Can't open multiple file types",
+                    Message = "Please select files of the same type to open a project.",
+                    Severity = Microsoft.UI.Xaml.Controls.InfoBarSeverity.Error
+                }));
+                return;
+            }
+
+            // get files
+            List<(StorageFile SourceFile, string? TargetFileName, StorageFile? TargetFile)> files = [];
+            foreach (PickFileResult pickerResult in pickerResults)
+            {
+                StorageFile file = await StorageFile.GetFileFromPathAsync(pickerResult.Path);
+                files.Add((file, Path.GetFileName(pickerResult.Path), file));
+            }
+
+            // get target folder
+            StorageFolder? targetFolder = await files[0].SourceFile.GetParentAsync();
+
+            // create project data
+            TargetFormat targetFormat = Helpers.Helpers.FileExtensionToTargetFormat(extension);
+            MultiFileProjectCreationData projectData = new(files, targetFormat, targetFolder, new(null, false), true);
+
+            await ProjectService.TryCreateProjectAsync(projectData, true, viewDispatcherQueue!);
         }
     }
 }

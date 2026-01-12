@@ -137,6 +137,7 @@ namespace Scanner.Models
                         // correct format, just copy
                         if (page.Value.TargetFile != null)
                         {
+                            page.Value.TargetFile.FileStream.Dispose();
                             StorageFile file = await page.Value.SourceFile.CopyAsync(page.Value.TargetFolder, page.Value.TargetFile.File.Name, NameCollisionOption.ReplaceExisting);
 
                             if (file.Name != page.Value.DesiredFileName)

@@ -83,7 +83,7 @@ namespace Scanner.Extensions
 
                 case ScannerSource.None:
                 default:
-                    throw new ArgumentException("Failed to determine page's BaseFilter for given configuration");
+                    return ImageFilter.None;
             }
         }
     }

@@ -90,7 +90,7 @@ namespace Scanner.Models.Interfaces
         // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         Task<StorageFile?> GetPreviewScanAsync(ScannerSource sourceMode, StorageFolder targetFolder, bool clearTargetFolder, DispatcherQueue uiDispatcherQueue);
-        Task<IReadOnlyList<StorageFile>> GetScanAsync(ScanOptions scanOptions, StorageFolder targetFolder);
+        Task<IReadOnlyList<StorageFile>> GetScanAsync(ScanOptions scanOptions, StorageFolder targetFolder, DispatcherQueue uiDispatcherQueue);
         void CancelPreview();
         void CancelScan();
         bool IsPreviewSupported(ScannerSource source);

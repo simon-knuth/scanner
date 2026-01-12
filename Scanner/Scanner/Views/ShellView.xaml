@@ -212,7 +212,7 @@
                             <KeyboardAccelerator Modifiers="Control" Key="N" />
                         </Button.KeyboardAccelerators>
                     </Button>
-                    <Button ToolTipService.ToolTip="{x:Bind strings:Resources.OpenProjectToolTip}" Style="{StaticResource TitlebarButtonStyle}" IsEnabled="{x:Bind ViewModel.ProjectService.IsProcessRunning, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}">
+                    <Button ToolTipService.ToolTip="{x:Bind strings:Resources.OpenProjectToolTip}" Style="{StaticResource TitlebarButtonStyle}" IsEnabled="{x:Bind ViewModel.ProjectService.IsProcessRunning, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}" Command="{x:Bind ViewModel.OpenFilesAsyncCommand}">
                         <FontIcon Glyph="&#xE838;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
 
                         <Button.KeyboardAccelerators>

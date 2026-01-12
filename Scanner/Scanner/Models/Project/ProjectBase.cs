@@ -171,7 +171,7 @@ namespace Scanner.Models
                 {
                     foreach (ProjectFileInsertion insertion in insertions)
                     {
-                        IProjectPage page = await CreatePageFromFileAsync(insertion.File, insertion.Index, IsPdf ? null : insertion.FileName, insertion.TargetFolder, keepSourceFiles, AppDataService.ChangesFolder, insertion.BaseFilter, insertion.Filter, insertion.Brightness, insertion.Contrast);
+                        IProjectPage page = await CreatePageFromFileAsync(insertion.File, insertion.Index, IsPdf ? null : insertion.FileName, null, insertion.TargetFolder, keepSourceFiles, AppDataService.ChangesFolder, insertion.BaseFilter, insertion.Filter, insertion.Brightness, insertion.Contrast);
                         copiedFiles.Add(page.SourceFile);
 
                         preparedInsertions.Add(new KeyValuePair<IProjectPage, int>(page, insertion.Index));
@@ -380,7 +380,7 @@ namespace Scanner.Models
             }
         }
 
-        protected static async Task<IProjectPage> CreatePageFromFileAsync(StorageFile file, int index, string? targetFileName, StorageFolder? targetFolder, bool keepSourceFile, StorageFolder pagesFolder, ImageFilter baseFilter, ImageFilter filter, int brightness, int contrast)
+        protected static async Task<IProjectPage> CreatePageFromFileAsync(StorageFile file, int index, string? targetFileName, StorageFile? targetFile, StorageFolder? targetFolder, bool keepSourceFile, StorageFolder pagesFolder, ImageFilter baseFilter, ImageFilter filter, int brightness, int contrast)
         {
             if (file == null) throw new ArgumentException("Can't create IProjectPage from null file");
 
@@ -392,7 +392,7 @@ namespace Scanner.Models
                 case ".bmp":
                 case ".tif":
                 case ".tiff":
-                    return await ImagePage.CreateAsync(file, targetFolder, index, targetFileName, keepSourceFile, pagesFolder, baseFilter, filter, brightness, contrast);
+                    return await ImagePage.CreateAsync(file, targetFile, targetFolder, index, targetFileName, keepSourceFile, pagesFolder, baseFilter, filter, brightness, contrast);
                 case ".pdf":
                     throw new NotImplementedException();
                 default:

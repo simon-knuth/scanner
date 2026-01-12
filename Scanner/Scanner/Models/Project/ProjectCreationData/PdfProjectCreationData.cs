@@ -57,7 +57,7 @@ namespace Scanner.Models
 
             foreach (StorageFile file in files)
             {
-                Pages.Add(new PageCreationData(file, targetFileName, targetFolder, initialScanOptions.GetBaseFilter(), initialScanOptions.GetFilter(), initialScanOptions.Brightness, initialScanOptions.Contrast));
+                Pages.Add(new PageCreationData(file, targetFileName, null, targetFolder, initialScanOptions.GetBaseFilter(), initialScanOptions.GetFilter(), initialScanOptions.Brightness, initialScanOptions.Contrast));
             }
         }
 
@@ -71,7 +71,7 @@ namespace Scanner.Models
             {
                 if (page is ImagePage imagePage)
                 {
-                    Pages.Add(new PageCreationData(imagePage.SourceFile, imagePage.TargetFile?.File.Name, imagePage.TargetFolder,
+                    Pages.Add(new PageCreationData(imagePage.SourceFile, imagePage.TargetFile?.File.Name, null, imagePage.TargetFolder,
                         imagePage.BaseFilter, imagePage.Filter, imagePage.Brightness, imagePage.Contrast));
                 }
             }

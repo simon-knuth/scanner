@@ -41,31 +41,35 @@ namespace Scanner.Models
 
         public ScanOptions InitialScanOptions { get; }
 
+        public bool IsAlreadySaved { get; }
+
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public MultiFileProjectCreationData(IReadOnlyList<StorageFile> files, TargetFormat format, string? targetFileName, StorageFolder? targetFolder, ScanOptions initialScanOptions)
+        public MultiFileProjectCreationData(List<(StorageFile SourceFile, string? TargetFileName, StorageFile? TargetFile)> pages, TargetFormat format, StorageFolder? targetFolder, ScanOptions initialScanOptions, bool isAlreadySaved)
         {
             Format = format;
             InitialScanOptions = initialScanOptions;
+            IsAlreadySaved = isAlreadySaved;
 
-            foreach (StorageFile file in files)
+            foreach ((StorageFile SourceFile, string? TargetFileName, StorageFile? TargetFile) page in pages)
             {
-                Pages.Add(new PageCreationData(file, targetFileName, targetFolder, initialScanOptions.GetBaseFilter(), initialScanOptions.GetFilter(), initialScanOptions.Brightness, initialScanOptions.Contrast));
+                Pages.Add(new PageCreationData(page.SourceFile, page.TargetFileName, page.TargetFile, targetFolder, initialScanOptions.GetBaseFilter(), initialScanOptions.GetFilter(), initialScanOptions.Brightness, initialScanOptions.Contrast));
             }
         }
 
-        public MultiFileProjectCreationData(Collection<IProjectPage> pages, TargetFormat format, string? targetFileName, ScanOptions initialScanOptions)
+        public MultiFileProjectCreationData(Collection<IProjectPage> pages, TargetFormat format, string? targetFileName, ScanOptions initialScanOptions, bool isAlreadySaved)
         {
             Format = format;
             InitialScanOptions = initialScanOptions;
+            IsAlreadySaved = isAlreadySaved;
 
             foreach (IProjectPage page in pages)
             {
                 if (page is ImagePage imagePage)
                 {
-                    Pages.Add(new PageCreationData(imagePage.SourceFile, targetFileName ?? imagePage.FileNameInfo?.DesiredName, imagePage.TargetFolder,
+                    Pages.Add(new PageCreationData(imagePage.SourceFile, targetFileName ?? imagePage.FileNameInfo?.DesiredName, null, imagePage.TargetFolder,
                         imagePage.BaseFilter, imagePage.Filter, imagePage.Brightness, imagePage.Contrast));
                 }
             }
@@ -77,7 +81,7 @@ namespace Scanner.Models
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public async Task<ProjectBase> CreateProjectAsync(bool keepSourceFiles, DispatcherQueue uiDispatcherQueue)
         {
-            return await MultiFileProject.CreateAsync(this, keepSourceFiles, uiDispatcherQueue);
+            return await MultiFileProject.CreateAsync(this, keepSourceFiles, IsAlreadySaved, uiDispatcherQueue);
         }
     }
 }
