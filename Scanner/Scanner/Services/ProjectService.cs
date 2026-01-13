@@ -307,11 +307,11 @@ namespace Scanner.Services
                             List<(StorageFile SourceFile, string? TargetFileName, StorageFile? TargetFile)> fileData = [];
                             foreach (StorageFile file in files)
                             {
-                                fileData.Add((file, saveOptions.FileName, file));
+                                fileData.Add((file, saveOptions.FileName, null));
                             }
 
-                            MultiFileProjectCreationData imageCreationData = new(fileData, scanOptions.TargetFormat, saveOptions.TargetFolder, scanOptions, false);
-                            project = await imageCreationData.CreateProjectAsync(false, uiDispatcherQueue);
+                            MultiFileProjectCreationData projectCreationData = new(fileData, scanOptions.TargetFormat, saveOptions.TargetFolder, scanOptions, false);
+                            project = await projectCreationData.CreateProjectAsync(false, uiDispatcherQueue);
                             break;
                         default:
                             throw new ArgumentException($"Can't create project for format {scanOptions.TargetFormat}");
