@@ -1059,6 +1059,10 @@ namespace Scanner.Services
             {
                 SelectedPage = CurrentProject?.Pages.FirstOrDefault();
             }
+            else if (SelectedPage == null)
+            {
+                SelectedPage = CurrentProject?.Pages.LastOrDefault();
+            }
 
             OnPropertyChanged(nameof(TotalNumberOfPages));
         }

@@ -198,7 +198,7 @@ Fuzzy</comment>
 Fuzzy</comment>
   </data>
   <data name="OpenWith" xml:space="preserve">
-    <value>Open in another app</value>
+    <value>Open with...</value>
     <comment>The tooltip text that appears while hovering the "Open with" button in the edit toolbar.</comment>
   </data>
   <data name="RenameFile" xml:space="preserve">
@@ -1921,5 +1921,8 @@ Fuzzy</comment>
   </data>
   <data name="ScanAreaAlignmentHeading" xml:space="preserve">
     <value>Scan area alignment</value>
+  </data>
+  <data name="OpenWithApp" xml:space="preserve">
+    <value>Open with {0}</value>
   </data>
 </root>

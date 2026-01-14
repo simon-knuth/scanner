@@ -30,6 +30,7 @@ using Windows.Foundation.Collections;
 using WinRT;
 using WinRT.Interop;
 using WinUIEx;
+using static CommunityToolkit.WinUI.Animations.Expressions.ExpressionValues;
 using static Scanner.Helpers.Helpers;
 
 
@@ -702,9 +703,9 @@ namespace Scanner.Views
             }
         }
 
-        private void MenuFlyoutSubItemOpenWith_Loading(FrameworkElement sender, object args)
+        private void SplitMenuFlyoutItemOpenWith_Loading(FrameworkElement sender, object args)
         {
-            MenuFlyoutSubItem mainItem = (MenuFlyoutSubItem)sender;
+            SplitMenuFlyoutItem mainItem = (SplitMenuFlyoutItem)sender;
 
             // clear list
             while (mainItem.Items.Count > 3)
@@ -713,7 +714,9 @@ namespace Scanner.Views
             }
 
             // add items
-            foreach (OpenWithTarget target in ViewModel.OpenWithTargets)
+            List<OpenWithTarget> reversed = [.. ViewModel.OpenWithTargets];
+            reversed.Reverse();
+            foreach (OpenWithTarget target in reversed)
             {
                 MenuFlyoutItem item = new MenuFlyoutItem()
                 {
@@ -738,6 +741,27 @@ namespace Scanner.Views
                 }
 
                 mainItem.Items.Insert(0, item);
+            }
+
+            // update main item
+            if (ViewModel.OpenWithTargets.Count > 0)
+            {
+                mainItem.Text = string.Format(GetLocalized(Scanner.Resources.Strings.ResourcesExtension.KeyEnum.OpenWithApp), ViewModel.OpenWithTargets[0].AppInfo.DisplayInfo.DisplayName);
+                mainItem.CommandParameter = ViewModel.OpenWithTargets[0].AppInfo;
+
+                if (ViewModel.OpenWithTargets[0].Logo != null)
+                {
+                    ViewModel.OpenWithTargets[0].Logo!.DecodePixelType = Microsoft.UI.Xaml.Media.Imaging.DecodePixelType.Logical;
+                    ViewModel.OpenWithTargets[0].Logo!.DecodePixelWidth = 32;
+                    ViewModel.OpenWithTargets[0].Logo!.DecodePixelHeight = 32;
+
+                    ImageIcon icon = new ImageIcon
+                    {
+                        Source = ViewModel.OpenWithTargets[0].Logo
+                    };
+
+                    mainItem.Icon = icon;
+                }
             }
         }
 

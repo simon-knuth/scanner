@@ -446,12 +446,12 @@
                                     </MenuFlyoutItem>
                                 </MenuFlyoutSubItem.Items>
                             </MenuFlyoutSubItem>
-                            <MenuFlyoutSubItem x:Name="MenuFlyoutSubItemOpenWith" Text="{x:Bind strings:Resources.OpenWith}" Loading="MenuFlyoutSubItemOpenWith_Loading">
-                                <MenuFlyoutSubItem.Icon>
+                            <SplitMenuFlyoutItem x:Name="SplitMenuFlyoutItemOpenWith" Text="{x:Bind strings:Resources.OpenWith}" Command="{x:Bind ViewModel.TryOpenWithAsyncCommand}" Loading="SplitMenuFlyoutItemOpenWith_Loading">
+                                <SplitMenuFlyoutItem.Icon>
                                     <FontIcon Glyph="&#xE7AC;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
-                                </MenuFlyoutSubItem.Icon>
+                                </SplitMenuFlyoutItem.Icon>
 
-                                <MenuFlyoutSubItem.Items>
+                                <SplitMenuFlyoutItem.Items>
                                     <MenuFlyoutItem Text="{x:Bind strings:Resources.OpenWithOpenStore}" Command="{x:Bind ViewModel.FindAppForFileTypeCommand}">
                                         <MenuFlyoutItem.Icon>
                                             <FontIcon Glyph="&#xE719;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
@@ -459,8 +459,8 @@
                                     </MenuFlyoutItem>
                                     <MenuFlyoutSeparator />
                                     <MenuFlyoutItem Text="{x:Bind strings:Resources.OpenWithShowAllApps}" FontWeight="SemiBold" Command="{x:Bind ViewModel.TryOpenWithAsyncCommand}" />
-                                </MenuFlyoutSubItem.Items>
-                            </MenuFlyoutSubItem>
+                                </SplitMenuFlyoutItem.Items>
+                            </SplitMenuFlyoutItem>
                             <MenuFlyoutItem Text="{x:Bind strings:Resources.Print}">
                                 <MenuFlyoutItem.Icon>
                                     <FontIcon Glyph="&#xE749;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />

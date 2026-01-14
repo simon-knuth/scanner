@@ -1643,4 +1643,7 @@ Fuzzy</comment>
     <value>Vybrat vše</value>
     <comment>The option to select all similar pages for cropping.</comment>
   </data>
+  <data name="OpenWithApp" xml:space="preserve">
+    <value />
+  </data>
 </root>
