@@ -1716,7 +1716,7 @@ Fuzzy</comment>
     <comment>Indicates that there are unsaved changes.</comment>
   </data>
   <data name="ConvertTo" xml:space="preserve">
-    <value>Convert project to...</value>
+    <value>Convert project to</value>
   </data>
   <data name="AddPagesFromImages" xml:space="preserve">
     <value>Add pages from images...</value>
@@ -1887,6 +1887,9 @@ Fuzzy</comment>
   <data name="ScanAlignmentPreview" xml:space="preserve">
     <value>Scan alignment preview</value>
   </data>
+  <data name="OpenWithApp" xml:space="preserve">
+    <value>Open with {0}</value>
+  </data>
   <data name="SettingsFileNamingCustomPatternExplanation" xml:space="preserve">
     <value>Drag and drop blocks to build your own dynamic file naming pattern. Select a block to modify its output or drag it into the bin to remove it.</value>
     <comment>The description for the custom file naming dialog.</comment>
@@ -1921,8 +1924,5 @@ Fuzzy</comment>
   </data>
   <data name="ScanAreaAlignmentHeading" xml:space="preserve">
     <value>Scan area alignment</value>
-  </data>
-  <data name="OpenWithApp" xml:space="preserve">
-    <value>Open with {0}</value>
   </data>
 </root>

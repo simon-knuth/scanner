@@ -249,8 +249,20 @@ namespace Scanner.Models
                     // add pages
                     foreach (IProjectPage insertion in insertions.OrderBy(x => x.Index))
                     {
+                        if (insertion.TargetFile != null)
+                            insertion.TargetFile = new(insertion.TargetFile.File, await insertion.TargetFile.File.OpenAsync(FileAccessMode.ReadWrite, StorageOpenOptions.AllowOnlyReaders));
+
                         Pages.Insert(insertion.Index, insertion);
                         insertedPages.Add(insertion);
+                    }
+
+                    // don't delete target files if pages were added back
+                    if (this is MultiFileProject multiFileProject)
+                    {
+                        foreach (IProjectPage page in insertedPages)
+                        {
+                            multiFileProject.PagesWithTargetFilesToDelete.Remove(page);
+                        }
                     }
 
                     // update previews
@@ -340,6 +352,9 @@ namespace Scanner.Models
                                 await page.SourceFile.MoveAsync(AppDataService.UndoFolder, page.SourceFile.Name, NameCollisionOption.GenerateUniqueName);
                             }
 
+                            if (page.TargetFile != null)
+                                page.TargetFile.FileStream.Dispose();
+
                             if (page.PreviewFile != null && page.PreviewFile != page.SourceFile)
                             {
                                 await imagePage.UpdatePreviewFileAsync(null, uiDispatcherQueue);
@@ -368,6 +383,10 @@ namespace Scanner.Models
                 {
                     Pages[i].Index = i;
                 }
+
+                // mark pages' target files for deletion
+                if (this is MultiFileProject multiFileProject)
+                    multiFileProject.PagesWithTargetFilesToDelete.AddRange(pages);
 
                 PagesRemoved?.Invoke(this, EventArgs.Empty);
 

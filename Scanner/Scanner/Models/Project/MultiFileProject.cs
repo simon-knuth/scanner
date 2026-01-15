@@ -40,6 +40,10 @@ namespace Scanner.Models
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /// <summary>
+        /// Pages that have been removed from the project and need to have their target files deleted.
+        /// </summary>
+        public List<IProjectPage> PagesWithTargetFilesToDelete { get; } = [];
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -247,6 +251,19 @@ namespace Scanner.Models
                                 }
                             }
                         }
+
+                        // delete target files marked for deletion
+                        foreach (IProjectPage page in PagesWithTargetFilesToDelete)
+                        {
+                            if (page.TargetFile != null)
+                            {
+                                TargetFile targetFile = page.TargetFile;
+                                page.TargetFile = null;
+                                targetFile.FileStream.Dispose();
+                                _ = Task.Run(async () => await targetFile.File.DeleteAsync(StorageDeleteOption.PermanentDelete));
+                            }
+                        }
+                        PagesWithTargetFilesToDelete.Clear();
 
                         // take snapshot
                         MultiFileProjectSnapshot? snapshot = null;
