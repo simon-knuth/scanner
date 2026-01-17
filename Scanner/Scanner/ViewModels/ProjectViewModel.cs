@@ -517,16 +517,42 @@ namespace Scanner.ViewModels
 
         private async Task TryOpenWithAsync(AppInfo? app)
         {
-            if (CurrentProject == null) return;
+            if (CurrentProject == null)
+                return;
 
             if (CurrentProject is PdfProject pdfProject)
             {
-                await ProjectService.TryOpenWithProjectAsync(app);
+                if (await ProjectService.TryOpenWithProjectAsync(app) && app != null)
+                    SettingsService.LastOpenWithAppPdf = app.AppUserModelId;
             }
             if (CurrentProject is MultiFileProject)
             {
-                if (ProjectService.SelectedPage == null) return;
-                await ProjectService.TryOpenWithPageAsync(app, ProjectService.SelectedPage);
+                if (ProjectService.SelectedPage == null)
+                    return;
+
+                if (await ProjectService.TryOpenWithPageAsync(app, ProjectService.SelectedPage) && app != null)
+                {
+                    switch (CurrentProject.Format)
+                    {
+                        case TargetFormat.JPG:
+                            SettingsService.LastOpenWithAppJpg = app.AppUserModelId;
+                            break;
+                        case TargetFormat.PNG:
+                            SettingsService.LastOpenWithAppPng = app.AppUserModelId;
+                            break;
+                        case TargetFormat.BMP:
+                            SettingsService.LastOpenWithAppBmp = app.AppUserModelId;
+                            break;
+                        case TargetFormat.SinglePagePDF:
+                            SettingsService.LastOpenWithAppPdf = app.AppUserModelId;
+                            break;
+                        case TargetFormat.TIFF:
+                            SettingsService.LastOpenWithAppTiff = app.AppUserModelId;
+                            break;
+                        case TargetFormat.None:
+                            break;
+                    }
+                }
             }
         }
 

@@ -24,6 +24,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
+using Windows.ApplicationModel;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
@@ -705,12 +706,12 @@ namespace Scanner.Views
 
         private void SplitMenuFlyoutItemOpenWith_Loading(FrameworkElement sender, object args)
         {
-            SplitMenuFlyoutItem mainItem = (SplitMenuFlyoutItem)sender;
+            SplitMenuFlyoutItem parentItem = (SplitMenuFlyoutItem)sender;
 
             // clear list
-            while (mainItem.Items.Count > 3)
+            while (parentItem.Items.Count > 3)
             {
-                mainItem.Items.RemoveAt(0);
+                parentItem.Items.RemoveAt(0);
             }
 
             // add items
@@ -740,27 +741,56 @@ namespace Scanner.Views
                     item.Icon = icon;
                 }
 
-                mainItem.Items.Insert(0, item);
+                parentItem.Items.Insert(0, item);
             }
 
-            // update main item
+            // update parent item
             if (ViewModel.OpenWithTargets.Count > 0)
             {
-                mainItem.Text = string.Format(GetLocalized(Scanner.Resources.Strings.ResourcesExtension.KeyEnum.OpenWithApp), ViewModel.OpenWithTargets[0].AppInfo.DisplayInfo.DisplayName);
-                mainItem.CommandParameter = ViewModel.OpenWithTargets[0].AppInfo;
-
-                if (ViewModel.OpenWithTargets[0].Logo != null)
+                // select app
+                string? featuredAppId = null;
+                switch (ViewModel.CurrentProject?.Format)
                 {
-                    ViewModel.OpenWithTargets[0].Logo!.DecodePixelType = Microsoft.UI.Xaml.Media.Imaging.DecodePixelType.Logical;
-                    ViewModel.OpenWithTargets[0].Logo!.DecodePixelWidth = 32;
-                    ViewModel.OpenWithTargets[0].Logo!.DecodePixelHeight = 32;
+                    case TargetFormat.PDF:
+                    case TargetFormat.SinglePagePDF:
+                        featuredAppId = ViewModel.SettingsService.LastOpenWithAppPdf;
+                        break;
+                    case TargetFormat.JPG:
+                        featuredAppId = ViewModel.SettingsService.LastOpenWithAppJpg;
+                        break;
+                    case TargetFormat.PNG:
+                        featuredAppId = ViewModel.SettingsService.LastOpenWithAppPng;
+                        break;
+                    case TargetFormat.BMP:
+                        featuredAppId = ViewModel.SettingsService.LastOpenWithAppBmp;
+                        break;
+                    case TargetFormat.TIFF:
+                        featuredAppId = ViewModel.SettingsService.LastOpenWithAppTiff;
+                        break;
+                }
+
+                OpenWithTarget? featuredApp = null;
+                if (featuredAppId != null)
+                    featuredApp = ViewModel.OpenWithTargets.FirstOrDefault(x => x.AppInfo.AppUserModelId == featuredAppId);
+
+                if (featuredApp == null)
+                    featuredApp = ViewModel.OpenWithTargets[0];
+
+                parentItem.Text = string.Format(GetLocalized(Scanner.Resources.Strings.ResourcesExtension.KeyEnum.OpenWithApp), featuredApp.AppInfo.DisplayInfo.DisplayName);
+                parentItem.CommandParameter = featuredApp.AppInfo;
+
+                if (featuredApp.Logo != null)
+                {
+                    featuredApp.Logo!.DecodePixelType = Microsoft.UI.Xaml.Media.Imaging.DecodePixelType.Logical;
+                    featuredApp.Logo!.DecodePixelWidth = 32;
+                    featuredApp.Logo!.DecodePixelHeight = 32;
 
                     ImageIcon icon = new ImageIcon
                     {
-                        Source = ViewModel.OpenWithTargets[0].Logo
+                        Source = featuredApp.Logo
                     };
 
-                    mainItem.Icon = icon;
+                    parentItem.Icon = icon;
                 }
             }
         }

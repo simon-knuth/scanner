@@ -59,6 +59,12 @@ namespace Scanner.Services.Interfaces
         bool SettingGenerateFileNameWithAI { get; set; }
         bool SettingOcrPdfs { get; set; }
 
+        string? LastOpenWithAppPdf { get; set; }
+        string? LastOpenWithAppJpg { get; set; }
+        string? LastOpenWithAppPng { get; set; }
+        string? LastOpenWithAppBmp { get; set; }
+        string? LastOpenWithAppTiff { get; set; }
+
         void TryLogAllSettings();
     }
 

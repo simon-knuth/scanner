@@ -202,9 +202,9 @@ namespace Scanner.Services
             set => SetSetting(nameof(SettingMirrorAppLayout), value);
         }
 
-        public string UserId
+        public string? UserId
         {
-            get => GetSetting<string>(nameof(UserId), null);
+            get => GetSetting<string?>(nameof(UserId), null);
             set => SetSetting(nameof(UserId), value);
         }
 
@@ -242,6 +242,36 @@ namespace Scanner.Services
         {
             get => GetSetting<bool>(nameof(SettingOcrPdfs), true);
             set => SetSetting(nameof(SettingOcrPdfs), value);
+        }
+
+        public string? LastOpenWithAppPdf
+        {
+            get => GetSetting<string?>(nameof(LastOpenWithAppPdf), null);
+            set => SetSetting(nameof(LastOpenWithAppPdf), value);
+        }
+
+        public string? LastOpenWithAppJpg
+        {
+            get => GetSetting<string?>(nameof(LastOpenWithAppJpg), null);
+            set => SetSetting(nameof(LastOpenWithAppJpg), value);
+        }
+
+        public string? LastOpenWithAppPng
+        {
+            get => GetSetting<string?>(nameof(LastOpenWithAppPng), null);
+            set => SetSetting(nameof(LastOpenWithAppPng), value);
+        }
+
+        public string? LastOpenWithAppBmp
+        {
+            get => GetSetting<string?>(nameof(LastOpenWithAppBmp), null);
+            set => SetSetting(nameof(LastOpenWithAppBmp), value);
+        }
+
+        public string? LastOpenWithAppTiff
+        {
+            get => GetSetting<string?>(nameof(LastOpenWithAppTiff), null);
+            set => SetSetting(nameof(LastOpenWithAppTiff), value);
         }
 
         private ApplicationDataContainer settingsContainer = ApplicationData.Current.LocalSettings;

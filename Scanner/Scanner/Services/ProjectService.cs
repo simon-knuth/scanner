@@ -561,7 +561,7 @@ namespace Scanner.Services
                 // open with project
                 if (CurrentProject is PdfProject pdfProject)
                 {
-                    await pdfProject.TryOpenWithAsync(app);
+                    return await pdfProject.TryOpenWithAsync(app);
                 }
             }
             catch (ActionFailedAndRolledBackException)
@@ -570,6 +570,7 @@ namespace Scanner.Services
                 {
                     Title = "Something went wrong and the action couldn't be completed"
                 }));
+                return false;
             }
             finally
             {
@@ -589,7 +590,7 @@ namespace Scanner.Services
                 // open with page
                 if (CurrentProject is MultiFileProject imageProject)
                 {
-                    await imageProject.TryOpenWithPageAsync(app, page);
+                    return await imageProject.TryOpenWithPageAsync(app, page);
                 }
             }
             catch (ActionFailedAndRolledBackException)
@@ -598,6 +599,7 @@ namespace Scanner.Services
                 {
                     Title = "Something went wrong and the action couldn't be completed"
                 }));
+                return false;
             }
             finally
             {

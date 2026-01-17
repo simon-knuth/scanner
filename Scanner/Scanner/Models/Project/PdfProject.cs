@@ -320,7 +320,7 @@ namespace Scanner.Models
             }
         }
 
-        public async Task TryOpenWithAsync(AppInfo? app)
+        public async Task<bool> TryOpenWithAsync(AppInfo? app)
         {
             // wait for save processes to end
             if (LatestSaveProcess != null && !LatestSaveProcess.Task.IsCompleted)
@@ -340,11 +340,12 @@ namespace Scanner.Models
                         Message = "The project needs to be saved to complete this action.",
                         Severity = InfoBarSeverity.Error
                     }));
-                    return;
+                    return false;
                 }
 
                 // get file
-                if (TargetFile == null) return;
+                if (TargetFile == null)
+                    return false;
 
                 // construct launcher options
                 Windows.System.LauncherOptions options = new();
@@ -358,7 +359,7 @@ namespace Scanner.Models
                 }
 
                 // open with
-                await Windows.System.Launcher.LaunchFileAsync(TargetFile.File, options);
+                return await Windows.System.Launcher.LaunchFileAsync(TargetFile.File, options);
             }
             catch (Exception exc)
             {
