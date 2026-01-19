@@ -3,30 +3,29 @@ using Scanner.Models.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Globalization;
 using Windows.Devices.Scanners;
 using static Scanner.Helpers.Helpers;
 
-namespace Scanner.Models.FileNaming
+namespace Scanner.Models.ItemNaming
 {
-    public class HourPeriodFileNamingBlock : ObservableObject, IFileNamingBlock
+    public class ContrastItemNamingBlock : ObservableObject, IItemNamingBlock
     {
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public string Glyph => "\uE121";
-        public string Name => "HOURPERIOD";
+        public string Glyph => "\uE7A1";
+        public string Name => "CONTRAST";
 
         public string DisplayName
         {
-            get => GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.FileNamingBlockHourPeriod);
+            get => GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.Contrast);
         }
 
-        private bool _AllCaps;
-        public bool AllCaps
+        private bool _SkipIfDefault;
+        public bool SkipIfDefault
         {
-            get => _AllCaps;
-            set => SetProperty(ref _AllCaps, value);
+            get => _SkipIfDefault;
+            set => SetProperty(ref _SkipIfDefault, value);
         }
 
         public bool IsValid
@@ -38,15 +37,15 @@ namespace Scanner.Models.FileNaming
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public HourPeriodFileNamingBlock()
+        public ContrastItemNamingBlock()
         {
-            
+
         }
 
-        public HourPeriodFileNamingBlock(string serialized)
+        public ContrastItemNamingBlock(string serialized)
         {
             string[] parts = serialized.TrimStart('*').Split('|', StringSplitOptions.RemoveEmptyEntries);
-            AllCaps = bool.Parse(parts[1]);
+            SkipIfDefault = bool.Parse(parts[1]);
         }
 
 
@@ -55,32 +54,19 @@ namespace Scanner.Models.FileNaming
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public string ToString(ScanOptions scanOptions)
         {
-            string result;
-            
-            DateTime currentTime = scanOptions.ScanTime;
-            result = currentTime.ToString("tt").ToUpper();
-
-            if (string.IsNullOrWhiteSpace(result))
+            if (SkipIfDefault && scanOptions.Contrast == 0)
             {
-                // fallback to American English for languages that don't have a 24-hour system
-                result = currentTime.ToString("tt", CultureInfo.GetCultureInfoByIetfLanguageTag("en-us").DateTimeFormat);
-            }
-            
-            if (AllCaps)
-            {
-                result = result.ToUpper();
+                return "";
             }
             else
             {
-                result = result.ToLower();
+                return scanOptions.Contrast.ToString();
             }
-
-            return result;
         }
 
         public string GetSerialized(bool obfuscated)
         {
-            return $"*{Name}|{AllCaps}";
+            return $"*{Name}|{SkipIfDefault}";
         }
     }
 }

@@ -3,22 +3,30 @@ using Scanner.Models.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 using Windows.Devices.Scanners;
 using static Scanner.Helpers.Helpers;
 
-namespace Scanner.Models.FileNaming
+namespace Scanner.Models.ItemNaming
 {
-    public class ResolutionFileNamingBlock : ObservableObject, IFileNamingBlock
+    public class MinuteItemNamingBlock : ObservableObject, IItemNamingBlock
     {
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public string Glyph => "\uE744";
-        public string Name => "RESOLUTION";
+        public string Glyph => "\uE121";
+        public string Name => "MINUTE";
 
         public string DisplayName
         {
-            get => GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.FileNamingBlockResolution);
+            get => GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.FileNamingBlockMinute);
+        }
+
+        private bool _Use2Digits = true;
+        public bool Use2Digits
+        {
+            get => _Use2Digits;
+            set => SetProperty(ref _Use2Digits, value);
         }
 
         public bool IsValid
@@ -30,14 +38,15 @@ namespace Scanner.Models.FileNaming
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public ResolutionFileNamingBlock()
-        {
-
-        }
-
-        public ResolutionFileNamingBlock(string serialized)
+        public MinuteItemNamingBlock()
         {
             
+        }
+
+        public MinuteItemNamingBlock(string serialized)
+        {
+            string[] parts = serialized.TrimStart('*').Split('|', StringSplitOptions.RemoveEmptyEntries);
+            Use2Digits = bool.Parse(parts[1]);
         }
 
 
@@ -46,12 +55,19 @@ namespace Scanner.Models.FileNaming
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public string ToString(ScanOptions scanOptions)
         {
-            return scanOptions.Resolution.Resolution.DpiX.ToString("0");
+            if (Use2Digits)
+            {
+                return scanOptions.ScanTime.Minute.ToString().PadLeft(2, '0');
+            }
+            else
+            {
+                return scanOptions.ScanTime.Minute.ToString();
+            }
         }
 
         public string GetSerialized(bool obfuscated)
         {
-            return $"*{Name}";
+            return $"*{Name}|{Use2Digits}";
         }
     }
 }

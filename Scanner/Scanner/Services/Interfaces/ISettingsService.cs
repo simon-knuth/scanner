@@ -15,7 +15,7 @@ using Windows.Storage;
 using Serilog;
 using System.ComponentModel;
 using Scanner.ViewModels;
-using Scanner.Models.FileNaming;
+using Scanner.Models.ItemNaming;
 using Scanner.Views;
 using Scanner.Helpers;
 
@@ -55,7 +55,9 @@ namespace Scanner.Services.Interfaces
         int DiagnosticEventsSentThisSession { get; set; }
         bool SettingAutoSave { get; set; }
         SettingFileNamingPattern SettingFileNamingPattern { get; set; }
-        FileNamingPattern CustomFileNamingPattern { get; set; }
+        ItemNamingPattern CustomFileNamingPattern { get; set; }
+        SettingSubFolderNamingPattern SettingSubFolderNamingPattern { get; set; }
+        ItemNamingPattern CustomSubFolderNamingPattern { get; set; }
         bool SettingGenerateFileNameWithAI { get; set; }
         bool SettingOcrPdfs { get; set; }
 
@@ -120,6 +122,13 @@ namespace Scanner.Services.Interfaces
     {
         DateTime = 0,
         Date = 1,
+        Custom = 2
+    }
+
+    public enum SettingSubFolderNamingPattern
+    {
+        Date = 0,
+        FileType = 1,
         Custom = 2
     }
 }

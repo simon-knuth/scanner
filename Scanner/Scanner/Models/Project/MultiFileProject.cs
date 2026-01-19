@@ -193,9 +193,14 @@ namespace Scanner.Models
                             desiredFileDisplayName = imagePage.FileNameInfo?.DesiredDisplayName;
 
                         // get save options
-                        SaveOptions? saveOptions = await SaveLocationService.GetSaveOptionsAsync(uiDispatcherQueue, ((App)Application.Current).MainWindow, InitialScanOptions!, this, true, saveAs, desiredFileDisplayName);
+                        SaveOptions? saveOptions = await SaveLocationService.GetSaveOptionsAsync(((App)Application.Current).MainWindow, InitialScanOptions!, this, true, uiDispatcherQueue, saveAs, desiredFileDisplayName);
                         if (saveOptions == null || saveOptions.TargetFolder == null)
                             return;
+
+                        // get target folder
+                        StorageFolder targetFolder = saveOptions.TargetFolder;
+                        if (saveOptions.SubFolderName != null)
+                            targetFolder = await targetFolder.CreateFolderAsync(saveOptions.SubFolderName, CreationCollisionOption.OpenIfExists);
 
                         foreach (IProjectPage page in pages)
                         {
@@ -204,7 +209,7 @@ namespace Scanner.Models
 
                             if (page is ImagePage imagePageToUpdate)
                             {
-                                imagePageToUpdate.TargetFolder = saveOptions.TargetFolder;
+                                imagePageToUpdate.TargetFolder = targetFolder;
                                 await imagePageToUpdate.FileNameInfo!.UpdateNamesAsync(saveOptions.FileName, saveOptions.FileName, false, uiDispatcherQueue);
                             }
                         }

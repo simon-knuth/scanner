@@ -1,9 +1,9 @@
 ﻿using Scanner.Models.Interfaces;
 using System.ComponentModel;
 
-namespace Scanner.Models.FileNaming
+namespace Scanner.Models.ItemNaming
 {
-    public interface IFileNamingBlock : INotifyPropertyChanged
+    public interface IItemNamingBlock : INotifyPropertyChanged
     {       
         string Glyph
         {

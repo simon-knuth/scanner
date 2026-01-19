@@ -10,7 +10,7 @@ using Microsoft.UI.Xaml.Media;
 using Scanner.Extensions;
 using Scanner.Messages;
 using Scanner.Models;
-using Scanner.Models.FileNaming;
+using Scanner.Models.ItemNaming;
 using Scanner.Models.Interfaces;
 using Scanner.Services.Interfaces;
 using Serilog;
@@ -131,8 +131,8 @@ namespace Scanner.Services
             initializationCompleted.TrySetResult();
         }
 
-        public async Task<SaveOptions?> GetSaveOptionsAsync(DispatcherQueue uiDispatcherQueue, Window window, ScanOptions scanOptions,
-            ProjectBase? existingProject, bool forceTargetFolder, bool forceDialog = false, string? desiredFileDisplayName = null)
+        public async Task<SaveOptions?> GetSaveOptionsAsync(Window window, ScanOptions scanOptions, ProjectBase? existingProject,
+            bool forceTargetFolder, DispatcherQueue uiDispatcherQueue, bool forceDialog = false, string? desiredFileDisplayName = null)
         {
             // generate default file name
             string fileName;
@@ -140,10 +140,10 @@ namespace Scanner.Services
             {
                 case SettingFileNamingPattern.DateTime:
                 default:
-                    fileName = FileNamingStatics.DateTimePattern.GenerateResult(scanOptions, true);
+                    fileName = ItemNamingStatics.FileDateTimePattern.GenerateResult(scanOptions, true);
                     break;
                 case SettingFileNamingPattern.Date:
-                    fileName = FileNamingStatics.DatePattern.GenerateResult(scanOptions, true);
+                    fileName = ItemNamingStatics.FileDatePattern.GenerateResult(scanOptions, true);
                     break;
                 case SettingFileNamingPattern.Custom:
                     fileName = SettingsService.CustomFileNamingPattern.GenerateResult(scanOptions, true);
@@ -159,6 +159,21 @@ namespace Scanner.Services
                 return result;
             }
 
+            // get sub folder name
+            string? subFolderName = null;
+            switch (SettingsService.SettingSubFolderNamingPattern)
+            {
+                case SettingSubFolderNamingPattern.Date:
+                    subFolderName = ItemNamingStatics.FolderDatePattern.GenerateResult(scanOptions, false);
+                    break;
+                case SettingSubFolderNamingPattern.FileType:
+                    subFolderName = ItemNamingStatics.FolderFileTypePattern.GenerateResult(scanOptions, false);
+                    break;
+                case SettingSubFolderNamingPattern.Custom:
+                    subFolderName = SettingsService.CustomSubFolderNamingPattern.GenerateResult(scanOptions, false);
+                    break;
+            }
+
             // determine final file name
             switch (SettingsService.SettingSaveLocationType)
             {
@@ -167,25 +182,17 @@ namespace Scanner.Services
                     TrackRecentlyUsedFolder(fixedSaveLocation!);
 
                     if (scanOptions.TargetFormat == TargetFormat.PDF)
-                    {
-                        return new SaveOptions(fixedSaveLocation!, fileName, SettingsService.SettingGenerateFileNameWithAI);
-                    }
+                        return new SaveOptions(fixedSaveLocation!, subFolderName, fileName, SettingsService.SettingGenerateFileNameWithAI);
                     else
-                    {
-                        return new SaveOptions(fixedSaveLocation!, fileName, false);
-                    }
+                        return new SaveOptions(fixedSaveLocation!, subFolderName, fileName, false);
 
                 case SettingSaveLocationType.AskBeforeNewProject:
                     if (existingProject != null)
                     {
                         if (existingProject is PdfProject pdfProject)
-                        {
-                            return new SaveOptions(pdfProject.TargetFolder!, fileName, false);
-                        }
+                            return new SaveOptions(pdfProject.TargetFolder!, subFolderName, fileName, false);
                         else if (existingProject.Pages[0] is ImagePage imagePage)
-                        {
-                            return new SaveOptions(imagePage.TargetFolder, fileName, false);
-                        }
+                            return new SaveOptions(imagePage.TargetFolder, subFolderName, fileName, false);
                     }
 
                     // ask user for location
@@ -200,12 +207,12 @@ namespace Scanner.Services
                         if (existingProject is PdfProject pdfProject)
                         {
                             if (!forceTargetFolder || pdfProject.TargetFolder != null)
-                                return new SaveOptions(pdfProject.TargetFolder, fileName, false);
+                                return new SaveOptions(pdfProject.TargetFolder, subFolderName, fileName, false);
                         }
                         else if (existingProject.Pages[0] is ImagePage imagePage)
                         {
                             if (!forceTargetFolder || imagePage.TargetFolder != null)
-                                return new SaveOptions(imagePage.TargetFolder, fileName, false);
+                                return new SaveOptions(imagePage.TargetFolder, subFolderName, fileName, false);
                         }
                     }
 
@@ -228,11 +235,11 @@ namespace Scanner.Services
                     {
                         if (scanOptions.TargetFormat == TargetFormat.PDF)
                         {
-                            return new SaveOptions(null, fileName, SettingsService.SettingGenerateFileNameWithAI);
+                            return new SaveOptions(null, subFolderName, fileName, SettingsService.SettingGenerateFileNameWithAI);
                         }
                         else
                         {
-                            return new SaveOptions(null, fileName, false);
+                            return new SaveOptions(null, subFolderName, fileName, false);
                         }
                     }
 
@@ -391,7 +398,7 @@ namespace Scanner.Services
                     // no more actual entries ~> clear in FutureAccessList
                     futureAccessList.Remove($"{futureAccessListRecentFoldersToken}{i}");
                 }
-            }
+            };
         }
     }
 }

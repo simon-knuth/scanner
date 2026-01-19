@@ -1,32 +1,39 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using Microsoft.UI.Xaml.Media.Animation;
 using Scanner.Models.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 using Windows.Devices.Scanners;
 using static Scanner.Helpers.Helpers;
 
-namespace Scanner.Models.FileNaming
+namespace Scanner.Models.ItemNaming
 {
-    public class BrightnessFileNamingBlock : ObservableObject, IFileNamingBlock
+    public class HourItemNamingBlock : ObservableObject, IItemNamingBlock
     {
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public string Glyph => "\uF08C";
-        public string Name => "BRIGHTNESS";
+        public string Glyph => "\uE121";
+        public string Name => "HOUR";
 
         public string DisplayName
         {
-            get => GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.Brightness);
+            get => GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.FileNamingBlockHour);
         }
 
-        private bool _SkipIfDefault;
-        public bool SkipIfDefault
+        private bool _Use24Hours;
+        public bool Use24Hours
         {
-            get => _SkipIfDefault;
-            set => SetProperty(ref _SkipIfDefault, value);
+            get => _Use24Hours;
+            set => SetProperty(ref _Use24Hours, value);
+        }
+
+        private bool _Use2Digits = true;
+        public bool Use2Digits
+        {
+            get => _Use2Digits;
+            set => SetProperty(ref _Use2Digits, value);
         }
 
         public bool IsValid
@@ -38,15 +45,20 @@ namespace Scanner.Models.FileNaming
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public BrightnessFileNamingBlock()
+        public HourItemNamingBlock()
         {
-
+            if (CultureInfo.CurrentUICulture.DateTimeFormat.LongTimePattern.Contains("H"))
+            {
+                // assume 24-hour clock
+                Use24Hours = true;
+            }
         }
 
-        public BrightnessFileNamingBlock(string serialized)
+        public HourItemNamingBlock(string serialized)
         {
             string[] parts = serialized.TrimStart('*').Split('|', StringSplitOptions.RemoveEmptyEntries);
-            SkipIfDefault = bool.Parse(parts[1]);
+            Use24Hours = bool.Parse(parts[1]);
+            Use2Digits = bool.Parse(parts[2]);
         }
 
 
@@ -55,19 +67,30 @@ namespace Scanner.Models.FileNaming
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public string ToString(ScanOptions scanOptions)
         {
-            if (SkipIfDefault && scanOptions.Brightness == 0)
+            DateTime currentTime = scanOptions.ScanTime;
+            string result;
+            if (Use24Hours)
             {
-                return "";
+                result = currentTime.Hour.ToString();
             }
             else
             {
-                return scanOptions.Brightness.ToString();
+                result = currentTime.ToString("%h");
+            }
+
+            if (Use2Digits)
+            {
+                return result.PadLeft(2, '0');
+            }
+            else
+            {
+                return result;
             }
         }
 
         public string GetSerialized(bool obfuscated)
         {
-            return $"*{Name}|{SkipIfDefault}";
+            return $"*{Name}|{Use24Hours}|{Use2Digits}";
         }
     }
 }

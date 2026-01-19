@@ -3,37 +3,22 @@ using Scanner.Models.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Globalization;
 using Windows.Devices.Scanners;
 using static Scanner.Helpers.Helpers;
 
-namespace Scanner.Models.FileNaming
+namespace Scanner.Models.ItemNaming
 {
-    public class HourFileNamingBlock : ObservableObject, IFileNamingBlock
+    public class ResolutionItemNamingBlock : ObservableObject, IItemNamingBlock
     {
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public string Glyph => "\uE121";
-        public string Name => "HOUR";
+        public string Glyph => "\uE744";
+        public string Name => "RESOLUTION";
 
         public string DisplayName
         {
-            get => GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.FileNamingBlockHour);
-        }
-
-        private bool _Use24Hours;
-        public bool Use24Hours
-        {
-            get => _Use24Hours;
-            set => SetProperty(ref _Use24Hours, value);
-        }
-
-        private bool _Use2Digits = true;
-        public bool Use2Digits
-        {
-            get => _Use2Digits;
-            set => SetProperty(ref _Use2Digits, value);
+            get => GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.FileNamingBlockResolution);
         }
 
         public bool IsValid
@@ -45,20 +30,14 @@ namespace Scanner.Models.FileNaming
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public HourFileNamingBlock()
+        public ResolutionItemNamingBlock()
         {
-            if (CultureInfo.CurrentUICulture.DateTimeFormat.LongTimePattern.Contains("H"))
-            {
-                // assume 24-hour clock
-                Use24Hours = true;
-            }
+
         }
 
-        public HourFileNamingBlock(string serialized)
+        public ResolutionItemNamingBlock(string serialized)
         {
-            string[] parts = serialized.TrimStart('*').Split('|', StringSplitOptions.RemoveEmptyEntries);
-            Use24Hours = bool.Parse(parts[1]);
-            Use2Digits = bool.Parse(parts[2]);
+            
         }
 
 
@@ -67,30 +46,12 @@ namespace Scanner.Models.FileNaming
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public string ToString(ScanOptions scanOptions)
         {
-            DateTime currentTime = scanOptions.ScanTime;
-            string result;
-            if (Use24Hours)
-            {
-                result = currentTime.Hour.ToString();
-            }
-            else
-            {
-                result = currentTime.ToString("%h");
-            }
-
-            if (Use2Digits)
-            {
-                return result.PadLeft(2, '0');
-            }
-            else
-            {
-                return result;
-            }
+            return scanOptions.Resolution.Resolution.DpiX.ToString("0");
         }
 
         public string GetSerialized(bool obfuscated)
         {
-            return $"*{Name}|{Use24Hours}|{Use2Digits}";
+            return $"*{Name}";
         }
     }
 }

@@ -14,7 +14,7 @@
     xmlns:converters="using:Scanner.Views.Converters"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:settings="using:Scanner.Views.Settings"
-    xmlns:filenaming="using:Scanner.Models.FileNaming"
+    xmlns:itemnaming="using:Scanner.Models.ItemNaming"
     xmlns:animations="using:CommunityToolkit.WinUI.Animations"
     xmlns:strings="using:Scanner.Resources.Strings"
     mc:Ignorable="d">
@@ -95,7 +95,7 @@
                     </ListView.ItemContainerTransitions>
 
                     <ListView.ItemTemplate>
-                        <DataTemplate x:DataType="filenaming:IFileNamingBlock">
+                        <DataTemplate x:DataType="itemnaming:IItemNamingBlock">
                             <ListViewItem Padding="4,0,4,0" VerticalContentAlignment="Center" HorizontalContentAlignment="Stretch" AutomationProperties.Name="{x:Bind DisplayName, Mode=OneWay}" KeyUp="ListViewItemPattern_KeyUp">
                                 <Grid CornerRadius="{StaticResource ControlCornerRadius}" Background="{ThemeResource ControlFillColorSecondaryBrush}" BorderBrush="{ThemeResource ControlElevationBorderBrush}" BorderThickness="1" Padding="8">
                                     <!-- Block -->
@@ -331,7 +331,7 @@
                                                 <controls:Case Value="BRIGHTNESS">
                                                     <StackPanel Orientation="Vertical" Spacing="12">
                                                         <StackPanel Orientation="Horizontal" Spacing="8">
-                                                            <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xF08C;" FontSize="16"/>
+                                                            <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE706;" FontSize="16"/>
                                                             <TextBlock Text="{x:Bind strings:Resources.Brightness}" Style="{StaticResource BaseTextBlockStyle}" />
                                                         </StackPanel>
                                                         <CheckBox Content="{x:Bind strings:Resources.FileNamingBlockSkipIfDefault}" IsChecked="{Binding Path=SkipIfDefault, Mode=TwoWay}" />
@@ -343,7 +343,7 @@
                                                 <controls:Case Value="CONTRAST">
                                                     <StackPanel Orientation="Vertical" Spacing="12">
                                                         <StackPanel Orientation="Horizontal" Spacing="8">
-                                                            <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xF08C;" FontSize="16"/>
+                                                            <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE7A1;" FontSize="16"/>
                                                             <TextBlock Text="{x:Bind strings:Resources.Contrast}" Style="{StaticResource BaseTextBlockStyle}" />
                                                         </StackPanel>
                                                         <CheckBox Content="{x:Bind strings:Resources.FileNamingBlockSkipIfDefault}" IsChecked="{Binding Path=SkipIfDefault, Mode=TwoWay}" />

@@ -3,29 +3,30 @@ using Scanner.Models.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 using Windows.Devices.Scanners;
 using static Scanner.Helpers.Helpers;
 
-namespace Scanner.Models.FileNaming
+namespace Scanner.Models.ItemNaming
 {
-    public class ContrastFileNamingBlock : ObservableObject, IFileNamingBlock
+    public class SecondItemNamingBlock : ObservableObject, IItemNamingBlock
     {
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public string Glyph => "\uF08C";
-        public string Name => "CONTRAST";
+        public string Glyph => "\uE121";
+        public string Name => "SECOND";
 
         public string DisplayName
         {
-            get => GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.Contrast);
+            get => GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.FileNamingBlockSecond);
         }
 
-        private bool _SkipIfDefault;
-        public bool SkipIfDefault
+        private bool _Use2Digits = true;
+        public bool Use2Digits
         {
-            get => _SkipIfDefault;
-            set => SetProperty(ref _SkipIfDefault, value);
+            get => _Use2Digits;
+            set => SetProperty(ref _Use2Digits, value);
         }
 
         public bool IsValid
@@ -37,15 +38,15 @@ namespace Scanner.Models.FileNaming
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public ContrastFileNamingBlock()
+        public SecondItemNamingBlock()
         {
-
+            
         }
 
-        public ContrastFileNamingBlock(string serialized)
+        public SecondItemNamingBlock(string serialized)
         {
             string[] parts = serialized.TrimStart('*').Split('|', StringSplitOptions.RemoveEmptyEntries);
-            SkipIfDefault = bool.Parse(parts[1]);
+            Use2Digits = bool.Parse(parts[1]);
         }
 
 
@@ -54,19 +55,19 @@ namespace Scanner.Models.FileNaming
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public string ToString(ScanOptions scanOptions)
         {
-            if (SkipIfDefault && scanOptions.Contrast == 0)
+            if (Use2Digits)
             {
-                return "";
+                return scanOptions.ScanTime.Second.ToString().PadLeft(2, '0');
             }
             else
             {
-                return scanOptions.Contrast.ToString();
+                return scanOptions.ScanTime.Second.ToString();
             }
         }
 
         public string GetSerialized(bool obfuscated)
         {
-            return $"*{Name}|{SkipIfDefault}";
+            return $"*{Name}|{Use2Digits}";
         }
     }
 }

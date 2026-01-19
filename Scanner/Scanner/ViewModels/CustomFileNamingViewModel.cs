@@ -3,7 +3,7 @@ using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.UI.Xaml;
 using Scanner.Models;
-using Scanner.Models.FileNaming;
+using Scanner.Models.ItemNaming;
 using Scanner.Models.Interfaces;
 using Scanner.Services.Interfaces;
 using System;
@@ -40,23 +40,23 @@ namespace Scanner.ViewModels
         public RelayCommand AcceptCommand => new RelayCommand(AcceptPattern);
         public RelayCommand CancelCommand => new RelayCommand(Cancel);
         public RelayCommand<string> AddBlockCommand => new RelayCommand<string>((x) => AddBlock(x));
-        public RelayCommand<IFileNamingBlock> DeleteBlockCommand => new RelayCommand<IFileNamingBlock>(DeleteBlock);
+        public RelayCommand<IItemNamingBlock> DeleteBlockCommand => new RelayCommand<IItemNamingBlock>(DeleteBlock);
         public RelayCommand DeleteAllBlocksCommand => new RelayCommand(DeleteAllBlocks);
-        public RelayCommand<IFileNamingBlock> MoveBlockForwardCommand => new RelayCommand<IFileNamingBlock>(MoveBlockForward);
-        public RelayCommand<IFileNamingBlock> MoveBlockBackwardCommand => new RelayCommand<IFileNamingBlock>(MoveBlockBackward);
-        public RelayCommand<IFileNamingBlock> MoveBlockToFrontCommand => new RelayCommand<IFileNamingBlock>(MoveBlockToFront);
-        public RelayCommand<IFileNamingBlock> MoveBlockToBackCommand => new RelayCommand<IFileNamingBlock>(MoveBlockToBack);
+        public RelayCommand<IItemNamingBlock> MoveBlockForwardCommand => new RelayCommand<IItemNamingBlock>(MoveBlockForward);
+        public RelayCommand<IItemNamingBlock> MoveBlockBackwardCommand => new RelayCommand<IItemNamingBlock>(MoveBlockBackward);
+        public RelayCommand<IItemNamingBlock> MoveBlockToFrontCommand => new RelayCommand<IItemNamingBlock>(MoveBlockToFront);
+        public RelayCommand<IItemNamingBlock> MoveBlockToBackCommand => new RelayCommand<IItemNamingBlock>(MoveBlockToBack);
         public RelayCommand DisposeCommand => new RelayCommand(Dispose);
         #endregion
 
         [ObservableProperty]
-        private ObservableCollection<IFileNamingBlock> selectedBlocks = new();
+        private ObservableCollection<IItemNamingBlock> selectedBlocks = new();
 
         [ObservableProperty]
         private string previewResult;
 
         [ObservableProperty]
-        private FileNamingPattern pattern;
+        private ItemNamingPattern pattern;
 
         private IScanningDevice previewScanner;
 
@@ -68,8 +68,8 @@ namespace Scanner.ViewModels
         {
             // get current pattern
             Pattern = SettingsService.CustomFileNamingPattern;
-            SelectedBlocks = new ObservableCollection<IFileNamingBlock>(Pattern.Blocks);
-            foreach (IFileNamingBlock block in SelectedBlocks)
+            SelectedBlocks = new ObservableCollection<IItemNamingBlock>(Pattern.Blocks);
+            foreach (IItemNamingBlock block in SelectedBlocks)
             {
                 block.PropertyChanged += Block_PropertyChanged;
             }
@@ -110,8 +110,8 @@ namespace Scanner.ViewModels
             // construct block
             Type[] parameterTypes = [];
             string[] parameters = [];
-            IFileNamingBlock? block = FileNamingStatics.FileNamingBlocksDictionary[blockName].GetConstructor(parameterTypes)?
-                .Invoke(parameters) as IFileNamingBlock;
+            IItemNamingBlock? block = ItemNamingStatics.ItemNamingBlocksDictionary[blockName].GetConstructor(parameterTypes)?
+                .Invoke(parameters) as IItemNamingBlock;
 
             // add to pattern
             if (block != null)
@@ -123,11 +123,11 @@ namespace Scanner.ViewModels
 
         private void Block_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            LogService?.Log.Information("CustomFileNamingViewModel - File naming {block} {property} changed", ((IFileNamingBlock)sender).Name, e.PropertyName);
+            LogService?.Log.Information("CustomFileNamingViewModel - File naming {block} {property} changed", ((IItemNamingBlock)sender).Name, e.PropertyName);
             UpdatePattern();
         }
 
-        private void DeleteBlock(IFileNamingBlock block)
+        private void DeleteBlock(IItemNamingBlock block)
         {
             LogService?.Log.Information("CustomFileNamingViewModel - Removing file naming {block}", block.Name);
 
@@ -139,7 +139,7 @@ namespace Scanner.ViewModels
         {
             LogService?.Log.Information("CustomFileNamingViewModel - Removing all file naming blocks");
 
-            foreach (IFileNamingBlock block in SelectedBlocks)
+            foreach (IItemNamingBlock block in SelectedBlocks)
             {
                 block.PropertyChanged -= Block_PropertyChanged;
             }
@@ -157,13 +157,13 @@ namespace Scanner.ViewModels
 
         private void UpdatePattern()
         {
-            Pattern = new FileNamingPattern(SelectedBlocks.ToList());
+            Pattern = new ItemNamingPattern(SelectedBlocks.ToList());
 
             // generate new preview
-            PreviewResult = Pattern.GenerateResult(FileNamingStatics.GetPreviewScanOptions(previewScanner), true);
+            PreviewResult = Pattern.GenerateResult(ItemNamingStatics.GetPreviewScanOptions(previewScanner), true);
         }
 
-        private void MoveBlockForward(IFileNamingBlock block)
+        private void MoveBlockForward(IItemNamingBlock block)
         {
             int oldIndex = SelectedBlocks.IndexOf(block);
             if (oldIndex > 0)
@@ -172,7 +172,7 @@ namespace Scanner.ViewModels
             }
         }
 
-        private void MoveBlockBackward(IFileNamingBlock block)
+        private void MoveBlockBackward(IItemNamingBlock block)
         {
             int oldIndex = SelectedBlocks.IndexOf(block);
             if (oldIndex < SelectedBlocks.Count - 1)
@@ -181,7 +181,7 @@ namespace Scanner.ViewModels
             }
         }
 
-        private void MoveBlockToFront(IFileNamingBlock block)
+        private void MoveBlockToFront(IItemNamingBlock block)
         {
             int oldIndex = SelectedBlocks.IndexOf(block);
             if (oldIndex > 0)
@@ -190,7 +190,7 @@ namespace Scanner.ViewModels
             }
         }
 
-        private void MoveBlockToBack(IFileNamingBlock block)
+        private void MoveBlockToBack(IItemNamingBlock block)
         {
             int oldIndex = SelectedBlocks.IndexOf(block);
             if (oldIndex < SelectedBlocks.Count - 1)

@@ -5,7 +5,7 @@ using Microsoft.UI.Dispatching;
 using Microsoft.UI.Xaml;
 using Scanner.Extensions;
 using Scanner.Models;
-using Scanner.Models.FileNaming;
+using Scanner.Models.ItemNaming;
 using Scanner.Models.Interfaces;
 using Scanner.Services.Interfaces;
 using System;
@@ -46,7 +46,7 @@ namespace Scanner.ViewModels
             {
                 if (AreValidOptionsSelected)
                 {
-                    return new SaveOptions(SelectedFolder!, FileDisplayName + FileExtension, GenerateAIFileName);
+                    return new SaveOptions(SelectedFolder!, SubFolderName, FileDisplayName + FileExtension, GenerateAIFileName);
                 }
                 else
                 {
@@ -116,6 +116,52 @@ namespace Scanner.ViewModels
         }
 
         [ObservableProperty]
+        private bool createSubFolder;
+
+        [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(AreValidOptionsSelected))]
+        [NotifyPropertyChangedFor(nameof(SelectedSubFolderNamingPattern))]
+        private string subFolderName;
+
+        public SettingSubFolderNamingPattern? SelectedSubFolderNamingPattern
+        {
+            get
+            {
+                if (SubFolderName == DateSubFolderNamingPatternValue)
+                {
+                    return SettingSubFolderNamingPattern.Date;
+                }
+                else if (SubFolderName == FileTypeSubFolderNamingPatternValue)
+                {
+                    return SettingSubFolderNamingPattern.FileType;
+                }
+                else if (SubFolderName == CustomSubFolderNamingPatternValue)
+                {
+                    return SettingSubFolderNamingPattern.Custom;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            set
+            {
+                switch (value)
+                {
+                    case SettingSubFolderNamingPattern.Date:
+                        SubFolderName = DateSubFolderNamingPatternValue;
+                        break;
+                    case SettingSubFolderNamingPattern.FileType:
+                        SubFolderName = FileTypeSubFolderNamingPatternValue;
+                        break;
+                    case SettingSubFolderNamingPattern.Custom:
+                        SubFolderName = CustomSubFolderNamingPatternValue;
+                        break;
+                }
+            }
+        }
+
+        [ObservableProperty]
         private bool generateAIFileName;
 
         public bool CanGenerateAIFileName => CopilotRuntimeService.IsSupported && ScanOptions.TargetFormat == TargetFormat.PDF && Project == null;
@@ -123,6 +169,10 @@ namespace Scanner.ViewModels
         public string DateTimeFileNamingPatternValue;
         public string DateFileNamingPatternValue;
         public string CustomFileNamingPatternValue;
+
+        public string DateSubFolderNamingPatternValue;
+        public string FileTypeSubFolderNamingPatternValue;
+        public string CustomSubFolderNamingPatternValue;
 
         public string FileExtension;
 
@@ -153,10 +203,16 @@ namespace Scanner.ViewModels
             PickFolderAsyncCommand = new AsyncRelayCommand(() => SelectFolderAsync());
 
             SettingsService.PropertyChanged += SettingsService_PropertyChanged;
-            DateTimeFileNamingPatternValue = FileNamingStatics.DateTimePattern.GenerateResult(ScanOptions, false);
-            DateFileNamingPatternValue = FileNamingStatics.DatePattern.GenerateResult(ScanOptions, false);
+
+            DateTimeFileNamingPatternValue = ItemNamingStatics.FileDateTimePattern.GenerateResult(ScanOptions, false);
+            DateFileNamingPatternValue = ItemNamingStatics.FileDatePattern.GenerateResult(ScanOptions, false);
             CustomFileNamingPatternValue = SettingsService.CustomFileNamingPattern.GenerateResult(ScanOptions, false);
             SelectedFileNamingPattern = SettingsService.SettingFileNamingPattern;
+
+            DateSubFolderNamingPatternValue = ItemNamingStatics.FolderDatePattern.GenerateResult(ScanOptions, false);
+            FileTypeSubFolderNamingPatternValue = ItemNamingStatics.FolderFileTypePattern.GenerateResult(ScanOptions, false);
+            CustomSubFolderNamingPatternValue = SettingsService.CustomSubFolderNamingPattern.GenerateResult(ScanOptions, false);
+            SelectedSubFolderNamingPattern = SettingsService.SettingSubFolderNamingPattern;
 
             // keep name if already present
             if (desiredFileDisplayName != null)
@@ -200,6 +256,14 @@ namespace Scanner.ViewModels
                     if (updateFileName)
                     {
                         FileDisplayName = CustomFileNamingPatternValue;
+                    }
+                    break;
+                case nameof(ISettingsService.CustomSubFolderNamingPattern):
+                    bool updateSubFolderName = SelectedSubFolderNamingPattern == SettingSubFolderNamingPattern.Custom;
+                    CustomSubFolderNamingPatternValue = SettingsService.CustomSubFolderNamingPattern.GenerateResult(ScanOptions, false);
+                    if (updateSubFolderName)
+                    {
+                        SubFolderName = CustomSubFolderNamingPatternValue;
                     }
                     break;
             }

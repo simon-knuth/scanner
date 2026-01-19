@@ -6,22 +6,22 @@ using System.ComponentModel.DataAnnotations;
 using Windows.Devices.Scanners;
 using static Scanner.Helpers.Helpers;
 
-namespace Scanner.Models.FileNaming
+namespace Scanner.Models.ItemNaming
 {
-    public class FileTypeFileNamingBlock : ObservableObject, IFileNamingBlock
+    public class ScannerNameItemNamingBlock : ObservableObject, IItemNamingBlock
     {
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public string Glyph => "\uE8A5";
-        public string Name => "FILETYPE";
+        public string Glyph => "\uE294";
+        public string Name => "SCANNERNAME";
 
         public string DisplayName
         {
-            get => GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.FileNamingBlockFileType);
+            get => GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.FileNamingBlockScannerName);
         }
 
-        private bool _AllCaps = true;
+        private bool _AllCaps;
         public bool AllCaps
         {
             get => _AllCaps;
@@ -37,12 +37,12 @@ namespace Scanner.Models.FileNaming
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public FileTypeFileNamingBlock()
+        public ScannerNameItemNamingBlock()
         {
 
         }
 
-        public FileTypeFileNamingBlock(string serialized)
+        public ScannerNameItemNamingBlock(string serialized)
         {
             string[] parts = serialized.TrimStart('*').Split('|', StringSplitOptions.RemoveEmptyEntries);
             AllCaps = bool.Parse(parts[1]);
@@ -56,11 +56,11 @@ namespace Scanner.Models.FileNaming
         {
             if (AllCaps)
             {
-                return TargetFormatToFileExtension(scanOptions.TargetFormat).ToUpper().Split(".")[1];
+                return scanOptions.Scanner.Name.ToUpper();
             }
             else
             {
-                return TargetFormatToFileExtension(scanOptions.TargetFormat).Split(".")[1];
+                return scanOptions.Scanner.Name;
             }
         }
 

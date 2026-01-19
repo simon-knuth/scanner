@@ -41,10 +41,16 @@ namespace Scanner.Views.Dialogs
             set => ViewModel.SelectedFileNamingPattern = value != -1 ? (SettingFileNamingPattern)value : null;
         }
 
+        private int SelectedSubFolderNamingPatternIndex
+        {
+            get => ViewModel.SelectedSubFolderNamingPattern != null ? (int)ViewModel.SelectedSubFolderNamingPattern : -1;
+            set => ViewModel.SelectedSubFolderNamingPattern = value != -1 ? (SettingSubFolderNamingPattern)value : null;
+        }
+
         [ObservableProperty]
         private double folderFlyoutWidth;
 
-        public CornerRadius TextBoxCornerRadius => ViewModel.IsFileNameCollision ? new(0, 0, 0, 0) : new(0, 0, 4, 4);
+        public CornerRadius TextBoxFileNameCornerRadius => ViewModel.IsFileNameCollision ? new(0, 0, 0, 0) : new(0, 0, 4, 4);
 
         public SaveOptions? SaveOptions => ViewModel.SaveOptions;
 
@@ -73,13 +79,16 @@ namespace Scanner.Views.Dialogs
                 case nameof(ViewModel.SelectedFileNamingPattern):
                     OnPropertyChanged(nameof(SelectedFileNamingPatternIndex));
                     break;
+                case nameof(ViewModel.SelectedSubFolderNamingPattern):
+                    OnPropertyChanged(nameof(SelectedSubFolderNamingPatternIndex));
+                    break;
                 case nameof(ViewModel.IsFileNameCollision):
-                    OnPropertyChanged(nameof(TextBoxCornerRadius));
+                    OnPropertyChanged(nameof(TextBoxFileNameCornerRadius));
                     break;
             }
         }
 
-        private void TextBoxFileName_GotFocus(object sender, RoutedEventArgs e)
+        private void TextBox_GotFocus(object sender, RoutedEventArgs e)
         {
             ((TextBox)sender).SelectAll();
         }

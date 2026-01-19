@@ -7,19 +7,26 @@ using System.Globalization;
 using Windows.Devices.Scanners;
 using static Scanner.Helpers.Helpers;
 
-namespace Scanner.Models.FileNaming
+namespace Scanner.Models.ItemNaming
 {
-    public class YearFileNamingBlock : ObservableObject, IFileNamingBlock
+    public class HourPeriodItemNamingBlock : ObservableObject, IItemNamingBlock
     {
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public string Glyph => "\uE163";
-        public string Name => "YEAR";
+        public string Glyph => "\uE121";
+        public string Name => "HOURPERIOD";
 
         public string DisplayName
         {
-            get => GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.FileNamingBlockYear);
+            get => GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.FileNamingBlockHourPeriod);
+        }
+
+        private bool _AllCaps;
+        public bool AllCaps
+        {
+            get => _AllCaps;
+            set => SetProperty(ref _AllCaps, value);
         }
 
         public bool IsValid
@@ -31,14 +38,15 @@ namespace Scanner.Models.FileNaming
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public YearFileNamingBlock()
+        public HourPeriodItemNamingBlock()
         {
             
         }
 
-        public YearFileNamingBlock(string serialized)
+        public HourPeriodItemNamingBlock(string serialized)
         {
-            
+            string[] parts = serialized.TrimStart('*').Split('|', StringSplitOptions.RemoveEmptyEntries);
+            AllCaps = bool.Parse(parts[1]);
         }
 
 
@@ -47,14 +55,32 @@ namespace Scanner.Models.FileNaming
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public string ToString(ScanOptions scanOptions)
         {
+            string result;
+            
             DateTime currentTime = scanOptions.ScanTime;
+            result = currentTime.ToString("tt").ToUpper();
 
-            return CultureInfo.CurrentCulture.Calendar.GetYear(currentTime).ToString();
+            if (string.IsNullOrWhiteSpace(result))
+            {
+                // fallback to American English for languages that don't have a 24-hour system
+                result = currentTime.ToString("tt", CultureInfo.GetCultureInfoByIetfLanguageTag("en-us").DateTimeFormat);
+            }
+            
+            if (AllCaps)
+            {
+                result = result.ToUpper();
+            }
+            else
+            {
+                result = result.ToLower();
+            }
+
+            return result;
         }
 
         public string GetSerialized(bool obfuscated)
         {
-            return $"*{Name}";
+            return $"*{Name}|{AllCaps}";
         }
     }
 }

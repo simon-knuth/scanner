@@ -6,7 +6,7 @@ using Microsoft.UI.Dispatching;
 using Microsoft.UI.Xaml;
 using Scanner.Messages;
 using Scanner.Models;
-using Scanner.Models.FileNaming;
+using Scanner.Models.ItemNaming;
 using Scanner.Models.Interfaces;
 using Scanner.Services;
 using Scanner.Services.Interfaces;
@@ -215,15 +215,15 @@ namespace Scanner.ViewModels
         private void UpdateFileNamingPatternPreview()
         {
             // get pattern
-            FileNamingPattern previewPattern;
+            ItemNamingPattern previewPattern;
             switch ((SettingFileNamingPattern)SettingFileNamingPattern)
             {
                 default:
                 case Services.Interfaces.SettingFileNamingPattern.DateTime:
-                    previewPattern = FileNamingStatics.DateTimePattern;
+                    previewPattern = ItemNamingStatics.FileDateTimePattern;
                     break;
                 case Services.Interfaces.SettingFileNamingPattern.Date:
-                    previewPattern = FileNamingStatics.DatePattern;
+                    previewPattern = ItemNamingStatics.FileDatePattern;
                     break;
                 case Services.Interfaces.SettingFileNamingPattern.Custom:
                     previewPattern = SettingsService.CustomFileNamingPattern;
@@ -234,7 +234,7 @@ namespace Scanner.ViewModels
             IScanningDevice? selectedScanner = Messenger.Send(new SelectedScannerRequestMessage()).Response;
 
             // generate preview
-            ScanOptions scanOptions = FileNamingStatics.GetPreviewScanOptions(selectedScanner);
+            ScanOptions scanOptions = ItemNamingStatics.GetPreviewScanOptions(selectedScanner);
             FileNamingPatternPreview = previewPattern.GenerateResult(scanOptions, true);
         }
 

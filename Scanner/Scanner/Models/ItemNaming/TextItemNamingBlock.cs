@@ -3,50 +3,58 @@ using Scanner.Models.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Globalization;
+using System.Text.RegularExpressions;
 using Windows.Devices.Scanners;
 using static Scanner.Helpers.Helpers;
 
-namespace Scanner.Models.FileNaming
+namespace Scanner.Models.ItemNaming
 {
-    public class SecondFileNamingBlock : ObservableObject, IFileNamingBlock
+    public class TextItemNamingBlock : ObservableObject, IItemNamingBlock
     {
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public string Glyph => "\uE121";
-        public string Name => "SECOND";
+        public string Glyph => null;
+        public string Name => "TEXT";
 
         public string DisplayName
         {
-            get => GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.FileNamingBlockSecond);
+            get => GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.FileNamingBlockText);
         }
 
-        private bool _Use2Digits = true;
-        public bool Use2Digits
+        private string _Text = "";
+        public string Text
         {
-            get => _Use2Digits;
-            set => SetProperty(ref _Use2Digits, value);
+            get => _Text;
+            set
+            {
+                if (SetProperty(ref _Text, value))
+                {
+                    IsValid = CheckValidity();
+                }
+            }
         }
 
+        private bool _IsValid;
         public bool IsValid
         {
-            get => true;
+            get => _IsValid;
+            set => SetProperty(ref _IsValid, value);
         }
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public SecondFileNamingBlock()
+        public TextItemNamingBlock()
         {
-            
+
         }
 
-        public SecondFileNamingBlock(string serialized)
+        public TextItemNamingBlock(string serialized)
         {
             string[] parts = serialized.TrimStart('*').Split('|', StringSplitOptions.RemoveEmptyEntries);
-            Use2Digits = bool.Parse(parts[1]);
+            Text = parts[1];
         }
 
 
@@ -55,19 +63,41 @@ namespace Scanner.Models.FileNaming
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public string ToString(ScanOptions scanOptions)
         {
-            if (Use2Digits)
-            {
-                return scanOptions.ScanTime.Second.ToString().PadLeft(2, '0');
-            }
-            else
-            {
-                return scanOptions.ScanTime.Second.ToString();
-            }
+            return Text;
         }
 
         public string GetSerialized(bool obfuscated)
         {
-            return $"*{Name}|{Use2Digits}";
+            string resultText = Text;
+            if (obfuscated)
+            {
+                // obfuscate all alphabetic characters
+                Regex regex = new Regex(@"\w", RegexOptions.IgnoreCase);
+                resultText = regex.Replace(resultText, "?");
+            }
+            
+            return $"*{Name}|{resultText}";
+        }
+
+        public bool CheckValidity()
+        {
+            // not empty?
+            if (string.IsNullOrEmpty(Text))
+            {
+                return false;
+            }
+            
+            // forbidden chars?
+            char[] invalidChars = System.IO.Path.GetInvalidFileNameChars();
+            foreach (char invalidChar in invalidChars)
+            {
+                if (Text.Contains(invalidChar.ToString()))
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
     }
 }

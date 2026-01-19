@@ -7,23 +7,23 @@ using System.Globalization;
 using Windows.Devices.Scanners;
 using static Scanner.Helpers.Helpers;
 
-namespace Scanner.Models.FileNaming
+namespace Scanner.Models.ItemNaming
 {
-    public class MonthFileNamingBlock : ObservableObject, IFileNamingBlock
+    public class DayItemNamingBlock : ObservableObject, IItemNamingBlock
     {
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public string Glyph => "\uE163";
-        public string Name => "MONTH";
+        public string Name => "DAY";
 
         public string DisplayName
         {
-            get => GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.FileNamingBlockMonth);
+            get => GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.FileNamingBlockDay);
         }
 
-        private MonthType _Type = MonthType.Number;
-        public MonthType Type
+        private DayType _Type = DayType.DayOfMonth;
+        public DayType Type
         {
             get => _Type;
             set => SetProperty(ref _Type, value);
@@ -73,15 +73,15 @@ namespace Scanner.Models.FileNaming
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public MonthFileNamingBlock()
+        public DayItemNamingBlock()
         {
             
         }
 
-        public MonthFileNamingBlock(string serialized)
+        public DayItemNamingBlock(string serialized)
         {
             string[] parts = serialized.TrimStart('*').Split('|', StringSplitOptions.RemoveEmptyEntries);
-            Type = (MonthType)int.Parse(parts[1]);
+            Type = (DayType)int.Parse(parts[1]);
             AllCaps = bool.Parse(parts[2]);
             UseMinimumDigits = bool.Parse(parts[3]);
             MinimumDigits = int.Parse(parts[4]);
@@ -100,29 +100,29 @@ namespace Scanner.Models.FileNaming
 
             switch (Type)
             {
-                case MonthType.Number:
-                    result = CultureInfo.CurrentUICulture.Calendar.GetMonth(currentTime).ToString();
+                case DayType.DayOfWeek:
+                    result = CultureInfo.CurrentUICulture.DateTimeFormat.GetDayName(currentTime.DayOfWeek);
+
+                    if (LimitMaxChars)
+                    {
+                        result = result.Substring(0, MaxChars);
+                    }
+                    break;
+                case DayType.DayOfYear:
+                    result = CultureInfo.CurrentUICulture.Calendar.GetDayOfYear(currentTime).ToString();
 
                     if (UseMinimumDigits)
                     {
                         result = result.PadLeft(MinimumDigits, '0');
                     }
                     break;
-                case MonthType.Name:
-                    result = CultureInfo.CurrentUICulture.DateTimeFormat.GetMonthName(currentTime.Month);
-
-                    if (LimitMaxChars)
-                    {
-                        result = result.Substring(0, MaxChars);
-                    }
-                    break;
-                case MonthType.ShortName:
+                case DayType.DayOfMonth:
                 default:
-                    result = CultureInfo.CurrentUICulture.DateTimeFormat.GetAbbreviatedMonthName(currentTime.Month);
+                    result = CultureInfo.CurrentUICulture.Calendar.GetDayOfMonth(currentTime).ToString();
 
-                    if (LimitMaxChars)
+                    if (UseMinimumDigits)
                     {
-                        result = result.Substring(0, MaxChars);
+                        result = result.PadLeft(MinimumDigits, '0');
                     }
                     break;
             }
@@ -141,10 +141,10 @@ namespace Scanner.Models.FileNaming
         }
     }
 
-    public enum MonthType
+    public enum DayType
     {
-        Number = 0,
-        Name = 1,
-        ShortName = 2
+        DayOfWeek = 0,
+        DayOfMonth = 1,
+        DayOfYear = 2
     }
 }

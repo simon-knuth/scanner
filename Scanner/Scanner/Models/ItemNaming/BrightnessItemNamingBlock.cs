@@ -1,60 +1,52 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using Microsoft.UI.Xaml.Media.Animation;
 using Scanner.Models.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Text.RegularExpressions;
 using Windows.Devices.Scanners;
 using static Scanner.Helpers.Helpers;
 
-namespace Scanner.Models.FileNaming
+namespace Scanner.Models.ItemNaming
 {
-    public class TextFileNamingBlock : ObservableObject, IFileNamingBlock
+    public class BrightnessItemNamingBlock : ObservableObject, IItemNamingBlock
     {
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public string Glyph => null;
-        public string Name => "TEXT";
+        public string Glyph => "\uE706";
+        public string Name => "BRIGHTNESS";
 
         public string DisplayName
         {
-            get => GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.FileNamingBlockText);
+            get => GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.Brightness);
         }
 
-        private string _Text = "";
-        public string Text
+        private bool _SkipIfDefault;
+        public bool SkipIfDefault
         {
-            get => _Text;
-            set
-            {
-                if (SetProperty(ref _Text, value))
-                {
-                    IsValid = CheckValidity();
-                }
-            }
+            get => _SkipIfDefault;
+            set => SetProperty(ref _SkipIfDefault, value);
         }
 
-        private bool _IsValid;
         public bool IsValid
         {
-            get => _IsValid;
-            set => SetProperty(ref _IsValid, value);
+            get => true;
         }
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public TextFileNamingBlock()
+        public BrightnessItemNamingBlock()
         {
 
         }
 
-        public TextFileNamingBlock(string serialized)
+        public BrightnessItemNamingBlock(string serialized)
         {
             string[] parts = serialized.TrimStart('*').Split('|', StringSplitOptions.RemoveEmptyEntries);
-            Text = parts[1];
+            SkipIfDefault = bool.Parse(parts[1]);
         }
 
 
@@ -63,41 +55,19 @@ namespace Scanner.Models.FileNaming
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public string ToString(ScanOptions scanOptions)
         {
-            return Text;
+            if (SkipIfDefault && scanOptions.Brightness == 0)
+            {
+                return "";
+            }
+            else
+            {
+                return scanOptions.Brightness.ToString();
+            }
         }
 
         public string GetSerialized(bool obfuscated)
         {
-            string resultText = Text;
-            if (obfuscated)
-            {
-                // obfuscate all alphabetic characters
-                Regex regex = new Regex(@"\w", RegexOptions.IgnoreCase);
-                resultText = regex.Replace(resultText, "?");
-            }
-            
-            return $"*{Name}|{resultText}";
-        }
-
-        public bool CheckValidity()
-        {
-            // not empty?
-            if (string.IsNullOrEmpty(Text))
-            {
-                return false;
-            }
-            
-            // forbidden chars?
-            char[] invalidChars = System.IO.Path.GetInvalidFileNameChars();
-            foreach (char invalidChar in invalidChars)
-            {
-                if (Text.Contains(invalidChar.ToString()))
-                {
-                    return false;
-                }
-            }
-
-            return true;
+            return $"*{Name}|{SkipIfDefault}";
         }
     }
 }

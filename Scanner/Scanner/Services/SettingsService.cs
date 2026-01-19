@@ -25,7 +25,7 @@ using System.ComponentModel;
 using Scanner.ViewModels;
 using static Scanner.Helpers.Helpers;
 using System.Security.Cryptography;
-using Scanner.Models.FileNaming;
+using Scanner.Models.ItemNaming;
 using Scanner.Views;
 using Scanner.Helpers;
 
@@ -226,10 +226,22 @@ namespace Scanner.Services
             set => SetSetting(nameof(SettingFileNamingPattern), (int)value);
         }
 
-        public FileNamingPattern CustomFileNamingPattern
+        public ItemNamingPattern CustomFileNamingPattern
         {
-            get => new FileNamingPattern(GetSetting(nameof(CustomFileNamingPattern), FileNamingStatics.DefaultCustomPattern.GetSerialized(false)));
+            get => new ItemNamingPattern(GetSetting(nameof(CustomFileNamingPattern), ItemNamingStatics.FileDefaultCustomPattern.GetSerialized(false)));
             set => SetSetting(nameof(CustomFileNamingPattern), value.GetSerialized(false));
+        }
+
+        public SettingSubFolderNamingPattern SettingSubFolderNamingPattern
+        {
+            get => (SettingSubFolderNamingPattern)GetSetting(nameof(SettingSubFolderNamingPattern), (int)SettingSubFolderNamingPattern.Date);
+            set => SetSetting(nameof(SettingSubFolderNamingPattern), (int)value);
+        }
+
+        public ItemNamingPattern CustomSubFolderNamingPattern
+        {
+            get => new ItemNamingPattern(GetSetting(nameof(CustomSubFolderNamingPattern), ItemNamingStatics.FolderDefaultCustomPattern.GetSerialized(false)));
+            set => SetSetting(nameof(CustomSubFolderNamingPattern), value.GetSerialized(false));
         }
 
         public bool SettingGenerateFileNameWithAI

@@ -8,7 +8,7 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using Scanner.Extensions;
-using Scanner.Models.FileNaming;
+using Scanner.Models.ItemNaming;
 using Scanner.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -61,13 +61,13 @@ namespace Scanner.Views.Settings
         private void ButtonAddBlock_Loaded(object sender, RoutedEventArgs e)
         {
             // get all available blocks
-            List<IFileNamingBlock> availableBlocks = new List<IFileNamingBlock>();
-            foreach (Type type in FileNamingStatics.FileNamingBlocksDictionary.Values)
+            List<IItemNamingBlock> availableBlocks = new List<IItemNamingBlock>();
+            foreach (Type type in ItemNamingStatics.ItemNamingBlocksDictionary.Values)
             {
                 Type[] parameterTypes = [];
                 string[] parameters = [];
 
-                IFileNamingBlock? block = type.GetConstructor(parameterTypes)?.Invoke(parameters) as IFileNamingBlock;
+                IItemNamingBlock? block = type.GetConstructor(parameterTypes)?.Invoke(parameters) as IItemNamingBlock;
                 if (block != null) availableBlocks.Add(block);
             }
 
@@ -108,25 +108,25 @@ namespace Scanner.Views.Settings
                 item.Command = ViewModel.AddBlockCommand;
                 item.CommandParameter = block.Name;
 
-                if (block.GetType() == typeof(TextFileNamingBlock))
+                if (block.GetType() == typeof(TextItemNamingBlock))
                 {
                     MenuFlyoutAddBlock.Items.Add(item);
                     MenuFlyoutAddBlock.Items.Add(new MenuFlyoutSeparator());
                 }
-                else if (block.GetType() == typeof(HourFileNamingBlock)
-                    || block.GetType() == typeof(MinuteFileNamingBlock)
-                    || block.GetType() == typeof(SecondFileNamingBlock))
+                else if (block.GetType() == typeof(HourItemNamingBlock)
+                    || block.GetType() == typeof(MinuteItemNamingBlock)
+                    || block.GetType() == typeof(SecondItemNamingBlock))
                 {
                     timeParentItem.Items.Add(item);
                 }
-                else if (block.GetType() == typeof(HourPeriodFileNamingBlock))
+                else if (block.GetType() == typeof(HourPeriodItemNamingBlock))
                 {
                     timeParentItem.Items.Add(new MenuFlyoutSeparator());
                     timeParentItem.Items.Add(item);
                 }
-                else if (block.GetType() == typeof(DayFileNamingBlock)
-                    || block.GetType() == typeof(MonthFileNamingBlock)
-                    || block.GetType() == typeof(YearFileNamingBlock))
+                else if (block.GetType() == typeof(DayItemNamingBlock)
+                    || block.GetType() == typeof(MonthItemNamingBlock)
+                    || block.GetType() == typeof(YearItemNamingBlock))
                 {
                     dateParentItem.Items.Add(item);
                 }

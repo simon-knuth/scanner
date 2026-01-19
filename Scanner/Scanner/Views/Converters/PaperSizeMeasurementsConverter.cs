@@ -4,7 +4,7 @@ using Microsoft.UI.Xaml.Data;
 using Scanner.Extensions;
 using Scanner.Helpers;
 using Scanner.Models;
-using Scanner.Models.FileNaming;
+using Scanner.Models.ItemNaming;
 using System;
 
 namespace Scanner.Views.Converters

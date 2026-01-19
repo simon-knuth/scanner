@@ -154,9 +154,14 @@ namespace Scanner.Models
                     if (saveAs || (TargetFile == null && TargetFolder == null))
                     {
                         // get save options
-                        SaveOptions? saveOptions = await SaveLocationService.GetSaveOptionsAsync(uiDispatcherQueue, ((App)Application.Current).MainWindow, InitialScanOptions!, this, true, saveAs, FileNameInfo.DesiredDisplayName);
+                        SaveOptions? saveOptions = await SaveLocationService.GetSaveOptionsAsync(((App)Application.Current).MainWindow, InitialScanOptions!, this, true, uiDispatcherQueue, saveAs, FileNameInfo.DesiredDisplayName);
                         if (saveOptions == null || saveOptions.TargetFolder == null)
                             return;
+
+                        // get target folder
+                        TargetFolder = saveOptions.TargetFolder;
+                        if (saveOptions.SubFolderName != null)
+                            TargetFolder = await TargetFolder.CreateFolderAsync(saveOptions.SubFolderName, CreationCollisionOption.OpenIfExists);
 
                         if (saveAs)
                         {
@@ -165,7 +170,6 @@ namespace Scanner.Models
                             targetFile?.FileStream.Dispose();
                         }
 
-                        TargetFolder = saveOptions.TargetFolder;
                         await FileNameInfo.UpdateNamesAsync(saveOptions.FileName, null, false, uiDispatcherQueue);
 
                         forceSaving = true;

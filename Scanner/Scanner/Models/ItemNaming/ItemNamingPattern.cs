@@ -9,15 +9,15 @@ using System.Linq;
 using Windows.Devices.Scanners;
 using static Scanner.Helpers.Helpers;
 
-namespace Scanner.Models.FileNaming
+namespace Scanner.Models.ItemNaming
 {
-    public class FileNamingPattern
+    public class ItemNamingPattern
     {
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         [Required(ErrorMessage = "Blocks is required")]
-        public IReadOnlyList<IFileNamingBlock> Blocks;
+        public IReadOnlyList<IItemNamingBlock> Blocks;
 
         public bool IsValid;
 
@@ -25,13 +25,13 @@ namespace Scanner.Models.FileNaming
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public FileNamingPattern(List<IFileNamingBlock> blocks)
+        public ItemNamingPattern(List<IItemNamingBlock> blocks)
         {
             Blocks = blocks;
             IsValid = CheckValidity();
         }
 
-        public FileNamingPattern(string serialized)
+        public ItemNamingPattern(string serialized)
         {
             try
             {
@@ -42,12 +42,12 @@ namespace Scanner.Models.FileNaming
                 };
 
                 // iterate through blocks
-                List<IFileNamingBlock> newList = new List<IFileNamingBlock>();
+                List<IItemNamingBlock> newList = new List<IItemNamingBlock>();
                 foreach (string part in parts)
                 {
-                    Type blockType = FileNamingStatics.FileNamingBlocksDictionary[part.Split("|", StringSplitOptions.RemoveEmptyEntries)[0]];
+                    Type blockType = ItemNamingStatics.ItemNamingBlocksDictionary[part.Split("|", StringSplitOptions.RemoveEmptyEntries)[0]];
                     string[] partArray = new string[1] { part };
-                    newList.Add(blockType.GetConstructor(types).Invoke(partArray) as IFileNamingBlock);
+                    newList.Add(blockType.GetConstructor(types).Invoke(partArray) as IItemNamingBlock);
                 }
 
                 Blocks = newList;
@@ -77,7 +77,7 @@ namespace Scanner.Models.FileNaming
                 return false;
             }
 
-            foreach (IFileNamingBlock block in Blocks)
+            foreach (IItemNamingBlock block in Blocks)
             {
                 if (!block.IsValid)
                 {
@@ -94,7 +94,7 @@ namespace Scanner.Models.FileNaming
             {
                 string result = "";
 
-                foreach (IFileNamingBlock block in Blocks)
+                foreach (IItemNamingBlock block in Blocks)
                 {
                     result += block.ToString(scanOptions);
                 }
@@ -120,7 +120,7 @@ namespace Scanner.Models.FileNaming
         {
             string serialized = "";
 
-            foreach (IFileNamingBlock block in Blocks)
+            foreach (IItemNamingBlock block in Blocks)
             {
                 serialized += block.GetSerialized(obfuscated);
             }
