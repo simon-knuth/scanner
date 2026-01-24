@@ -46,7 +46,7 @@ namespace Scanner.ViewModels
             {
                 if (AreValidOptionsSelected)
                 {
-                    return new SaveOptions(SelectedFolder!, SubFolderName, FileDisplayName + FileExtension, GenerateAIFileName);
+                    return new SaveOptions(SelectedFolder!, CreateSubFolder ? SubFolderName : null, FileDisplayName + FileExtension, GenerateAIFileName);
                 }
                 else
                 {
@@ -117,11 +117,13 @@ namespace Scanner.ViewModels
 
         [ObservableProperty]
         private bool createSubFolder;
+        partial void OnCreateSubFolderChanged(bool value) => _ = Task.Run(UpdateOccupiedFoldersAsync);
 
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(AreValidOptionsSelected))]
         [NotifyPropertyChangedFor(nameof(SelectedSubFolderNamingPattern))]
         private string subFolderName;
+        partial void OnSubFolderNameChanged(string value) => _ = Task.Run(UpdateOccupiedFoldersAsync);
 
         public SettingSubFolderNamingPattern? SelectedSubFolderNamingPattern
         {
@@ -156,6 +158,9 @@ namespace Scanner.ViewModels
                         break;
                     case SettingSubFolderNamingPattern.Custom:
                         SubFolderName = CustomSubFolderNamingPatternValue;
+                        break;
+                    default:
+                        SubFolderName = "";
                         break;
                 }
             }
@@ -208,6 +213,7 @@ namespace Scanner.ViewModels
             DateFileNamingPatternValue = ItemNamingStatics.FileDatePattern.GenerateResult(ScanOptions, false);
             CustomFileNamingPatternValue = SettingsService.CustomFileNamingPattern.GenerateResult(ScanOptions, false);
             SelectedFileNamingPattern = SettingsService.SettingFileNamingPattern;
+            SelectedSubFolderNamingPattern = SettingsService.SettingSubFolderNamingPattern;
 
             DateSubFolderNamingPatternValue = ItemNamingStatics.FolderDatePattern.GenerateResult(ScanOptions, false);
             FileTypeSubFolderNamingPatternValue = ItemNamingStatics.FolderFileTypePattern.GenerateResult(ScanOptions, false);
@@ -277,8 +283,16 @@ namespace Scanner.ViewModels
                 return;
             }
 
-            occupiedFileNames = (await SelectedFolder.GetFilesAsync()).Select((x) => x.Name.ToLower()).ToArray();
+            StorageFolder folder = SelectedFolder;
 
+            try
+            {
+                if (CreateSubFolder)
+                    folder = await SelectedFolder.GetFolderAsync(SubFolderName);
+            }
+            catch (Exception) { }
+
+            occupiedFileNames = [.. (await folder.GetFilesAsync()).Select((x) => x.Name.ToLower())];
             viewDispatcherQueue?.RunOnThread(DispatcherQueuePriority.Low, () => OnPropertyChanged(nameof(IsFileNameCollision)));
         }
 

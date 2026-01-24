@@ -222,7 +222,7 @@
                     <Button x:Name="ButtonSave" Padding="0" ToolTipService.ToolTip="{x:Bind strings:Resources.SaveProjectToolTip}" Style="{StaticResource TitlebarButtonStyle}" IsEnabled="{x:Bind ViewModel.ProjectService.CanSaveProject, Mode=OneWay}" Command="{x:Bind ViewModel.SaveAsyncCommand}" RightTapped="ButtonSave_RightTapped">
                         <Grid>
                             <FontIcon Glyph="{x:Bind SaveButtonGlyph, Mode=OneWay}" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
-                            <ProgressRing x:Name="ProgressRingSave" Width="32" Height="32" HorizontalAlignment="Center" VerticalAlignment="Center" IsActive="True" x:Load="{x:Bind ViewModel.CurrentProject.IsSaving, Mode=OneWay}" />
+                            <ProgressBar x:Name="ProgressBarSave" Width="32" Margin="0,0,0,-10" IsHitTestVisible="False" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" IsIndeterminate="True" />
                         </Grid>
 
                         <FlyoutBase.AttachedFlyout>

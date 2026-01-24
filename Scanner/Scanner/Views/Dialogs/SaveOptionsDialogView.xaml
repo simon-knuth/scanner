@@ -101,7 +101,7 @@
             </Grid>
 
             <!-- Collision warning -->
-            <Grid Margin="0,-8,0,0" Padding="0,4,16,4" ToolTipService.ToolTip="{x:Bind strings:Resources.FileNameCollisionToolTip}" CornerRadius="0,0,4,4" Background="{ThemeResource SystemFillColorCautionBackgroundBrush}" BorderBrush="{ThemeResource DividerStrokeColorDefaultBrush}" BorderThickness="1,0,1,1" Visibility="{x:Bind ViewModel.IsFileNameCollision, Mode=OneWay}">
+            <Grid x:Name="CollisionWarningGrid" Margin="0,-8,0,0" Padding="0,4,16,4" ToolTipService.ToolTip="{x:Bind strings:Resources.FileNameCollisionToolTip}" CornerRadius="0,0,4,4" Background="{ThemeResource SystemFillColorCautionBackgroundBrush}" BorderBrush="{ThemeResource DividerStrokeColorDefaultBrush}" BorderThickness="1,0,1,1" x:Load="{x:Bind ViewModel.IsFileNameCollision, Mode=OneWay}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="1*" />
