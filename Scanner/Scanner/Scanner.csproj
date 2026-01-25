@@ -151,7 +151,7 @@
     <Page Update="Views\HistoryView.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Views\Settings\SettingsViewCustomFileNaming.xaml">
+    <Page Update="Views\Settings\SettingsViewCustomItemNaming.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\Settings\SettingsViewLicenses.xaml">

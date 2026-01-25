@@ -1598,11 +1598,19 @@ Fuzzy</comment>
   <data name="ScanAlignmentPreview" xml:space="preserve">
     <value />
   </data>
+  <data name="OpenWithApp" xml:space="preserve">
+    <value />
+  </data>
   <data name="SettingsFileNamingCustomPatternExplanation" xml:space="preserve">
     <value>拖放方块以构建自己的自动文件命名模式。选择一个方块以修改其输出，或将其拖动到垃圾箱中以将其删除。</value>
     <comment>The description for the custom file naming dialog.</comment>
   </data>
-  <data name="OpenWithApp" xml:space="preserve">
-    <value />
+  <data name="CustomFolderNamingDialogHeading" xml:space="preserve">
+    <value>自定义文件命名模式</value>
+    <comment>The heading for the custom file naming dialog.</comment>
+  </data>
+  <data name="SettingsFolderNamingCustomPatternExplanation" xml:space="preserve">
+    <value>拖放方块以构建自己的自动文件命名模式。选择一个方块以修改其输出，或将其拖动到垃圾箱中以将其删除。</value>
+    <comment>The description for the custom file naming dialog.</comment>
   </data>
 </root>

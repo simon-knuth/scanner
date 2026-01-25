@@ -1879,4 +1879,8 @@ Fuzzy</comment>
   <data name="OpenWithApp" xml:space="preserve">
     <value />
   </data>
+  <data name="CustomFolderNamingDialogHeading" xml:space="preserve">
+    <value>نط تسمية الملفات المخصصة</value>
+    <comment>The heading for the custom file naming dialog.</comment>
+  </data>
 </root>

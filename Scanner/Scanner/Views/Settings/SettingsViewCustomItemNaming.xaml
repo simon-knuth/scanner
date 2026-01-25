@@ -1,5 +1,5 @@
 ﻿<settings:SettingsPage
-    x:Class="Scanner.Views.Settings.SettingsViewCustomFileNaming"
+    x:Class="Scanner.Views.Settings.SettingsViewCustomItemNaming"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:animatedvisuals="using:Microsoft.UI.Xaml.Controls.AnimatedVisuals"
@@ -20,7 +20,7 @@
     mc:Ignorable="d">
 
     <Page.DataContext>
-        <viewModels:CustomFileNamingViewModel x:Name="ViewModel"/>
+        <viewModels:CustomItemNamingViewModel x:Name="ViewModel"/>
     </Page.DataContext>
     
 
@@ -54,9 +54,7 @@
             <RowDefinition Height="1*" />
         </Grid.RowDefinitions>
 
-        <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="12" Margin="32,0,32,0">
-            <TextBlock Text="{x:Bind strings:Resources.CustomFileNamingDialogHeading}" Margin="0,0,0,24" FontSize="24" Style="{StaticResource BaseTextBlockStyle}" />
-        </StackPanel>
+        <TextBlock Grid.Row="0" Text="{x:Bind Heading, Mode=OneWay}" Margin="32,0,32,16" FontSize="24" Style="{StaticResource BaseTextBlockStyle}" />
 
         <Grid Grid.Row="1" ColumnSpacing="12">
             <Grid.RowDefinitions>
@@ -69,7 +67,7 @@
             </Grid.RowDefinitions>
 
             <ScrollViewer Grid.Row="0" VerticalAlignment="Top" Padding="32,0,32,0" HorizontalScrollMode="Disabled" VerticalScrollMode="Auto" VerticalScrollBarVisibility="Auto">
-                <TextBlock Text="{x:Bind strings:Resources.SettingsFileNamingCustomPatternExplanation}" Style="{StaticResource BodyTextBlockStyle}" />
+                <TextBlock Text="{x:Bind Body, Mode=OneWay}" Style="{StaticResource BodyTextBlockStyle}" />
             </ScrollViewer>
 
             <Grid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">

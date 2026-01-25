@@ -21,7 +21,7 @@ using static Scanner.Helpers.Helpers;
 
 namespace Scanner.ViewModels
 {
-    public partial class CustomFileNamingViewModel : ObservableRecipient, IDisposable
+    public partial class CustomItemNamingViewModel : ObservableRecipient, IDisposable
     {
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -49,14 +49,41 @@ namespace Scanner.ViewModels
         public RelayCommand DisposeCommand => new RelayCommand(Dispose);
         #endregion
 
+        private ItemNamingKind? kind;
+        public ItemNamingKind? Kind
+        {
+            get => kind;
+            set
+            {
+                SetProperty(ref kind, value);
+                Pattern = Kind == ItemNamingKind.File ? SettingsService.CustomFileNamingPattern : SettingsService.CustomSubFolderNamingPattern;
+                UpdatePattern();
+            }
+        }
+
         [ObservableProperty]
-        private ObservableCollection<IItemNamingBlock> selectedBlocks = new();
+        private ObservableCollection<IItemNamingBlock> selectedBlocks = [];
 
         [ObservableProperty]
         private string previewResult;
 
-        [ObservableProperty]
         private ItemNamingPattern pattern;
+        public ItemNamingPattern Pattern
+        {
+            get => pattern;
+            set
+            {
+                SetProperty(ref pattern, value);
+
+                SelectedBlocks.CollectionChanged -= SelectedBlocks_CollectionChanged;
+                SelectedBlocks = new ObservableCollection<IItemNamingBlock>(Pattern.Blocks);
+                foreach (IItemNamingBlock block in SelectedBlocks)
+                {
+                    block.PropertyChanged += Block_PropertyChanged;
+                }
+                SelectedBlocks.CollectionChanged += SelectedBlocks_CollectionChanged;
+            }
+        }
 
         private IScanningDevice previewScanner;
 
@@ -64,16 +91,10 @@ namespace Scanner.ViewModels
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public CustomFileNamingViewModel()
+        public CustomItemNamingViewModel()
         {
             // get current pattern
-            Pattern = SettingsService.CustomFileNamingPattern;
-            SelectedBlocks = new ObservableCollection<IItemNamingBlock>(Pattern.Blocks);
-            foreach (IItemNamingBlock block in SelectedBlocks)
-            {
-                block.PropertyChanged += Block_PropertyChanged;
-            }
-            SelectedBlocks.CollectionChanged += SelectedBlocks_CollectionChanged;
+            Pattern = Kind == ItemNamingKind.File ? SettingsService.CustomFileNamingPattern : SettingsService.CustomSubFolderNamingPattern;
 
             // ensure initial pattern is visible
             UpdatePattern();
@@ -92,7 +113,11 @@ namespace Scanner.ViewModels
         {
             if (Pattern.IsValid)
             {
-                SettingsService.CustomFileNamingPattern = Pattern;
+                if (Kind == ItemNamingKind.File)
+                    SettingsService.CustomFileNamingPattern = Pattern;
+                else
+                    SettingsService.CustomSubFolderNamingPattern = Pattern;
+
                 LogService?.Log.Information("CustomFileNamingViewModel - Changes in file naming pattern confirmed");
                 CloseRequested?.Invoke(this, EventArgs.Empty);
             }
@@ -157,10 +182,10 @@ namespace Scanner.ViewModels
 
         private void UpdatePattern()
         {
-            Pattern = new ItemNamingPattern(SelectedBlocks.ToList());
+            Pattern = new ItemNamingPattern([.. SelectedBlocks]);
 
             // generate new preview
-            PreviewResult = Pattern.GenerateResult(ItemNamingStatics.GetPreviewScanOptions(previewScanner), true);
+            PreviewResult = Pattern.GenerateResult(ItemNamingStatics.GetPreviewScanOptions(previewScanner), Kind == ItemNamingKind.File);
         }
 
         private void MoveBlockForward(IItemNamingBlock block)
@@ -197,6 +222,15 @@ namespace Scanner.ViewModels
             {
                 SelectedBlocks.Move(oldIndex, SelectedBlocks.Count - 1);
             }
+        }
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // MISCELLANEOUS ////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        public enum ItemNamingKind
+        {
+            File = 0,
+            Folder = 1
         }
     }
 }

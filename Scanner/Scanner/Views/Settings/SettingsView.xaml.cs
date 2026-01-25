@@ -79,9 +79,9 @@ namespace Scanner.Views.Settings
             }
         }
 
-        private void Navigate(Type pageType, NavigationTransitionInfo transition)
+        private void Navigate(Type pageType, NavigationTransitionInfo transition, object? parameter = null)
         {
-            FrameContent.Navigate(pageType, ViewModel, transition);
+            FrameContent.Navigate(pageType, parameter ?? ViewModel, transition);
         }
 
         private void SettingsView_GoBackRequested(object? sender, EventArgs e)
@@ -89,12 +89,12 @@ namespace Scanner.Views.Settings
             FrameContent.GoBack();
         }
 
-        private void SettingsView_PageNavigationRequested(object? sender, Type e)
+        private void SettingsView_PageNavigationRequested(object? sender, (Type, object?) e)
         {
-            Navigate(e, new SlideNavigationTransitionInfo
+            Navigate(e.Item1, new SlideNavigationTransitionInfo
             {
                 Effect = SlideNavigationTransitionEffect.FromRight
-            });
+            }, e.Item2);
         }
 
         private void ViewModel_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)

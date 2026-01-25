@@ -1617,6 +1617,9 @@ Fuzzy</comment>
   <data name="ScanAlignmentPreview" xml:space="preserve">
     <value />
   </data>
+  <data name="OpenWithApp" xml:space="preserve">
+    <value />
+  </data>
   <data name="SettingsFileNamingCustomPatternExplanation" xml:space="preserve">
     <value>Drag and drop blocks to build your own dynamic file naming pattern. Select a block to modify its output or drag it into the bin to remove it.</value>
     <comment>The description for the custom file naming dialog.</comment>
@@ -1625,7 +1628,12 @@ Fuzzy</comment>
     <value>Select all</value>
     <comment>The option to select all similar pages for cropping.</comment>
   </data>
-  <data name="OpenWithApp" xml:space="preserve">
-    <value />
+  <data name="CustomFolderNamingDialogHeading" xml:space="preserve">
+    <value>Custom file naming pattern</value>
+    <comment>The heading for the custom file naming dialog.</comment>
+  </data>
+  <data name="SettingsFolderNamingCustomPatternExplanation" xml:space="preserve">
+    <value>Drag and drop blocks to build your own dynamic file naming pattern. Select a block to modify its output or drag it into the bin to remove it.</value>
+    <comment>The description for the custom file naming dialog.</comment>
   </data>
 </root>

@@ -56,6 +56,7 @@ namespace Scanner.Services.Interfaces
         bool SettingAutoSave { get; set; }
         SettingFileNamingPattern SettingFileNamingPattern { get; set; }
         ItemNamingPattern CustomFileNamingPattern { get; set; }
+        bool SettingUseSubFolder { get; set; }
         SettingSubFolderNamingPattern SettingSubFolderNamingPattern { get; set; }
         ItemNamingPattern CustomSubFolderNamingPattern { get; set; }
         bool SettingGenerateFileNameWithAI { get; set; }

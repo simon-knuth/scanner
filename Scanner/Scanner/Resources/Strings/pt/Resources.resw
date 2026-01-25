@@ -1618,11 +1618,19 @@ Fuzzy</comment>
   <data name="ScanAlignmentPreview" xml:space="preserve">
     <value />
   </data>
+  <data name="OpenWithApp" xml:space="preserve">
+    <value />
+  </data>
   <data name="SettingsFileNamingCustomPatternExplanation" xml:space="preserve">
     <value>Arraste e largue blocos para construir o seu próprio padrão dinâmico de nomes de ficheiros. Selecione um bloco para modificar o seu resultado ou arraste-o para o lixo para removê-lo.</value>
     <comment>The description for the custom file naming dialog.</comment>
   </data>
-  <data name="OpenWithApp" xml:space="preserve">
-    <value />
+  <data name="CustomFolderNamingDialogHeading" xml:space="preserve">
+    <value>Padrão de nome de ficheiros personalizados</value>
+    <comment>The heading for the custom file naming dialog.</comment>
+  </data>
+  <data name="SettingsFolderNamingCustomPatternExplanation" xml:space="preserve">
+    <value>Arraste e largue blocos para construir o seu próprio padrão dinâmico de nomes de ficheiros. Selecione um bloco para modificar o seu resultado ou arraste-o para o lixo para removê-lo.</value>
+    <comment>The description for the custom file naming dialog.</comment>
   </data>
 </root>

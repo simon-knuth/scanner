@@ -19,13 +19,13 @@ using Microsoft.UI.Xaml.Controls;
 
 namespace Scanner.Views.Settings
 {
-    public class SettingsPage : Page
+    public partial class SettingsPage : Page
     {
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public event EventHandler<Type> PageNavigationRequested;
-        public event EventHandler GoBackRequested;
+        public event EventHandler<(Type, object?)>? PageNavigationRequested;
+        public event EventHandler? GoBackRequested;
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -33,7 +33,12 @@ namespace Scanner.Views.Settings
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         protected void OnPageNavigationRequested(Type type)
         {
-            PageNavigationRequested?.Invoke(this, type);
+            OnPageNavigationRequested(type, null);
+        }
+
+        protected void OnPageNavigationRequested(Type type, object? parameter)
+        {
+            PageNavigationRequested?.Invoke(this, (type, parameter));
         }
 
         protected void OnGoBackRequested()

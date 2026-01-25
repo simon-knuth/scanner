@@ -49,8 +49,8 @@
                     </TransitionCollection>
                 </StackPanel.ChildrenTransitions>
                 
-                <TextBlock Text="General" Margin="0,0,0,24" FontSize="24" Style="{StaticResource BaseTextBlockStyle}" />
-                <TextBlock Text="Saving" Margin="0,0,0,8" Style="{StaticResource BaseTextBlockStyle}" />
+                <TextBlock Text="General" Margin="0,0,0,16" FontSize="24" Style="{StaticResource BaseTextBlockStyle}" />
+                <TextBlock Text="Files" Margin="0,0,0,4" Style="{StaticResource BaseTextBlockStyle}" />
                 <controls:SettingsExpander Header="Save location" IsExpanded="{x:Bind ViewModel.SettingsService.SettingSaveLocationType, Mode=OneWay, Converter={StaticResource EnumIntComparisonConverter}, ConverterParameter=0}">
                     <controls:SettingsExpander.HeaderIcon>
                         <FontIcon Glyph="&#xE8B7;" FontFamily="{StaticResource SymbolThemeFontFamily}" />
@@ -128,6 +128,58 @@
                     </controls:SettingsExpander.Items>
                 </controls:SettingsExpander>
 
+                <controls:SettingsExpander Header="Create sub folder" Description="Save scans in a sub folder of the selected folder. If the sub folder doesn't exist, it will be created.">
+                    <controls:SettingsExpander.HeaderIcon>
+                        <FontIcon Glyph="&#xE8DE;" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                    </controls:SettingsExpander.HeaderIcon>
+
+                    <controls:SettingsExpander.Content>
+                        <ToggleSwitch IsOn="{x:Bind ViewModel.SettingsService.SettingUseSubFolder, Mode=TwoWay}" />
+                    </controls:SettingsExpander.Content>
+
+                    <controls:SettingsExpander.Items>
+                        <controls:SettingsCard Header="Sub folder naming pattern" IsEnabled="{x:Bind ViewModel.SettingsService.SettingUseSubFolder, Mode=OneWay}">
+                            <controls:SettingsCard.Content>
+                                <ComboBox SelectedIndex="{x:Bind ViewModel.SettingSubFolderNamingPattern, Mode=TwoWay}">
+                                    <ComboBox.Items>
+                                        <ComboBoxItem FontWeight="SemiBold">
+                                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                                <FontIcon Glyph="&#xE787;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}"/>
+                                                <TextBlock Text="Date" />
+                                            </StackPanel>
+                                        </ComboBoxItem>
+                                        <ComboBoxItem>
+                                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                                <FontIcon Glyph="&#xE8A5;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}"/>
+                                                <TextBlock Text="File type" />
+                                            </StackPanel>
+                                        </ComboBoxItem>
+                                        <ComboBoxItem>
+                                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                                <FontIcon Glyph="&#xEF60;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}"/>
+                                                <TextBlock Text="Custom pattern" />
+                                            </StackPanel>
+                                        </ComboBoxItem>
+                                    </ComboBox.Items>
+                                </ComboBox>
+                            </controls:SettingsCard.Content>
+                        </controls:SettingsCard>
+                        <controls:SettingsCard Header="Preview">
+                            <controls:SettingsCard.Description>
+                                <StackPanel Orientation="Horizontal" Spacing="12" Margin="4,12,0,8">
+                                    <FontIcon Glyph="&#xEA90;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                    <TextBlock Text="{x:Bind ViewModel.SubFolderNamingPatternPreview, Mode=OneWay}" Style="{StaticResource BodyTextBlockStyle}" />
+                                </StackPanel>
+                            </controls:SettingsCard.Description>
+                        </controls:SettingsCard>
+                        <controls:SettingsCard x:Name="SettingsCardEditCustomSubFolderNamingPattern" Header="Edit custom pattern" IsClickEnabled="True" Click="SettingsCardEditCustomSubFolderNamingPattern_Click">
+                            <controls:SettingsCard.HeaderIcon>
+                                <FontIcon Glyph="&#xE70F;" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                            </controls:SettingsCard.HeaderIcon>
+                        </controls:SettingsCard>
+                    </controls:SettingsExpander.Items>
+                </controls:SettingsExpander>
+
                 <controls:SettingsExpander Header="File naming">
                     <controls:SettingsExpander.HeaderIcon>
                         <FontIcon Glyph="&#xE8AC;" FontFamily="{StaticResource SymbolThemeFontFamily}" />
@@ -167,7 +219,7 @@
                                 </StackPanel>
                             </controls:SettingsCard.Description>
                         </controls:SettingsCard>
-                        <controls:SettingsCard x:Name="SettingsCardEditCustomPattern" Header="Edit custom pattern" IsClickEnabled="True" Click="SettingsCardEditCustomPattern_Click">
+                        <controls:SettingsCard x:Name="SettingsCardEditCustomFileNamingPattern" Header="Edit custom pattern" IsClickEnabled="True" Click="SettingsCardEditCustomFileNamingPattern_Click">
                             <controls:SettingsCard.HeaderIcon>
                                 <FontIcon Glyph="&#xE70F;" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                             </controls:SettingsCard.HeaderIcon>
@@ -207,7 +259,7 @@
                     <ToggleSwitch IsOn="{x:Bind ViewModel.SettingsService.SettingOcrPdfs, Mode=TwoWay}" />
                 </controls:SettingsCard>
 
-                <TextBlock Text="Scans" Margin="0,24,0,8" Style="{StaticResource BaseTextBlockStyle}" />
+                <TextBlock Text="Scanning" Margin="0,24,0,4" Style="{StaticResource BaseTextBlockStyle}" />
                 <controls:SettingsCard Header="Automatic rotation">
                     <controls:SettingsCard.HeaderIcon>
                         <FontIcon Glyph="&#xE7AD;" FontFamily="{StaticResource SymbolThemeFontFamily}" />

@@ -27,18 +27,22 @@ using static Scanner.Helpers.Helpers;
 namespace Scanner.Views.Settings
 {
     [ObservableObject]
-    public sealed partial class SettingsViewCustomFileNaming : SettingsPage
+    public sealed partial class SettingsViewCustomItemNaming : SettingsPage
     {
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        
+        [ObservableProperty]
+        private string heading;
+
+        [ObservableProperty]
+        private string body;
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public SettingsViewCustomFileNaming()
+        public SettingsViewCustomItemNaming()
         {
             this.InitializeComponent();
 
@@ -49,9 +53,27 @@ namespace Scanner.Views.Settings
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            ViewModel.Kind = (CustomItemNamingViewModel.ItemNamingKind)e.Parameter;
+            switch (ViewModel.Kind)
+            {
+                case CustomItemNamingViewModel.ItemNamingKind.File:
+                    Heading = GetLocalized(Scanner.Resources.Strings.ResourcesExtension.KeyEnum.CustomFileNamingDialogHeading);
+                    Body = GetLocalized(Scanner.Resources.Strings.ResourcesExtension.KeyEnum.SettingsFileNamingCustomPatternExplanation);
+                    break;
+                case CustomItemNamingViewModel.ItemNamingKind.Folder:
+                    Heading = GetLocalized(Scanner.Resources.Strings.ResourcesExtension.KeyEnum.CustomFolderNamingDialogHeading);
+                    Body = GetLocalized(Scanner.Resources.Strings.ResourcesExtension.KeyEnum.SettingsFolderNamingCustomPatternExplanation);
+                    break;
+            }
+
+            base.OnNavigatedTo(e);
+        }
+        
         private async void ListViewPattern_ItemClick(object sender, ItemClickEventArgs e)
         {
-            this.RunOnUIThreadAndWaitAsync(DispatcherQueuePriority.Normal, () =>
+            await this.RunOnUIThreadAndWaitAsync(DispatcherQueuePriority.Normal, () =>
             {
                 ListViewItem container = (ListViewItem)((ListView)sender).ContainerFromItem(e.ClickedItem);
                 FlyoutBase.ShowAttachedFlyout(container);
@@ -223,7 +245,7 @@ namespace Scanner.Views.Settings
         {
             if (e.Key == Windows.System.VirtualKey.Delete)
             {
-                ListViewItem item = sender as ListViewItem;
+                ListViewItem item = (ListViewItem)sender;
                 ViewModel.DeleteBlockCommand.Execute(item.DataContext);
             }
         }

@@ -1617,11 +1617,19 @@ Fuzzy</comment>
   <data name="ScanAlignmentPreview" xml:space="preserve">
     <value />
   </data>
+  <data name="OpenWithApp" xml:space="preserve">
+    <value />
+  </data>
   <data name="SettingsFileNamingCustomPatternExplanation" xml:space="preserve">
     <value>Presuňte bloky a vytvorte si vlastný dynamický vzor pomenovania súborov. Vyberte blok, ak chcete upraviť jeho výstup, alebo ho potiahnutím do koša odstráňte.</value>
     <comment>The description for the custom file naming dialog.</comment>
   </data>
-  <data name="OpenWithApp" xml:space="preserve">
-    <value />
+  <data name="CustomFolderNamingDialogHeading" xml:space="preserve">
+    <value>Vlastný vzor pomenovania súboru</value>
+    <comment>The heading for the custom file naming dialog.</comment>
+  </data>
+  <data name="SettingsFolderNamingCustomPatternExplanation" xml:space="preserve">
+    <value>Presuňte bloky a vytvorte si vlastný dynamický vzor pomenovania súborov. Vyberte blok, ak chcete upraviť jeho výstup, alebo ho potiahnutím do koša odstráňte.</value>
+    <comment>The description for the custom file naming dialog.</comment>
   </data>
 </root>

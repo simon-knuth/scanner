@@ -84,6 +84,15 @@ namespace Scanner.ViewModels
             set => SettingsService.SettingFileNamingPattern = (SettingFileNamingPattern)value;
         }
 
+        [ObservableProperty]
+        private string subFolderNamingPatternPreview;
+
+        public int SettingSubFolderNamingPattern
+        {
+            get => (int)SettingsService.SettingSubFolderNamingPattern;
+            set => SettingsService.SettingSubFolderNamingPattern = (SettingSubFolderNamingPattern)value;
+        }
+
         public int SettingScanAction
         {
             get => (int)SettingsService.SettingScanAction;
@@ -125,6 +134,7 @@ namespace Scanner.ViewModels
             SettingsService.PropertyChanged += SettingsService_PropertyChanged;
 
             UpdateFileNamingPatternPreview();
+            UpdateSubFolderNamingPatternPreview();
         }
 
 
@@ -238,6 +248,32 @@ namespace Scanner.ViewModels
             FileNamingPatternPreview = previewPattern.GenerateResult(scanOptions, true);
         }
 
+        private void UpdateSubFolderNamingPatternPreview()
+        {
+            // get pattern
+            ItemNamingPattern previewPattern;
+            switch ((SettingSubFolderNamingPattern)SettingSubFolderNamingPattern)
+            {
+                default:
+                case Services.Interfaces.SettingSubFolderNamingPattern.Date:
+                    previewPattern = ItemNamingStatics.FolderDatePattern;
+                    break;
+                case Services.Interfaces.SettingSubFolderNamingPattern.FileType:
+                    previewPattern = ItemNamingStatics.FolderFileTypePattern;
+                    break;
+                case Services.Interfaces.SettingSubFolderNamingPattern.Custom:
+                    previewPattern = SettingsService.CustomSubFolderNamingPattern;
+                    break;
+            }
+
+            // get currently selected scanner
+            IScanningDevice? selectedScanner = Messenger.Send(new SelectedScannerRequestMessage()).Response;
+
+            // generate preview
+            ScanOptions scanOptions = ItemNamingStatics.GetPreviewScanOptions(selectedScanner);
+            SubFolderNamingPatternPreview = previewPattern.GenerateResult(scanOptions, false);
+        }
+
         private void SettingsService_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             switch (e.PropertyName)
@@ -245,6 +281,10 @@ namespace Scanner.ViewModels
                 case nameof(ISettingsService.SettingFileNamingPattern):
                 case nameof(ISettingsService.CustomFileNamingPattern):
                     UpdateFileNamingPatternPreview();
+                    break;
+                case nameof(ISettingsService.SettingSubFolderNamingPattern):
+                case nameof(ISettingsService.CustomSubFolderNamingPattern):
+                    UpdateSubFolderNamingPatternPreview();
                     break;
                 case nameof(ISettingsService.SettingSaveLocationType):
                     OnPropertyChanged(nameof(IsAutoSaveAvailable));

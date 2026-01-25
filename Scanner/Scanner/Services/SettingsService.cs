@@ -232,6 +232,12 @@ namespace Scanner.Services
             set => SetSetting(nameof(CustomFileNamingPattern), value.GetSerialized(false));
         }
 
+        public bool SettingUseSubFolder
+        {
+            get => GetSetting<bool>(nameof(SettingUseSubFolder), true);
+            set => SetSetting(nameof(SettingUseSubFolder), value);
+        }
+
         public SettingSubFolderNamingPattern SettingSubFolderNamingPattern
         {
             get => (SettingSubFolderNamingPattern)GetSetting(nameof(SettingSubFolderNamingPattern), (int)SettingSubFolderNamingPattern.Date);

@@ -38,7 +38,7 @@
             <RowDefinition Height="1*" />
         </Grid.RowDefinitions>
 
-        <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="12" Margin="24,0,24,24">
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="12" Margin="24,0,24,16">
             <Button x:Name="ButtonBack" Width="32" Height="32" VerticalAlignment="Center" Padding="4" Style="{StaticResource MutedButtonStyle}" Click="ButtonBack_Click">
                 <AnimatedIcon x:Name="AnimatedIconBack">
                     <AnimatedIcon.Source>

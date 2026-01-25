@@ -53,9 +53,14 @@ namespace Scanner.Views.Settings
             ViewModel.ViewLoadingCommand.Execute(this.DispatcherQueue);
         }
 
-        private void SettingsCardEditCustomPattern_Click(object sender, RoutedEventArgs e)
+        private void SettingsCardEditCustomFileNamingPattern_Click(object sender, RoutedEventArgs e)
         {
-            OnPageNavigationRequested(typeof(SettingsViewCustomFileNaming));
+            OnPageNavigationRequested(typeof(SettingsViewCustomItemNaming), CustomItemNamingViewModel.ItemNamingKind.File);
+        }
+
+        private void SettingsCardEditCustomSubFolderNamingPattern_Click(object sender, RoutedEventArgs e)
+        {
+            OnPageNavigationRequested(typeof(SettingsViewCustomItemNaming), CustomItemNamingViewModel.ItemNamingKind.Folder);
         }
 
         private void ToggleSwitchGenerateFileNameWithAI_Toggled(object sender, RoutedEventArgs e)

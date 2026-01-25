@@ -46,7 +46,7 @@
                     </TransitionCollection>
                 </StackPanel.ChildrenTransitions>
                 
-                <TextBlock Text="Privacy" Margin="0,0,0,24" FontSize="24" Style="{StaticResource BaseTextBlockStyle}" />
+                <TextBlock Text="Privacy" Margin="0,0,0,16" FontSize="24" Style="{StaticResource BaseTextBlockStyle}" />
                 <controls:SettingsCard Header="Send error reports and usage statistics" Description="This helps investigate bugs and makes the app better for everyone.&#x0a;Rest assured that your clipboard content is never included in these reports.">
                     <controls:SettingsCard.HeaderIcon>
                         <FontIcon Glyph="&#xEBE8;" FontFamily="{StaticResource SymbolThemeFontFamily}" />

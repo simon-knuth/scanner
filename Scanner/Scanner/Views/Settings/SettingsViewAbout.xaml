@@ -38,7 +38,7 @@
     <Grid x:Name="GridRoot">
         <ScrollViewer HorizontalScrollMode="Disabled" VerticalScrollMode="Auto" VerticalScrollBarVisibility="Auto">
             <StackPanel Orientation="Vertical" Spacing="4" Padding="32">
-                <TextBlock Text="About" Margin="0,0,0,24" FontSize="24" Style="{StaticResource BaseTextBlockStyle}" />
+                <TextBlock Text="About" Margin="0,0,0,16" FontSize="24" Style="{StaticResource BaseTextBlockStyle}" />
                 <Grid Margin="0,0,0,16" HorizontalAlignment="Stretch" ColumnSpacing="16">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="60" />

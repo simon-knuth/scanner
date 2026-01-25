@@ -1617,11 +1617,19 @@ Fuzzy</comment>
   <data name="ScanAlignmentPreview" xml:space="preserve">
     <value />
   </data>
+  <data name="OpenWithApp" xml:space="preserve">
+    <value />
+  </data>
   <data name="SettingsFileNamingCustomPatternExplanation" xml:space="preserve">
     <value>Húzzon ide blokkokat saját dinamikus fájlelnevezési minta létrehozásához. Válasszon egy blokkot a kimenet módosításához, vagy húzza a tálcába az eltávolításhoz.</value>
     <comment>The description for the custom file naming dialog.</comment>
   </data>
-  <data name="OpenWithApp" xml:space="preserve">
-    <value />
+  <data name="CustomFolderNamingDialogHeading" xml:space="preserve">
+    <value>Egyedi fájl elnevezési minta</value>
+    <comment>The heading for the custom file naming dialog.</comment>
+  </data>
+  <data name="SettingsFolderNamingCustomPatternExplanation" xml:space="preserve">
+    <value>Húzzon ide blokkokat saját dinamikus fájlelnevezési minta létrehozásához. Válasszon egy blokkot a kimenet módosításához, vagy húzza a tálcába az eltávolításhoz.</value>
+    <comment>The description for the custom file naming dialog.</comment>
   </data>
 </root>
