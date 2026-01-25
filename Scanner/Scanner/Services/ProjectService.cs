@@ -47,6 +47,7 @@ namespace Scanner.Services
         private readonly ICopilotRuntimeService CopilotRuntimeService = Ioc.Default.GetRequiredService<ICopilotRuntimeService>();
         private readonly ILogService? LogService = Ioc.Default.GetService<ILogService>();
         private readonly ISaveLocationService SaveLocationService = Ioc.Default.GetRequiredService<ISaveLocationService>();
+        private readonly ISentryService? SentryService = Ioc.Default.GetService<ISentryService>();
         private readonly ISettingsService SettingsService = Ioc.Default.GetRequiredService<ISettingsService>();
         #endregion
 
@@ -202,12 +203,13 @@ namespace Scanner.Services
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public async Task TryCreateProjectAsync(IProjectCreationData creationData, bool keepSourceFiles, DispatcherQueue uiDispatcherQueue)
+        public async Task<bool> TryCreateProjectAsync(IProjectCreationData creationData, bool keepSourceFiles, DispatcherQueue uiDispatcherQueue)
         {
             try
             {
                 // close project
-                if (await TryCloseProjectAsync() == false) return;
+                if (await TryCloseProjectAsync() == false)
+                    return false;
 
                 // create project
                 CurrentScanState = ScanState.Processing;
@@ -231,11 +233,18 @@ namespace Scanner.Services
 
                 // free up space
                 _ = Task.Run(() => _ = AppDataService.EmptyFolderAsync(AppDataService.IncomingFolder));
+                return true;
             }
-            catch (Exception)
+            catch (Exception exc)
             {
-                // TODO: catch exceptions and notify user
-                throw;
+                LogService?.Log.Error(exc, "ProjectService - Failed to create project from data");
+                SentryService?.TrackError(exc);
+                Messenger.Send(new ShowNotificationMessage(new CommunityToolkit.WinUI.Behaviors.Notification()
+                {
+                    Title = "Something went wrong",
+                    Message = string.IsNullOrEmpty(exc.Message) ? exc.Message : "Please try again later."
+                }));
+                return false;
             }
             finally
             {
@@ -243,19 +252,21 @@ namespace Scanner.Services
             }
         }
 
-        public async Task TryCreateProjectFromScanAsync(ScanOptions scanOptions, DispatcherQueue uiDispatcherQueue)
+        public async Task<bool> TryCreateProjectFromScanAsync(ScanOptions scanOptions, DispatcherQueue uiDispatcherQueue)
         {
             try
             {
                 CurrentScanState = ScanState.Scanning;
 
                 // close project
-                if (await TryCloseProjectAsync() == false) return;
+                if (await TryCloseProjectAsync() == false)
+                    return false;
 
                 // get save options
                 IsActionRunning = true;
                 SaveOptions? saveOptions = await SaveLocationService.GetSaveOptionsAsync(((App)Application.Current).MainWindow, scanOptions, CurrentProject, false, UiDispatcherQueue!, false, null);
-                if (saveOptions == null) return;
+                if (saveOptions == null)
+                    return false;
 
                 // preheat AI models
                 if (saveOptions.GenerateAIFileName)
@@ -268,7 +279,26 @@ namespace Scanner.Services
                 await Task.Run(async () => files = await scanOptions.Scanner.GetScanAsync(scanOptions, AppDataService.IncomingFolder, uiDispatcherQueue));
 
                 if (files.Count == 0)
-                    return;
+                {
+                    // this should only happen if the feeder is empty
+                    if (scanOptions.SourceMode == ScannerSource.Feeder)
+                    {
+                        Messenger.Send(new ShowNotificationMessage(new CommunityToolkit.WinUI.Behaviors.Notification()
+                        {
+                            Title = "Feeder empty",
+                            Message = "There are no pages in the feeder. Please make sure you have inserted them correctly for the scanner to detect them."
+                        }));
+                    }
+                    else
+                    {
+                        Messenger.Send(new ShowNotificationMessage(new CommunityToolkit.WinUI.Behaviors.Notification()
+                        {
+                            Title = "Something went wrong",
+                            Message = "Please try again later."
+                        }));
+                    }
+                    return false;
+                }
 
                 // automatic rotation
                 if (SettingsService.SettingAutoRotate)
@@ -357,11 +387,19 @@ namespace Scanner.Services
 
                 // free up space
                 _ = Task.Run(() => _ = AppDataService.EmptyFolderAsync(AppDataService.IncomingFolder));
+
+                return true;
             }
-            catch (Exception)
+            catch (Exception exc)
             {
-                // TODO: catch exceptions and notify user
-                throw;
+                LogService?.Log.Error(exc, "ProjectService - Failed to create project from scan");
+                SentryService?.TrackError(exc);
+                Messenger.Send(new ShowNotificationMessage(new CommunityToolkit.WinUI.Behaviors.Notification()
+                {
+                    Title = "Something went wrong",
+                    Message = string.IsNullOrEmpty(exc.Message) ? exc.Message : "Please try again later."
+                }));
+                return false;
             }
             finally
             {
@@ -370,14 +408,16 @@ namespace Scanner.Services
             }
         }
 
-        public async Task TryScanToProjectAsync(ScanOptions scanOptions, DispatcherQueue uiDispatcherQueue)
+        public async Task<bool> TryScanToProjectAsync(ScanOptions scanOptions, DispatcherQueue uiDispatcherQueue)
         {
             try
             {
                 CurrentScanState = ScanState.Scanning;
 
-                if (CurrentProject == null) return;
-                if (scanOptions.Scanner == null) return;
+                if (CurrentProject == null)
+                    return false;
+                if (scanOptions.Scanner == null)
+                    return false;
 
                 // get save options
                 IsActionRunning = true;
@@ -385,7 +425,8 @@ namespace Scanner.Services
                 if (scanOptions.TargetFormat != TargetFormat.PDF)
                 {
                     saveOptions = await SaveLocationService.GetSaveOptionsAsync(((App)Application.Current).MainWindow, scanOptions, CurrentProject, false, UiDispatcherQueue!, false, null);
-                    if (saveOptions == null) return;
+                    if (saveOptions == null)
+                        return false;
                 }
 
                 // scan
@@ -393,6 +434,28 @@ namespace Scanner.Services
                 await AppDataService.EmptyFolderAsync(AppDataService.IncomingFolder);
                 IReadOnlyList<StorageFile> files = [];
                 await Task.Run(async () => files = await scanOptions.Scanner.GetScanAsync(scanOptions, AppDataService.IncomingFolder, uiDispatcherQueue));
+
+                if (files.Count == 0)
+                {
+                    // this should only happen if the feeder is empty
+                    if (scanOptions.SourceMode == ScannerSource.Feeder)
+                    {
+                        Messenger.Send(new ShowNotificationMessage(new CommunityToolkit.WinUI.Behaviors.Notification()
+                        {
+                            Title = "Feeder empty",
+                            Message = "There are no pages in the feeder. Please make sure you have inserted them correctly for the scanner to detect them."
+                        }));
+                    }
+                    else
+                    {
+                        Messenger.Send(new ShowNotificationMessage(new CommunityToolkit.WinUI.Behaviors.Notification()
+                        {
+                            Title = "Something went wrong",
+                            Message = "Please try again later."
+                        }));
+                    }
+                    return false;
+                }
 
                 // automatic rotation
                 if (SettingsService.SettingAutoRotate)
@@ -429,11 +492,18 @@ namespace Scanner.Services
                 IProjectAction action = new AddFilesAction(insertions, false);
 
                 await ApplyActionAsync(action);
+                return true;
             }
-            catch (Exception)
+            catch (Exception exc)
             {
-                // TODO: catch exceptions and notify user
-                throw;
+                LogService?.Log.Error(exc, "ProjectService - Failed to scan to project");
+                SentryService?.TrackError(exc);
+                Messenger.Send(new ShowNotificationMessage(new CommunityToolkit.WinUI.Behaviors.Notification()
+                {
+                    Title = "Something went wrong",
+                    Message = string.IsNullOrEmpty(exc.Message) ? exc.Message : "Please try again later."
+                }));
+                return false;
             }
             finally
             {

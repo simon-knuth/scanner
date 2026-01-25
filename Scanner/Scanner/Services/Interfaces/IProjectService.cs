@@ -74,9 +74,9 @@ namespace Scanner.Services.Interfaces
         Task TryUndoAsync(IProjectAction? upUntil = null);
         Task TryRedoAsync(IProjectAction? upUntil = null);
         
-        Task TryCreateProjectAsync(IProjectCreationData creationData, bool keepSourceFiles, DispatcherQueue uiDispatcherQueue);
-        Task TryCreateProjectFromScanAsync(ScanOptions scanOptions, DispatcherQueue uiDispatcherQueue);
-        Task TryScanToProjectAsync(ScanOptions scanOptions, DispatcherQueue uiDispatcherQueue);
+        Task<bool> TryCreateProjectAsync(IProjectCreationData creationData, bool keepSourceFiles, DispatcherQueue uiDispatcherQueue);
+        Task<bool> TryCreateProjectFromScanAsync(ScanOptions scanOptions, DispatcherQueue uiDispatcherQueue);
+        Task<bool> TryScanToProjectAsync(ScanOptions scanOptions, DispatcherQueue uiDispatcherQueue);
 
         Task<bool> ConvertProjectAsync(TargetFormat targetFormat, DispatcherQueue uiDispatcherQueue);
 

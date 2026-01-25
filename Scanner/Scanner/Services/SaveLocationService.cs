@@ -310,7 +310,7 @@ namespace Scanner.Services
             return fixedSaveLocation;
         }
 
-        public async Task<StorageFolder?> SelectFixedSaveLocationAsync(DispatcherQueue uiDispatcherQueue, Window window)
+        public async Task<StorageFolder?> SelectFixedSaveLocationAsync(Window window, DispatcherQueue uiDispatcherQueue)
         {
             await initializationCompleted.Task;
 

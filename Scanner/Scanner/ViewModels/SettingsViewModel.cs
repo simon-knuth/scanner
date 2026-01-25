@@ -207,7 +207,7 @@ namespace Scanner.ViewModels
         private async Task SelectFixedSaveLocationAsync()
         {
             if (viewDispatcherQueue == null) return;
-            await SaveLocationService.SelectFixedSaveLocationAsync(viewDispatcherQueue, ((App)Application.Current).SettingsWindow!);
+            await SaveLocationService.SelectFixedSaveLocationAsync(((App)Application.Current).SettingsWindow!, viewDispatcherQueue);
             await UpdateFixedSaveLocationPath();
         }
 

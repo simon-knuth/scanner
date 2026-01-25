@@ -52,7 +52,7 @@ namespace Scanner.Services.Interfaces
         /// <returns>
         ///     The updated save location. This can be the same as before or null, especially if the user cancelled the operation.
         /// </returns>
-        Task<StorageFolder?> SelectFixedSaveLocationAsync(DispatcherQueue uiDispatcherQueue, Window window);
+        Task<StorageFolder?> SelectFixedSaveLocationAsync(Window window, DispatcherQueue uiDispatcherQueue);
 
         /// <summary>
         ///     Resets the save location to a default value.
