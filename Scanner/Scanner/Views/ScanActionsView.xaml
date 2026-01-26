@@ -183,7 +183,7 @@
                     <animations:OpacityAnimation Duration="0:0:0.2" To="0.0" />
                 </animations:Implicit.HideAnimations>
 
-                <Grid ColumnSpacing="4">
+                <Grid ColumnSpacing="8">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />

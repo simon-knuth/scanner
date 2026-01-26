@@ -9,6 +9,30 @@
     xmlns:windows11NotPresent="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractNotPresent(Windows.Foundation.UniversalApiContract, 14)"
     xmlns:primitiveContract7Present="using:Microsoft.UI.Xaml.Controls.Primitives?IsApiContractPresent(Windows.Foundation.UniversalApiContract,7)">
 
+    <ResourceDictionary.ThemeDictionaries>
+        <ResourceDictionary x:Key="Light">
+            <StaticResource x:Key="ButtonOnAccentBackgroundBrush" ResourceKey="SubtleFillColorSecondaryBrush" />
+            <StaticResource x:Key="ButtonOnAccentBorderBrush" ResourceKey="ControlStrokeColorSecondaryBrush" />
+            <StaticResource x:Key="ButtonOnAccentPointerOverBackgroundBrush" ResourceKey="ControlAltFillColorQuarternaryBrush" />
+            <StaticResource x:Key="ButtonOnAccentPointerOverBorderBrush" ResourceKey="ControlStrokeColorOnAccentTertiaryBrush" />
+            <StaticResource x:Key="ButtonOnAccentPressedBorderBrush" ResourceKey="ControlStrokeColorOnAccentTertiaryBrush" />
+        </ResourceDictionary>
+        <ResourceDictionary x:Key="Dark">
+            <StaticResource x:Key="ButtonOnAccentBackgroundBrush" ResourceKey="ControlFillColorSecondaryBrush" />
+            <StaticResource x:Key="ButtonOnAccentBorderBrush" ResourceKey="ControlStrokeColorOnAccentSecondaryBrush" />
+            <StaticResource x:Key="ButtonOnAccentPointerOverBackgroundBrush" ResourceKey="ControlStrongFillColorDefaultBrush" />
+            <StaticResource x:Key="ButtonOnAccentPointerOverBorderBrush" ResourceKey="AccentControlElevationBorderBrush" />
+            <StaticResource x:Key="ButtonOnAccentPressedBorderBrush" ResourceKey="ButtonBorderBrushPressed" />
+        </ResourceDictionary>
+        <ResourceDictionary x:Key="HighContrast">
+            <StaticResource x:Key="ButtonOnAccentBackgroundBrush" ResourceKey="ControlFillColorDefaultBrush" />
+            <StaticResource x:Key="ButtonOnAccentBorderBrush" ResourceKey="ControlStrokeColorSecondaryBrush" />
+            <StaticResource x:Key="ButtonOnAccentPointerOverBackgroundBrush" ResourceKey="ControlFillColorSecondaryBrush" />
+            <StaticResource x:Key="ButtonOnAccentPointerOverBorderBrush" ResourceKey="AccentControlElevationBorderBrush" />
+            <StaticResource x:Key="ButtonOnAccentPressedBorderBrush" ResourceKey="ControlStrokeColorDefaultBrush" />
+        </ResourceDictionary>
+    </ResourceDictionary.ThemeDictionaries>
+
     <Style x:Key="MutedButtonStyle" TargetType="Button">
         <Setter Property="BackgroundSizing" Value="InnerBorderEdge" />
         <Setter Property="Background" Value="{ThemeResource SubtleFillColorTransparentBrush}" />
@@ -386,10 +410,10 @@
     </Style>
 
     <Style x:Key="ButtonOnAccentStyle" TargetType="Button">
-        <Setter Property="Background" Value="{ThemeResource ControlFillColorSecondaryBrush}" />
+        <Setter Property="Background" Value="{ThemeResource ButtonOnAccentBackgroundBrush}" />
         <Setter Property="BackgroundSizing" Value="InnerBorderEdge" />
         <Setter Property="Foreground" Value="{ThemeResource TextOnAccentFillColorPrimaryBrush}" />
-        <Setter Property="BorderBrush" Value="{ThemeResource AccentControlElevationBorderBrush}" />
+        <Setter Property="BorderBrush" Value="{ThemeResource ButtonOnAccentBorderBrush}" />
         <Setter Property="BorderThickness" Value="{ThemeResource ButtonBorderThemeThickness}" />
         <Setter Property="Padding" Value="{StaticResource ButtonPadding}" />
         <Setter Property="HorizontalAlignment" Value="Left" />
@@ -407,16 +431,17 @@
                         <ContentPresenter.BackgroundTransition>
                             <BrushTransition Duration="0:0:0.083" />
                         </ContentPresenter.BackgroundTransition>
+                        
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup x:Name="CommonStates">
                                 <VisualState x:Name="Normal" />
                                 <VisualState x:Name="PointerOver">
                                     <Storyboard>
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Background">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ControlStrongFillColorDefaultBrush}" />
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonOnAccentPointerOverBackgroundBrush}" />
                                         </ObjectAnimationUsingKeyFrames>
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="BorderBrush">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource AccentControlElevationBorderBrush}" />
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonOnAccentPointerOverBorderBrush}" />
                                         </ObjectAnimationUsingKeyFrames>
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
                                             <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource TextOnAccentFillColorPrimaryBrush}" />
@@ -432,7 +457,7 @@
                                             <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ControlStrongFillColorDisabledBrush}" />
                                         </ObjectAnimationUsingKeyFrames>
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="BorderBrush">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonBorderBrushPressed}" />
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonOnAccentPressedBorderBrush}" />
                                         </ObjectAnimationUsingKeyFrames>
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
                                             <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource TextOnAccentFillColorSecondaryBrush}" />
