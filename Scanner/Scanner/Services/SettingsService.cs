@@ -37,6 +37,7 @@ namespace Scanner.Services
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         #region Services
+        private readonly ICopilotRuntimeService CopilotRuntimeService = Ioc.Default.GetRequiredService<ICopilotRuntimeService>();
         private readonly ILogService? LogService = Ioc.Default.GetService<ILogService>();
         #endregion
 
@@ -252,7 +253,7 @@ namespace Scanner.Services
 
         public bool SettingGenerateFileNameWithAI
         {
-            get => GetSetting<bool>(nameof(SettingGenerateFileNameWithAI), true);
+            get => GetSetting<bool>(nameof(SettingGenerateFileNameWithAI), CopilotRuntimeService.AreModelsInstalled);
             set => SetSetting(nameof(SettingGenerateFileNameWithAI), value);
         }
 

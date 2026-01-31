@@ -380,7 +380,9 @@ namespace Scanner.Services
         private void TrackRecentlyUsedFolder(StorageFolder folder)
         {
             // remove existing entry
-            recentFolders.Remove(folder);
+            StorageFolder? existingEntry = recentFolders.FirstOrDefault(x => x.Path == folder.Path);
+            if (existingEntry != null)
+                recentFolders.Remove(existingEntry);
 
             // add entry to front
             recentFolders.Insert(0, folder);
