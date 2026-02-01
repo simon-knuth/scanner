@@ -73,7 +73,12 @@ namespace Scanner.Models
 
             // create project and update previews
             PdfProject project = new PdfProject(pages, creationData.TargetFileName, creationData.TargetFolder, creationData.InitialScanOptions);
-            await project.GeneratePagePreviewsAsync(pages.OfType<ImagePage>().ToList(), uiDispatcherQueue);
+            
+            if (Helpers.Helpers.FileExtensionToTargetFormat(pages[0].SourceFile.FileType) == TargetFormat.PDF)
+                await project.GeneratePagePreviewsAsync([.. pages.Cast<PdfPage>()], uiDispatcherQueue);
+            else
+                await project.GeneratePagePreviewsAsync([.. pages.Cast<ImagePage>()], uiDispatcherQueue);
+
             return project;
         }
 
@@ -186,15 +191,16 @@ namespace Scanner.Models
                         // commit changes
                         foreach (IProjectPage page in Pages)
                         {
-                            if (page.CommitNeeded)
+                            ImagePage imagePage = (ImagePage)page;
+                            if (imagePage.CommitNeeded)
                             {
                                 // copy file to project folder
                                 StorageFile? fileToDelete = page.SourceFile;
                                 StorageFile newSourceFile;
-                                if (page.OutOfDateSourceFile != null)
+                                if (imagePage.OutOfDateSourceFile != null)
                                 {
-                                    newSourceFile = await page.SourceFile.CopyAsync(AppDataService.ProjectFolder, page.OutOfDateSourceFile.Name, NameCollisionOption.ReplaceExisting);
-                                    page.ClearOutOfDateSourceFile();
+                                    newSourceFile = await page.SourceFile.CopyAsync(AppDataService.ProjectFolder, imagePage.OutOfDateSourceFile.Name, NameCollisionOption.ReplaceExisting);
+                                    imagePage.ClearOutOfDateSourceFile();
                                 }
                                 else
                                 {
@@ -202,7 +208,7 @@ namespace Scanner.Models
                                 }
 
                                 // update page
-                                await page.ChangeSourceFileAsync(AppDataService.ProjectFolder, newSourceFile, uiDispatcherQueue);
+                                await imagePage.ChangeSourceFileAsync(AppDataService.ProjectFolder, newSourceFile, uiDispatcherQueue);
 
                                 // delete old file
                                 if (fileToDelete != null)
@@ -544,7 +550,7 @@ namespace Scanner.Models
             for (int i = 0; i < snapshotPages.Count; i++)
             {
                 IProjectSnapshotPage snapshotPage = snapshotPages[i];
-                PdfPage newPdfPage = document.AddPage();
+                PdfSharp.Pdf.PdfPage newPdfPage = document.AddPage();
 
                 // get image
                 XImage image;

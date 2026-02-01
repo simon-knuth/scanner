@@ -137,7 +137,7 @@ namespace Scanner.Models
         public abstract Task SaveAsync(bool saveAs, DispatcherQueue uiDispatcherQueue);
 
 
-        public async Task<List<IProjectPage>> AddFilesAsync(List<ProjectFileInsertion> insertions, bool keepSourceFiles, DispatcherQueue uiDispatcherQueue)
+        public async Task<List<ImagePage>> AddFilesAsync(List<ProjectFileInsertion> insertions, bool keepSourceFiles, DispatcherQueue uiDispatcherQueue)
         {
             TaskCompletionSource process = new();
             if (insertions.Count > 1)
@@ -156,12 +156,12 @@ namespace Scanner.Models
             }
         }
 
-        private async Task<List<IProjectPage>> AddFilesInternalAsync(List<ProjectFileInsertion> insertions, bool keepSourceFiles, DispatcherQueue uiDispatcherQueue)
+        private async Task<List<ImagePage>> AddFilesInternalAsync(List<ProjectFileInsertion> insertions, bool keepSourceFiles, DispatcherQueue uiDispatcherQueue)
         {
             // keep track of changes in case of error
-            List<StorageFile> copiedFiles = new();
-            List<KeyValuePair<IProjectPage, int>> preparedInsertions = new();
-            List<IProjectPage> insertedPages = new();
+            List<StorageFile> copiedFiles = [];
+            List<KeyValuePair<ImagePage, int>> preparedInsertions = [];
+            List<ImagePage> insertedPages = [];
 
             // revertable section
             try
@@ -174,12 +174,12 @@ namespace Scanner.Models
                         IProjectPage page = await CreatePageFromFileAsync(insertion.File, insertion.Index, IsPdf ? null : insertion.FileName, null, insertion.TargetFolder, keepSourceFiles, AppDataService.ChangesFolder, insertion.BaseFilter, insertion.Filter, insertion.Brightness, insertion.Contrast);
                         copiedFiles.Add(page.SourceFile);
 
-                        preparedInsertions.Add(new KeyValuePair<IProjectPage, int>(page, insertion.Index));
+                        preparedInsertions.Add(new KeyValuePair<ImagePage, int>((ImagePage)page, insertion.Index));
                     }
                 });
 
                 // add pages
-                foreach (KeyValuePair<IProjectPage, int> insertion in preparedInsertions)
+                foreach (KeyValuePair<ImagePage, int> insertion in preparedInsertions)
                 {
                     Pages.Insert(insertion.Value, insertion.Key);
                     insertedPages.Add(insertion.Key);
@@ -220,7 +220,7 @@ namespace Scanner.Models
             return insertedPages;
         }
 
-        public async Task AddPagesAsync(List<IProjectPage> insertions, DispatcherQueue uiDispatcherQueue)
+        public async Task AddPagesAsync(List<ImagePage> insertions, DispatcherQueue uiDispatcherQueue)
         {
             TaskCompletionSource process = new();
             if (insertions.Count > 1)
@@ -232,13 +232,13 @@ namespace Scanner.Models
             {
                 // keep track of changes in case of error
                 List<KeyValuePair<StorageFile, StorageFolder>> moves = new();
-                List<IProjectPage> insertedPages = new();
+                List<ImagePage> insertedPages = new();
 
                 // revertable section
                 try
                 {
                     // move files
-                    foreach (IProjectPage insertion in insertions)
+                    foreach (ImagePage insertion in insertions)
                     {
                         StorageFolder previousFolder = await insertion.SourceFile.GetParentAsync();
                         await insertion.SourceFile.MoveAsync(AppDataService.ChangesFolder, insertion.SourceFile.Name, NameCollisionOption.GenerateUniqueName);
@@ -247,7 +247,7 @@ namespace Scanner.Models
                     }
 
                     // add pages
-                    foreach (IProjectPage insertion in insertions.OrderBy(x => x.Index))
+                    foreach (ImagePage insertion in insertions.OrderBy(x => x.Index))
                     {
                         if (insertion.TargetFile != null)
                             insertion.TargetFile = new(insertion.TargetFile.File, await insertion.TargetFile.File.OpenAsync(FileAccessMode.ReadWrite, StorageOpenOptions.AllowOnlyReaders));
@@ -280,7 +280,7 @@ namespace Scanner.Models
                         await move.Key.MoveAsync(move.Value, move.Key.Name, NameCollisionOption.GenerateUniqueName);
                     }
 
-                    foreach (IProjectPage page in insertedPages)
+                    foreach (ImagePage page in insertedPages)
                     {
                         Pages.Remove(page);
                         await page.ChangeSourceFileAsync(await page.SourceFile.GetParentAsync(), page.SourceFile, uiDispatcherQueue);
@@ -316,7 +316,7 @@ namespace Scanner.Models
         /// Whether to move the source files of the removed pages to the Redo folder.
         /// </param>
         /// <exception cref="ActionFailedAndRolledBackException"></exception>
-        public async Task RemovePagesAsync(List<IProjectPage> pages, bool isUndoing, DispatcherQueue uiDispatcherQueue)
+        public async Task RemovePagesAsync(List<ImagePage> pages, bool isUndoing, DispatcherQueue uiDispatcherQueue)
         {
             TaskCompletionSource process = new();
             if (pages.Count > 1)
@@ -334,7 +334,7 @@ namespace Scanner.Models
                 try
                 {
                     // remove pages
-                    foreach (IProjectPage page in pages)
+                    foreach (ImagePage page in pages)
                     {
                         deletedFiles.Add(page.SourceFile);
                         deletedIndices.Add(page.Index);
@@ -413,7 +413,7 @@ namespace Scanner.Models
                 case ".tiff":
                     return await ImagePage.CreateAsync(file, targetFile, targetFolder, index, targetFileName, keepSourceFile, pagesFolder, baseFilter, filter, brightness, contrast);
                 case ".pdf":
-                    throw new NotImplementedException();
+                    return await PdfPage.CreateAsync(file, (uint)index, index);
                 default:
                     throw new ArgumentException("Failed to create IProjectPage due to incompatible file format");
             }
@@ -448,7 +448,7 @@ namespace Scanner.Models
         /// </summary>
         /// <param name="instructions">Which page to rotate how much.</param>
         /// <returns></returns>
-        public async Task RotatePagesAsync(Dictionary<IProjectPage, BitmapRotation> instructions, StorageFolder pagesFolder, DispatcherQueue uiDispatcherQueue)
+        public async Task RotatePagesAsync(Dictionary<ImagePage, BitmapRotation> instructions, StorageFolder pagesFolder, DispatcherQueue uiDispatcherQueue)
         {
             TaskCompletionSource process = new();
             if (instructions.Count > 1)
@@ -456,7 +456,7 @@ namespace Scanner.Models
 
             try
             {
-                List<(IProjectPage Page, StorageFile OldFile, StorageFile NewFile)> finalStepData = [];
+                List<(ImagePage Page, StorageFile OldFile, StorageFile NewFile)> finalStepData = [];
 
                 try
                 {
@@ -465,7 +465,7 @@ namespace Scanner.Models
                     try
                     {
                         // generate rotated files
-                        foreach (KeyValuePair<IProjectPage, BitmapRotation> instruction in instructions)
+                        foreach (KeyValuePair<ImagePage, BitmapRotation> instruction in instructions)
                         {
                             if (instruction.Value == BitmapRotation.None) continue;
 
@@ -626,17 +626,17 @@ namespace Scanner.Models
         /// <param name="pagesFolder">Where to save the result to. Overrides <paramref name="overwriteFileDirectly"/> if set to a folder different from <paramref name="file"/>'s.</param>
         /// <param name="uiDispatcherQueue">The UI dispatcher queue.</param>
         /// <returns>The actual rotations performed for each file.</returns>
-        public async Task<Dictionary<IProjectPage, BitmapRotation>> RotatePagesAsync(Dictionary<IProjectPage, RotationIntent> instructions, StorageFolder pagesFolder, DispatcherQueue uiDispatcherQueue)
+        public async Task<Dictionary<ImagePage, BitmapRotation>> RotatePagesAsync(Dictionary<ImagePage, RotationIntent> instructions, StorageFolder pagesFolder, DispatcherQueue uiDispatcherQueue)
         {
             // split instructions
-            Dictionary<IProjectPage, RotationIntent> autos = instructions.Where((x) => x.Value == RotationIntent.Automatic).ToDictionary();
-            Dictionary<IProjectPage, RotationIntent> predetermined = instructions.Where((x) => x.Value != RotationIntent.Automatic).ToDictionary();
-            Dictionary<IProjectPage, BitmapRotation> mergedInstructions = new();
+            Dictionary<ImagePage, RotationIntent> autos = instructions.Where((x) => x.Value == RotationIntent.Automatic).ToDictionary();
+            Dictionary<ImagePage, RotationIntent> predetermined = instructions.Where((x) => x.Value != RotationIntent.Automatic).ToDictionary();
+            Dictionary<ImagePage, BitmapRotation> mergedInstructions = new();
 
             // get recommended rotations first
             if (autos.Count > 0)
             {
-                foreach (KeyValuePair<IProjectPage, RotationIntent> auto in autos)
+                foreach (KeyValuePair<ImagePage, RotationIntent> auto in autos)
                 {
                     BitmapRotation? rotation = OcrService.GetRecommendedRotation(auto.Key.SourceFile);
                     if (rotation != null)
@@ -647,7 +647,7 @@ namespace Scanner.Models
             }
 
             // add predetermined instructions
-            foreach (KeyValuePair<IProjectPage, RotationIntent> instruction in predetermined)
+            foreach (KeyValuePair<ImagePage, RotationIntent> instruction in predetermined)
             {
                 mergedInstructions.Add(instruction.Key, RotationIntentToBitmapRotation(instruction.Value));
             }
@@ -656,7 +656,7 @@ namespace Scanner.Models
             await RotatePagesAsync(mergedInstructions, pagesFolder, uiDispatcherQueue);
 
             // update dimensions
-            foreach (KeyValuePair<IProjectPage, BitmapRotation> instruction in mergedInstructions)
+            foreach (KeyValuePair<ImagePage, BitmapRotation> instruction in mergedInstructions)
             {
                 if (instruction.Value is BitmapRotation.Clockwise90Degrees or BitmapRotation.Clockwise270Degrees)
                 {
@@ -699,7 +699,7 @@ namespace Scanner.Models
                     page.Filter = filter;
                 }
 
-                await GeneratePagePreviewsAsync([.. pages.Cast<IProjectPage>()], uiDispatcherQueue);
+                await GeneratePagePreviewsAsync(pages, uiDispatcherQueue);
             }
             catch (Exception exc)
             {
@@ -708,7 +708,7 @@ namespace Scanner.Models
                     previousState.Key.Filter = previousState.Value;
                 }
 
-                await GeneratePagePreviewsAsync([.. pages.Cast<IProjectPage>()], uiDispatcherQueue);
+                await GeneratePagePreviewsAsync(pages, uiDispatcherQueue);
 
                 throw new ActionFailedAndRolledBackException(exc);
             }
@@ -782,13 +782,33 @@ namespace Scanner.Models
             }
         }
 
-        protected Task GeneratePagePreviewsAsync(List<IProjectPage> pages, DispatcherQueue uiDispatcherQueue)
+        protected async Task GeneratePagePreviewsAsync(List<PdfPage> pages, DispatcherQueue uiDispatcherQueue)
         {
-            List<ImagePage> imagePages = [.. pages.Where((x) => x is ImagePage).Cast<ImagePage>()];
-            return GeneratePagePreviewsAsync(imagePages, uiDispatcherQueue);
+            try
+            {
+                using (IRandomAccessStream fileStream = await pages[0].SourceFile.OpenAsync(FileAccessMode.Read))
+                {
+                    Windows.Data.Pdf.PdfDocument document = await Windows.Data.Pdf.PdfDocument.LoadFromStreamAsync(fileStream);
+                    foreach (PdfPage page in pages)
+                    {
+                        StorageFile previewFile = await AppDataService.PreviewFolder.CreateFileAsync("pdf_thumbnail.jpg", CreationCollisionOption.GenerateUniqueName);
+                        using (IRandomAccessStream previewFileStream = await previewFile.OpenAsync(FileAccessMode.ReadWrite))
+                        {
+                            await document.GetPage(page.IndexInPdf).RenderToStreamAsync(previewFileStream);
+                        }
+
+                        // update preview file
+                        await page.UpdatePreviewFileAsync(previewFile, uiDispatcherQueue);
+                    }
+                }
+            }
+            catch (Exception exc)
+            {
+                throw new ActionFailedAndRolledBackException(exc);
+            }
         }
 
-        public async Task<List<AppliedCrop>> CropPagesAsync(List<IProjectPage> pages, Rect cropRegion, StorageFolder pagesFolder, DispatcherQueue uiDispatcherQueue)
+        public async Task<List<AppliedCrop>> CropPagesAsync(List<ImagePage> pages, Rect cropRegion, StorageFolder pagesFolder, DispatcherQueue uiDispatcherQueue)
         {
             TaskCompletionSource process = new();
             if (pages.Count > 1)
@@ -798,7 +818,7 @@ namespace Scanner.Models
             await StartEditingAsync();
             try
             {
-                foreach (IProjectPage page in pages)
+                foreach (ImagePage page in pages)
                 {
                     StorageFile oldFile = page.SourceFile;
                     StorageFile? newFile = null;
@@ -849,17 +869,17 @@ namespace Scanner.Models
             return result;
         }
 
-        public async Task<List<IProjectPage>> CropPagesAsCopyAsync(List<IProjectPage> pages, Rect cropRegion, StorageFolder pagesFolder, DispatcherQueue uiDispatcherQueue)
+        public async Task<List<ImagePage>> CropPagesAsCopyAsync(List<ImagePage> pages, Rect cropRegion, StorageFolder pagesFolder, DispatcherQueue uiDispatcherQueue)
         {
             TaskCompletionSource process = new();
             if (pages.Count > 1)
                 Messenger.Send(new ShowIndeterminateProgressDialogMessage(Resources.Strings.Resources.ApplyingChanges, process.Task));
 
-            List<IProjectPage> result = [];
+            List<ImagePage> result = [];
             await StartEditingAsync();
             try
             {
-                foreach (IProjectPage page in pages)
+                foreach (ImagePage page in pages)
                 {
                     StorageFile newFile;
 
@@ -887,9 +907,9 @@ namespace Scanner.Models
             catch (Exception exc)
             {
                 // roll back changes
-                foreach (AppliedCrop appliedCrop in result)
+                foreach (ImagePage newPage in result)
                 {
-                    StorageFile croppedFile = appliedCrop.Page.SourceFile;
+                    StorageFile croppedFile = newPage.SourceFile;
 
                     // delete cropped file
                     _ = Task.Run(async () => await croppedFile.DeleteAsync(StorageDeleteOption.PermanentDelete));
@@ -1073,5 +1093,5 @@ namespace Scanner.Models
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public record TargetFile(StorageFile File, IRandomAccessStream FileStream);
     public record ProjectFileInsertion(StorageFile File, int Index, string? FileName, StorageFolder? TargetFolder, ImageFilter BaseFilter, ImageFilter Filter, int Brightness, int Contrast);
-    public record AppliedCrop(IProjectPage Page, StorageFile PreviousFile, uint PreviousWidth, uint PreviousHeight);
+    public record AppliedCrop(ImagePage Page, StorageFile PreviousFile, uint PreviousWidth, uint PreviousHeight);
 }

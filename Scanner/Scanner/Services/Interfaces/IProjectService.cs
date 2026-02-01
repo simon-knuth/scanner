@@ -84,13 +84,13 @@ namespace Scanner.Services.Interfaces
         Task<bool> TrySaveProjectAsync();
 
         Task<bool> TryCopyProjectAsync();
-        Task<bool> TryCopyPagesAsync(List<IProjectPage> pages);
+        Task<bool> TryCopyPagesAsync(List<ImagePage> pages);
 
         Task<bool> TryOpenWithProjectAsync(AppInfo? app);
-        Task<bool> TryOpenWithPageAsync(AppInfo? app, IProjectPage page);
+        Task<bool> TryOpenWithPageAsync(AppInfo? app, ImagePage page);
 
         Task<bool> TryShareProjectAsync();
-        Task<bool> TrySharePagesAsync(List<IProjectPage> pages);
+        Task<bool> TrySharePagesAsync(List<ImagePage> pages);
 
         Task<bool> TryCloseProjectAsync(bool preserveSourceFilesInIncomingFolder = true, bool ignoreUnsavedChanges = false);
 

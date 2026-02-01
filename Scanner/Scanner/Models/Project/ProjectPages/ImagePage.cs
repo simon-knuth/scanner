@@ -56,13 +56,29 @@ namespace Scanner.Models
             }
         }
 
+        /// <summary>
+        /// If the current <see cref="SourceFile"/> needs to be committed to the <see cref="IAppDataService.ProjectFolder"/>
+        /// and a file already exists, this is the file it will replace there.
+        /// </summary>
         public StorageFile? OutOfDateSourceFile {  get; private set; }
+
+        /// <summary>
+        /// Whether the current <see cref="SourceFile"/> needs to be committed to the <see cref="IAppDataService.ProjectFolder"/>.
+        /// </summary>
         public bool CommitNeeded => Path.GetDirectoryName(SourceFile.Path) == AppDataService.ChangesFolder.Path;
 
+        /// <summary>
+        /// The file to save changes to, including destructive effects.
+        /// </summary>
         public TargetFile? TargetFile { get; set; }
 
         public StorageFolder? TargetFolder { get; set; }
 
+        /// <summary>
+        /// The URI for the bitmap representing the <see cref="SourceFile"/>.
+        /// Will raise <see cref="INotifyPropertyChanged"/> event every
+        /// time the bitmap changes, even if the file is the same.
+        /// </summary>
         [ObservableProperty]
         private Uri sourceBitmapUri;
 
@@ -145,7 +161,7 @@ namespace Scanner.Models
         }
 
         /// <summary>
-        ///    Creates a new ImagePage from a file.
+        ///    Creates a new <see cref="ImagePage"/> from a file.
         /// </summary>
         public static async Task<IProjectPage> CreateAsync(StorageFile sourceFile, StorageFile? targetFile, StorageFolder? targetFolder, int index, string? targetFileName, bool keepSourceFile, StorageFolder pagesFolder, ImageFilter baseFilter, ImageFilter filter, int brightness, int contrast)
         {

@@ -30,9 +30,9 @@ namespace Scanner.Models
         private static readonly IProjectService ProjectService = Ioc.Default.GetRequiredService<IProjectService>();
         #endregion
 
-        private List<IProjectPage> removals;
+        private List<ImagePage> removals;
 
-        private List<IProjectPage>? removedPages;
+        private List<ImagePage>? removedPages;
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -44,7 +44,7 @@ namespace Scanner.Models
         /// <param name="removals">
         /// A list of pages to remove.
         /// </param>
-        public RemovePagesAction(List<IProjectPage> removals)
+        public RemovePagesAction(List<ImagePage> removals)
         {
             this.removals = removals;
         }

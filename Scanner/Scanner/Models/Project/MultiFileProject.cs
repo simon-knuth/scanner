@@ -106,10 +106,11 @@ namespace Scanner.Models
             {
                 foreach (IProjectPage page in Pages)
                 {
-                    if (page.TargetFile != null)
+                    ImagePage imagePage = (ImagePage)page;
+                    if (imagePage.TargetFile != null)
                     {
-                        TargetFile targetFile = page.TargetFile;
-                        page.TargetFile = null;
+                        TargetFile targetFile = imagePage.TargetFile;
+                        imagePage.TargetFile = null;
                         targetFile.FileStream.Dispose();
                         await targetFile.File.DeleteAsync(StorageDeleteOption.PermanentDelete);
                     }
@@ -204,8 +205,10 @@ namespace Scanner.Models
 
                         foreach (IProjectPage page in pages)
                         {
+                            imagePage = (ImagePage)page;
+
                             if (saveAs)
-                                page.TargetFile = null;
+                                imagePage.TargetFile = null;
 
                             if (page is ImagePage imagePageToUpdate)
                             {
@@ -228,15 +231,16 @@ namespace Scanner.Models
                         // commit changes
                         foreach (IProjectPage page in pages)
                         {
-                            if (page.CommitNeeded)
+                            ImagePage imagePage = (ImagePage)page;
+                            if (imagePage.CommitNeeded)
                             {
                                 // copy file to project folder
                                 StorageFile? fileToDelete = page.SourceFile;
                                 StorageFile newSourceFile;
-                                if (page.OutOfDateSourceFile != null)
+                                if (imagePage.OutOfDateSourceFile != null)
                                 {
-                                    newSourceFile = await page.SourceFile.CopyAsync(AppDataService.ProjectFolder, page.OutOfDateSourceFile.Name, NameCollisionOption.ReplaceExisting);
-                                    page.ClearOutOfDateSourceFile();
+                                    newSourceFile = await page.SourceFile.CopyAsync(AppDataService.ProjectFolder, imagePage.OutOfDateSourceFile.Name, NameCollisionOption.ReplaceExisting);
+                                    imagePage.ClearOutOfDateSourceFile();
                                 }
                                 else
                                 {
@@ -244,7 +248,7 @@ namespace Scanner.Models
                                 }
 
                                 // update page
-                                await page.ChangeSourceFileAsync(AppDataService.ProjectFolder, newSourceFile, uiDispatcherQueue);
+                                await imagePage.ChangeSourceFileAsync(AppDataService.ProjectFolder, newSourceFile, uiDispatcherQueue);
 
                                 // delete old file
                                 if (fileToDelete != null)
@@ -260,10 +264,11 @@ namespace Scanner.Models
                         // delete target files marked for deletion
                         foreach (IProjectPage page in PagesWithTargetFilesToDelete)
                         {
-                            if (page.TargetFile != null)
+                            ImagePage imagePage = (ImagePage)page;
+                            if (imagePage.TargetFile != null)
                             {
-                                TargetFile targetFile = page.TargetFile;
-                                page.TargetFile = null;
+                                TargetFile targetFile = imagePage.TargetFile;
+                                imagePage.TargetFile = null;
                                 targetFile.FileStream.Dispose();
                                 _ = Task.Run(async () => await targetFile.File.DeleteAsync(StorageDeleteOption.PermanentDelete));
                             }
@@ -292,7 +297,7 @@ namespace Scanner.Models
                         await projectObjectSemaphore.WaitAsync();
                         foreach (KeyValuePair<IProjectPage, TargetFile?> pageSave in pageSaves)
                         {
-                            pageSave.Key.TargetFile = pageSave.Value;
+                            ((ImagePage)pageSave.Key).TargetFile = pageSave.Value;
                         }
                         projectObjectSemaphore.Release();
 
@@ -356,7 +361,7 @@ namespace Scanner.Models
             return success;
         }
 
-        public async Task CopyPagesAsync(List<IProjectPage> pages)
+        public async Task CopyPagesAsync(List<ImagePage> pages)
         {
             // wait for save processes to end
             if (LatestSaveProcess != null && !LatestSaveProcess.Task.IsCompleted)
@@ -372,7 +377,7 @@ namespace Scanner.Models
                 if (IsSaved)
                 {
                     List<StorageFile> files = new();
-                    foreach (IProjectPage page in pages)
+                    foreach (ImagePage page in pages)
                     {
                         if (page is ImagePage imagePage)
                         {
@@ -408,7 +413,7 @@ namespace Scanner.Models
             }
         }
 
-        public async Task<bool> TryOpenWithPageAsync(AppInfo? app, IProjectPage page)
+        public async Task<bool> TryOpenWithPageAsync(AppInfo? app, ImagePage page)
         {
             // wait for save processes to end
             if (LatestSaveProcess != null && !LatestSaveProcess.Task.IsCompleted)
@@ -460,7 +465,7 @@ namespace Scanner.Models
             }
         }
 
-        public async Task SharePagesAsync(List<IProjectPage> pages)
+        public async Task SharePagesAsync(List<ImagePage> pages)
         {
             // wait for save processes to end
             if (LatestSaveProcess != null && !LatestSaveProcess.Task.IsCompleted)
@@ -477,7 +482,7 @@ namespace Scanner.Models
                 {
                     // collect files
                     List<StorageFile> files = [];
-                    foreach (IProjectPage page in pages)
+                    foreach (ImagePage page in pages)
                     {
                         if (page.TargetFile == null)
                             throw new ActionFailedAndRolledBackException("Failed to collect files for sharing");

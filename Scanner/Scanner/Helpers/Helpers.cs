@@ -172,7 +172,7 @@ namespace Scanner.Helpers
                 case ".raw":
                     return TargetFormat.RAW;
                 case ".pdf":
-                    throw new ArgumentException("PDF file format can be mapped to multiple TargetFormats");
+                    return TargetFormat.PDF;
                 default:
                     throw new ArgumentException($"Unsupported file extension: {fileExtension}", nameof(fileExtension));
             }
@@ -201,6 +201,7 @@ namespace Scanner.Helpers
                 picker.FileTypeFilter.Add(".bmp");
                 picker.FileTypeFilter.Add(".tif");
                 picker.FileTypeFilter.Add(".tiff");
+                picker.FileTypeFilter.Add(".pdf");
 
                 // pick files
                 if (allowMultipleFiles)

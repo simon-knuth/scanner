@@ -593,7 +593,7 @@ namespace Scanner.Services
             return true;
         }
 
-        public async Task<bool> TryCopyPagesAsync(List<IProjectPage> pages)
+        public async Task<bool> TryCopyPagesAsync(List<ImagePage> pages)
         {
             if (CurrentProject == null) return true;
             IsActionRunning = true;
@@ -650,7 +650,7 @@ namespace Scanner.Services
             return true;
         }
 
-        public async Task<bool> TryOpenWithPageAsync(AppInfo? app, IProjectPage page)
+        public async Task<bool> TryOpenWithPageAsync(AppInfo? app, ImagePage page)
         {
             if (CurrentProject == null) return true;
             IsActionRunning = true;
@@ -707,7 +707,7 @@ namespace Scanner.Services
             return true;
         }
 
-        public async Task<bool> TrySharePagesAsync(List<IProjectPage> pages)
+        public async Task<bool> TrySharePagesAsync(List<ImagePage> pages)
         {
             if (CurrentProject == null) return true;
             IsActionRunning = true;

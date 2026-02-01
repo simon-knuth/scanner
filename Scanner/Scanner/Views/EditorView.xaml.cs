@@ -470,7 +470,7 @@ namespace Scanner.Views
             if (page == null)
                 return;
 
-            sender.Tag = await CacheCanvasBitmapAsync(sender, page, null);
+            sender.Tag = await CacheCanvasBitmapAsync(sender, page);
         }
 
         private void CanvasPreview_Draw(CanvasControl sender, CanvasDrawEventArgs args)
@@ -536,10 +536,10 @@ namespace Scanner.Views
                 }
             }
 
-            canvas.Tag = await CacheCanvasBitmapAsync(canvas, page, canvasPageData?.Page);
+            canvas.Tag = await CacheCanvasBitmapAsync(canvas, page);
         }
 
-        private async Task<CanvasPageData?> CacheCanvasBitmapAsync(CanvasControl canvas, IProjectPage page, IProjectPage? previousPage)
+        private async Task<CanvasPageData?> CacheCanvasBitmapAsync(CanvasControl canvas, IProjectPage page)
         {
             pageCanvases[page] = canvas;
             page.PropertyChanged -= Page_PropertyChanged;
@@ -548,7 +548,25 @@ namespace Scanner.Views
             try
             {
                 // load the image file into a CanvasBitmap
-                CanvasBitmap newBitmap = await CanvasBitmap.LoadAsync(canvas, page.SourceBitmapUri);
+                CanvasBitmap newBitmap;
+                if (page is ImagePage imagePage)
+                {
+                    newBitmap = await CanvasBitmap.LoadAsync(canvas, imagePage.SourceBitmapUri);
+                }
+                else if (page is PdfPage pdfPage)
+                {
+                    using (IRandomAccessStream fileStream = await page.SourceFile.OpenAsync(FileAccessMode.Read))
+                    {
+                        Windows.Data.Pdf.PdfDocument document = await Windows.Data.Pdf.PdfDocument.LoadFromStreamAsync(fileStream);
+                        InMemoryRandomAccessStream bitmapStream = new();
+                        await document.GetPage(pdfPage.IndexInPdf).RenderToStreamAsync(bitmapStream);
+                        newBitmap = await CanvasBitmap.LoadAsync(canvas, bitmapStream);
+                    }
+                }
+                else
+                {
+                    throw new NotImplementedException();
+                }
 
                 // update canvas size
                 canvas.Width = newBitmap.Size.Width;
@@ -570,8 +588,8 @@ namespace Scanner.Views
             {
                 switch (e.PropertyName)
                 {
-                    case nameof(IProjectPage.SourceBitmapUri):
-                        IProjectPage? page = sender as IProjectPage;
+                    case nameof(ImagePage.SourceBitmapUri):
+                        ImagePage? page = sender as ImagePage;
                         if (page == null)
                             return;
 
@@ -585,12 +603,12 @@ namespace Scanner.Views
                             canvasPageData.Bitmap.Dispose();
                         }
 
-                        canvas.Tag = await CacheCanvasBitmapAsync(canvas, page, null);
+                        canvas.Tag = await CacheCanvasBitmapAsync(canvas, page);
                         break;
                     case nameof(ImagePage.Filter):
                     case nameof(ImagePage.DisplayedBrightness):
                     case nameof(ImagePage.DisplayedContrast):
-                        page = sender as IProjectPage;
+                        page = sender as ImagePage;
                         if (page == null)
                             return;
 

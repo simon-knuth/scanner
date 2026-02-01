@@ -30,9 +30,9 @@ namespace Scanner.Models
         private static readonly ILogService? LogService = Ioc.Default.GetService<ILogService>();
         #endregion
 
-        private Dictionary<IProjectPage, RotationIntent> rotations;
+        private Dictionary<ImagePage, RotationIntent> rotations;
 
-        private Dictionary<IProjectPage, BitmapRotation>? appliedRotations;
+        private Dictionary<ImagePage, BitmapRotation>? appliedRotations;
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -44,7 +44,7 @@ namespace Scanner.Models
         /// <param name="rotations">
         /// A sorted list of pages to rotate, with their respective rotation amounts. Rotations are applied in the order they are listed.
         /// </param>
-        public RotatePagesAction(Dictionary<IProjectPage, RotationIntent> rotations)
+        public RotatePagesAction(Dictionary<ImagePage, RotationIntent> rotations)
         {
             this.rotations = rotations;
         }
@@ -68,8 +68,8 @@ namespace Scanner.Models
             }
 
             // gather instructions
-            Dictionary<IProjectPage, BitmapRotation> invertedRotations = new();
-            foreach (KeyValuePair<IProjectPage, BitmapRotation> rotation in appliedRotations)
+            Dictionary<ImagePage, BitmapRotation> invertedRotations = new();
+            foreach (KeyValuePair<ImagePage, BitmapRotation> rotation in appliedRotations)
             {
                 invertedRotations.Add(rotation.Key, InvertRotation(rotation.Value));
             }

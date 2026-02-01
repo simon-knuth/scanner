@@ -40,9 +40,9 @@ namespace Scanner.ViewModels
         public AsyncRelayCommand RotateCurrentPageAutomaticallyAsyncCommand => new AsyncRelayCommand(async (x) => await RotateCurrentPageAsync(RotationIntent.Automatic));
         public AsyncRelayCommand RemoveCurrentPageAsyncCommand => new AsyncRelayCommand(RemoveCurrentPageAsync);
         public AsyncRelayCommand<ImageFilter> ApplyFilterToCurrentPageAsyncCommand => new AsyncRelayCommand<ImageFilter>(ApplyFilterToCurrentPageAsync);
-        public AsyncRelayCommand<Rect> CropCurrentPageAsyncCommand => new AsyncRelayCommand<Rect>(async (x) => await CropPagesAsync([ProjectService.SelectedPage], x, false));
-        public AsyncRelayCommand<Rect> CropCurrentPageAsCopyAsyncCommand => new AsyncRelayCommand<Rect>(async (x) => await CropPagesAsync([ProjectService.SelectedPage], x, true));
-        public AsyncRelayCommand<(List<IProjectPage>, Rect)> CropPagesAsyncCommand => new AsyncRelayCommand<(List<IProjectPage>, Rect)>(async (x) => await CropPagesAsync(x.Item1, x.Item2, false));
+        public AsyncRelayCommand<Rect> CropCurrentPageAsyncCommand => new AsyncRelayCommand<Rect>(async (x) => await CropPagesAsync(ProjectService.SelectedPage != null ? [(ImagePage)ProjectService.SelectedPage] : [], x, false));
+        public AsyncRelayCommand<Rect> CropCurrentPageAsCopyAsyncCommand => new AsyncRelayCommand<Rect>(async (x) => await CropPagesAsync(ProjectService.SelectedPage != null ? [(ImagePage)ProjectService.SelectedPage] : [], x, true));
+        public AsyncRelayCommand<(List<ImagePage>, Rect)> CropPagesAsyncCommand => new AsyncRelayCommand<(List<ImagePage>, Rect)>(async (x) => await CropPagesAsync(x.Item1, x.Item2, false));
         public AsyncRelayCommand<int> SetBrightnessForCurrentPageCommand => new AsyncRelayCommand<int>(SetBrightnessForCurrentPageAsync);
         public AsyncRelayCommand<int> SetContrastForCurrentPageCommand => new AsyncRelayCommand<int>(SetContrastForCurrentPageAsync);
         public AsyncRelayCommand ResetBrightnessCommand => new AsyncRelayCommand(async () => await SetBrightnessForCurrentPageAsync(AppConfig.DefaultBrightness));
@@ -196,7 +196,7 @@ namespace Scanner.ViewModels
 
             await ProjectService.ApplyActionAsync(new RotatePagesAction(new()
             {
-                { ProjectService.SelectedPage, rotationIntent }
+                { (ImagePage)ProjectService.SelectedPage, rotationIntent }
             }));
         }
 
@@ -207,7 +207,7 @@ namespace Scanner.ViewModels
             
             await ProjectService.ApplyActionAsync(new RemovePagesAction(new()
             {
-                ProjectService.SelectedPage
+                (ImagePage)ProjectService.SelectedPage
             }));
         }
 
@@ -222,7 +222,7 @@ namespace Scanner.ViewModels
             }
         }
 
-        private async Task CropPagesAsync(List<IProjectPage> pages, Rect cropRegion, bool asCopy)
+        private async Task CropPagesAsync(List<ImagePage> pages, Rect cropRegion, bool asCopy)
         {
             if (CurrentProject == null) return;
             Task process;

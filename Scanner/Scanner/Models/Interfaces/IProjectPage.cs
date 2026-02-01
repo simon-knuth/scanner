@@ -31,52 +31,25 @@ namespace Scanner.Models.Interfaces
         StorageFile SourceFile { get; }
 
         /// <summary>
-        /// The file to save changes to, including destructive effects.
-        /// </summary>
-        TargetFile? TargetFile { get; set; }
-
-        /// <summary>
         /// The file used for preview generation. Usually the same as <see cref="SourceFile"/>, unless a destructive effect is applied.
         /// </summary>
         StorageFile PreviewFile { get; }
-
-        /// <summary>
-        /// The URI for the bitmap representing the <see cref="SourceFile"/>.
-        /// Will raise <see cref="INotifyPropertyChanged"/> event every
-        /// time the bitmap changes, even if the file is the same.
-        /// </summary>
-        Uri SourceBitmapUri { get; }
 
         /// <summary>
         /// The URI for the bitmap representing the <see cref="PreviewFile"/>.
         /// Usually the same as <see cref="SourceBitmapUri"/>, unless a destructive effect is applied.
         /// Will raise <see cref="INotifyPropertyChanged"/> event every
         /// time the bitmap changes, even if the file is the same.
-        /// </summary>
+        /// </summary>        
         Uri PreviewBitmapUri { get; }
-
-        /// <summary>
-        /// Whether the current <see cref="SourceFile"/> needs to be committed to the <see cref="IAppDataService.ProjectFolder"/>.
-        /// </summary>
-        bool CommitNeeded { get; }
-
-        /// <summary>
-        /// If the current <see cref="SourceFile"/> needs to be committed to the <see cref="IAppDataService.ProjectFolder"/>
-        /// and a file already exists, this is the file it will replace there.
-        /// </summary>
-        StorageFile? OutOfDateSourceFile { get; }
 
         int Index { get; set; }
         int PageNumber { get; }
-
-        uint Width { get; set; }
-        uint Height { get; set; }
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        Task ChangeSourceFileAsync(StorageFolder parentFolder, StorageFile file, DispatcherQueue uiDispatcherQueue);
-        void ClearOutOfDateSourceFile();
+        
     }
 }

@@ -367,7 +367,7 @@ namespace Scanner.ViewModels
 
             await ProjectService.ApplyActionAsync(new RemovePagesAction(new()
             {
-                ProjectService.SelectedPage
+                (ImagePage)ProjectService.SelectedPage
             }));
         }
 
@@ -497,7 +497,7 @@ namespace Scanner.ViewModels
             }
             else if (CurrentProject is MultiFileProject imageProject && ProjectService.SelectedPage != null)
             {
-                await ProjectService.TryCopyPagesAsync([.. imageProject.Pages]);
+                await ProjectService.TryCopyPagesAsync([.. imageProject.Pages.Cast<ImagePage>()]);
             }
         }
 
@@ -511,7 +511,7 @@ namespace Scanner.ViewModels
             }
             else if (CurrentProject is MultiFileProject imageProject && ProjectService.SelectedPage != null)
             {
-                await ProjectService.TrySharePagesAsync([.. imageProject.Pages]);
+                await ProjectService.TrySharePagesAsync([.. imageProject.Pages.Cast<ImagePage>()]);
             }
         }
 
@@ -530,7 +530,7 @@ namespace Scanner.ViewModels
                 if (ProjectService.SelectedPage == null)
                     return;
 
-                if (await ProjectService.TryOpenWithPageAsync(app, ProjectService.SelectedPage) && app != null)
+                if (await ProjectService.TryOpenWithPageAsync(app, (ImagePage)ProjectService.SelectedPage) && app != null)
                 {
                     switch (CurrentProject.Format)
                     {
@@ -604,10 +604,10 @@ namespace Scanner.ViewModels
             if (ProjectService.SelectedPages == null) return;
 
             // gather instructions
-            Dictionary<IProjectPage, RotationIntent> rotations = new();
+            Dictionary<ImagePage, RotationIntent> rotations = new();
             foreach (IProjectPage page in ProjectService.SelectedPages)
             {
-                rotations.Add(page, rotationIntent);
+                rotations.Add((ImagePage)page, rotationIntent);
             }
 
             Task process = ProjectService.ApplyActionAsync(new RotatePagesAction(rotations));
@@ -625,7 +625,7 @@ namespace Scanner.ViewModels
             if (ProjectService.SelectedPagesCount == 0) return;
             if (ProjectService.SelectedPages == null) return;
 
-            List<IProjectPage> pages = ProjectService.SelectedPages.ToList();
+            List<ImagePage> pages = [.. ProjectService.SelectedPages.Cast<ImagePage>()];
 
             Task process = ProjectService.ApplyActionAsync(new RemovePagesAction(pages));
 
@@ -641,9 +641,9 @@ namespace Scanner.ViewModels
             if (ProjectService.SelectedPagesCount == 0) return;
 
             if (IsMultiSelect && ProjectService.SelectedPages != null)
-                await ProjectService.TryCopyPagesAsync(ProjectService.SelectedPages.ToList());
+                await ProjectService.TryCopyPagesAsync([.. ProjectService.SelectedPages.Cast<ImagePage>()]);
             else if (ProjectService.SelectedPage != null)
-                await ProjectService.TryCopyPagesAsync([ProjectService.SelectedPage]);
+                await ProjectService.TryCopyPagesAsync([(ImagePage)ProjectService.SelectedPage]);
         }
 
         private async Task TryShareSelectedPagesAsync()
@@ -652,9 +652,9 @@ namespace Scanner.ViewModels
             if (ProjectService.SelectedPagesCount == 0) return;
 
             if (IsMultiSelect && ProjectService.SelectedPages != null)
-                await ProjectService.TrySharePagesAsync(ProjectService.SelectedPages.ToList());
+                await ProjectService.TrySharePagesAsync([.. ProjectService.SelectedPages.Cast<ImagePage>()]);
             else if (ProjectService.SelectedPage != null)
-                await ProjectService.TrySharePagesAsync([ProjectService.SelectedPage]);
+                await ProjectService.TrySharePagesAsync([(ImagePage)ProjectService.SelectedPage]);
         }
 
         private async Task ApplyFilterToSelectedPagesAsync(ImageFilter filter)

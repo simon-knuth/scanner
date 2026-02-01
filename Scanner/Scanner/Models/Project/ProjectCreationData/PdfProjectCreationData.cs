@@ -61,6 +61,18 @@ namespace Scanner.Models
             }
         }
 
+        public PdfProjectCreationData(StorageFile pdfFile, uint pagesInPdf, StorageFolder? targetFolder, ScanOptions initialScanOptions)
+        {
+            TargetFileName = pdfFile.Name;
+            TargetFolder = targetFolder;
+            InitialScanOptions = initialScanOptions;
+
+            for (int i = 0; i < pagesInPdf; i++)
+            {
+                Pages.Add(new PageCreationData(pdfFile, TargetFileName, null, targetFolder, initialScanOptions.GetBaseFilter(), initialScanOptions.GetFilter(), initialScanOptions.Brightness, initialScanOptions.Contrast));
+            }
+        }
+
         public PdfProjectCreationData(Collection<IProjectPage> pages, string targetFileName, StorageFolder? targetFolder, ScanOptions initialScanOptions)
         {
             InitialScanOptions = initialScanOptions;

@@ -30,7 +30,7 @@ namespace Scanner.Models
         private List<ProjectFileInsertion> insertions;
         private bool keepSourceFiles;
 
-        private List<IProjectPage>? addedPages;
+        private List<ImagePage>? addedPages;
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

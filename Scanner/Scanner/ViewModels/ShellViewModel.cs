@@ -322,7 +322,17 @@ namespace Scanner.ViewModels
                 Messenger.Send(new ShowNotificationMessage(new Notification
                 {
                     Title = "Can't open multiple file types",
-                    Message = "Please select files of the same type to open a project.",
+                    Message = "Please select files of the same type to create a project.",
+                    Severity = Microsoft.UI.Xaml.Controls.InfoBarSeverity.Error
+                }));
+                return;
+            }
+            else if (pickerResults.Count > 1 && pickerResults.Any(f => Path.GetExtension(f.Path).ToLowerInvariant() == ".pdf"))
+            {
+                Messenger.Send(new ShowNotificationMessage(new Notification
+                {
+                    Title = "Can't open multiple PDF files",
+                    Message = "Please select just one PDF file to create a project.",
                     Severity = Microsoft.UI.Xaml.Controls.InfoBarSeverity.Error
                 }));
                 return;
@@ -341,9 +351,18 @@ namespace Scanner.ViewModels
 
             // create project data
             TargetFormat targetFormat = Helpers.Helpers.FileExtensionToTargetFormat(extension);
-            MultiFileProjectCreationData projectData = new(files, targetFormat, targetFolder, new(null, false), true);
+            IProjectCreationData projectCreationData;
+            if (targetFormat == TargetFormat.PDF)
+            {
+                Windows.Data.Pdf.PdfDocument document = await Windows.Data.Pdf.PdfDocument.LoadFromFileAsync(files[0].SourceFile);
+                projectCreationData = new PdfProjectCreationData(files[0].SourceFile, document.PageCount, targetFolder, new(null, false));
+            }
+            else
+            {
+                projectCreationData = new MultiFileProjectCreationData(files, targetFormat, targetFolder, new(null, false), true);
+            }
 
-            await ProjectService.TryCreateProjectAsync(projectData, true, viewDispatcherQueue!);
+            await ProjectService.TryCreateProjectAsync(projectCreationData, true, viewDispatcherQueue!);
         }
     }
 }

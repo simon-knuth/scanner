@@ -32,7 +32,7 @@ namespace Scanner.Models
         private static readonly ILogService? LogService = Ioc.Default.GetService<ILogService>();
         #endregion
 
-        private List<IProjectPage> pages;
+        private List<ImagePage> pages;
         private Rect cropRegion;
 
         private List<AppliedCrop>? appliedCrops;
@@ -50,7 +50,7 @@ namespace Scanner.Models
         /// <param name="cropRegion">
         /// The crop to apply to all pages.
         /// </param>
-        public CropPagesAction(List<IProjectPage> pages, Rect cropRegion)
+        public CropPagesAction(List<ImagePage> pages, Rect cropRegion)
         {
             this.pages = pages;
             this.cropRegion = cropRegion;
