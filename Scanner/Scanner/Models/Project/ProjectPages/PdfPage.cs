@@ -65,6 +65,8 @@ namespace Scanner.Models
 
         public int PageNumber => Index + 1;
 
+        public bool IsReadOnly { get; } = true;
+
         public uint IndexInPdf { get; }
 
 

@@ -321,8 +321,8 @@ namespace Scanner.ViewModels
             {
                 Messenger.Send(new ShowNotificationMessage(new Notification
                 {
-                    Title = "Can't open multiple file types",
-                    Message = "Please select files of the same type to create a project.",
+                    Title = "Can not open multiple file types",
+                    Message = "Please select files of the same type to open a project.",
                     Severity = Microsoft.UI.Xaml.Controls.InfoBarSeverity.Error
                 }));
                 return;
@@ -331,12 +331,15 @@ namespace Scanner.ViewModels
             {
                 Messenger.Send(new ShowNotificationMessage(new Notification
                 {
-                    Title = "Can't open multiple PDF files",
-                    Message = "Please select just one PDF file to create a project.",
+                    Title = "Can not open multiple PDF files",
+                    Message = "Please select just one PDF file to open a project.",
                     Severity = Microsoft.UI.Xaml.Controls.InfoBarSeverity.Error
                 }));
                 return;
             }
+
+            TaskCompletionSource openTcs = new();
+            Messenger.Send(new ShowIndeterminateProgressDialogMessage("Opening project", openTcs.Task));
 
             // get files
             List<(StorageFile SourceFile, string? TargetFileName, StorageFile? TargetFile)> files = [];
@@ -363,6 +366,7 @@ namespace Scanner.ViewModels
             }
 
             await ProjectService.TryCreateProjectAsync(projectCreationData, true, viewDispatcherQueue!);
+            openTcs.TrySetResult();
         }
     }
 }

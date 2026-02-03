@@ -95,7 +95,10 @@ namespace Scanner.Views
         public bool ShowFileNameGenerationButton => ViewModel.CurrentProject is PdfProject && ViewModel.CopilotRuntimeService.IsSupported &&
             (IsFileNameTextBoxFocused || IsFileNameGenerationButtonFocused || ViewModel.IsFileNameGenerationInProgress);
 
-        public bool AreMultiSelectActionsAvailable => !ViewModel.ProjectService.IsProcessRunningOrEditing && ViewModel.IsMultiSelect && ViewModel.ProjectService.SelectedPagesCount > 0;
+        public bool AreMultiSelectEditActionsAvailable => !ViewModel.ProjectService.IsProcessRunningOrEditing && ViewModel.IsMultiSelect && ViewModel.ProjectService.SelectedPagesCount > 0
+            && ViewModel.ProjectService.SelectedPages != null && !ViewModel.ProjectService.SelectedPages.Any(x => x is not ImagePage);
+        public bool IsMultiSelectExportAvailable => !ViewModel.ProjectService.IsProcessRunningOrEditing && ViewModel.IsMultiSelect && ViewModel.ProjectService.SelectedPagesCount > 0
+            && ViewModel.CurrentProject?.IsPdf == true;
 
         public bool ShowTextBlockTotalPages => ViewModel.CurrentProject?.IsPdf == true || ViewModel.IsMultiSelect;
 
@@ -220,6 +223,7 @@ namespace Scanner.Views
                         OnPropertyChanged(nameof(ShowFileNameGenerationButton));
                         OnPropertyChanged(nameof(FileNameTextBoxPadding));
                         OnPropertyChanged(nameof(ShowActionExtentOptions));
+                        OnPropertyChanged(nameof(IsMultiSelectExportAvailable));
                     });
 
                     if (ViewModel.CurrentProject != null)
@@ -272,6 +276,7 @@ namespace Scanner.Views
                         OnPropertyChanged(nameof(IsFilterNoneAvailable));
                         OnPropertyChanged(nameof(IsFilterGrayscaleAvailable));
                         OnPropertyChanged(nameof(IsFilterMonochromeAvailable));
+                        OnPropertyChanged(nameof(AreMultiSelectEditActionsAvailable));
 
                         if (ViewModel.ProjectService.SelectedPages == null)
                             return;
@@ -293,7 +298,8 @@ namespace Scanner.Views
                     {
                         OnPropertyChanged(nameof(SelectedPagesString));
                         OnPropertyChanged(nameof(SelectedFileString));
-                        OnPropertyChanged(nameof(AreMultiSelectActionsAvailable));
+                        OnPropertyChanged(nameof(AreMultiSelectEditActionsAvailable));
+                        OnPropertyChanged(nameof(IsMultiSelectExportAvailable));
                         OnPropertyChanged(nameof(AreFilterNone));
                         OnPropertyChanged(nameof(AreFilterGrayscale));
                         OnPropertyChanged(nameof(AreFilterMonochrome));
@@ -303,7 +309,11 @@ namespace Scanner.Views
                     });
                     break;
                 case nameof(IProjectService.IsProcessRunningOrEditing):
-                    this.RunOnUIThread(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, () => OnPropertyChanged(nameof(AreMultiSelectActionsAvailable)));
+                    this.RunOnUIThread(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, () =>
+                    {
+                        OnPropertyChanged(nameof(AreMultiSelectEditActionsAvailable));
+                        OnPropertyChanged(nameof(IsMultiSelectExportAvailable));
+                    });
                     break;
                 case nameof(IProjectService.TotalNumberOfPages):
                     this.RunOnUIThread(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, () =>
@@ -797,7 +807,8 @@ namespace Scanner.Views
 
         private void ApplyIsMultiSelect()
         {
-            OnPropertyChanged(nameof(AreMultiSelectActionsAvailable));
+            OnPropertyChanged(nameof(AreMultiSelectEditActionsAvailable));
+            OnPropertyChanged(nameof(IsMultiSelectExportAvailable));
             OnPropertyChanged(nameof(ShowTextBlockTotalPages));
 
             if (GridViewPageList == null)

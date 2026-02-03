@@ -54,7 +54,15 @@ namespace Scanner.ViewModels
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(AreSimilarPagesForCropAvailable))]
         [NotifyPropertyChangedFor(nameof(SimilarPagesForCrop))]
+        [NotifyPropertyChangedFor(nameof(AreEditingOptionsAvailable))]
+        [NotifyPropertyChangedFor(nameof(IsPdfPageSelected))]
         private ProjectBase? currentProject;
+
+        public bool AreEditingOptionsAvailable => CurrentProject != null && ProjectService.SelectedPage != null 
+            && ProjectService.SelectedPage is ImagePage && !ProjectService.IsProcessRunningOrEditing;
+
+        public bool IsPdfPageSelected => CurrentProject != null && ProjectService.SelectedPage != null
+            && ProjectService.SelectedPage is PdfPage;
 
         private AspectRatio selectedAspectRatio;
         public AspectRatio SelectedAspectRatio
@@ -152,6 +160,8 @@ namespace Scanner.ViewModels
                     CurrentProject = ProjectService.CurrentProject;
                     break;
                 case nameof(IProjectService.SelectedPage):
+                    OnPropertyChanged(nameof(AreEditingOptionsAvailable));
+                    OnPropertyChanged(nameof(IsPdfPageSelected));
                     OnPropertyChanged(nameof(AreSimilarPagesForCropAvailable));
                     OnPropertyChanged(nameof(SimilarPagesForCrop));
                     OnPropertyChanged(nameof(DisplayedPageBrightness));
@@ -163,6 +173,9 @@ namespace Scanner.ViewModels
 
                     if (ProjectService.SelectedPage != null)
                         ProjectService.SelectedPage.PropertyChanged += SelectedPage_PropertyChanged;
+                    break;
+                case nameof(IProjectService.IsProcessRunningOrEditing):
+                    OnPropertyChanged(nameof(AreEditingOptionsAvailable));
                     break;
             }
         }

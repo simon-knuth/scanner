@@ -247,7 +247,7 @@
                                     <FontIcon Glyph="&#xEA3D;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                                 </MenuFlyoutItem.Icon>
                             </MenuFlyoutItem>
-                            <MenuFlyoutSubItem Text="{x:Bind strings:Resources.ConvertTo}">
+                            <MenuFlyoutSubItem Text="{x:Bind strings:Resources.ConvertTo}" Visibility="{x:Bind ViewModel.CurrentProject.HasBeenCreatedFromPdf, Mode=OneWay, Converter={StaticResource NegativeBoolVisibilityConverter}}">
                                 <MenuFlyoutSubItem.Icon>
                                     <FontIcon Glyph="&#xEA4E;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                                 </MenuFlyoutSubItem.Icon>
@@ -636,11 +636,14 @@
                                                         </Image.Source>
                                                     </Image>
                                                 </Frame>
+                                                <Border x:Name="BorderReadOnly" MinWidth="20" Height="20" Margin="0,12,0,0" Padding="4,0,4,0" HorizontalAlignment="Center" VerticalAlignment="Top" CornerRadius="10" Background="{ThemeResource SystemControlAcrylicElementMediumHighBrush}" x:Load="{x:Bind IsReadOnly, Mode=OneWay}">
+                                                    <FontIcon Glyph="&#xE7B3;" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                                </Border>
                                                 <Rectangle x:Name="RectangleSelectionIndicatorInner" Width="92" Height="92" RadiusX="4" RadiusY="4" HorizontalAlignment="Center" VerticalAlignment="Center" Stroke="{ThemeResource SurfaceStrokeColorDefaultBrush}" StrokeThickness="0" />
                                                 <Rectangle x:Name="RectangleSelectionIndicatorOuter" Width="92" Height="92" RadiusX="4" RadiusY="4" HorizontalAlignment="Center" VerticalAlignment="Center" Stroke="{ThemeResource AccentFillColorDefaultBrush}" StrokeThickness="0" />
-                                                <Grid MinWidth="24" Height="24" Margin="0,0,0,12" Padding="4,0,4,0" HorizontalAlignment="Center" VerticalAlignment="Bottom" CornerRadius="4" Background="{ThemeResource SystemControlAcrylicElementMediumHighBrush}">
+                                                <Border MinWidth="24" Height="24" Margin="0,0,0,12" Padding="4,0,4,0" HorizontalAlignment="Center" VerticalAlignment="Bottom" CornerRadius="4" Background="{ThemeResource SystemControlAcrylicElementMediumHighBrush}">
                                                     <TextBlock x:Name="TextBlockPageNumber" Text="{x:Bind PageNumber, Mode=OneWay}" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Style="{StaticResource BodyTextBlockStyle}" />
-                                                </Grid>
+                                                </Border>
                                             </Grid>
                                         </GridViewItem>
                                     </DataTemplate>
@@ -664,10 +667,10 @@
                                             <TextBlock Grid.Column="1" Text="{x:Bind strings:Resources.ToggleMultiSelect}" VerticalAlignment="Center" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" Style="{StaticResource BodyTextBlockStyle}" />
                                         </Grid>
                                     </ToggleButton>
-                                    <Frame Grid.Column="1" IsEnabled="{x:Bind AreMultiSelectActionsAvailable, Mode=OneWay}">
+                                    <Frame Grid.Column="1">
                                         <StackPanel Orientation="Horizontal" Spacing="8">
                                             <AppBarSeparator />
-                                            <Button x:Name="ButtonRotate" Width="32" Height="32" Style="{StaticResource MutedButtonStyle}" ToolTipService.ToolTip="{x:Bind strings:Resources.RotateSelectedPagesToolTip}" Command="{x:Bind ViewModel.RotateSelectedPages90DegreesAsyncCommand}" ContextRequested="ButtonRotate_ContextRequested">
+                                            <Button x:Name="ButtonRotate" Width="32" Height="32" Style="{StaticResource MutedButtonStyle}" ToolTipService.ToolTip="{x:Bind strings:Resources.RotateSelectedPagesToolTip}" IsEnabled="{x:Bind AreMultiSelectEditActionsAvailable, Mode=OneWay}" Command="{x:Bind ViewModel.RotateSelectedPages90DegreesAsyncCommand}" ContextRequested="ButtonRotate_ContextRequested">
                                                 <Grid>
                                                     <FontIcon Glyph="&#xE7AD;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                                                     <FontIcon Glyph="&#xE96E;" FontSize="8" Margin="0,0,-8,-8" Foreground="{ThemeResource TextFillColorTertiaryBrush}" HorizontalAlignment="Right" VerticalAlignment="Bottom" FontFamily="{StaticResource SymbolThemeFontFamily}" />
@@ -696,7 +699,7 @@
                                                     </MenuFlyout>
                                                 </FlyoutBase.AttachedFlyout>
                                             </Button>
-                                            <Button Width="32" Height="32" Style="{StaticResource MutedButtonStyle}" ToolTipService.ToolTip="{x:Bind strings:Resources.ApplyFilterToSelectedPagesToolTip}">
+                                            <Button Width="32" Height="32" Style="{StaticResource MutedButtonStyle}" ToolTipService.ToolTip="{x:Bind strings:Resources.ApplyFilterToSelectedPagesToolTip}" IsEnabled="{x:Bind AreMultiSelectEditActionsAvailable, Mode=OneWay}">
                                                 <FontIcon Glyph="&#xE790;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
 
                                                 <Button.Flyout>
@@ -707,16 +710,16 @@
                                                     </MenuFlyout>
                                                 </Button.Flyout>
                                             </Button>
-                                            <Button Width="32" Height="32" Style="{StaticResource MutedButtonStyle}" ToolTipService.ToolTip="{x:Bind strings:Resources.DeleteSelectedPages}" Command="{x:Bind ViewModel.RemoveSelectedPagesAsyncCommand}">
+                                            <Button Width="32" Height="32" Style="{StaticResource MutedButtonStyle}" ToolTipService.ToolTip="{x:Bind strings:Resources.DeleteSelectedPages}" IsEnabled="{x:Bind AreMultiSelectEditActionsAvailable, Mode=OneWay}" Command="{x:Bind ViewModel.RemoveSelectedPagesAsyncCommand}">
                                                 <FontIcon Glyph="&#xE74D;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                                             </Button>
-                                            <Button Width="32" Height="32" Style="{StaticResource MutedButtonStyle}" ToolTipService.ToolTip="{x:Bind strings:Resources.ExportSelectedPagesAsSeparatePDF}" Visibility="{x:Bind ViewModel.CurrentProject.IsPdf, Mode=OneWay}" Command="{x:Bind ViewModel.ExportSelectedPagesAsSeparatePDFAsyncCommand}">
+                                            <Button Width="32" Height="32" Style="{StaticResource MutedButtonStyle}" ToolTipService.ToolTip="{x:Bind strings:Resources.ExportSelectedPagesAsSeparatePDF}" Visibility="{x:Bind ViewModel.CurrentProject.IsPdf, Mode=OneWay}" IsEnabled="{x:Bind IsMultiSelectExportAvailable, Mode=OneWay}" Command="{x:Bind ViewModel.ExportSelectedPagesAsSeparatePDFAsyncCommand}">
                                                 <FontIcon Glyph="&#xEA3D;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                                             </Button>
-                                            <Button Width="32" Height="32" Style="{StaticResource MutedButtonStyle}" ToolTipService.ToolTip="{x:Bind strings:Resources.CopySelectedPages}" Visibility="{x:Bind ViewModel.CurrentProject.IsPdf, Mode=OneWay, Converter={StaticResource NegativeBoolVisibilityConverter}}" Command="{x:Bind ViewModel.TryCopySelectedPagesAsyncCommand}">
+                                            <Button Width="32" Height="32" Style="{StaticResource MutedButtonStyle}" ToolTipService.ToolTip="{x:Bind strings:Resources.CopySelectedPages}" Visibility="{x:Bind ViewModel.CurrentProject.IsPdf, Mode=OneWay, Converter={StaticResource NegativeBoolVisibilityConverter}}" IsEnabled="{x:Bind AreMultiSelectEditActionsAvailable, Mode=OneWay}" Command="{x:Bind ViewModel.TryCopySelectedPagesAsyncCommand}">
                                                 <FontIcon Glyph="&#xE8C8;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                                             </Button>
-                                            <Button Width="32" Height="32" Style="{StaticResource MutedButtonStyle}" ToolTipService.ToolTip="{x:Bind strings:Resources.ShareSelectedPages}" Visibility="{x:Bind ViewModel.CurrentProject.IsPdf, Mode=OneWay, Converter={StaticResource NegativeBoolVisibilityConverter}}" Command="{x:Bind ViewModel.TryShareSelectedPagesAsyncCommand}">
+                                            <Button Width="32" Height="32" Style="{StaticResource MutedButtonStyle}" ToolTipService.ToolTip="{x:Bind strings:Resources.ShareSelectedPages}" Visibility="{x:Bind ViewModel.CurrentProject.IsPdf, Mode=OneWay, Converter={StaticResource NegativeBoolVisibilityConverter}}" IsEnabled="{x:Bind AreMultiSelectEditActionsAvailable, Mode=OneWay}" Command="{x:Bind ViewModel.TryShareSelectedPagesAsyncCommand}">
                                                 <FontIcon Glyph="&#xE72D;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                                             </Button>
                                         </StackPanel>

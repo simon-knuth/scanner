@@ -93,6 +93,8 @@ namespace Scanner.Models
 
         public int PageNumber => Index + 1;
 
+        public bool IsReadOnly { get; }
+
         public BitmapRotation Rotation { get; set; } = BitmapRotation.None;
         public BitmapRotation? RecommendedRotation { get; set; } = null;
 

@@ -53,6 +53,8 @@ namespace Scanner.Models
             FileNameInfo = new FileNameInfo(targetFileName);
             FileNameInfo.NameChanged += FileNameInfo_NameChanged;
             hasFileNameBeenApplied = false;
+
+            HasBeenCreatedFromPdf = pages.Any(x => x is PdfPage);
         }
 
         public static async Task<ProjectBase> CreateAsync(PdfProjectCreationData creationData, bool keepSourceFiles, DispatcherQueue uiDispatcherQueue)

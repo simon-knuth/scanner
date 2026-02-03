@@ -390,6 +390,7 @@
             </Style>
 
             <!-- XAML Converters -->
+            <converters:BoolOpacityConverter x:Key="BoolOpacityConverter" />
             <converters:EnumIntComparisonConverter x:Key="EnumIntComparisonConverter" />
             <converters:NegativeBoolConverter x:Key="NegativeBoolConverter" />
             <converters:NegativeBoolVisibilityConverter x:Key="NegativeBoolVisibilityConverter" />
@@ -494,132 +495,143 @@
                 <Border x:Name="BorderToolbarToolsBackground" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{ThemeResource AcrylicBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource DividerStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="8" animations:Implicit.ShowAnimations="{StaticResource ToolbarBackgroundShowAnimations}" x:Load="{x:Bind IsToolbarBackgroundVisible, Mode=OneWay}" />
 
                 <!-- Main editing controls -->
-                <Frame IsEnabled="{x:Bind ViewModel.ProjectService.IsProcessRunningOrEditing, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}" BorderThickness="1" Visibility="{x:Bind IsEditingExperienceActive, Mode=OneWay, Converter={StaticResource NegativeBoolVisibilityConverter}}">
-                    <ScrollViewer x:Name="ScrollViewerMainEditingControls" HorizontalScrollMode="Auto" VerticalScrollMode="Disabled" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Hidden" SizeChanged="ScrollViewerMainEditingControls_SizeChanged">
-                        <StackPanel Orientation="Horizontal" Spacing="8" Margin="4" HorizontalAlignment="Center" VerticalAlignment="Center">
-                            <Button x:Name="ButtonCrop" Style="{StaticResource EditorButtonStyle}" ToolTipService.ToolTip="{x:Bind strings:Resources.CropPageToolTip}" Click="ButtonCrop_Click">
-                                <FontIcon Glyph="&#xE7A8;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
-                            </Button>
-                            <Button x:Name="ButtonRotate" Style="{StaticResource EditorButtonStyle}" ToolTipService.ToolTip="{x:Bind strings:Resources.RotateToolTip}" Command="{x:Bind ViewModel.RotateCurrentPage90DegreesAsyncCommand}" ContextRequested="ButtonRotate_ContextRequested">
-                                <Grid>
-                                    <FontIcon Glyph="&#xE7AD;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
-                                    <FontIcon Glyph="&#xE96E;" FontSize="8" Margin="0,0,-8,-8" Foreground="{ThemeResource TextFillColorTertiaryBrush}" HorizontalAlignment="Right" VerticalAlignment="Bottom" FontFamily="{StaticResource SymbolThemeFontFamily}" />
-                                </Grid>
+                <Frame IsEnabled="{x:Bind ViewModel.AreEditingOptionsAvailable, Mode=OneWay}" BorderThickness="1" Visibility="{x:Bind IsEditingExperienceActive, Mode=OneWay, Converter={StaticResource NegativeBoolVisibilityConverter}}">
+                    <Grid>
+                        <ScrollViewer x:Name="ScrollViewerMainEditingControls" Opacity="{x:Bind ViewModel.IsPdfPageSelected, Mode=OneWay, Converter={StaticResource BoolOpacityConverter}, ConverterParameter=invert}" HorizontalScrollMode="Auto" VerticalScrollMode="Disabled" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Hidden" SizeChanged="ScrollViewerMainEditingControls_SizeChanged">
+                            <StackPanel Orientation="Horizontal" Spacing="8" Margin="4" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                <Button x:Name="ButtonCrop" Style="{StaticResource EditorButtonStyle}" ToolTipService.ToolTip="{x:Bind strings:Resources.CropPageToolTip}" Click="ButtonCrop_Click">
+                                    <FontIcon Glyph="&#xE7A8;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                </Button>
+                                <Button x:Name="ButtonRotate" Style="{StaticResource EditorButtonStyle}" ToolTipService.ToolTip="{x:Bind strings:Resources.RotateToolTip}" Command="{x:Bind ViewModel.RotateCurrentPage90DegreesAsyncCommand}" ContextRequested="ButtonRotate_ContextRequested">
+                                    <Grid>
+                                        <FontIcon Glyph="&#xE7AD;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                        <FontIcon Glyph="&#xE96E;" FontSize="8" Margin="0,0,-8,-8" Foreground="{ThemeResource TextFillColorTertiaryBrush}" HorizontalAlignment="Right" VerticalAlignment="Bottom" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                    </Grid>
 
-                                <FlyoutBase.AttachedFlyout>
-                                    <MenuFlyout Placement="Top">
-                                        <MenuFlyoutItem Text="{x:Bind strings:Resources.Rotate90}" FontWeight="SemiBold" Command="{x:Bind ViewModel.RotateCurrentPage90DegreesAsyncCommand}" />
-                                        <MenuFlyoutItem Text="{x:Bind strings:Resources.Rotate180}" Command="{x:Bind ViewModel.RotateCurrentPage180DegreesAsyncCommand}" />
-                                        <MenuFlyoutItem Text="{x:Bind strings:Resources.Rotate270}" Command="{x:Bind ViewModel.RotateCurrentPage270DegreesAsyncCommand}" />
-                                        <MenuFlyoutItem Text="{x:Bind strings:Resources.RotateAutomatically}" Command="{x:Bind ViewModel.RotateCurrentPageAutomaticallyAsyncCommand}">
-                                            <MenuFlyoutItem.Icon>
-                                                <ImageIcon>
-                                                    <ImageIcon.Source>
-                                                        <SvgImageSource UriSource="/Assets/AI Sparkles.svg" RasterizePixelWidth="32" RasterizePixelHeight="32" />
-                                                    </ImageIcon.Source>
-                                                </ImageIcon>
-                                            </MenuFlyoutItem.Icon>
-                                        </MenuFlyoutItem>
-                                        <MenuFlyoutSeparator />
-                                        <MenuFlyoutItem Text="{x:Bind strings:Resources.Settings}" Command="{x:Bind ViewModel.ShowSettingsCommand}">
-                                            <MenuFlyoutItem.Icon>
-                                                <FontIcon Glyph="&#xE713;" FontFamily="{StaticResource SymbolThemeFontFamily}" />
-                                            </MenuFlyoutItem.Icon>
-                                        </MenuFlyoutItem>
-                                    </MenuFlyout>
-                                </FlyoutBase.AttachedFlyout>
-                            </Button>
-                            <Button x:Name="ButtonDraw" Style="{StaticResource EditorButtonStyle}" ToolTipService.ToolTip="{x:Bind strings:Resources.DrawOnPage}" Click="ButtonDraw_Click">
-                                <FontIcon Glyph="&#xEDC6;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
-                            </Button>
-                            <Button Style="{StaticResource EditorButtonStyle}" ToolTipService.ToolTip="{x:Bind strings:Resources.ApplyFilterToPage}">
-                                <Grid>
-                                    <FontIcon Glyph="&#xE790;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
-                                </Grid>
+                                    <FlyoutBase.AttachedFlyout>
+                                        <MenuFlyout Placement="Top">
+                                            <MenuFlyoutItem Text="{x:Bind strings:Resources.Rotate90}" FontWeight="SemiBold" Command="{x:Bind ViewModel.RotateCurrentPage90DegreesAsyncCommand}" />
+                                            <MenuFlyoutItem Text="{x:Bind strings:Resources.Rotate180}" Command="{x:Bind ViewModel.RotateCurrentPage180DegreesAsyncCommand}" />
+                                            <MenuFlyoutItem Text="{x:Bind strings:Resources.Rotate270}" Command="{x:Bind ViewModel.RotateCurrentPage270DegreesAsyncCommand}" />
+                                            <MenuFlyoutItem Text="{x:Bind strings:Resources.RotateAutomatically}" Command="{x:Bind ViewModel.RotateCurrentPageAutomaticallyAsyncCommand}">
+                                                <MenuFlyoutItem.Icon>
+                                                    <ImageIcon>
+                                                        <ImageIcon.Source>
+                                                            <SvgImageSource UriSource="/Assets/AI Sparkles.svg" RasterizePixelWidth="32" RasterizePixelHeight="32" />
+                                                        </ImageIcon.Source>
+                                                    </ImageIcon>
+                                                </MenuFlyoutItem.Icon>
+                                            </MenuFlyoutItem>
+                                            <MenuFlyoutSeparator />
+                                            <MenuFlyoutItem Text="{x:Bind strings:Resources.Settings}" Command="{x:Bind ViewModel.ShowSettingsCommand}">
+                                                <MenuFlyoutItem.Icon>
+                                                    <FontIcon Glyph="&#xE713;" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                                </MenuFlyoutItem.Icon>
+                                            </MenuFlyoutItem>
+                                        </MenuFlyout>
+                                    </FlyoutBase.AttachedFlyout>
+                                </Button>
+                                <Button x:Name="ButtonDraw" Style="{StaticResource EditorButtonStyle}" ToolTipService.ToolTip="{x:Bind strings:Resources.DrawOnPage}" Click="ButtonDraw_Click">
+                                    <FontIcon Glyph="&#xEDC6;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                </Button>
+                                <Button Style="{StaticResource EditorButtonStyle}" ToolTipService.ToolTip="{x:Bind strings:Resources.ApplyFilterToPage}">
+                                    <Grid>
+                                        <FontIcon Glyph="&#xE790;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                    </Grid>
 
-                                <Button.Flyout>
-                                    <MenuFlyout>
-                                        <RadioMenuFlyoutItem Text="{x:Bind strings:Resources.FilterNone}" IsChecked="{x:Bind IsFilterNone, Mode=OneWay}" IsEnabled="{x:Bind IsFilterNoneAvailable, Mode=OneWay}" Command="{x:Bind ViewModel.ApplyFilterToCurrentPageAsyncCommand}" CommandParameter="{x:Bind models:ImageFilter.None}" />
-                                        <RadioMenuFlyoutItem Text="{x:Bind strings:Resources.FilterGrayscale}" IsChecked="{x:Bind IsFilterGrayscale, Mode=OneWay}" IsEnabled="{x:Bind IsFilterGrayscaleAvailable, Mode=OneWay}" Command="{x:Bind ViewModel.ApplyFilterToCurrentPageAsyncCommand}" CommandParameter="{x:Bind models:ImageFilter.Grayscale}" />
-                                        <RadioMenuFlyoutItem Text="{x:Bind strings:Resources.FilterMonochrome}" IsChecked="{x:Bind IsFilterMonochrome, Mode=OneWay}" IsEnabled="{x:Bind IsFilterMonochromeAvailable, Mode=OneWay}" Command="{x:Bind ViewModel.ApplyFilterToCurrentPageAsyncCommand}" CommandParameter="{x:Bind models:ImageFilter.Monochrome}" />
-                                    </MenuFlyout>
-                                </Button.Flyout>
-                            </Button>
-                            <Button Style="{StaticResource EditorButtonStyle}" ToolTipService.ToolTip="{x:Bind strings:Resources.Brightness}">
-                                <FontIcon Glyph="&#xE706;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
-                                
-                                <Button.Flyout>
-                                    <Flyout x:Name="FlyoutBrightness" Placement="Top" AreOpenCloseAnimationsEnabled="False" LightDismissOverlayMode="Off">
-                                        <Flyout.FlyoutPresenterStyle>
-                                            <Style TargetType="FlyoutPresenter" BasedOn="{StaticResource DefaultFlyoutPresenterStyle}">
-                                                <Setter Property="MinHeight" Value="0" />
-                                                <Setter Property="Padding" Value="0" />
-                                                <Setter Property="Margin" Value="0,48,0,0" />
-                                            </Style>
-                                        </Flyout.FlyoutPresenterStyle>
+                                    <Button.Flyout>
+                                        <MenuFlyout>
+                                            <RadioMenuFlyoutItem Text="{x:Bind strings:Resources.FilterNone}" IsChecked="{x:Bind IsFilterNone, Mode=OneWay}" IsEnabled="{x:Bind IsFilterNoneAvailable, Mode=OneWay}" Command="{x:Bind ViewModel.ApplyFilterToCurrentPageAsyncCommand}" CommandParameter="{x:Bind models:ImageFilter.None}" />
+                                            <RadioMenuFlyoutItem Text="{x:Bind strings:Resources.FilterGrayscale}" IsChecked="{x:Bind IsFilterGrayscale, Mode=OneWay}" IsEnabled="{x:Bind IsFilterGrayscaleAvailable, Mode=OneWay}" Command="{x:Bind ViewModel.ApplyFilterToCurrentPageAsyncCommand}" CommandParameter="{x:Bind models:ImageFilter.Grayscale}" />
+                                            <RadioMenuFlyoutItem Text="{x:Bind strings:Resources.FilterMonochrome}" IsChecked="{x:Bind IsFilterMonochrome, Mode=OneWay}" IsEnabled="{x:Bind IsFilterMonochromeAvailable, Mode=OneWay}" Command="{x:Bind ViewModel.ApplyFilterToCurrentPageAsyncCommand}" CommandParameter="{x:Bind models:ImageFilter.Monochrome}" />
+                                        </MenuFlyout>
+                                    </Button.Flyout>
+                                </Button>
+                                <Button Style="{StaticResource EditorButtonStyle}" ToolTipService.ToolTip="{x:Bind strings:Resources.Brightness}">
+                                    <FontIcon Glyph="&#xE706;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
 
-                                        <StackPanel Orientation="Vertical" Spacing="4">
-                                            <Grid Padding="16,8,16,4">
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="1*" />
-                                                    <ColumnDefinition Width="Auto" />
-                                                </Grid.ColumnDefinitions>
+                                    <Button.Flyout>
+                                        <Flyout x:Name="FlyoutBrightness" Placement="Top" AreOpenCloseAnimationsEnabled="False" LightDismissOverlayMode="Off">
+                                            <Flyout.FlyoutPresenterStyle>
+                                                <Style TargetType="FlyoutPresenter" BasedOn="{StaticResource DefaultFlyoutPresenterStyle}">
+                                                    <Setter Property="MinHeight" Value="0" />
+                                                    <Setter Property="Padding" Value="0" />
+                                                    <Setter Property="Margin" Value="0,48,0,0" />
+                                                </Style>
+                                            </Flyout.FlyoutPresenterStyle>
 
-                                                <TextBlock Grid.Column="0" Text="{x:Bind strings:Resources.Brightness}" MaxLines="1" VerticalAlignment="Center" Style="{StaticResource BaseTextBlockStyle}" />
-                                                <NumberBox x:Name="NumberBoxBrightness" Grid.Column="1" Margin="0,0,-8,0" Minimum="-100" Maximum="100" SmallChange="1" LargeChange="10" MaxWidth="92" Padding="10,5,40,6" Background="Transparent" BorderThickness="0" Style="{StaticResource NoClearButtonNumberBoxStyle}" Value="{x:Bind ViewModel.DisplayedPageBrightness, Mode=OneWay}" ValueChanged="NumberBoxBrightness_ValueChanged" />
-                                                <Button x:Name="ButtonBrightnessReset" Grid.Column="1" Width="32" Height="32" Margin="0,0,-8,0" VerticalAlignment="Center" Style="{StaticResource MutedButtonStyle}" ToolTipService.ToolTip="{x:Bind strings:Resources.ResetToDefault}" IsEnabled="{x:Bind ViewModel.CanResetBrightness, Mode=OneWay}" Command="{x:Bind ViewModel.ResetBrightnessCommand}">
-                                                    <FontIcon Glyph="&#xE7A7;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
-                                                </Button>
-                                            </Grid>
-                                            <StackPanel Orientation="Horizontal" Spacing="12" Padding="16,8,16,8" Background="{ThemeResource LayerOnAcrylicFillColorDefaultBrush}" BorderBrush="{ThemeResource DividerStrokeColorDefaultBrush}" BorderThickness="0,1,0,0">
-                                                <FontIcon Glyph="&#xEC8A;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
-                                                <Slider x:Name="SliderBrightness" Orientation="Horizontal" TabIndex="0" Width="148" TickPlacement="Outside" TickFrequency="100" Minimum="-100" Maximum="100" SnapsTo="StepValues" IsThumbToolTipEnabled="False" Value="{x:Bind ViewModel.DisplayedPageBrightnessDouble, Mode=OneWay}" DoubleTapped="SliderBrightness_DoubleTapped" ValueChanged="SliderBrightness_ValueChanged" />
-                                                <FontIcon Glyph="&#xE706;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                            <StackPanel Orientation="Vertical" Spacing="4">
+                                                <Grid Padding="16,8,16,4">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="1*" />
+                                                        <ColumnDefinition Width="Auto" />
+                                                    </Grid.ColumnDefinitions>
+
+                                                    <TextBlock Grid.Column="0" Text="{x:Bind strings:Resources.Brightness}" MaxLines="1" VerticalAlignment="Center" Style="{StaticResource BaseTextBlockStyle}" />
+                                                    <NumberBox x:Name="NumberBoxBrightness" Grid.Column="1" Margin="0,0,-8,0" Minimum="-100" Maximum="100" SmallChange="1" LargeChange="10" MaxWidth="92" Padding="10,5,40,6" Background="Transparent" BorderThickness="0" Style="{StaticResource NoClearButtonNumberBoxStyle}" Value="{x:Bind ViewModel.DisplayedPageBrightness, Mode=OneWay}" ValueChanged="NumberBoxBrightness_ValueChanged" />
+                                                    <Button x:Name="ButtonBrightnessReset" Grid.Column="1" Width="32" Height="32" Margin="0,0,-8,0" VerticalAlignment="Center" Style="{StaticResource MutedButtonStyle}" ToolTipService.ToolTip="{x:Bind strings:Resources.ResetToDefault}" IsEnabled="{x:Bind ViewModel.CanResetBrightness, Mode=OneWay}" Command="{x:Bind ViewModel.ResetBrightnessCommand}">
+                                                        <FontIcon Glyph="&#xE7A7;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                                    </Button>
+                                                </Grid>
+                                                <StackPanel Orientation="Horizontal" Spacing="12" Padding="16,8,16,8" Background="{ThemeResource LayerOnAcrylicFillColorDefaultBrush}" BorderBrush="{ThemeResource DividerStrokeColorDefaultBrush}" BorderThickness="0,1,0,0">
+                                                    <FontIcon Glyph="&#xEC8A;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                                    <Slider x:Name="SliderBrightness" Orientation="Horizontal" TabIndex="0" Width="148" TickPlacement="Outside" TickFrequency="100" Minimum="-100" Maximum="100" SnapsTo="StepValues" IsThumbToolTipEnabled="False" Value="{x:Bind ViewModel.DisplayedPageBrightnessDouble, Mode=OneWay}" DoubleTapped="SliderBrightness_DoubleTapped" ValueChanged="SliderBrightness_ValueChanged" />
+                                                    <FontIcon Glyph="&#xE706;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                                </StackPanel>
                                             </StackPanel>
-                                        </StackPanel>
-                                    </Flyout>
-                                </Button.Flyout>
-                            </Button>
-                            <Button Style="{StaticResource EditorButtonStyle}" ToolTipService.ToolTip="{x:Bind strings:Resources.Contrast}">
-                                <FontIcon Glyph="&#xE7A1;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                        </Flyout>
+                                    </Button.Flyout>
+                                </Button>
+                                <Button Style="{StaticResource EditorButtonStyle}" ToolTipService.ToolTip="{x:Bind strings:Resources.Contrast}">
+                                    <FontIcon Glyph="&#xE7A1;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
 
-                                <Button.Flyout>
-                                    <Flyout x:Name="FlyoutContrast" Placement="Top" AreOpenCloseAnimationsEnabled="False" LightDismissOverlayMode="Off">
-                                        <Flyout.FlyoutPresenterStyle>
-                                            <Style TargetType="FlyoutPresenter" BasedOn="{StaticResource DefaultFlyoutPresenterStyle}">
-                                                <Setter Property="MinHeight" Value="0" />
-                                                <Setter Property="Padding" Value="0" />
-                                                <Setter Property="Margin" Value="0,48,0,0" />
-                                            </Style>
-                                        </Flyout.FlyoutPresenterStyle>
+                                    <Button.Flyout>
+                                        <Flyout x:Name="FlyoutContrast" Placement="Top" AreOpenCloseAnimationsEnabled="False" LightDismissOverlayMode="Off">
+                                            <Flyout.FlyoutPresenterStyle>
+                                                <Style TargetType="FlyoutPresenter" BasedOn="{StaticResource DefaultFlyoutPresenterStyle}">
+                                                    <Setter Property="MinHeight" Value="0" />
+                                                    <Setter Property="Padding" Value="0" />
+                                                    <Setter Property="Margin" Value="0,48,0,0" />
+                                                </Style>
+                                            </Flyout.FlyoutPresenterStyle>
 
-                                        <StackPanel Orientation="Vertical" Spacing="4">
-                                            <Grid Padding="16,8,16,4">
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="1*" />
-                                                    <ColumnDefinition Width="Auto" />
-                                                </Grid.ColumnDefinitions>
+                                            <StackPanel Orientation="Vertical" Spacing="4">
+                                                <Grid Padding="16,8,16,4">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="1*" />
+                                                        <ColumnDefinition Width="Auto" />
+                                                    </Grid.ColumnDefinitions>
 
-                                                <TextBlock Grid.Column="0" Text="{x:Bind strings:Resources.Contrast}" MaxLines="1" VerticalAlignment="Center" Style="{StaticResource BaseTextBlockStyle}" />
-                                                <NumberBox x:Name="NumberBoxContrast" Grid.Column="1" Margin="0,0,-8,0" Minimum="-100" Maximum="100" SmallChange="1" LargeChange="10" MaxWidth="92" Padding="10,5,40,6" Background="Transparent" BorderThickness="0" Style="{StaticResource NoClearButtonNumberBoxStyle}" Value="{x:Bind ViewModel.DisplayedPageContrast, Mode=OneWay}" ValueChanged="NumberBoxContrast_ValueChanged" />
-                                                <Button x:Name="ButtonContrastReset" Grid.Column="1" Width="32" Height="32" Margin="0,0,-8,0" VerticalAlignment="Center" Style="{StaticResource MutedButtonStyle}" ToolTipService.ToolTip="{x:Bind strings:Resources.ResetToDefault}" IsEnabled="{x:Bind ViewModel.CanResetContrast, Mode=OneWay}" Command="{x:Bind ViewModel.ResetContrastCommand}">
-                                                    <FontIcon Glyph="&#xE7A7;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
-                                                </Button>
-                                            </Grid>
-                                            <StackPanel Orientation="Horizontal" Spacing="12" Padding="16,8,16,8" Background="{ThemeResource LayerOnAcrylicFillColorDefaultBrush}" BorderBrush="{ThemeResource DividerStrokeColorDefaultBrush}" BorderThickness="0,1,0,0">
-                                                <FontIcon Glyph="&#xEA3A;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
-                                                <Slider x:Name="SliderContrast" Orientation="Horizontal" TabIndex="0" Width="148" TickPlacement="Outside" TickFrequency="100" Minimum="-100" Maximum="100" SnapsTo="StepValues" IsThumbToolTipEnabled="False" Value="{x:Bind ViewModel.DisplayedPageContrastDouble, Mode=OneWay}" DoubleTapped="SliderContrast_DoubleTapped" ValueChanged="SliderContrast_ValueChanged" />
-                                                <FontIcon Glyph="&#xE7A1;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                                    <TextBlock Grid.Column="0" Text="{x:Bind strings:Resources.Contrast}" MaxLines="1" VerticalAlignment="Center" Style="{StaticResource BaseTextBlockStyle}" />
+                                                    <NumberBox x:Name="NumberBoxContrast" Grid.Column="1" Margin="0,0,-8,0" Minimum="-100" Maximum="100" SmallChange="1" LargeChange="10" MaxWidth="92" Padding="10,5,40,6" Background="Transparent" BorderThickness="0" Style="{StaticResource NoClearButtonNumberBoxStyle}" Value="{x:Bind ViewModel.DisplayedPageContrast, Mode=OneWay}" ValueChanged="NumberBoxContrast_ValueChanged" />
+                                                    <Button x:Name="ButtonContrastReset" Grid.Column="1" Width="32" Height="32" Margin="0,0,-8,0" VerticalAlignment="Center" Style="{StaticResource MutedButtonStyle}" ToolTipService.ToolTip="{x:Bind strings:Resources.ResetToDefault}" IsEnabled="{x:Bind ViewModel.CanResetContrast, Mode=OneWay}" Command="{x:Bind ViewModel.ResetContrastCommand}">
+                                                        <FontIcon Glyph="&#xE7A7;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                                    </Button>
+                                                </Grid>
+                                                <StackPanel Orientation="Horizontal" Spacing="12" Padding="16,8,16,8" Background="{ThemeResource LayerOnAcrylicFillColorDefaultBrush}" BorderBrush="{ThemeResource DividerStrokeColorDefaultBrush}" BorderThickness="0,1,0,0">
+                                                    <FontIcon Glyph="&#xEA3A;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                                    <Slider x:Name="SliderContrast" Orientation="Horizontal" TabIndex="0" Width="148" TickPlacement="Outside" TickFrequency="100" Minimum="-100" Maximum="100" SnapsTo="StepValues" IsThumbToolTipEnabled="False" Value="{x:Bind ViewModel.DisplayedPageContrastDouble, Mode=OneWay}" DoubleTapped="SliderContrast_DoubleTapped" ValueChanged="SliderContrast_ValueChanged" />
+                                                    <FontIcon Glyph="&#xE7A1;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                                </StackPanel>
                                             </StackPanel>
-                                        </StackPanel>
-                                    </Flyout>
-                                </Button.Flyout>
-                            </Button>
-                            <Button x:Name="ButtonRemove" Style="{StaticResource EditorButtonStyle}" ToolTipService.ToolTip="{x:Bind strings:Resources.DeletePageToolTip}" Command="{x:Bind ViewModel.RemoveCurrentPageAsyncCommand}">
-                                <FontIcon Glyph="&#xE74D;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
-                            </Button>
-                        </StackPanel>
-                    </ScrollViewer>
+                                        </Flyout>
+                                    </Button.Flyout>
+                                </Button>
+                                <Button x:Name="ButtonRemove" Style="{StaticResource EditorButtonStyle}" ToolTipService.ToolTip="{x:Bind strings:Resources.DeletePageToolTip}" Command="{x:Bind ViewModel.RemoveCurrentPageAsyncCommand}">
+                                    <FontIcon Glyph="&#xE74D;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                </Button>
+                            </StackPanel>
+                        </ScrollViewer>
+                        <Grid x:Name="GridReadOnly" ColumnSpacing="12" HorizontalAlignment="Center" VerticalAlignment="Center" x:Load="{x:Bind ViewModel.IsPdfPageSelected, Mode=OneWay}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="1*" />
+                            </Grid.ColumnDefinitions>
+
+                            <FontIcon Grid.Column="0" Glyph="&#xE7B3;" FontSize="16" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                            <TextBlock Grid.Column="1" Text="Imported PDF pages are read-only" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" MaxLines="2" TextWrapping="WrapWholeWords" TextTrimming="WordEllipsis" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Style="{StaticResource CaptionTextBlockStyle}" />
+                        </Grid>
+                    </Grid>
                 </Frame>
             
                 <!-- Crop controls -->

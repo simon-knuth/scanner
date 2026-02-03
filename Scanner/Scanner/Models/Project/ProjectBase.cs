@@ -79,6 +79,7 @@ namespace Scanner.Models
         public string FriendlyFormatName => Format.GetFriendlyName();
 
         public bool IsPdf => Format == TargetFormat.PDF;
+        public bool HasBeenCreatedFromPdf { init; get; }
 
         private bool _areFilesSaved;
         protected bool areFilesSaved
@@ -786,20 +787,23 @@ namespace Scanner.Models
         {
             try
             {
-                using (IRandomAccessStream fileStream = await pages[0].SourceFile.OpenAsync(FileAccessMode.Read))
+                using IRandomAccessStream fileStream = await pages[0].SourceFile.OpenAsync(FileAccessMode.Read);
+                Windows.Data.Pdf.PdfDocument document = await Windows.Data.Pdf.PdfDocument.LoadFromStreamAsync(fileStream);
+                foreach (PdfPage page in pages)
                 {
-                    Windows.Data.Pdf.PdfDocument document = await Windows.Data.Pdf.PdfDocument.LoadFromStreamAsync(fileStream);
-                    foreach (PdfPage page in pages)
+                    StorageFile previewFile = await AppDataService.PreviewFolder.CreateFileAsync("pdf_thumbnail.jpg", CreationCollisionOption.GenerateUniqueName);
+                    using (IRandomAccessStream previewFileStream = await previewFile.OpenAsync(FileAccessMode.ReadWrite))
                     {
-                        StorageFile previewFile = await AppDataService.PreviewFolder.CreateFileAsync("pdf_thumbnail.jpg", CreationCollisionOption.GenerateUniqueName);
-                        using (IRandomAccessStream previewFileStream = await previewFile.OpenAsync(FileAccessMode.ReadWrite))
+                        Windows.Data.Pdf.PdfPageRenderOptions renderOptions = new()
                         {
-                            await document.GetPage(page.IndexInPdf).RenderToStreamAsync(previewFileStream);
-                        }
-
-                        // update preview file
-                        await page.UpdatePreviewFileAsync(previewFile, uiDispatcherQueue);
+                            DestinationWidth = 92,
+                            DestinationHeight = 92
+                        };
+                        await document.GetPage(page.IndexInPdf).RenderToStreamAsync(previewFileStream);
                     }
+
+                    // update preview file
+                    await page.UpdatePreviewFileAsync(previewFile, uiDispatcherQueue);
                 }
             }
             catch (Exception exc)
