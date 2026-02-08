@@ -153,7 +153,6 @@ namespace Scanner.ViewModels
 
             if (SelectedScanner == null)
                 await SelectBestAvailableScannerAsync();
-
         }
 
         private async void ScannerDiscoveryService_ScanningDeviceLost(object? sender, IScanningDevice e)

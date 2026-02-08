@@ -41,18 +41,15 @@ namespace Scanner.ViewModels
             set
             {
                 if (scanOptions != null)
-                {
                     scanOptions.PropertyChanged -= ScanOptions_PropertyChanged;
-                }
 
                 SetProperty(ref scanOptions, value);
                 OnPropertyChanged(nameof(CanScan));
                 OnPropertyChanged(nameof(CanPreviewScan));
+                UpdateCanAddToProject();
 
                 if (value != null)
-                {
                     value.PropertyChanged += ScanOptions_PropertyChanged;
-                }
             }
         }
 
@@ -86,6 +83,7 @@ namespace Scanner.ViewModels
                         // can't add to project anymore
                         AddToProject = false;
                     }
+                    OnPropertyChanged(nameof(CanScanModeBeSwitched));
                 }
             }
         }
@@ -170,10 +168,6 @@ namespace Scanner.ViewModels
         {
             switch (e.PropertyName)
             {
-                case nameof(ScanOptions.Scanner):
-                    OnPropertyChanged(nameof(CanScan));
-                    OnPropertyChanged(nameof(CanPreviewScan));
-                    break;
                 case nameof(ScanOptions.SourceMode):
                     OnPropertyChanged(nameof(CanPreviewScan));
                     OnPropertyChanged(nameof(CanScanAndMerge));
