@@ -791,7 +791,7 @@ namespace Scanner.Models
                 Windows.Data.Pdf.PdfDocument document = await Windows.Data.Pdf.PdfDocument.LoadFromStreamAsync(fileStream);
                 foreach (PdfPage page in pages)
                 {
-                    StorageFile previewFile = await AppDataService.PreviewFolder.CreateFileAsync("pdf_thumbnail.jpg", CreationCollisionOption.GenerateUniqueName);
+                    StorageFile previewFile = await AppDataService.PreviewFolder.CreateFileAsync("pdf_thumbnail.png", CreationCollisionOption.GenerateUniqueName);
                     using (IRandomAccessStream previewFileStream = await previewFile.OpenAsync(FileAccessMode.ReadWrite))
                     {
                         Windows.Data.Pdf.PdfPageRenderOptions renderOptions = new()
