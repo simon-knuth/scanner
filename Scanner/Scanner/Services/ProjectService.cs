@@ -757,6 +757,9 @@ namespace Scanner.Services
             if (project is PdfProject pdfProject && pdfProject.TargetFile != null)
             {
                 pdfProject.TargetFile.FileStream.Dispose();
+
+                if (pdfProject.SourceFile != null && pdfProject.SourceFile != pdfProject.TargetFile)
+                    pdfProject.SourceFile.FileStream.Dispose();
             }
             else
             {
@@ -770,10 +773,11 @@ namespace Scanner.Services
             if (preserveSourceFilesInIncomingFolder)
             {
                 // move all source files to the Incoming folder before clearing
-                Task[] tasks = new Task[pages.Count];
+                List<Task> tasks = [];
                 for (int i = 0; i < pages.Count; i++)
                 {
-                    tasks[i] = pages[i].SourceFile.MoveAsync(AppDataService.IncomingFolder, pages[i].SourceFile.Name, NameCollisionOption.GenerateUniqueName).AsTask();
+                    if (pages[i] is ImagePage imagePage)
+                        tasks.Add(imagePage.SourceFile.MoveAsync(AppDataService.IncomingFolder, imagePage.SourceFile.Name, NameCollisionOption.GenerateUniqueName).AsTask());
                 }
                 await Task.WhenAll(tasks);
             }

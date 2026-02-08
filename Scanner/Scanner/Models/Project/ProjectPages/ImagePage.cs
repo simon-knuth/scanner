@@ -37,6 +37,9 @@ namespace Scanner.Models
         private static string[] allowedFileExtensions = [".jpg", ".jpeg", ".png", ".bmp", ".tif", ".tiff"];
 
         private StorageFile sourceFile;
+        /// <summary>
+        /// The page's source file with all information intact and without any destructive effects applied.
+        /// </summary>
         public StorageFile SourceFile
         {
             get => sourceFile;
@@ -70,7 +73,7 @@ namespace Scanner.Models
         /// <summary>
         /// The file to save changes to, including destructive effects.
         /// </summary>
-        public TargetFile? TargetFile { get; set; }
+        public FileHandle? TargetFile { get; set; }
 
         public StorageFolder? TargetFolder { get; set; }
 
@@ -143,7 +146,7 @@ namespace Scanner.Models
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        private ImagePage(StorageFile sourceFile, TargetFile? targetFile, Uri sourceBitmapUri, int index, string? targetFileName, StorageFolder? targetFolder, ImageFilter baseFilter, ImageFilter filter, int brightness, int contrast, uint width, uint height)
+        private ImagePage(StorageFile sourceFile, FileHandle? targetFile, Uri sourceBitmapUri, int index, string? targetFileName, StorageFolder? targetFolder, ImageFilter baseFilter, ImageFilter filter, int brightness, int contrast, uint width, uint height)
         {
             SourceFile = PreviewFile = sourceFile;
             TargetFile = targetFile;
@@ -201,7 +204,7 @@ namespace Scanner.Models
             ImageProperties imageProperties = await sourceFile.Properties.GetImagePropertiesAsync();
 
             // get target file
-            TargetFile? target = null;
+            FileHandle? target = null;
             if (targetFile != null)
                 target = new(targetFile, await targetFile.OpenAsync(FileAccessMode.ReadWrite, StorageOpenOptions.AllowOnlyReaders));
 

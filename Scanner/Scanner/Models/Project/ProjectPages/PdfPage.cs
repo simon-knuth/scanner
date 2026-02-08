@@ -36,16 +36,6 @@ namespace Scanner.Models
 
         private static string[] allowedFileExtensions = [".pdf"];
 
-        private StorageFile sourceFile;
-        public StorageFile SourceFile
-        {
-            get => sourceFile;
-            private set
-            {
-                SetProperty(ref sourceFile, value);
-            }
-        }
-
         private StorageFile previewFile;
         public StorageFile PreviewFile
         {
@@ -73,9 +63,8 @@ namespace Scanner.Models
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        private PdfPage(StorageFile sourceFile, uint indexInPdf, int index)
+        private PdfPage(uint indexInPdf, int index)
         {
-            SourceFile = sourceFile;
             IndexInPdf = indexInPdf;
             Index = index;
         }
@@ -83,31 +72,16 @@ namespace Scanner.Models
         /// <summary>
         ///    Creates a new <see cref="PdfPage"/> from a file.
         /// </summary>
-        public static async Task<IProjectPage> CreateAsync(StorageFile sourceFile, uint indexInPdf, int index)
+        public static async Task<IProjectPage> CreateAsync(uint indexInPdf, int index)
         {
-            PdfPage result = await CreateAsyncInternal(sourceFile, indexInPdf, index);
+            PdfPage result = await CreateAsyncInternal(indexInPdf, index);
             return result;
         }
 
-        private static async Task<PdfPage> CreateAsyncInternal(StorageFile sourceFile, uint indexInPdf, int index)
+        private static async Task<PdfPage> CreateAsyncInternal(uint indexInPdf, int index)
         {
-            // check file
-            if (sourceFile == null)
-            {
-                throw new ArgumentException("Can't create PdfPage from null file");
-            }
-
-            // check file extension
-            string extension = sourceFile.FileType.ToLower();
-            if (!allowedFileExtensions.Contains(extension))
-            {
-                // unknown format
-                throw new ArgumentException("Failed to create PdfPage due to incompatible file format");
-            }
-
-
             // create PdfPage
-            PdfPage result = new(sourceFile, indexInPdf, index);
+            PdfPage result = new(indexInPdf, index);
             
             return result;
         }

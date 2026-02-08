@@ -38,7 +38,8 @@ namespace Scanner.Models
 
         public StorageFolder? TargetFolder;
 
-        public TargetFile? TargetFile;
+        public FileHandle? SourceFile;
+        public FileHandle? TargetFile;
 
         public FileNameInfo FileNameInfo { get; private set; }
 
@@ -74,12 +75,17 @@ namespace Scanner.Models
             }
 
             // create project and update previews
-            PdfProject project = new PdfProject(pages, creationData.TargetFileName, creationData.TargetFolder, creationData.InitialScanOptions);
+            PdfProject project = new(pages, creationData.TargetFileName, creationData.TargetFolder, creationData.InitialScanOptions);
             
-            if (Helpers.Helpers.FileExtensionToTargetFormat(pages[0].SourceFile.FileType) == TargetFormat.PDF)
+            if (pages[0] is PdfPage)
+            {
+                project.SourceFile = project.TargetFile = new(creationData.Pages[0].File, await creationData.Pages[0].File.OpenAsync(FileAccessMode.ReadWrite, StorageOpenOptions.AllowOnlyReaders));
                 await project.GeneratePagePreviewsAsync([.. pages.Cast<PdfPage>()], uiDispatcherQueue);
+            }
             else
+            {
                 await project.GeneratePagePreviewsAsync([.. pages.Cast<ImagePage>()], uiDispatcherQueue);
+            }
 
             return project;
         }
@@ -103,7 +109,7 @@ namespace Scanner.Models
             {
                 if (TargetFile != null)
                 {
-                    TargetFile targetFile = TargetFile;
+                    FileHandle targetFile = TargetFile;
                     TargetFile = null;
                     targetFile.FileStream.Dispose();
                     await targetFile.File.DeleteAsync(StorageDeleteOption.PermanentDelete);
@@ -172,7 +178,7 @@ namespace Scanner.Models
 
                         if (saveAs)
                         {
-                            TargetFile? targetFile = TargetFile;
+                            FileHandle? targetFile = TargetFile;
                             TargetFile = null;
                             targetFile?.FileStream.Dispose();
                         }
@@ -193,20 +199,19 @@ namespace Scanner.Models
                         // commit changes
                         foreach (IProjectPage page in Pages)
                         {
-                            ImagePage imagePage = (ImagePage)page;
-                            if (imagePage.CommitNeeded)
+                            if (page is ImagePage imagePage && imagePage.CommitNeeded)
                             {
                                 // copy file to project folder
-                                StorageFile? fileToDelete = page.SourceFile;
+                                StorageFile? fileToDelete = imagePage.SourceFile;
                                 StorageFile newSourceFile;
                                 if (imagePage.OutOfDateSourceFile != null)
                                 {
-                                    newSourceFile = await page.SourceFile.CopyAsync(AppDataService.ProjectFolder, imagePage.OutOfDateSourceFile.Name, NameCollisionOption.ReplaceExisting);
+                                    newSourceFile = await imagePage.SourceFile.CopyAsync(AppDataService.ProjectFolder, imagePage.OutOfDateSourceFile.Name, NameCollisionOption.ReplaceExisting);
                                     imagePage.ClearOutOfDateSourceFile();
                                 }
                                 else
                                 {
-                                    newSourceFile = await page.SourceFile.CopyAsync(AppDataService.ProjectFolder, page.SourceFile.Name, NameCollisionOption.GenerateUniqueName);
+                                    newSourceFile = await imagePage.SourceFile.CopyAsync(AppDataService.ProjectFolder, imagePage.SourceFile.Name, NameCollisionOption.GenerateUniqueName);
                                 }
 
                                 // update page
@@ -236,7 +241,7 @@ namespace Scanner.Models
                         changesFolderSemaphore.Release();
 
                         // save
-                        Dictionary<IProjectPage, TargetFile?> pageSaves = await snapshot.TrySaveAsync(uiDispatcherQueue);
+                        Dictionary<IProjectPage, FileHandle?> pageSaves = await snapshot.TrySaveAsync(uiDispatcherQueue);
 
                         // process save result
                         if (pageSaves.Count == 0) throw new ApplicationException("Failed to save Project (no files saved)");
@@ -489,9 +494,9 @@ namespace Scanner.Models
             hasFileNameBeenApplied = FileNameInfo!.DesiredName == FileNameInfo.ActualName;
         }
 
-        public static async Task<Dictionary<IProjectPage, TargetFile?>> CreatePdfFromPagesAsync(Dictionary<IProjectPage, IProjectSnapshotPage> pages, TargetFile? targetFile, string? desiredFileName, StorageFolder? targetFolder, bool ocr, DispatcherQueue uiDispatcherQueue)
+        public static async Task<Dictionary<IProjectPage, FileHandle?>> CreatePdfFromPagesAsync(Dictionary<IProjectPage, IProjectSnapshotPage> pages, FileHandle? targetFile, string? desiredFileName, StorageFolder? targetFolder, bool ocr, DispatcherQueue uiDispatcherQueue)
         {
-            Dictionary<IProjectPage, TargetFile?> result = new();
+            Dictionary<IProjectPage, FileHandle?> result = new();
             string pdfGenerationFilePath = Path.Combine(AppDataService.PdfOutputFolder.Path, pdfOutputFileDisplayName);
 
             // generate PDF
@@ -545,57 +550,79 @@ namespace Scanner.Models
         {
             using PdfDocument document = new();
 
+            // load source PDF
+            XPdfForm? sourcePdf = null;
+
+            // load OCR PDF
             XPdfForm? ocrPdf = null;
+            int ocrIndex = 0;
             if (ocrPdfPath != null)
                 ocrPdf = XPdfForm.FromFile(ocrPdfPath);
 
             for (int i = 0; i < snapshotPages.Count; i++)
             {
-                IProjectSnapshotPage snapshotPage = snapshotPages[i];
+                PdfProjectSnapshotPage snapshotPage = (PdfProjectSnapshotPage)snapshotPages[i];
                 PdfSharp.Pdf.PdfPage newPdfPage = document.AddPage();
 
-                // get image
-                XImage image;
-                if (Helpers.Helpers.FileExtensionToTargetFormat(snapshotPage.SourceFile.FileType) != TargetFormat.JPG)
+                if (snapshotPage.IndexInSourceFile == null)
                 {
-                    // convert image to JPG to reduce PDF size
-                    using InMemoryRandomAccessStream targetStream = new();
-                    await uiDispatcherQueue.RunOnThreadAndWaitAsync(DispatcherQueuePriority.Low, async () =>
+                    // page from image (OCR or not)
+                    XImage image;
+                    if (Helpers.Helpers.FileExtensionToTargetFormat(snapshotPage.SourceFile.FileType) != TargetFormat.JPG)
                     {
-                        using IRandomAccessStream sourceStream = await snapshotPage.SourceFile.OpenAsync(FileAccessMode.Read);
-                        BitmapDecoder decoder = await BitmapDecoder.CreateAsync(sourceStream);
+                        // convert image to JPG to reduce PDF size
+                        using InMemoryRandomAccessStream targetStream = new();
+                        await uiDispatcherQueue.RunOnThreadAndWaitAsync(DispatcherQueuePriority.Low, async () =>
+                        {
+                            using IRandomAccessStream sourceStream = await snapshotPage.SourceFile.OpenAsync(FileAccessMode.Read);
+                            BitmapDecoder decoder = await BitmapDecoder.CreateAsync(sourceStream);
 
-                        BitmapPropertySet propertySet = new BitmapPropertySet();
-                        propertySet.Add("ImageQuality", new BitmapTypedValue(jpegQuality, Windows.Foundation.PropertyType.Single));
-                        BitmapEncoder encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.JpegEncoderId, targetStream, propertySet);
+                            BitmapPropertySet propertySet = new BitmapPropertySet();
+                            propertySet.Add("ImageQuality", new BitmapTypedValue(jpegQuality, Windows.Foundation.PropertyType.Single));
+                            BitmapEncoder encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.JpegEncoderId, targetStream, propertySet);
 
-                        using SoftwareBitmap softwareBitmap = await decoder.GetSoftwareBitmapAsync();
-                        encoder.SetSoftwareBitmap(softwareBitmap);
-                        await encoder.FlushAsync();
-                    });
-                    image = XImage.FromStream(targetStream.AsStream());
+                            using SoftwareBitmap softwareBitmap = await decoder.GetSoftwareBitmapAsync();
+                            encoder.SetSoftwareBitmap(softwareBitmap);
+                            await encoder.FlushAsync();
+                        });
+                        image = XImage.FromStream(targetStream.AsStream());
+                    }
+                    else
+                    {
+                        // use original image
+                        image = XImage.FromFile(snapshotPage.SourceFile.Path);
+                    }
+
+                    // setup page
+                    newPdfPage.Width = XUnit.FromInch(image.PixelWidth / image.HorizontalResolution);
+                    newPdfPage.Height = XUnit.FromInch(image.PixelHeight / image.VerticalResolution);
+                    using XGraphics gfx = XGraphics.FromPdfPage(newPdfPage);
+
+                    // add OCR layer
+                    if (ocrPdf != null)
+                    {
+                        ocrPdf.PageIndex = ocrIndex;
+                        ocrIndex++;
+                        gfx.DrawImage(ocrPdf, 0, 0);
+                    }
+
+                    // add image layer
+                    gfx.DrawImage(image, 0, 0);
+                    image.Dispose();
                 }
                 else
                 {
-                    // use original image
-                    image = XImage.FromFile(snapshotPage.SourceFile.Path);
+                    // page from PDF
+                    using (IRandomAccessStream sourceStream = await snapshotPage.SourceFile.OpenAsync(FileAccessMode.Read))
+                    sourcePdf ??= XPdfForm.FromStream(sourceStream.AsStream());
+
+                    // append PDF page
+                    sourcePdf.PageIndex = (int)snapshotPage.IndexInSourceFile;
+                    newPdfPage.Width = XUnit.FromPoint(sourcePdf.PointWidth);
+                    newPdfPage.Height = XUnit.FromPoint(sourcePdf.PointHeight);
+                    using XGraphics gfx = XGraphics.FromPdfPage(newPdfPage);
+                    gfx.DrawImage(sourcePdf, 0, 0);
                 }
-
-                // setup page
-                newPdfPage.Width = XUnit.FromInch(image.PixelWidth / image.HorizontalResolution);
-                newPdfPage.Height = XUnit.FromInch(image.PixelHeight / image.VerticalResolution);
-                using XGraphics gfx = XGraphics.FromPdfPage(newPdfPage);
-
-                // add OCR layer
-                if (ocrPdf != null)
-                {
-                    ocrPdf.PageIndex = i;
-                    gfx.DrawImage(ocrPdf, 0, 0);
-                }
-
-                // add image layer
-                gfx.DrawImage(image, 0, 0);
-                image.Dispose();
             }
 
             ocrPdf?.Dispose();

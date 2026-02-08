@@ -109,7 +109,7 @@ namespace Scanner.Models
                     ImagePage imagePage = (ImagePage)page;
                     if (imagePage.TargetFile != null)
                     {
-                        TargetFile targetFile = imagePage.TargetFile;
+                        FileHandle targetFile = imagePage.TargetFile;
                         imagePage.TargetFile = null;
                         targetFile.FileStream.Dispose();
                         await targetFile.File.DeleteAsync(StorageDeleteOption.PermanentDelete);
@@ -235,16 +235,16 @@ namespace Scanner.Models
                             if (imagePage.CommitNeeded)
                             {
                                 // copy file to project folder
-                                StorageFile? fileToDelete = page.SourceFile;
+                                StorageFile? fileToDelete = imagePage.SourceFile;
                                 StorageFile newSourceFile;
                                 if (imagePage.OutOfDateSourceFile != null)
                                 {
-                                    newSourceFile = await page.SourceFile.CopyAsync(AppDataService.ProjectFolder, imagePage.OutOfDateSourceFile.Name, NameCollisionOption.ReplaceExisting);
+                                    newSourceFile = await imagePage.SourceFile.CopyAsync(AppDataService.ProjectFolder, imagePage.OutOfDateSourceFile.Name, NameCollisionOption.ReplaceExisting);
                                     imagePage.ClearOutOfDateSourceFile();
                                 }
                                 else
                                 {
-                                    newSourceFile = await page.SourceFile.CopyAsync(AppDataService.ProjectFolder);
+                                    newSourceFile = await imagePage.SourceFile.CopyAsync(AppDataService.ProjectFolder);
                                 }
 
                                 // update page
@@ -267,7 +267,7 @@ namespace Scanner.Models
                             ImagePage imagePage = (ImagePage)page;
                             if (imagePage.TargetFile != null)
                             {
-                                TargetFile targetFile = imagePage.TargetFile;
+                                FileHandle targetFile = imagePage.TargetFile;
                                 imagePage.TargetFile = null;
                                 targetFile.FileStream.Dispose();
                                 _ = Task.Run(async () => await targetFile.File.DeleteAsync(StorageDeleteOption.PermanentDelete));
@@ -288,21 +288,21 @@ namespace Scanner.Models
                         changesFolderSemaphore.Release();
 
                         // save
-                        Dictionary<IProjectPage, TargetFile?> pageSaves = await snapshot.TrySaveAsync(uiDispatcherQueue);
+                        Dictionary<IProjectPage, FileHandle?> pageSaves = await snapshot.TrySaveAsync(uiDispatcherQueue);
 
                         // process save result
                         if (pageSaves.Count == 0) throw new ApplicationException("Failed to save project (no files saved)");
 
                         // update target files
                         await projectObjectSemaphore.WaitAsync();
-                        foreach (KeyValuePair<IProjectPage, TargetFile?> pageSave in pageSaves)
+                        foreach (KeyValuePair<IProjectPage, FileHandle?> pageSave in pageSaves)
                         {
                             ((ImagePage)pageSave.Key).TargetFile = pageSave.Value;
                         }
                         projectObjectSemaphore.Release();
 
                         // update file names
-                        foreach (KeyValuePair<IProjectPage, TargetFile?> pageSave in pageSaves)
+                        foreach (KeyValuePair<IProjectPage, FileHandle?> pageSave in pageSaves)
                         {
                             if (pageSave.Key is ImagePage imagePage && imagePage.FileNameInfo != null)
                             {

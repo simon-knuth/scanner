@@ -26,12 +26,8 @@ namespace Scanner.Models.Interfaces
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// <summary>
-        /// The page's source file with all information intact and without any destructive effects applied.
-        /// </summary>
-        StorageFile SourceFile { get; }
-
-        /// <summary>
-        /// The file used for preview generation. Usually the same as <see cref="SourceFile"/>, unless a destructive effect is applied.
+        /// The file used for preview generation. Usually the same as the source file, unless a destructive effect is
+        /// applied.
         /// </summary>
         StorageFile PreviewFile { get; }
 

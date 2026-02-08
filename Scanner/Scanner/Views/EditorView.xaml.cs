@@ -553,15 +553,13 @@ namespace Scanner.Views
                 {
                     newBitmap = await CanvasBitmap.LoadAsync(canvas, imagePage.SourceBitmapUri);
                 }
-                else if (page is PdfPage pdfPage)
+                else if (page is PdfPage pdfPage && ViewModel.CurrentProject is PdfProject pdfProject)
                 {
-                    using (IRandomAccessStream fileStream = await page.SourceFile.OpenAsync(FileAccessMode.Read))
-                    {
-                        Windows.Data.Pdf.PdfDocument document = await Windows.Data.Pdf.PdfDocument.LoadFromStreamAsync(fileStream);
-                        InMemoryRandomAccessStream bitmapStream = new();
-                        await document.GetPage(pdfPage.IndexInPdf).RenderToStreamAsync(bitmapStream);
-                        newBitmap = await CanvasBitmap.LoadAsync(canvas, bitmapStream);
-                    }
+                    using IRandomAccessStream fileStream = await pdfProject.SourceFile!.File.OpenAsync(FileAccessMode.Read);
+                    Windows.Data.Pdf.PdfDocument document = await Windows.Data.Pdf.PdfDocument.LoadFromStreamAsync(fileStream);
+                    InMemoryRandomAccessStream bitmapStream = new();
+                    await document.GetPage(pdfPage.IndexInPdf).RenderToStreamAsync(bitmapStream);
+                    newBitmap = await CanvasBitmap.LoadAsync(canvas, bitmapStream);
                 }
                 else
                 {

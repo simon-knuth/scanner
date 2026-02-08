@@ -722,10 +722,10 @@ namespace Scanner.ViewModels
                     Dictionary<IProjectPage, IProjectSnapshotPage> pages = [];
                     foreach (IProjectPage page in ProjectService.SelectedPages.OrderBy(x => x.Index))
                     {
-                        if (page is not ImagePage imagePage)
-                            continue;
-
-                        pages.Add(page, new PdfProjectSnapshotPage(page.SourceFile, imagePage.Filter, imagePage.Brightness, imagePage.Contrast));
+                        if (page is ImagePage imagePage)
+                            pages.Add(page, new PdfProjectSnapshotPage(imagePage.SourceFile, null, imagePage.Filter, imagePage.Brightness, imagePage.Contrast));
+                        else if (page is PdfPage pdfPage)
+                            pages.Add(page, new PdfProjectSnapshotPage(pdfProject.SourceFile!.File, pdfPage.IndexInPdf, ImageFilter.None, AppConfig.DefaultBrightness, AppConfig.DefaultContrast));
                     }
                     await PdfProject.CreatePdfFromPagesAsync(pages, null, saveOptions.FileName, saveOptions.TargetFolder, SettingsService.SettingOcrPdfs, viewDispatcherQueue!);
                 }
@@ -738,7 +738,10 @@ namespace Scanner.ViewModels
                             continue;
 
                         Dictionary<IProjectPage, IProjectSnapshotPage> pages = [];
-                        pages.Add(page, new PdfProjectSnapshotPage(page.SourceFile, imagePage.Filter, imagePage.Brightness, imagePage.Contrast));
+                        if (page is ImagePage imagePage1)
+                            pages.Add(page, new PdfProjectSnapshotPage(imagePage1.SourceFile, null, imagePage.Filter, imagePage.Brightness, imagePage.Contrast));
+                        else if (page is PdfPage pdfPage)
+                            pages.Add(page, new PdfProjectSnapshotPage(pdfProject.SourceFile!.File, pdfPage.IndexInPdf, imagePage.Filter, imagePage.Brightness, imagePage.Contrast));
 
                         await PdfProject.CreatePdfFromPagesAsync(pages, null, saveOptions.FileName, saveOptions.TargetFolder, SettingsService.SettingOcrPdfs, viewDispatcherQueue!);
                     }

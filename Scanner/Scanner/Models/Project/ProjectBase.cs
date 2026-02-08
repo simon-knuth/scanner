@@ -173,7 +173,7 @@ namespace Scanner.Models
                     foreach (ProjectFileInsertion insertion in insertions)
                     {
                         IProjectPage page = await CreatePageFromFileAsync(insertion.File, insertion.Index, IsPdf ? null : insertion.FileName, null, insertion.TargetFolder, keepSourceFiles, AppDataService.ChangesFolder, insertion.BaseFilter, insertion.Filter, insertion.Brightness, insertion.Contrast);
-                        copiedFiles.Add(page.SourceFile);
+                        copiedFiles.Add(((ImagePage)page).SourceFile);
 
                         preparedInsertions.Add(new KeyValuePair<ImagePage, int>((ImagePage)page, insertion.Index));
                     }
@@ -414,7 +414,7 @@ namespace Scanner.Models
                 case ".tiff":
                     return await ImagePage.CreateAsync(file, targetFile, targetFolder, index, targetFileName, keepSourceFile, pagesFolder, baseFilter, filter, brightness, contrast);
                 case ".pdf":
-                    return await PdfPage.CreateAsync(file, (uint)index, index);
+                    return await PdfPage.CreateAsync((uint)index, index);
                 default:
                     throw new ArgumentException("Failed to create IProjectPage due to incompatible file format");
             }
@@ -787,7 +787,7 @@ namespace Scanner.Models
         {
             try
             {
-                using IRandomAccessStream fileStream = await pages[0].SourceFile.OpenAsync(FileAccessMode.Read);
+                using IRandomAccessStream fileStream = await ((PdfProject)this).SourceFile!.File.OpenAsync(FileAccessMode.Read);
                 Windows.Data.Pdf.PdfDocument document = await Windows.Data.Pdf.PdfDocument.LoadFromStreamAsync(fileStream);
                 foreach (PdfPage page in pages)
                 {
@@ -1095,7 +1095,7 @@ namespace Scanner.Models
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // MISCELLANEOUS ////////////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    public record TargetFile(StorageFile File, IRandomAccessStream FileStream);
+    public record FileHandle(StorageFile File, IRandomAccessStream FileStream);
     public record ProjectFileInsertion(StorageFile File, int Index, string? FileName, StorageFolder? TargetFolder, ImageFilter BaseFilter, ImageFilter Filter, int Brightness, int Contrast);
     public record AppliedCrop(ImagePage Page, StorageFile PreviousFile, uint PreviousWidth, uint PreviousHeight);
 }

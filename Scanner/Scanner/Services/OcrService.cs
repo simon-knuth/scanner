@@ -120,6 +120,9 @@ namespace Scanner.Services
                     int i = 0;
                     foreach (IProjectSnapshotPage snapshotPage in pages)
                     {
+                        if (snapshotPage is PdfProjectSnapshotPage pdfSnapshotPage && pdfSnapshotPage.IndexInSourceFile != null)
+                            continue;
+
                         if (snapshotPage.Filter == ImageFilter.None && snapshotPage.Brightness == 0 && snapshotPage.Contrast == 0)
                         {
                             // source file can be used directly

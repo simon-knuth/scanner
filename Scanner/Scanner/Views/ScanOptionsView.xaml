@@ -634,7 +634,7 @@
                                         <TextBlock Text="{x:Bind strings:Resources.SearchingKnownScanners}" MaxLines="1" TextTrimming="CharacterEllipsis" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Style="{StaticResource BodyTextBlockStyle}" />
                                     </StackPanel>
                                 </ComboBoxItem>
-                                <ComboBoxItem IsEnabled="False" Margin="-16,-10,-16,-6" Padding="0">
+                                <ComboBoxItem IsEnabled="False" Margin="-20,-10,-20,-6" Padding="0">
                                     <MenuFlyoutSeparator />
                                 </ComboBoxItem>
                                 <ComboBoxItem x:Name="ComboBoxItemManageScanners">

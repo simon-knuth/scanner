@@ -981,7 +981,8 @@ namespace Scanner.Views
         {
             foreach (ComboBoxItem item in ComboBoxScanners.Items)
             {
-                item.MaxWidth = e.NewSize.Width;
+                if (item.Content is not MenuFlyoutSeparator)
+                    item.MaxWidth = e.NewSize.Width;
             }
         }
 

@@ -70,16 +70,16 @@ namespace Scanner.Models
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public async Task<Dictionary<IProjectPage, TargetFile?>> TrySaveAsync(DispatcherQueue uiDispatcherQueue)
+        public async Task<Dictionary<IProjectPage, FileHandle?>> TrySaveAsync(DispatcherQueue uiDispatcherQueue)
         {
-            Dictionary<IProjectPage, TargetFile?> result = new();
+            Dictionary<IProjectPage, FileHandle?> result = new();
 
             // save images to target folders
             try
             {
                 foreach (KeyValuePair<IProjectPage, MultiFileProjectSnapshotPage> page in Pages)
                 {
-                    TargetFile generatedTargetFile;
+                    FileHandle generatedTargetFile;
                     if (Format == TargetFormat.SinglePagePDF)
                     {
                         // need to generate PDF file
@@ -87,7 +87,7 @@ namespace Scanner.Models
                         {
                             { page.Key, page.Value }
                         };
-                        Dictionary<IProjectPage, TargetFile?> pdfResult = await PdfProject.CreatePdfFromPagesAsync(pdfPages, page.Value.TargetFile, page.Value.DesiredFileName, page.Value.TargetFolder, SettingsService.SettingOcrPdfs, uiDispatcherQueue);
+                        Dictionary<IProjectPage, FileHandle?> pdfResult = await PdfProject.CreatePdfFromPagesAsync(pdfPages, page.Value.TargetFile, page.Value.DesiredFileName, page.Value.TargetFolder, SettingsService.SettingOcrPdfs, uiDispatcherQueue);
                         generatedTargetFile = pdfResult[page.Key];
                     }
                     else if (page.Value.Filter != ImageFilter.None || FileExtensionToTargetFormat(page.Value.SourceFile.FileType) != Format)
