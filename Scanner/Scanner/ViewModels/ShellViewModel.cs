@@ -311,62 +311,83 @@ namespace Scanner.ViewModels
 
         private async Task OpenFilesAsync()
         {
-            IReadOnlyList<PickFileResult> pickerResults = await Helpers.Helpers.PickInputFilesAsync(true, viewDispatcherQueue!);
-            if (pickerResults.Count == 0)
-                return;
-
-            // ensure single file type
-            string extension = Path.GetExtension(pickerResults[0].Path).ToLowerInvariant();
-            if (pickerResults.Any(f => Path.GetExtension(f.Path).ToLowerInvariant() != extension))
-            {
-                Messenger.Send(new ShowNotificationMessage(new Notification
-                {
-                    Title = "Can not open multiple file types",
-                    Message = "Please select files of the same type to open a project.",
-                    Severity = Microsoft.UI.Xaml.Controls.InfoBarSeverity.Error
-                }));
-                return;
-            }
-            else if (pickerResults.Count > 1 && pickerResults.Any(f => Path.GetExtension(f.Path).ToLowerInvariant() == ".pdf"))
-            {
-                Messenger.Send(new ShowNotificationMessage(new Notification
-                {
-                    Title = "Can not open multiple PDF files",
-                    Message = "Please select just one PDF file to open a project.",
-                    Severity = Microsoft.UI.Xaml.Controls.InfoBarSeverity.Error
-                }));
-                return;
-            }
-
             TaskCompletionSource openTcs = new();
-            Messenger.Send(new ShowIndeterminateProgressDialogMessage("Opening project", openTcs.Task));
 
-            // get files
-            List<(StorageFile SourceFile, string? TargetFileName, StorageFile? TargetFile)> files = [];
-            foreach (PickFileResult pickerResult in pickerResults)
+            try
             {
-                StorageFile file = await StorageFile.GetFileFromPathAsync(pickerResult.Path);
-                files.Add((file, Path.GetFileName(pickerResult.Path), file));
+                IReadOnlyList<PickFileResult> pickerResults = await Helpers.Helpers.PickInputFilesAsync(true, viewDispatcherQueue!);
+                if (pickerResults.Count == 0)
+                    return;
+
+                // ensure single file type
+                string extension = Path.GetExtension(pickerResults[0].Path).ToLowerInvariant();
+                if (pickerResults.Any(f => Path.GetExtension(f.Path).ToLowerInvariant() != extension))
+                {
+                    Messenger.Send(new ShowNotificationMessage(new Notification
+                    {
+                        Title = "Can not open multiple file types",
+                        Message = "Please select files of the same type to open a project.",
+                        Severity = Microsoft.UI.Xaml.Controls.InfoBarSeverity.Error
+                    }));
+                    return;
+                }
+                else if (pickerResults.Count > 1 && pickerResults.Any(f => Path.GetExtension(f.Path).ToLowerInvariant() == ".pdf"))
+                {
+                    Messenger.Send(new ShowNotificationMessage(new Notification
+                    {
+                        Title = "Can not open multiple PDF files",
+                        Message = "Please select just one PDF file to open a project.",
+                        Severity = Microsoft.UI.Xaml.Controls.InfoBarSeverity.Error
+                    }));
+                    return;
+                }
+
+                // close project
+                if (await ProjectService.TryCloseProjectAsync() == false)
+                    return;
+
+                Messenger.Send(new ShowIndeterminateProgressDialogMessage("Opening project", openTcs.Task));                
+
+                // get files
+                List<(StorageFile SourceFile, string? TargetFileName, StorageFile? TargetFile)> files = [];
+                foreach (PickFileResult pickerResult in pickerResults)
+                {
+                    StorageFile file = await StorageFile.GetFileFromPathAsync(pickerResult.Path);
+                    files.Add((file, Path.GetFileName(pickerResult.Path), file));
+                }
+
+                // get target folder
+                StorageFolder? targetFolder = await files[0].SourceFile.GetParentAsync();
+
+                // create project data
+                TargetFormat targetFormat = Helpers.Helpers.FileExtensionToTargetFormat(extension);
+                IProjectCreationData projectCreationData;
+                if (targetFormat == TargetFormat.PDF)
+                {
+                    Windows.Data.Pdf.PdfDocument document = await Windows.Data.Pdf.PdfDocument.LoadFromFileAsync(files[0].SourceFile);
+                    projectCreationData = new PdfProjectCreationData(files[0].SourceFile, document.PageCount, targetFolder, new(null, false));
+                }
+                else
+                {
+                    projectCreationData = new MultiFileProjectCreationData(files, targetFormat, targetFolder, new(null, false), true);
+                }
+
+                await ProjectService.TryCreateProjectAsync(projectCreationData, true, viewDispatcherQueue!);
             }
-
-            // get target folder
-            StorageFolder? targetFolder = await files[0].SourceFile.GetParentAsync();
-
-            // create project data
-            TargetFormat targetFormat = Helpers.Helpers.FileExtensionToTargetFormat(extension);
-            IProjectCreationData projectCreationData;
-            if (targetFormat == TargetFormat.PDF)
+            catch (Exception exc)
             {
-                Windows.Data.Pdf.PdfDocument document = await Windows.Data.Pdf.PdfDocument.LoadFromFileAsync(files[0].SourceFile);
-                projectCreationData = new PdfProjectCreationData(files[0].SourceFile, document.PageCount, targetFolder, new(null, false));
+                LogService?.Log.Error(exc, "ShellViewModel - Failed to open files");
+                Messenger.Send(new ShowNotificationMessage(new Notification
+                {
+                    Title = "Something went wrong",
+                    Message = "Failed to open files.",
+                    Severity = Microsoft.UI.Xaml.Controls.InfoBarSeverity.Error
+                }));
             }
-            else
+            finally
             {
-                projectCreationData = new MultiFileProjectCreationData(files, targetFormat, targetFolder, new(null, false), true);
+                openTcs.TrySetResult();
             }
-
-            await ProjectService.TryCreateProjectAsync(projectCreationData, true, viewDispatcherQueue!);
-            openTcs.TrySetResult();
         }
     }
 }

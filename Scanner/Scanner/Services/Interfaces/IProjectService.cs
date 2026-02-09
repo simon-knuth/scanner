@@ -92,7 +92,7 @@ namespace Scanner.Services.Interfaces
         Task<bool> TryShareProjectAsync();
         Task<bool> TrySharePagesAsync(List<ImagePage> pages);
 
-        Task<bool> TryCloseProjectAsync(bool preserveSourceFilesInIncomingFolder = true, bool ignoreUnsavedChanges = false);
+        Task<bool> TryCloseProjectAsync(bool preserveSourceFilesInIncomingFolder = false, bool ignoreUnsavedChanges = false);
 
         void SelectPreviousPage();
         void SelectNextPage();
