@@ -53,12 +53,11 @@ namespace Scanner.Models
             TargetFolder = targetFolder;
             FileNameInfo = new FileNameInfo(targetFileName);
             FileNameInfo.NameChanged += FileNameInfo_NameChanged;
-            hasFileNameBeenApplied = false;
 
             HasBeenCreatedFromPdf = pages.Any(x => x is PdfPage);
         }
 
-        public static async Task<ProjectBase> CreateAsync(PdfProjectCreationData creationData, bool keepSourceFiles, DispatcherQueue uiDispatcherQueue)
+        public static async Task<ProjectBase> CreateAsync(PdfProjectCreationData creationData, bool keepSourceFiles, bool isAlreadySaved, DispatcherQueue uiDispatcherQueue)
         {
             // empty project folders
             await AppDataService.EmptyFolderAsync(AppDataService.ProjectFolder);
@@ -76,7 +75,10 @@ namespace Scanner.Models
 
             // create project and update previews
             PdfProject project = new(pages, creationData.TargetFileName, creationData.TargetFolder, creationData.InitialScanOptions);
-            
+
+            if (isAlreadySaved)
+                project.areFilesSaved = true;
+
             if (pages[0] is PdfPage)
             {
                 project.SourceFile = project.TargetFile = new(creationData.Pages[0].File, await creationData.Pages[0].File.OpenAsync(FileAccessMode.ReadWrite, StorageOpenOptions.AllowOnlyReaders));

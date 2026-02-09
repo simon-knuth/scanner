@@ -362,17 +362,22 @@ namespace Scanner.ViewModels
                 // create project data
                 TargetFormat targetFormat = Helpers.Helpers.FileExtensionToTargetFormat(extension);
                 IProjectCreationData projectCreationData;
+                ScanOptions scanOptions = new(null, false)
+                {
+                    TargetFormat = targetFormat
+                };
+
                 if (targetFormat == TargetFormat.PDF)
                 {
                     Windows.Data.Pdf.PdfDocument document = await Windows.Data.Pdf.PdfDocument.LoadFromFileAsync(files[0].SourceFile);
-                    projectCreationData = new PdfProjectCreationData(files[0].SourceFile, document.PageCount, targetFolder, new(null, false));
+                    projectCreationData = new PdfProjectCreationData(files[0].SourceFile, document.PageCount, targetFolder, scanOptions, true);
                 }
                 else
                 {
-                    projectCreationData = new MultiFileProjectCreationData(files, targetFormat, targetFolder, new(null, false), true);
+                    projectCreationData = new MultiFileProjectCreationData(files, targetFormat, targetFolder, scanOptions, true);
                 }
 
-                await ProjectService.TryCreateProjectAsync(projectCreationData, true, viewDispatcherQueue!);
+                await ProjectService.TryCreateProjectAsync(projectCreationData, true, true, viewDispatcherQueue!);
             }
             catch (Exception exc)
             {

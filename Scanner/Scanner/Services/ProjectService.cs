@@ -203,7 +203,7 @@ namespace Scanner.Services
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public async Task<bool> TryCreateProjectAsync(IProjectCreationData creationData, bool keepSourceFiles, DispatcherQueue uiDispatcherQueue)
+        public async Task<bool> TryCreateProjectAsync(IProjectCreationData creationData, bool keepSourceFiles, bool isAlreadySaved, DispatcherQueue uiDispatcherQueue)
         {
             try
             {
@@ -325,7 +325,7 @@ namespace Scanner.Services
                     switch (scanOptions.TargetFormat)
                     {
                         case TargetFormat.PDF:
-                            PdfProjectCreationData pdfCreationData = new(files, saveOptions.FileName, saveOptions.TargetFolder, scanOptions);
+                            PdfProjectCreationData pdfCreationData = new(files, saveOptions.FileName, saveOptions.TargetFolder, scanOptions, false);
                             project = await pdfCreationData.CreateProjectAsync(false, uiDispatcherQueue);
                             break;
                         case TargetFormat.JPG:
@@ -1031,7 +1031,7 @@ namespace Scanner.Services
                         // get file name and target folder from first page
                         ImagePage imagePage = (ImagePage)CurrentProject.Pages.First(x => x is ImagePage);
 
-                        creationData = new PdfProjectCreationData(CurrentProject.Pages, imagePage.FileNameInfo!.DesiredName, imagePage.TargetFolder, CurrentProject.InitialScanOptions);
+                        creationData = new PdfProjectCreationData(CurrentProject.Pages, imagePage.FileNameInfo!.DesiredName, imagePage.TargetFolder, CurrentProject.InitialScanOptions, false);
                         break;
                     case TargetFormat.JPG:
                     case TargetFormat.PNG:
@@ -1056,7 +1056,7 @@ namespace Scanner.Services
                     return false;
 
                 // create new project from preserved files
-                Task createProjectTask = TryCreateProjectAsync(creationData, false, uiDispatcherQueue);
+                Task createProjectTask = TryCreateProjectAsync(creationData, false, false, uiDispatcherQueue);
                 Messenger.Send(new ShowIndeterminateProgressDialogMessage(Resources.Strings.Resources.ApplyingChanges, createProjectTask));
                 await createProjectTask;
             }

@@ -41,6 +41,8 @@ namespace Scanner.Models
 
         public ScanOptions InitialScanOptions { get; }
 
+        public bool IsAlreadySaved { get; }
+
         public string TargetFileName { get; }
 
         public StorageFolder? TargetFolder { get; }
@@ -49,11 +51,12 @@ namespace Scanner.Models
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public PdfProjectCreationData(IReadOnlyList<StorageFile> files, string targetFileName, StorageFolder? targetFolder, ScanOptions initialScanOptions)
+        public PdfProjectCreationData(IReadOnlyList<StorageFile> files, string targetFileName, StorageFolder? targetFolder, ScanOptions initialScanOptions, bool isAlreadySaved)
         {
             TargetFileName = targetFileName;
             TargetFolder = targetFolder;
             InitialScanOptions = initialScanOptions;
+            IsAlreadySaved = isAlreadySaved;
 
             foreach (StorageFile file in files)
             {
@@ -61,11 +64,12 @@ namespace Scanner.Models
             }
         }
 
-        public PdfProjectCreationData(StorageFile pdfFile, uint pagesInPdf, StorageFolder? targetFolder, ScanOptions initialScanOptions)
+        public PdfProjectCreationData(StorageFile pdfFile, uint pagesInPdf, StorageFolder? targetFolder, ScanOptions initialScanOptions, bool isAlreadySaved)
         {
             TargetFileName = pdfFile.Name;
             TargetFolder = targetFolder;
             InitialScanOptions = initialScanOptions;
+            IsAlreadySaved = isAlreadySaved;
 
             for (int i = 0; i < pagesInPdf; i++)
             {
@@ -73,11 +77,12 @@ namespace Scanner.Models
             }
         }
 
-        public PdfProjectCreationData(Collection<IProjectPage> pages, string targetFileName, StorageFolder? targetFolder, ScanOptions initialScanOptions)
+        public PdfProjectCreationData(Collection<IProjectPage> pages, string targetFileName, StorageFolder? targetFolder, ScanOptions initialScanOptions, bool isAlreadySaved)
         {
-            InitialScanOptions = initialScanOptions;
             TargetFileName = targetFileName;
             TargetFolder = targetFolder;
+            InitialScanOptions = initialScanOptions;
+            IsAlreadySaved = isAlreadySaved;
 
             foreach (IProjectPage page in pages)
             {
@@ -95,7 +100,7 @@ namespace Scanner.Models
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public async Task<ProjectBase> CreateProjectAsync(bool keepSourceFiles, DispatcherQueue uiDispatcherQueue)
         {
-            return await PdfProject.CreateAsync(this, keepSourceFiles, uiDispatcherQueue);
+            return await PdfProject.CreateAsync(this, keepSourceFiles, IsAlreadySaved, uiDispatcherQueue);
         }
     }
 }
