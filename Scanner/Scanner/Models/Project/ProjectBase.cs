@@ -90,7 +90,7 @@ namespace Scanner.Models
                 if (!SetProperty(ref _areFilesSaved, value))
                     return;
 
-                if (!value && LatestSaveProcess != null)
+                if (!value && LatestSaveProcess != null && !LatestSaveProcess.Task.IsCompleted)
                     hasMadeChangesDuringSaveProcess = true;
 
                 OnPropertyChanged(nameof(IsSaved));
