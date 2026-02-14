@@ -734,14 +734,11 @@ namespace Scanner.ViewModels
                     // export every page as a separate PDF
                     foreach (IProjectPage page in CurrentProject.Pages)
                     {
-                        if (page is not ImagePage imagePage)
-                            continue;
-
                         Dictionary<IProjectPage, IProjectSnapshotPage> pages = [];
-                        if (page is ImagePage imagePage1)
-                            pages.Add(page, new PdfProjectSnapshotPage(imagePage1.SourceFile, null, imagePage.Filter, imagePage.Brightness, imagePage.Contrast));
+                        if (page is ImagePage imagePage)
+                            pages.Add(page, new PdfProjectSnapshotPage(imagePage.SourceFile, null, imagePage.Filter, imagePage.Brightness, imagePage.Contrast));
                         else if (page is PdfPage pdfPage)
-                            pages.Add(page, new PdfProjectSnapshotPage(pdfProject.SourceFile!.File, pdfPage.IndexInPdf, imagePage.Filter, imagePage.Brightness, imagePage.Contrast));
+                            pages.Add(page, new PdfProjectSnapshotPage(pdfProject.SourceFile!.File, pdfPage.IndexInPdf, ImageFilter.None, AppConfig.DefaultBrightness, AppConfig.DefaultContrast));
 
                         await PdfProject.CreatePdfFromPagesAsync(pages, null, saveOptions.FileName, saveOptions.TargetFolder, SettingsService.SettingOcrPdfs, viewDispatcherQueue!);
                     }

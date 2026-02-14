@@ -52,7 +52,7 @@ namespace Scanner.Services.Interfaces
 
         /// <summary>
         /// Holds preview files that are needed if destructive effects are applied to generate a target file.
-        /// Also used for thumbnails of imported PDF pages.
+        /// Also used for thumbnails of opened PDFs' pages.
         /// </summary>
         StorageFolder PreviewFolder
         {

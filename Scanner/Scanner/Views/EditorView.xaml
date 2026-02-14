@@ -629,7 +629,7 @@
                             </Grid.ColumnDefinitions>
 
                             <FontIcon Grid.Column="0" Glyph="&#xE7B3;" FontSize="16" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontFamily="{StaticResource SymbolThemeFontFamily}" />
-                            <TextBlock Grid.Column="1" Text="Imported PDF pages are read-only" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" MaxLines="2" TextWrapping="WrapWholeWords" TextTrimming="WordEllipsis" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Style="{StaticResource CaptionTextBlockStyle}" />
+                            <TextBlock Grid.Column="1" Text="Opened PDF pages are read-only" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" MaxLines="2" TextWrapping="WrapWholeWords" TextTrimming="WordEllipsis" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Style="{StaticResource CaptionTextBlockStyle}" />
                         </Grid>
                     </Grid>
                 </Frame>
