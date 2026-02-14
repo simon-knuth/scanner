@@ -34,7 +34,7 @@ namespace Scanner.Services
 
         private const string logFolderName = "logs";
 
-        public ILogger Log
+        public CallerLogger Log
         {
             get;
             private set;
@@ -90,7 +90,7 @@ namespace Scanner.Services
                     .MinimumLevel.Is(Serilog.Events.LogEventLevel.Information)
                     .WriteTo.Async(a => a.File(
                         path: logPath,
-                        formatter: new CompactJsonFormatter(),
+                        outputTemplate: "{Timestamp:yy-MM-dd HH:mm:ss} [{Level:u3}] [{Caller}] {Message:lj}{NewLine}{Exception}",
                         rollingInterval: RollingInterval.Day,
                         retainedFileCountLimit: 8,
                         fileSizeLimitBytes: 500000,
@@ -99,7 +99,7 @@ namespace Scanner.Services
                     .CreateLogger();
 
             log.Information("--- Log initialized ---");
-            Log = log;
+            Log = new(log);
         }
 
         private void Hook_FilePathChanged(object? sender, string e)

@@ -89,7 +89,7 @@ namespace Scanner.Services
                 }
                 catch (Exception exc)
                 {
-                    LogService?.Log.Error(exc, "SaveLocationService - Failed to load fixed save location from FutureAccessList");
+                    LogService?.Log.Error(exc, "Failed to load fixed save location from FutureAccessList");
                     try
                     {
                         fixedSaveLocation = await KnownFolders.PicturesLibrary.CreateFolderAsync
@@ -99,7 +99,7 @@ namespace Scanner.Services
                     {
                         isFixedSaveLocationSupported = false;
                         SettingsService.SettingSaveLocationType = SettingSaveLocationType.AskBeforeNewProject;
-                        LogService?.Log.Error(exc2, "SaveLocationService - Fixed save location is not supported");
+                        LogService?.Log.Error(exc2, "Fixed save location is not supported");
                         SentryService?.TrackError(exc2);
                     }
                 }
@@ -280,7 +280,7 @@ namespace Scanner.Services
             {
                 isFixedSaveLocationSupported = false;
                 SettingsService.SettingSaveLocationType = SettingSaveLocationType.AskBeforeNewProject;
-                LogService?.Log.Error(exc, "SaveLocationService - Resetting fixed save location failed (Unauthorized)");
+                LogService?.Log.Error(exc, "Resetting fixed save location failed (Unauthorized)");
                 SentryService?.TrackError(exc);
                 Messenger.Send(new ShowNotificationMessage(new CommunityToolkit.WinUI.Behaviors.Notification
                 {
@@ -293,7 +293,7 @@ namespace Scanner.Services
             {
                 isFixedSaveLocationSupported = false;
                 SettingsService.SettingSaveLocationType = SettingSaveLocationType.AskBeforeNewProject;
-                LogService?.Log.Error(exc, "SaveLocationService - Resetting fixed save location failed");
+                LogService?.Log.Error(exc, "Resetting fixed save location failed");
                 SentryService?.TrackError(exc);
                 Messenger.Send(new ShowNotificationMessage(new CommunityToolkit.WinUI.Behaviors.Notification
                 {

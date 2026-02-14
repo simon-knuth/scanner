@@ -157,7 +157,7 @@ namespace Scanner.Models
             }
             catch (Exception exc)
             {
-                LogService?.Log.Error(exc, "ImageProjectSnapshot - Failed to save images to target folder");
+                LogService?.Log.Error(exc, "Failed to save images to target folder");
             }
 
             return result;

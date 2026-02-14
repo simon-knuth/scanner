@@ -89,7 +89,7 @@ namespace Scanner.Services
             watcher.EnumerationCompleted += Watcher_EnumerationCompleted;
 
             watcher.Start();
-            LogService?.Log.Information("ScannerDiscoverService - Initialized");
+            LogService?.Log.Information("Initialized");
         }
 
         private void Watcher_EnumerationCompleted(DeviceWatcher sender, object args)
@@ -110,7 +110,7 @@ namespace Scanner.Services
                     HardwareScanner scanner = new HardwareScanner(imageScanner, args.Name);
 
                     await TryAddScannerAsync(scanner);
-                    LogService?.Log.Information("ScannerDiscoveryScanner - Found and added {@Scanner}", scanner);
+                    LogService?.Log.Information("Found and added {@Scanner}", scanner);
 
                     // analytics
                     if (scanner != null) SendScannerAnalytics(scanner);
@@ -119,7 +119,7 @@ namespace Scanner.Services
                 }
                 catch (Exception exc)
                 {
-                    LogService?.Log.Warning(exc, "ScannerDiscoveryService - Failed to add scanner ({Attempt})", attempt);
+                    LogService?.Log.Warning(exc, "Failed to add scanner ({Attempt})", attempt);
                     if (attempt < 2)
                     {
                         // scanner may just be blocked by another app, try again
@@ -145,7 +145,7 @@ namespace Scanner.Services
             }
             catch (Exception exc)
             {
-                LogService?.Log.Warning(exc, "ScannerDiscoveryService - Failed to remove {@Device}", scanner);
+                LogService?.Log.Warning(exc, "Failed to remove {@Device}", scanner);
                 return;
             }
             finally
@@ -171,7 +171,7 @@ namespace Scanner.Services
             }
             catch (Exception exc)
             {
-                LogService?.Log.Warning(exc, "ScannerDiscoveryService - Failed to remove device by {Id}", scannerId);
+                LogService?.Log.Warning(exc, "Failed to remove device by {Id}", scannerId);
                 return;
             }
             finally
@@ -199,7 +199,7 @@ namespace Scanner.Services
                 if (Devices.Exists((x) => x.Id.ToLower() == scanner.Id.ToLower()))
                 {
                     // duplicate detected ~> ignore
-                    LogService?.Log.Information("ScannerDiscoveryService - Found duplicate {@Scanner}", scanner);
+                    LogService?.Log.Information("Found duplicate {@Scanner}", scanner);
                     return;
                 }
 
@@ -209,7 +209,7 @@ namespace Scanner.Services
             }
             catch (Exception exc)
             {
-                LogService?.Log.Warning(exc, "ScannerDiscoveryService - Failed to add discovered {@Scanner}", scanner);
+                LogService?.Log.Warning(exc, "Failed to add discovered {@Scanner}", scanner);
                 return;
             }
             finally

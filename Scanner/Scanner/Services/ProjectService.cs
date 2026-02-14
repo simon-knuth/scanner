@@ -237,7 +237,7 @@ namespace Scanner.Services
             }
             catch (Exception exc)
             {
-                LogService?.Log.Error(exc, "ProjectService - Failed to create project from data");
+                LogService?.Log.Error(exc, "Failed to create project from data");
                 SentryService?.TrackError(exc);
                 Messenger.Send(new ShowNotificationMessage(new CommunityToolkit.WinUI.Behaviors.Notification()
                 {
@@ -392,7 +392,7 @@ namespace Scanner.Services
             }
             catch (Exception exc)
             {
-                LogService?.Log.Error(exc, "ProjectService - Failed to create project from scan");
+                LogService?.Log.Error(exc, "Failed to create project from scan");
                 SentryService?.TrackError(exc);
                 Messenger.Send(new ShowNotificationMessage(new CommunityToolkit.WinUI.Behaviors.Notification()
                 {
@@ -496,7 +496,7 @@ namespace Scanner.Services
             }
             catch (Exception exc)
             {
-                LogService?.Log.Error(exc, "ProjectService - Failed to scan to project");
+                LogService?.Log.Error(exc, "Failed to scan to project");
                 SentryService?.TrackError(exc);
                 Messenger.Send(new ShowNotificationMessage(new CommunityToolkit.WinUI.Behaviors.Notification()
                 {

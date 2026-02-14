@@ -115,7 +115,7 @@ namespace Scanner.Models.ScanningDevices
             }
             catch (Exception exc)
             {
-                LogService?.Log.Error(exc, "HardwareScanner - Failed to determine supported scan sources");
+                LogService?.Log.Error(exc, "Failed to determine supported scan sources");
                 throw;
             }
 
@@ -139,7 +139,7 @@ namespace Scanner.Models.ScanningDevices
                 {
                     // no color mode allowed, source mode is invalid
                     IsFlatbedAllowed = false;
-                    LogService?.Log.Warning("HardwareScanner - No color mode for flatbed allowed, invalid source mode");
+                    LogService?.Log.Warning("No color mode for flatbed allowed, invalid source mode");
                 }
                 else
                 {
@@ -149,7 +149,7 @@ namespace Scanner.Models.ScanningDevices
                     }
                     catch (Exception exc)
                     {
-                        LogService?.Log.Warning(exc, "HardwareScanner - Failed to determine preview support for flatbed");
+                        LogService?.Log.Warning(exc, "Failed to determine preview support for flatbed");
                         IsFlatbedPreviewAllowed = false;
                     }
 
@@ -162,30 +162,30 @@ namespace Scanner.Models.ScanningDevices
                     }
                     catch (Exception exc)
                     {
-                        LogService?.Log.Warning(exc, "DiscoveredScanner - Failed to determine auto crop support for flatbed");
+                        LogService?.Log.Warning(exc, "Failed to determine auto crop support for flatbed");
                         IsFlatbedAutoCropSingleRegionAllowed = IsFlatbedAutoCropMultiRegionAllowed = false;
                     }
 
                     FlatbedFormats = GenerateFormats(device.FlatbedConfiguration);
                     if (FlatbedFormats.Count == 0)
                     {
-                        LogService?.Log.Warning("HardwareScanner - No formats generated for flatbed, invalid source mode");
+                        LogService?.Log.Warning("No formats generated for flatbed, invalid source mode");
                         IsFeederAllowed = false;
                     }
                     else
                     {
-                        LogService?.Log.Information("HardwareScanner - Generated {@Formats} for flatbed", FlatbedFormats);
+                        LogService?.Log.Information("Generated {@Formats} for flatbed", FlatbedFormats);
                     }
 
                     FlatbedResolutions = GenerateResolutions(device.FlatbedConfiguration);
                     if (FlatbedResolutions.Count == 0)
                     {
-                        LogService?.Log.Warning("HardwareScanner - No resolutions generated for flatbed, invalid source mode");
+                        LogService?.Log.Warning("No resolutions generated for flatbed, invalid source mode");
                         IsFeederAllowed = false;
                     }
                     else
                     {
-                        LogService?.Log.Information("HardwareScanner - Generated {@Resolutions} for flatbed", FlatbedResolutions);
+                        LogService?.Log.Information("Generated {@Resolutions} for flatbed", FlatbedResolutions);
                     }
 
                     FlatbedMinScanArea = device.FlatbedConfiguration.MinScanArea;
@@ -205,7 +205,7 @@ namespace Scanner.Models.ScanningDevices
                 {
                     // no color mode allowed, source mode is invalid
                     IsFeederAllowed = false;
-                    LogService?.Log.Warning("HardwareScanner - No color mode for feeder allowed, invalid source mode");
+                    LogService?.Log.Warning("No color mode for feeder allowed, invalid source mode");
                 }
                 else
                 {
@@ -215,7 +215,7 @@ namespace Scanner.Models.ScanningDevices
                     }
                     catch (Exception exc)
                     {
-                        LogService?.Log.Warning(exc, "HardwareScanner - Failed to determine duplex support for feeder");
+                        LogService?.Log.Warning(exc, "Failed to determine duplex support for feeder");
                         IsFeederDuplexSupported = false;
                     }
 
@@ -225,7 +225,7 @@ namespace Scanner.Models.ScanningDevices
                     }
                     catch (Exception exc)
                     {
-                        LogService?.Log.Warning(exc, "HardwareScanner - Failed to determine preview support for feeder");
+                        LogService?.Log.Warning(exc, "Failed to determine preview support for feeder");
                         IsFeederPreviewAllowed = false;
                     }
 
@@ -238,30 +238,30 @@ namespace Scanner.Models.ScanningDevices
                     }
                     catch (Exception exc)
                     {
-                        LogService?.Log.Warning(exc, "HardwareScanner - Failed to determine auto crop support for feeder");
+                        LogService?.Log.Warning(exc, "Failed to determine auto crop support for feeder");
                         IsFeederAutoCropSingleRegionAllowed = IsFeederAutoCropMultiRegionAllowed = false;
                     }
 
                     FeederFormats = GenerateFormats(device.FeederConfiguration);
                     if (FeederFormats.Count == 0)
                     {
-                        LogService?.Log.Warning("HardwareScanner - No formats generated for feeder, invalid source mode");
+                        LogService?.Log.Warning("No formats generated for feeder, invalid source mode");
                         IsFeederAllowed = false;
                     }
                     else
                     {
-                        LogService?.Log.Information("HardwareScanner - Generated {@Formats} for feeder", FeederFormats);
+                        LogService?.Log.Information("Generated {@Formats} for feeder", FeederFormats);
                     }
 
                     FeederResolutions = GenerateResolutions(device.FeederConfiguration);
                     if (FeederResolutions.Count == 0)
                     {
-                        LogService?.Log.Warning("HardwareScanner - No resolutions generated for feeder, invalid source mode");
+                        LogService?.Log.Warning("No resolutions generated for feeder, invalid source mode");
                         IsFeederAllowed = false;
                     }
                     else
                     {
-                        LogService?.Log.Information("HardwareScanner - Generated {@Resolutions} for feeder", FeederResolutions);
+                        LogService?.Log.Information("Generated {@Resolutions} for feeder", FeederResolutions);
                     }
 
                     FeederMinScanArea = device.FeederConfiguration.MinScanArea;
@@ -275,7 +275,7 @@ namespace Scanner.Models.ScanningDevices
                 throw new ArgumentException("Scanner doesn't support any source mode and can't be used");
             }
 
-            LogService?.Log.Information("HardwareScanner - Created {@Scanner}", this);
+            LogService?.Log.Information("Created {@Scanner}", this);
         }
 
 

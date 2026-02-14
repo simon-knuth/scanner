@@ -381,7 +381,7 @@ namespace Scanner.ViewModels
             }
             catch (Exception exc)
             {
-                LogService?.Log.Error(exc, "ShellViewModel - Failed to open files");
+                LogService?.Log.Error(exc, "Failed to open files");
                 Messenger.Send(new ShowNotificationMessage(new Notification
                 {
                     Title = "Something went wrong",

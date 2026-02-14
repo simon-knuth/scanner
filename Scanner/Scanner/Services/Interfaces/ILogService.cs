@@ -28,7 +28,7 @@ namespace Scanner.Services.Interfaces
         event EventHandler<string> LogFilePathChanged;
         #endregion
 
-        ILogger Log { get; }
+        CallerLogger Log { get; }
 
         StorageFolder LogFolder { get; }
 

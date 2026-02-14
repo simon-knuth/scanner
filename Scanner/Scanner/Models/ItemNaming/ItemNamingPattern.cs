@@ -55,7 +55,7 @@ namespace Scanner.Models.ItemNaming
             }
             catch (Exception exc)
             {
-                Ioc.Default.GetService<ILogService>()?.Log.Error(exc, "FileNamingPattern - Failed to generate file naming pattern");
+                Ioc.Default.GetService<ILogService>()?.Log.Error(exc, "Failed to generate file naming pattern");
                 Ioc.Default.GetService<ISentryService>()?.TrackError(exc);
                 throw;
             }
@@ -108,7 +108,7 @@ namespace Scanner.Models.ItemNaming
             }
             catch (Exception exc)
             {
-                Ioc.Default.GetService<ILogService>()?.Log.Error(exc, "FileNamingPattern - Failed to generate file name");
+                Ioc.Default.GetService<ILogService>()?.Log.Error(exc, "Failed to generate file name");
                 Ioc.Default.GetService<ISentryService>()?.TrackError(exc);
 
                 // fallback to rudimentary legacy file naming

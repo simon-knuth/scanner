@@ -118,14 +118,14 @@ namespace Scanner.ViewModels
                 else
                     SettingsService.CustomSubFolderNamingPattern = Pattern;
 
-                LogService?.Log.Information("CustomFileNamingViewModel - Changes in file naming pattern confirmed");
+                LogService?.Log.Information("Changes in file naming pattern confirmed");
                 CloseRequested?.Invoke(this, EventArgs.Empty);
             }
         }
 
         private void Cancel()
         {
-            LogService?.Log.Information("CustomFileNamingViewModel - Changes in file naming pattern discarded");
+            LogService?.Log.Information("Changes in file naming pattern discarded");
         }
 
         private void AddBlock(string blockName)
@@ -148,13 +148,13 @@ namespace Scanner.ViewModels
 
         private void Block_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            LogService?.Log.Information("CustomFileNamingViewModel - File naming {block} {property} changed", ((IItemNamingBlock)sender).Name, e.PropertyName);
+            LogService?.Log.Information("File naming {block} {property} changed", ((IItemNamingBlock)sender).Name, e.PropertyName);
             UpdatePattern();
         }
 
         private void DeleteBlock(IItemNamingBlock block)
         {
-            LogService?.Log.Information("CustomFileNamingViewModel - Removing file naming {block}", block.Name);
+            LogService?.Log.Information("Removing file naming {block}", block.Name);
 
             block.PropertyChanged -= Block_PropertyChanged;
             SelectedBlocks.Remove(block);
@@ -162,7 +162,7 @@ namespace Scanner.ViewModels
 
         private void DeleteAllBlocks()
         {
-            LogService?.Log.Information("CustomFileNamingViewModel - Removing all file naming blocks");
+            LogService?.Log.Information("Removing all file naming blocks");
 
             foreach (IItemNamingBlock block in SelectedBlocks)
             {

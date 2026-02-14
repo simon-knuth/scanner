@@ -175,7 +175,7 @@ namespace Scanner.ViewModels
                 var savePicker = new FileSavePicker();
                 savePicker.SuggestedStartLocation = PickerLocationId.Desktop;
 #if DEBUG
-                savePicker.FileTypeChoices.Add("JSON", new List<string>() { ".json" });
+                savePicker.FileTypeChoices.Add("LOG", new List<string>() { ".log" });
 #else
                 savePicker.FileTypeChoices.Add("TXT", new List<string>() { ".txt" });
 #endif
@@ -199,7 +199,7 @@ namespace Scanner.ViewModels
             }
             catch (Exception exc)
             {
-                LogService?.Log.Warning(exc, "SettingsViewModel - Log export failed");
+                LogService?.Log.Warning(exc, "Log export failed");
                 SentryService?.TrackError(exc);
             }
         }

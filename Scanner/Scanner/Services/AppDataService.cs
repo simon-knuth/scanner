@@ -71,7 +71,7 @@ namespace Scanner.Services
         /// </summary>
         public async Task InitializeAsync()
         {
-            LogService?.Log.Information("AppDataService - Initializing");
+            LogService?.Log.Information("Initializing");
 
             // clean up temp folder
             try
@@ -86,7 +86,7 @@ namespace Scanner.Services
             }
             catch (Exception exc)
             {
-                LogService?.Log.Error(exc, "AppDataService - Failed to clean up temp folder");
+                LogService?.Log.Error(exc, "Failed to clean up temp folder");
                 throw;
             }
 
@@ -100,7 +100,7 @@ namespace Scanner.Services
             UndoFolder = await CreateOrReplaceFolderAsync(UndoFolderName);
             RedoFolder = await CreateOrReplaceFolderAsync(RedoFolderName);
 
-            LogService?.Log.Information("AppDataService - Initialized temp folder");
+            LogService?.Log.Information("Initialized temp folder");
         }
 
         private async Task<StorageFolder> CreateOrReplaceFolderAsync(string name)
@@ -111,7 +111,7 @@ namespace Scanner.Services
             }
             catch (Exception exc)
             {
-                LogService?.Log.Error(exc, $"AppDataService - Failed to replace folder '{name}' in temp folder");
+                LogService?.Log.Error(exc, $"Failed to replace folder '{name}' in temp folder");
                 throw;
             }
         }

@@ -247,7 +247,7 @@ namespace Scanner.ViewModels
 
         private void Cancel()
         {
-            LogService?.Log.Information("Scan and merge: Cancel");
+            LogService?.Log.Information("Cancel");
         }
 
         private ScanMergeConfig CreateMergeConfig()

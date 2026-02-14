@@ -106,7 +106,7 @@ namespace Scanner.Services
             }
             catch (Exception exc)
             {
-                LogService?.Log.Warning(exc, "CopilotRuntimeService - Failed to generate image description for file name");
+                LogService?.Log.Warning(exc, "Failed to generate image description for file name");
                 return null;
             }
             finally
@@ -122,12 +122,12 @@ namespace Scanner.Services
                 // validate description (ignore ImageHasTooMuchText status)
                 if (descriptionResult.Status != ImageDescriptionResultStatus.Complete && descriptionResult.Status != ImageDescriptionResultStatus.ImageHasTooMuchText)
                 {
-                    LogService?.Log.Warning("CopilotRuntimeService - Image description failed with {Status}", descriptionResult.Status);
+                    LogService?.Log.Warning("Image description failed with {Status}", descriptionResult.Status);
                     return null;
                 }
                 if (description.Length < minImageDescriptionLengthAcceptanceThreshold)
                 {
-                    LogService?.Log.Warning("CopilotRuntimeService - Image description {Length} is below threshold", descriptionResult.Description.Length);
+                    LogService?.Log.Warning("Image description {Length} is below threshold", descriptionResult.Description.Length);
                     return null;
                 }
 
@@ -155,17 +155,17 @@ namespace Scanner.Services
                 // validate name
                 if (languageModelResult.Status != LanguageModelResponseStatus.Complete)
                 {
-                    LogService?.Log.Warning("CopilotRuntimeService - Name generation failed with {Status} and {Error}", languageModelResult.Status, languageModelResult.ExtendedError);
+                    LogService?.Log.Warning("Name generation failed with {Status} and {Error}", languageModelResult.Status, languageModelResult.ExtendedError);
                     return null;
                 }
                 if (generatedName.Length < minNameLengthAcceptanceThreshold)
                 {
-                    LogService?.Log.Warning("CopilotRuntimeService - Name generation {Length} is below threshold", languageModelResult.Text.Length);
+                    LogService?.Log.Warning("Name generation {Length} is below threshold", languageModelResult.Text.Length);
                     return null;
                 }
                 if (generatedName.Length > maxNameLengthAcceptanceThreshold)
                 {
-                    LogService?.Log.Warning("CopilotRuntimeService - Name generation {Length} is above threshold", languageModelResult.Text.Length);
+                    LogService?.Log.Warning("Name generation {Length} is above threshold", languageModelResult.Text.Length);
                     return null;
                 }
 
@@ -173,7 +173,7 @@ namespace Scanner.Services
             }
             catch (Exception exc)
             {
-                LogService?.Log.Warning(exc, "CopilotRuntimeService - Failed to generate file name");
+                LogService?.Log.Warning(exc, "Failed to generate file name");
             }
 
             return null;
@@ -202,7 +202,7 @@ namespace Scanner.Services
             }
             catch (Exception exc)
             {
-                LogService?.Log.Warning(exc, "CopilotRuntimeService - Failed to install models");
+                LogService?.Log.Warning(exc, "Failed to install models");
             }
         }
 

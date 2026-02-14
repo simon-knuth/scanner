@@ -81,7 +81,7 @@ namespace Scanner.Services
                 if (new Random().NextDouble() <= AppConfig.CrashAttachmentRate)
                 {
                     FileAttachmentContent fileAttachment = new FileAttachmentContent(LogService?.LogFilePath);
-                    SentryAttachment attachment = new SentryAttachment(AttachmentType.Default, fileAttachment, "log.json", "application/json");
+                    SentryAttachment attachment = new SentryAttachment(AttachmentType.Default, fileAttachment, "log.log", "application/log");
                     scope.AddAttachment(attachment);
                 }
             };
@@ -95,7 +95,7 @@ namespace Scanner.Services
                 if (new Random().NextDouble() <= AppConfig.ErrorAttachmentRate)
                 {
                     FileAttachmentContent fileAttachment = new FileAttachmentContent(LogService?.LogFilePath);
-                    SentryAttachment attachment = new SentryAttachment(AttachmentType.Default, fileAttachment, "log.json", "application/json");
+                    SentryAttachment attachment = new SentryAttachment(AttachmentType.Default, fileAttachment, "log.log", "application/log");
                     scope.AddAttachment(attachment);
                 }
             };
@@ -109,7 +109,7 @@ namespace Scanner.Services
                 if (new Random().NextDouble() <= AppConfig.WarningAttachmentRate)
                 {
                     FileAttachmentContent fileAttachment = new FileAttachmentContent(LogService?.LogFilePath);
-                    SentryAttachment attachment = new SentryAttachment(AttachmentType.Default, fileAttachment, "log.json", "application/json");
+                    SentryAttachment attachment = new SentryAttachment(AttachmentType.Default, fileAttachment, "log.log", "application/log");
                     scope.AddAttachment(attachment);
                 }
             };
@@ -123,7 +123,7 @@ namespace Scanner.Services
                 if (new Random().NextDouble() <= AppConfig.WarningAttachmentRate)
                 {
                     FileAttachmentContent fileAttachment = new FileAttachmentContent(LogService?.LogFilePath);
-                    SentryAttachment attachment = new SentryAttachment(AttachmentType.Default, fileAttachment, "log.json", "application/json");
+                    SentryAttachment attachment = new SentryAttachment(AttachmentType.Default, fileAttachment, "log.log", "application/log");
                     scope.AddAttachment(attachment);
                 }
             };
@@ -299,12 +299,12 @@ namespace Scanner.Services
                     return string.Format("{0}={1}", key, value);
                 }).ToArray());
             }
-            LogService?.Log.Information("SentryService - Tracking {Event} with {Properties}", sentryEvent, dictToText);
+            LogService?.Log.Information("Tracking {Event} with {Properties}", sentryEvent, dictToText);
         }
 
         public void TrackError(Exception exception, bool isFatal = false)
         {
-            LogService?.Log.Information("SentryService - Tracking error");
+            LogService?.Log.Information("Tracking error");
             if (isFatal)
             {
                 SentrySdk.CaptureException(exception, defaultScope);
@@ -317,7 +317,7 @@ namespace Scanner.Services
 
         public void TrackWarning(Exception exception)
         {
-            LogService?.Log.Information("SentryService - Tracking warning");
+            LogService?.Log.Information("Tracking warning");
             SentrySdk.CaptureException(exception, warningScope);
         }
 
@@ -330,14 +330,14 @@ namespace Scanner.Services
 
         public void SendSuggestionFeedback(string message, string? contactEmail, string? name)
         {
-            LogService?.Log.Information("SentryService - Tracking suggestion feedback");
+            LogService?.Log.Information("Tracking suggestion feedback");
             SentryFeedback feedback = new(message, contactEmail, name);
             SentrySdk.CaptureFeedback(feedback, suggestionFeedbackScope);
         }
 
         public void SendErrorFeedback(string message, string? contactEmail, string? name)
         {
-            LogService?.Log.Information("SentryService - Tracking error feedback");
+            LogService?.Log.Information("Tracking error feedback");
             SentryFeedback feedback = new(message, contactEmail, name);
             SentrySdk.CaptureFeedback(feedback, errorFeedbackScope);
         }

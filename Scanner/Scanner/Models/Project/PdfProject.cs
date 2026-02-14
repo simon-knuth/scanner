@@ -516,7 +516,7 @@ namespace Scanner.Models
             }
             catch (Exception exc)
             {
-                LogService?.Log.Error(exc, "PdfProjectSnapshot - Failed to generate PDF");
+                LogService?.Log.Error(exc, "Failed to generate PDF");
                 return result;
             }
 
@@ -542,7 +542,7 @@ namespace Scanner.Models
             }
             catch (Exception exc)
             {
-                LogService?.Log.Error(exc, "PdfProjectSnapshot - Failed to save PDF to target folder");
+                LogService?.Log.Error(exc, "Failed to save PDF to target folder");
             }
 
             return result;

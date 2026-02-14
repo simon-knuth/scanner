@@ -575,7 +575,7 @@ namespace Scanner.Views
             }
             catch (Exception exc)
             {
-                ViewModel.LogService?.Log.Warning(exc, "EditorView - Failed to cahce canvas bitmap");
+                ViewModel.LogService?.Log.Warning(exc, "Failed to cahce canvas bitmap");
                 return null;
             }
         }
