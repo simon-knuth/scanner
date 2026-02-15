@@ -30,6 +30,7 @@ namespace Scanner.ViewModels
         public readonly IAccessibilityService AccessibilityService = Ioc.Default.GetRequiredService<IAccessibilityService>();
         public readonly ICopilotRuntimeService CopilotRuntimeService = Ioc.Default.GetRequiredService<ICopilotRuntimeService>();
         private readonly ILogService? LogService = Ioc.Default.GetService<ILogService>();
+        public readonly IProjectService ProjectService = Ioc.Default.GetRequiredService<IProjectService>();
         public readonly ISaveLocationService SaveLocationService = Ioc.Default.GetRequiredService<ISaveLocationService>();
         private readonly ISentryService? SentryService = Ioc.Default.GetService<ISentryService>();
         public readonly ISettingsService SettingsService = Ioc.Default.GetRequiredService<ISettingsService>();
