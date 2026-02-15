@@ -175,11 +175,7 @@ namespace Scanner.ViewModels
                 // prepare picker
                 var savePicker = new FileSavePicker();
                 savePicker.SuggestedStartLocation = PickerLocationId.Desktop;
-#if DEBUG
                 savePicker.FileTypeChoices.Add("LOG", new List<string>() { ".log" });
-#else
-                savePicker.FileTypeChoices.Add("TXT", new List<string>() { ".txt" });
-#endif
                 savePicker.SuggestedFileName = file.DisplayName;
 
                 var hwnd = WindowNative.GetWindowHandle(((App)Application.Current).SettingsWindow);
