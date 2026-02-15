@@ -18,7 +18,6 @@ using System.IO;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
 using Windows.System;
-using Serilog.Formatting.Compact;
 using Serilog.Exceptions;
 using CommunityToolkit.Mvvm.DependencyInjection;
 

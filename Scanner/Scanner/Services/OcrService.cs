@@ -13,7 +13,6 @@ using Scanner.Models.Interfaces;
 using Scanner.Services.Interfaces;
 using Serilog;
 using Serilog.Exceptions;
-using Serilog.Formatting.Compact;
 using Serilog.Sinks.File;
 using System;
 using System.Collections.Generic;
