@@ -371,7 +371,7 @@
                                             </controls:SettingsCard>
                                         </controls:SettingsExpander.Items>
                                     </controls:SettingsExpander>
-                                    <controls:SettingsExpander Header="Notifications">
+                                    <controls:SettingsExpander Header="In-app notifications">
                                         <controls:SettingsExpander.HeaderIcon>
                                             <FontIcon Glyph="&#xE768;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                                         </controls:SettingsExpander.HeaderIcon>
@@ -382,13 +382,13 @@
                                                     <StackPanel Orientation="Vertical" Spacing="12">
                                                         <TextBox Header="Title" Text="{x:Bind DebugNotification.Title, Mode=TwoWay}" />
                                                         <TextBox Header="Message" Text="{x:Bind DebugNotification.Message, Mode=TwoWay}" />
-                                                        <ComboBox x:Name="ComboBoxDebugNotificationsSeverity" Header="Severity" SelectedIndex="0">
+                                                        <ComboBox x:Name="ComboBoxDebugInAppNotificationsSeverity" Header="Severity" SelectedIndex="0">
                                                             <ComboBoxItem Content="Informational" />
                                                             <ComboBoxItem Content="Success" />
                                                             <ComboBoxItem Content="Warning" />
                                                             <ComboBoxItem Content="Error" />
                                                         </ComboBox>
-                                                        <Button x:Name="ButtonDebugNotification" Content="Show notification" Click="ButtonDebugNotification_Click" />
+                                                        <Button x:Name="ButtonDebugInAppNotification" Content="Show notification" Click="ButtonDebugInAppNotification_Click" />
                                                     </StackPanel>
                                                 </controls:SettingsCard.Content>
                                             </controls:SettingsCard>

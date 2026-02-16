@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace Scanner.Messages
 {
-    internal class ShowNotificationMessage
+    internal class ShowInAppNotificationMessage
     {
         public readonly Notification Notification;
 
-        public ShowNotificationMessage(Notification notification)
+        public ShowInAppNotificationMessage(Notification notification)
         {
             Notification = notification;
         }

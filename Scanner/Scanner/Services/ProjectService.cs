@@ -7,6 +7,9 @@ using Microsoft.UI.Dispatching;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media;
+using Microsoft.Windows.AppNotifications;
+using Microsoft.Windows.AppNotifications.Builder;
+using Scanner.Extensions;
 using Scanner.Messages;
 using Scanner.Models;
 using Scanner.Models.Interfaces;
@@ -26,14 +29,13 @@ using Windows.Graphics.Imaging;
 using Windows.Storage;
 using Windows.Storage.Streams;
 using Windows.System.Threading;
-using WinRT.Interop;
-using static Scanner.Helpers.RotationHelpers;
-using static Scanner.Helpers.Helpers;
-using Scanner.Extensions;
 using Windows.UI.Shell;
-using Windows.Win32.UI.Shell;
 using Windows.Win32;
+using Windows.Win32.UI.Shell;
+using WinRT.Interop;
 using WinUIEx;
+using static Scanner.Helpers.Helpers;
+using static Scanner.Helpers.RotationHelpers;
 
 namespace Scanner.Services
 {
@@ -239,7 +241,7 @@ namespace Scanner.Services
             {
                 LogService?.Log.Error(exc, "Failed to create project from data");
                 SentryService?.TrackError(exc);
-                Messenger.Send(new ShowNotificationMessage(new CommunityToolkit.WinUI.Behaviors.Notification()
+                Messenger.Send(new ShowInAppNotificationMessage(new CommunityToolkit.WinUI.Behaviors.Notification()
                 {
                     Title = "Something went wrong",
                     Message = string.IsNullOrEmpty(exc.Message) ? exc.Message : "Please try again later."
@@ -273,32 +275,9 @@ namespace Scanner.Services
                     _ = Task.Run(CopilotRuntimeService.PreheatFileNameGenerationModelsAsync);
 
                 // scan
-                IsScanProcessRunning = true;
-                await AppDataService.EmptyFolderAsync(AppDataService.IncomingFolder);
-                IReadOnlyList<StorageFile> files = [];
-                await Task.Run(async () => files = await scanOptions.Scanner.GetScanAsync(scanOptions, AppDataService.IncomingFolder, uiDispatcherQueue));
-
-                if (files.Count == 0)
-                {
-                    // this should only happen if the feeder is empty
-                    if (scanOptions.SourceMode == ScannerSource.Feeder)
-                    {
-                        Messenger.Send(new ShowNotificationMessage(new CommunityToolkit.WinUI.Behaviors.Notification()
-                        {
-                            Title = "Feeder empty",
-                            Message = "There are no pages in the feeder. Please make sure you have inserted them correctly for the scanner to detect them."
-                        }));
-                    }
-                    else
-                    {
-                        Messenger.Send(new ShowNotificationMessage(new CommunityToolkit.WinUI.Behaviors.Notification()
-                        {
-                            Title = "Something went wrong",
-                            Message = "Please try again later."
-                        }));
-                    }
+                IReadOnlyList<StorageFile>? files = await ScanAsync(scanOptions, uiDispatcherQueue);
+                if (files == null)
                     return false;
-                }
 
                 // automatic rotation
                 if (SettingsService.SettingAutoRotate)
@@ -388,13 +367,15 @@ namespace Scanner.Services
                 // free up space
                 _ = Task.Run(() => _ = AppDataService.EmptyFolderAsync(AppDataService.IncomingFolder));
 
+                ShowScanCompleteToastNotification();
+
                 return true;
             }
             catch (Exception exc)
             {
                 LogService?.Log.Error(exc, "Failed to create project from scan");
                 SentryService?.TrackError(exc);
-                Messenger.Send(new ShowNotificationMessage(new CommunityToolkit.WinUI.Behaviors.Notification()
+                Messenger.Send(new ShowInAppNotificationMessage(new CommunityToolkit.WinUI.Behaviors.Notification()
                 {
                     Title = "Something went wrong",
                     Message = string.IsNullOrEmpty(exc.Message) ? exc.Message : "Please try again later."
@@ -430,32 +411,9 @@ namespace Scanner.Services
                 }
 
                 // scan
-                IsScanProcessRunning = true;
-                await AppDataService.EmptyFolderAsync(AppDataService.IncomingFolder);
-                IReadOnlyList<StorageFile> files = [];
-                await Task.Run(async () => files = await scanOptions.Scanner.GetScanAsync(scanOptions, AppDataService.IncomingFolder, uiDispatcherQueue));
-
-                if (files.Count == 0)
-                {
-                    // this should only happen if the feeder is empty
-                    if (scanOptions.SourceMode == ScannerSource.Feeder)
-                    {
-                        Messenger.Send(new ShowNotificationMessage(new CommunityToolkit.WinUI.Behaviors.Notification()
-                        {
-                            Title = "Feeder empty",
-                            Message = "There are no pages in the feeder. Please make sure you have inserted them correctly for the scanner to detect them."
-                        }));
-                    }
-                    else
-                    {
-                        Messenger.Send(new ShowNotificationMessage(new CommunityToolkit.WinUI.Behaviors.Notification()
-                        {
-                            Title = "Something went wrong",
-                            Message = "Please try again later."
-                        }));
-                    }
+                IReadOnlyList<StorageFile>? files = await ScanAsync(scanOptions, uiDispatcherQueue);
+                if (files == null)
                     return false;
-                }
 
                 // automatic rotation
                 if (SettingsService.SettingAutoRotate)
@@ -492,13 +450,16 @@ namespace Scanner.Services
                 IProjectAction action = new AddFilesAction(insertions, false);
 
                 await ApplyActionAsync(action);
+
+                ShowScanCompleteToastNotification();
+
                 return true;
             }
             catch (Exception exc)
             {
                 LogService?.Log.Error(exc, "Failed to scan to project");
                 SentryService?.TrackError(exc);
-                Messenger.Send(new ShowNotificationMessage(new CommunityToolkit.WinUI.Behaviors.Notification()
+                Messenger.Send(new ShowInAppNotificationMessage(new CommunityToolkit.WinUI.Behaviors.Notification()
                 {
                     Title = "Something went wrong",
                     Message = string.IsNullOrEmpty(exc.Message) ? exc.Message : "Please try again later."
@@ -509,6 +470,41 @@ namespace Scanner.Services
             {
                 IsActionRunning = IsScanProcessRunning = false;
             }
+        }
+
+        private async Task<IReadOnlyList<StorageFile>?> ScanAsync(ScanOptions scanOptions, DispatcherQueue uiDispatcherQueue)
+        {
+            if (scanOptions.Scanner == null)
+                return null;
+
+            IsScanProcessRunning = true;
+            await AppDataService.EmptyFolderAsync(AppDataService.IncomingFolder);
+            IReadOnlyList<StorageFile> files = [];
+            await Task.Run(async () => files = await scanOptions.Scanner.GetScanAsync(scanOptions, AppDataService.IncomingFolder, uiDispatcherQueue));
+
+            if (files.Count == 0)
+            {
+                // this should only happen if the feeder is empty
+                if (scanOptions.SourceMode == ScannerSource.Feeder)
+                {
+                    Messenger.Send(new ShowInAppNotificationMessage(new CommunityToolkit.WinUI.Behaviors.Notification()
+                    {
+                        Title = "Feeder empty",
+                        Message = "There are no pages in the feeder. Please make sure you have inserted them correctly for the scanner to detect them."
+                    }));
+                }
+                else
+                {
+                    Messenger.Send(new ShowInAppNotificationMessage(new CommunityToolkit.WinUI.Behaviors.Notification()
+                    {
+                        Title = "Something went wrong",
+                        Message = "Please try again later."
+                    }));
+                }
+                return null;
+            }
+
+            return files;
         }
 
         public async Task<bool> TryDeleteProjectAsync()
@@ -527,14 +523,14 @@ namespace Scanner.Services
             }
             catch (ActionFailedAndRolledBackException)
             {
-                Messenger.Send(new ShowNotificationMessage(new CommunityToolkit.WinUI.Behaviors.Notification
+                Messenger.Send(new ShowInAppNotificationMessage(new CommunityToolkit.WinUI.Behaviors.Notification
                 {
                     Title = "Something went wrong and the actions couldn't be completed"
                 }));
             }
             catch (Exception)
             {
-                Messenger.Send(new ShowNotificationMessage(new CommunityToolkit.WinUI.Behaviors.Notification
+                Messenger.Send(new ShowInAppNotificationMessage(new CommunityToolkit.WinUI.Behaviors.Notification
                 {
                     Title = "Something went wrong and the project needs to be closed"
                 }));
@@ -580,7 +576,7 @@ namespace Scanner.Services
             }
             catch (ActionFailedAndRolledBackException)
             {
-                Messenger.Send(new ShowNotificationMessage(new CommunityToolkit.WinUI.Behaviors.Notification
+                Messenger.Send(new ShowInAppNotificationMessage(new CommunityToolkit.WinUI.Behaviors.Notification
                 {
                     Title = "Something went wrong and the action couldn't be completed"
                 }));
@@ -608,7 +604,7 @@ namespace Scanner.Services
             }
             catch (ActionFailedAndRolledBackException)
             {
-                Messenger.Send(new ShowNotificationMessage(new CommunityToolkit.WinUI.Behaviors.Notification
+                Messenger.Send(new ShowInAppNotificationMessage(new CommunityToolkit.WinUI.Behaviors.Notification
                 {
                     Title = "Something went wrong and the action couldn't be completed"
                 }));
@@ -636,7 +632,7 @@ namespace Scanner.Services
             }
             catch (ActionFailedAndRolledBackException)
             {
-                Messenger.Send(new ShowNotificationMessage(new CommunityToolkit.WinUI.Behaviors.Notification
+                Messenger.Send(new ShowInAppNotificationMessage(new CommunityToolkit.WinUI.Behaviors.Notification
                 {
                     Title = "Something went wrong and the action couldn't be completed"
                 }));
@@ -665,7 +661,7 @@ namespace Scanner.Services
             }
             catch (ActionFailedAndRolledBackException)
             {
-                Messenger.Send(new ShowNotificationMessage(new CommunityToolkit.WinUI.Behaviors.Notification
+                Messenger.Send(new ShowInAppNotificationMessage(new CommunityToolkit.WinUI.Behaviors.Notification
                 {
                     Title = "Something went wrong and the action couldn't be completed"
                 }));
@@ -694,7 +690,7 @@ namespace Scanner.Services
             }
             catch (ActionFailedAndRolledBackException)
             {
-                Messenger.Send(new ShowNotificationMessage(new CommunityToolkit.WinUI.Behaviors.Notification
+                Messenger.Send(new ShowInAppNotificationMessage(new CommunityToolkit.WinUI.Behaviors.Notification
                 {
                     Title = "Something went wrong and the action couldn't be completed"
                 }));
@@ -722,7 +718,7 @@ namespace Scanner.Services
             }
             catch (ActionFailedAndRolledBackException)
             {
-                Messenger.Send(new ShowNotificationMessage(new CommunityToolkit.WinUI.Behaviors.Notification
+                Messenger.Send(new ShowInAppNotificationMessage(new CommunityToolkit.WinUI.Behaviors.Notification
                 {
                     Title = "Something went wrong and the action couldn't be completed"
                 }));
@@ -893,7 +889,7 @@ namespace Scanner.Services
             }
             catch (ActionFailedAndRolledBackException)
             {
-                Messenger.Send(new ShowNotificationMessage(new CommunityToolkit.WinUI.Behaviors.Notification
+                Messenger.Send(new ShowInAppNotificationMessage(new CommunityToolkit.WinUI.Behaviors.Notification
                 {
                     Title = "Something went wrong and the actions couldn't be completed"
                 }));
@@ -909,7 +905,7 @@ namespace Scanner.Services
             }
             catch (Exception)
             {
-                Messenger.Send(new ShowNotificationMessage(new CommunityToolkit.WinUI.Behaviors.Notification
+                Messenger.Send(new ShowInAppNotificationMessage(new CommunityToolkit.WinUI.Behaviors.Notification
                 {
                     Title = "Something went wrong and the project needs to be closed"
                 }));
@@ -942,7 +938,7 @@ namespace Scanner.Services
             }
             catch (ActionFailedAndRolledBackException)
             {
-                Messenger.Send(new ShowNotificationMessage(new CommunityToolkit.WinUI.Behaviors.Notification
+                Messenger.Send(new ShowInAppNotificationMessage(new CommunityToolkit.WinUI.Behaviors.Notification
                 {
                     Title = "Something went wrong and the actions couldn't be completed"
                 }));
@@ -955,7 +951,7 @@ namespace Scanner.Services
             }
             catch (Exception)
             {
-                Messenger.Send(new ShowNotificationMessage(new CommunityToolkit.WinUI.Behaviors.Notification
+                Messenger.Send(new ShowInAppNotificationMessage(new CommunityToolkit.WinUI.Behaviors.Notification
                 {
                     Title = "Something went wrong and the project needs to be closed"
                 }));
@@ -1233,6 +1229,18 @@ namespace Scanner.Services
             taskbarList.HrInit();
             TBPFLAG flag = IsScanProcessRunning || (CurrentProject != null && CurrentProject.IsSaving) ? TBPFLAG.TBPF_INDETERMINATE : TBPFLAG.TBPF_NOPROGRESS;
             taskbarList.SetProgressState((Windows.Win32.Foundation.HWND)((App)App.Current).MainWindow.GetWindowHandle(), flag);
+        }
+
+        private void ShowScanCompleteToastNotification()
+        {
+            if (((App)Application.Current).MainWindow.IsInForeground)
+                return;
+
+            AppNotificationBuilder builder = new AppNotificationBuilder()
+                .AddText(GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.ScanCompleteNotificationHeading))
+                .AddText(GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.ScanCompleteNotificationBody));
+
+            AppNotificationManager.Default.Show(builder.BuildNotification());
         }
     }
 }

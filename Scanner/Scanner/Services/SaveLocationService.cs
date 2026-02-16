@@ -281,7 +281,7 @@ namespace Scanner.Services
                 SettingsService.SettingSaveLocationType = SettingSaveLocationType.AskBeforeNewProject;
                 LogService?.Log.Error(exc, "Resetting fixed save location failed (Unauthorized)");
                 SentryService?.TrackError(exc);
-                Messenger.Send(new ShowNotificationMessage(new CommunityToolkit.WinUI.Behaviors.Notification
+                Messenger.Send(new ShowInAppNotificationMessage(new CommunityToolkit.WinUI.Behaviors.Notification
                 {
                     Title = GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.ErrorMessageResetFolderUnauthorizedHeading),
                     Message = GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.ErrorMessageResetFolderUnauthorizedBody),
@@ -294,7 +294,7 @@ namespace Scanner.Services
                 SettingsService.SettingSaveLocationType = SettingSaveLocationType.AskBeforeNewProject;
                 LogService?.Log.Error(exc, "Resetting fixed save location failed");
                 SentryService?.TrackError(exc);
-                Messenger.Send(new ShowNotificationMessage(new CommunityToolkit.WinUI.Behaviors.Notification
+                Messenger.Send(new ShowInAppNotificationMessage(new CommunityToolkit.WinUI.Behaviors.Notification
                 {
                     Title = GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.ErrorMessageHeading),
                     Message = GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.ErrorMessageResetFolderBody),

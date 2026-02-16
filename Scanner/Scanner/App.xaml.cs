@@ -46,6 +46,8 @@ namespace Scanner
         public FeedbackWindow? FeedbackWindow;
         public DispatcherQueue MainDispatcherQueue;
 
+        public bool _launched;
+
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
@@ -86,7 +88,7 @@ namespace Scanner
             _ = Task.Run(async () =>
             {
                 // if the main instance isn't this current instance
-                if (!mainInstance.IsCurrent)
+                if (mainInstance.ProcessId != Environment.ProcessId)
                 {
                     // redirect activation to that instance
                     await mainInstance.RedirectActivationToAsync(appArgs);
@@ -96,25 +98,37 @@ namespace Scanner
                     return;
                 }
 
-                // register event handler
-                UnhandledException += App_UnhandledException;
-
-                // initialize essential singleton services
-                LogService = Ioc.Default.GetService<ILogService>();
-                if (LogService != null)
+                if (!_launched)
                 {
-                    await LogService.InitializeAsync();
+                    // register event handler
+                    UnhandledException += App_UnhandledException;
+
+                    // initialize essential singleton services
+                    LogService = Ioc.Default.GetService<ILogService>();
+                    if (LogService != null)
+                    {
+                        await LogService.InitializeAsync();
+                    }
+                    Ioc.Default.GetService<ISentryService>()?.Initialize();
+                    await Ioc.Default.GetRequiredService<IAppDataService>().InitializeAsync();
+                    Ioc.Default.GetRequiredService<ISaveLocationService>();
+
+                    MainDispatcherQueue.RunOnThread(DispatcherQueuePriority.High, () =>
+                    {
+                        MainWindow = new MainWindow();
+                        MainWindow.Closed += MainWindow_Closed;
+                        MainWindow.Activate();
+                    });
                 }
-                Ioc.Default.GetService<ISentryService>()?.Initialize();
-                await Ioc.Default.GetRequiredService<IAppDataService>().InitializeAsync();
-                Ioc.Default.GetRequiredService<ISaveLocationService>();
-
-                MainDispatcherQueue.RunOnThread(DispatcherQueuePriority.High, () =>
+                else
                 {
-                    MainWindow = new MainWindow();
-                    MainWindow.Closed += MainWindow_Closed;
-                    MainWindow.Activate();
-                });
+                    MainDispatcherQueue.RunOnThread(DispatcherQueuePriority.High, () =>
+                    {
+                        MainWindow?.Activate();
+                    });
+                }
+
+                _launched = true;
 
                 //try
                 //{

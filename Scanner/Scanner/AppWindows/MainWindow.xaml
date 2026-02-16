@@ -13,7 +13,8 @@
     MinWidth="548"
     MinHeight="700"
     Width="1348"
-    Height="848">
+    Height="848"
+    Activated="WindowEx_Activated">
 
     <views:ShellView />
 </winuiex:WindowEx>

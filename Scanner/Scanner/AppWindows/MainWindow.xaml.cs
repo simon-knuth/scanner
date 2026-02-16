@@ -36,6 +36,8 @@ namespace Scanner.AppWindows
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        public bool IsInForeground { get; private set; }
+        
         public IDataTransferManagerInterop DataTransferManagerInterop { get; private set; }
 
 
@@ -115,6 +117,21 @@ namespace Scanner.AppWindows
                     args.Request.Data.Properties.Title = shareFiles[0].Name;
                 else
                     args.Request.Data.Properties.Title = GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.ShareUITitleMultipleFiles);
+            }
+        }
+
+        private void WindowEx_Activated(object sender, WindowActivatedEventArgs args)
+        {
+            switch (args.WindowActivationState)
+            {
+                case WindowActivationState.CodeActivated:
+                case WindowActivationState.PointerActivated:
+                    IsInForeground = true;
+                    break;
+                case WindowActivationState.Deactivated:
+                default:
+                    IsInForeground = false;
+                    break;
             }
         }
     }

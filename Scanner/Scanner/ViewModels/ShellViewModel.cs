@@ -49,7 +49,7 @@ namespace Scanner.ViewModels
         public event EventHandler DonationDialogRequested;
         public event EventHandler OtherAppsDialogRequested;
         public event EventHandler ScanMergeDialogRequested;
-        public event EventHandler<Notification> ShowNotificationRequested;
+        public event EventHandler<Notification> ShowInAppNotificationRequested;
         #endregion
 
         #region Commands
@@ -119,9 +119,9 @@ namespace Scanner.ViewModels
             {
                 ShowDonationDialog();
             });
-            Messenger.Register<ShowNotificationMessage>(this, (r, m) =>
+            Messenger.Register<ShowInAppNotificationMessage>(this, (r, m) =>
             {
-                ShowNotificationRequested?.Invoke(this, m.Notification);
+                ShowInAppNotificationRequested?.Invoke(this, m.Notification);
             });
             Messenger.Register<ShowSettingsMessage>(this, (r, m) =>
             {
@@ -323,7 +323,7 @@ namespace Scanner.ViewModels
                 string extension = Path.GetExtension(pickerResults[0].Path).ToLowerInvariant();
                 if (pickerResults.Any(f => Path.GetExtension(f.Path).ToLowerInvariant() != extension))
                 {
-                    Messenger.Send(new ShowNotificationMessage(new Notification
+                    Messenger.Send(new ShowInAppNotificationMessage(new Notification
                     {
                         Title = "Can not open multiple file types",
                         Message = "Please select files of the same type to open a project.",
@@ -333,7 +333,7 @@ namespace Scanner.ViewModels
                 }
                 else if (pickerResults.Count > 1 && pickerResults.Any(f => Path.GetExtension(f.Path).ToLowerInvariant() == ".pdf"))
                 {
-                    Messenger.Send(new ShowNotificationMessage(new Notification
+                    Messenger.Send(new ShowInAppNotificationMessage(new Notification
                     {
                         Title = "Can not open multiple PDF files",
                         Message = "Please select just one PDF file to open a project.",
@@ -382,7 +382,7 @@ namespace Scanner.ViewModels
             catch (Exception exc)
             {
                 LogService?.Log.Error(exc, "Failed to open files");
-                Messenger.Send(new ShowNotificationMessage(new Notification
+                Messenger.Send(new ShowInAppNotificationMessage(new Notification
                 {
                     Title = "Something went wrong",
                     Message = "Failed to open files.",

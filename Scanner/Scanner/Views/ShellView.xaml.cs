@@ -86,7 +86,7 @@ namespace Scanner.Views
             ViewModel.DonationDialogRequested += ViewModel_DonationDialogRequested;
             ViewModel.OtherAppsDialogRequested += ViewModel_OtherAppsDialogRequested;
             ViewModel.ScanMergeDialogRequested += ViewModel_ScanMergeDialogRequested;
-            ViewModel.ShowNotificationRequested += ViewModel_ShowNotificationRequested;
+            ViewModel.ShowInAppNotificationRequested += ViewModel_ShowInAppNotificationRequested;
             ViewModel.ProjectService.PropertyChanged += ProjectService_PropertyChanged;
             this.AddHandler(UIElement.KeyDownEvent, new KeyEventHandler(Page_KeyDown), true);
         }
@@ -566,7 +566,7 @@ namespace Scanner.Views
             });
         }
 
-        private void ViewModel_ShowNotificationRequested(object? sender, CommunityToolkit.WinUI.Behaviors.Notification e)
+        private void ViewModel_ShowInAppNotificationRequested(object? sender, Notification e)
         {
             this.RunOnUIThread(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, () =>
             {
@@ -574,9 +574,9 @@ namespace Scanner.Views
             });
         }
 
-        private void ButtonDebugNotification_Click(object sender, RoutedEventArgs e)
+        private void ButtonDebugInAppNotification_Click(object sender, RoutedEventArgs e)
         {
-            DebugNotification.Severity = (InfoBarSeverity)ComboBoxDebugNotificationsSeverity.SelectedIndex;
+            DebugNotification.Severity = (InfoBarSeverity)ComboBoxDebugInAppNotificationsSeverity.SelectedIndex;
             NotificationQueue.Show(new Notification
             {
                 Title = DebugNotification.Title,

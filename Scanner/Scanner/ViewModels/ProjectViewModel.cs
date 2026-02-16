@@ -409,7 +409,7 @@ namespace Scanner.ViewModels
             // ensure folder
             if (folder == null)
             {
-                Messenger.Send(new ShowNotificationMessage(new CommunityToolkit.WinUI.Behaviors.Notification
+                Messenger.Send(new ShowInAppNotificationMessage(new CommunityToolkit.WinUI.Behaviors.Notification
                 {
                     Title = "Project not saved",
                     Message = "The project needs to be saved to complete this action.",

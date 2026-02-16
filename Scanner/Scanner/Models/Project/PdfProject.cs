@@ -320,7 +320,7 @@ namespace Scanner.Models
                 }
                 else
                 {
-                    Messenger.Send(new ShowNotificationMessage(new CommunityToolkit.WinUI.Behaviors.Notification
+                    Messenger.Send(new ShowInAppNotificationMessage(new CommunityToolkit.WinUI.Behaviors.Notification
                     {
                         Title = "Project not saved",
                         Message = "The project needs to be saved to complete this action.",
@@ -353,7 +353,7 @@ namespace Scanner.Models
             {
                 if (!IsSaved)
                 {
-                    Messenger.Send(new ShowNotificationMessage(new CommunityToolkit.WinUI.Behaviors.Notification
+                    Messenger.Send(new ShowInAppNotificationMessage(new CommunityToolkit.WinUI.Behaviors.Notification
                     {
                         Title = "Project not saved",
                         Message = "The project needs to be saved to complete this action.",
@@ -406,7 +406,7 @@ namespace Scanner.Models
             {
                 if (!IsSaved)
                 {
-                    Messenger.Send(new ShowNotificationMessage(new CommunityToolkit.WinUI.Behaviors.Notification
+                    Messenger.Send(new ShowInAppNotificationMessage(new CommunityToolkit.WinUI.Behaviors.Notification
                     {
                         Title = "Project not saved",
                         Message = "The project needs to be saved to complete this action.",
