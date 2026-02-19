@@ -88,7 +88,6 @@ namespace Scanner.Views
             ViewModel.ScanMergeDialogRequested += ViewModel_ScanMergeDialogRequested;
             ViewModel.ShowInAppNotificationRequested += ViewModel_ShowInAppNotificationRequested;
             ViewModel.ProjectService.PropertyChanged += ProjectService_PropertyChanged;
-            this.AddHandler(UIElement.KeyDownEvent, new KeyEventHandler(Page_KeyDown), true);
         }
 
 
@@ -645,11 +644,6 @@ namespace Scanner.Views
         private void ButtonSave_RightTapped(object sender, RightTappedRoutedEventArgs e)
         {
             FlyoutBase.ShowAttachedFlyout(ButtonSave);
-        }
-
-        private void Page_KeyDown(object sender, KeyRoutedEventArgs e)
-        {
-            ((App)Application.Current).InvokeKeyDown(e);
         }
 
         private async void Page_Loading(FrameworkElement sender, object args)

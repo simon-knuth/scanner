@@ -25,6 +25,7 @@ using Microsoft.Windows.AppLifecycle;
 using Sentry;
 using Microsoft.UI.Dispatching;
 using Scanner.Extensions;
+using Scanner.Helpers;
 
 namespace Scanner
 {
@@ -38,7 +39,7 @@ namespace Scanner
         #endregion
 
         #region Events
-        public event EventHandler<KeyRoutedEventArgs> KeyDown;
+        public event EventHandler<Windows.System.VirtualKey> KeyPressed;
         #endregion
 
         public MainWindow MainWindow;
@@ -118,6 +119,7 @@ namespace Scanner
                         MainWindow = new MainWindow();
                         MainWindow.Closed += MainWindow_Closed;
                         MainWindow.Activate();
+                        KeyboardHookHelper.Initialize(MainWindow);
                     });
                 }
                 else
@@ -163,6 +165,8 @@ namespace Scanner
             {
                 SettingsWindow.Close();
             }
+
+            KeyboardHookHelper.Unhook();
         }
 
         public void ShowSettings()
@@ -195,10 +199,6 @@ namespace Scanner
             FeedbackWindow = null;
         }
 
-        public void InvokeKeyDown(KeyRoutedEventArgs e)
-        {
-            KeyDown?.Invoke(this, e);
-        }
 
         private void App_UnhandledException(object sender, Microsoft.UI.Xaml.UnhandledExceptionEventArgs e)
         {

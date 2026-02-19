@@ -364,18 +364,18 @@ namespace Scanner.Views
 
         private async void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            ((App)Application.Current).KeyDown += App_KeyDown;
+            ((App)Application.Current).KeyPressed += App_KeyPressed;
 
             await Task.Delay(500);
             showEntranceExitAnimations = true;
         }
 
-        private void App_KeyDown(object? sender, KeyRoutedEventArgs e)
+        private void App_KeyPressed(object? sender, Windows.System.VirtualKey key)
         {
-            if (e.Key == Windows.System.VirtualKey.F2)
+            if (key == Windows.System.VirtualKey.F2)
                 FocusProjectNameTextBox();
 
-            if (e.Key == Windows.System.VirtualKey.Escape)
+            if (key == Windows.System.VirtualKey.Escape)
                 ViewModel.IsMultiSelect = false;
         }
 
@@ -860,7 +860,7 @@ namespace Scanner.Views
 
         private void Page_Unloaded(object sender, RoutedEventArgs e)
         {
-            ((App)Application.Current).KeyDown -= App_KeyDown;
+            ((App)Application.Current).KeyPressed -= App_KeyPressed;
         }
 
         private void GridViewItem_DataContextChanged(FrameworkElement sender, DataContextChangedEventArgs args)

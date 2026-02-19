@@ -1,2 +1,10 @@
 ITaskbarList3
 TaskbarList
+SetWindowsHookEx
+UnhookWindowHookEx
+CallNextHookEx
+GetCurrentThreadId
+CallWindowProc
+GetCurrentThreadId
+SetWindowLong
+SetWindowLongPtr

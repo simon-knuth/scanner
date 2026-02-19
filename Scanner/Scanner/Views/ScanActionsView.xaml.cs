@@ -127,15 +127,15 @@ namespace Scanner.Views
 
         private async void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            ((App)Application.Current).KeyDown += App_KeyDown;
+            ((App)Application.Current).KeyPressed += App_KeyPressed;
 
             await Task.Delay(500);
             showEntranceAnimations = true;
         }
 
-        private async void App_KeyDown(object? sender, KeyRoutedEventArgs e)
+        private async void App_KeyPressed(object? sender, Windows.System.VirtualKey key)
         {
-            if (e.Key == Windows.System.VirtualKey.F5)
+            if (key == Windows.System.VirtualKey.F5)
             {
                 if (Microsoft.UI.Input.InputKeyboardSource.GetKeyStateForCurrentThread(Windows.System.VirtualKey.Shift) == Windows.UI.Core.CoreVirtualKeyStates.Down)
                     await ViewModel.ScanCommand.ExecuteAsync(true);
@@ -219,7 +219,7 @@ namespace Scanner.Views
 
         private void Page_Unloaded(object sender, RoutedEventArgs e)
         {
-            ((App)Application.Current).KeyDown -= App_KeyDown;
+            ((App)Application.Current).KeyPressed -= App_KeyPressed;
         }
     }
 }
