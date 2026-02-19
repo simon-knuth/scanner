@@ -18,40 +18,39 @@ using Windows.Graphics.Imaging;
 using Windows.Storage;
 using WinRT.Interop;
 
-namespace Scanner.Services.Interfaces
+namespace Scanner.Services.Interfaces;
+
+/// <summary>
+///     Exposes the Windows Copilot Runtime.
+/// </summary>
+public interface ICopilotRuntimeService
 {
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /// <summary>
-    ///     Exposes the Windows Copilot Runtime.
+    /// Whether the Copilot Runtime is supported on this PC.
     /// </summary>
-    public interface ICopilotRuntimeService
-    {
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// <summary>
-        /// Whether the Copilot Runtime is supported on this PC.
-        /// </summary>
-        bool IsSupported { get; }
+    bool IsSupported { get; }
 
-        /// <summary>
-        /// Whether the models required to use the Windows Copilot Runtime are installed.
-        /// </summary>
-        bool AreModelsInstalled { get; }
+    /// <summary>
+    /// Whether the models required to use the Windows Copilot Runtime are installed.
+    /// </summary>
+    bool AreModelsInstalled { get; }
 
-        /// <summary>
-        /// Whether the models required to use the Windows Copilot Runtime are currently being installed.
-        /// </summary>
-        bool AreModelsInstalling { get; }
+    /// <summary>
+    /// Whether the models required to use the Windows Copilot Runtime are currently being installed.
+    /// </summary>
+    bool AreModelsInstalling { get; }
 
 
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        Task TryInstallModelsAsync();
-        Task TryShowModelsInstallProgressAsync(DispatcherQueue uiDispatcherQueue);
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    Task TryInstallModelsAsync();
+    Task TryShowModelsInstallProgressAsync(DispatcherQueue uiDispatcherQueue);
 
-        Task PreheatFileNameGenerationModelsAsync();
-        Task StopPreheatingFileNameGenerationModelsAsync();
-        Task<string?> TryGenerateFileNameForImageAsync(SoftwareBitmap bitmap, CancellationTokenSource cts);
-    }
+    Task PreheatFileNameGenerationModelsAsync();
+    Task StopPreheatingFileNameGenerationModelsAsync();
+    Task<string?> TryGenerateFileNameForImageAsync(SoftwareBitmap bitmap, CancellationTokenSource cts);
 }

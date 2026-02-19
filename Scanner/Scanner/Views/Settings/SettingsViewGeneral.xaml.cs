@@ -17,70 +17,69 @@ using Windows.Foundation;
 using Windows.Foundation.Collections;
 
 
-namespace Scanner.Views.Settings
+namespace Scanner.Views.Settings;
+
+[ObservableObjectAttribute]
+public sealed partial class SettingsViewGeneral : SettingsPage
 {
-    [ObservableObjectAttribute]
-    public sealed partial class SettingsViewGeneral : SettingsPage
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public SettingsViewModel? ViewModel;
+
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public SettingsViewGeneral()
     {
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public SettingsViewModel? ViewModel;
+        this.InitializeComponent();
+    }
 
 
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public SettingsViewGeneral()
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    protected override void OnNavigatedTo(NavigationEventArgs e)
+    {
+        base.OnNavigatedTo(e);
+
+        ViewModel = e.Parameter as SettingsViewModel;
+    }
+
+    private void Page_Loading(FrameworkElement sender, object args)
+    {
+        if (ViewModel == null) return;
+        ViewModel.ViewLoadingCommand.Execute(this.DispatcherQueue);
+    }
+
+    private void SettingsCardEditCustomFileNamingPattern_Click(object sender, RoutedEventArgs e)
+    {
+        OnPageNavigationRequested(typeof(SettingsViewCustomItemNaming), CustomItemNamingViewModel.ItemNamingKind.File);
+    }
+
+    private void SettingsCardEditCustomSubFolderNamingPattern_Click(object sender, RoutedEventArgs e)
+    {
+        OnPageNavigationRequested(typeof(SettingsViewCustomItemNaming), CustomItemNamingViewModel.ItemNamingKind.Folder);
+    }
+
+    private void ToggleSwitchGenerateFileNameWithAI_Toggled(object sender, RoutedEventArgs e)
+    {
+        if (ViewModel == null)
+            return;
+
+        if (ToggleSwitchGenerateFileNameWithAI.IsOn && !ViewModel.CopilotRuntimeService.AreModelsInstalled)
         {
-            this.InitializeComponent();
+            ToggleSwitchGenerateFileNameWithAI.IsOn = false;
+
+            TeachingTipCopilotRuntimeDownload.Target = ToggleSwitchGenerateFileNameWithAI;
+            TeachingTipCopilotRuntimeDownload.IsOpen = true;
         }
+    }
 
-
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        protected override void OnNavigatedTo(NavigationEventArgs e)
-        {
-            base.OnNavigatedTo(e);
-
-            ViewModel = e.Parameter as SettingsViewModel;
-        }
-
-        private void Page_Loading(FrameworkElement sender, object args)
-        {
-            if (ViewModel == null) return;
-            ViewModel.ViewLoadingCommand.Execute(this.DispatcherQueue);
-        }
-
-        private void SettingsCardEditCustomFileNamingPattern_Click(object sender, RoutedEventArgs e)
-        {
-            OnPageNavigationRequested(typeof(SettingsViewCustomItemNaming), CustomItemNamingViewModel.ItemNamingKind.File);
-        }
-
-        private void SettingsCardEditCustomSubFolderNamingPattern_Click(object sender, RoutedEventArgs e)
-        {
-            OnPageNavigationRequested(typeof(SettingsViewCustomItemNaming), CustomItemNamingViewModel.ItemNamingKind.Folder);
-        }
-
-        private void ToggleSwitchGenerateFileNameWithAI_Toggled(object sender, RoutedEventArgs e)
-        {
-            if (ViewModel == null)
-                return;
-
-            if (ToggleSwitchGenerateFileNameWithAI.IsOn && !ViewModel.CopilotRuntimeService.AreModelsInstalled)
-            {
-                ToggleSwitchGenerateFileNameWithAI.IsOn = false;
-
-                TeachingTipCopilotRuntimeDownload.Target = ToggleSwitchGenerateFileNameWithAI;
-                TeachingTipCopilotRuntimeDownload.IsOpen = true;
-            }
-        }
-
-        private void HyperlinkButtonAIDisclaimer_Click(object sender, RoutedEventArgs e)
-        {
-            TeachingTipAIDisclaimer.Target = HyperlinkButtonAIDisclaimer;
-            TeachingTipAIDisclaimer.IsOpen = true;
-        }
+    private void HyperlinkButtonAIDisclaimer_Click(object sender, RoutedEventArgs e)
+    {
+        TeachingTipAIDisclaimer.Target = HyperlinkButtonAIDisclaimer;
+        TeachingTipAIDisclaimer.IsOpen = true;
     }
 }

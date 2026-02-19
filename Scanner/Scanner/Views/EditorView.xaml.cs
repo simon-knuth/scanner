@@ -39,821 +39,820 @@ using Windows.UI.WebUI;
 using static Scanner.Helpers.Helpers;
 
 
-namespace Scanner.Views
+namespace Scanner.Views;
+
+[ObservableObjectAttribute]
+public sealed partial class EditorView : Page
 {
-    [ObservableObjectAttribute]
-    public sealed partial class EditorView : Page
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    #region Constants
+    private const float minZoomFactor = 1.0f;
+    private const float maxZoomFactor = 2.5f;
+    #endregion
+
+    [ObservableProperty]
+    private double pageWidth;
+
+    [ObservableProperty]
+    private double pageHeight;
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(FriendlyPageZoomFactor))]
+    [NotifyPropertyChangedFor(nameof(IsToolbarBackgroundVisible))]
+    [NotifyPropertyChangedFor(nameof(CanZoomIn))]
+    [NotifyPropertyChangedFor(nameof(CanZoomOut))]
+    private float pageZoomFactor = 1.0f;
+
+    public string FriendlyPageZoomFactor => string.Format(GetLocalized(ResourcesExtension.KeyEnum.TextZoomFactor), PageZoomFactor * 100);
+
+    public bool IsToolbarBackgroundVisible => PageZoomFactor > 1.0f || IsCropping || IsDrawing || ScrollViewerMainEditingControls?.ScrollableWidth > 0;
+
+    [ObservableProperty]
+    private bool isHoveringZoomControls;
+
+    public bool CanZoomIn => PageZoomFactor < maxZoomFactor - 0.009f;
+    public bool CanZoomOut => PageZoomFactor > minZoomFactor + 0.009f;
+
+    private bool isCropping;
+    public bool IsCropping
     {
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        #region Constants
-        private const float minZoomFactor = 1.0f;
-        private const float maxZoomFactor = 2.5f;
-        #endregion
-
-        [ObservableProperty]
-        private double pageWidth;
-
-        [ObservableProperty]
-        private double pageHeight;
-
-        [ObservableProperty]
-        [NotifyPropertyChangedFor(nameof(FriendlyPageZoomFactor))]
-        [NotifyPropertyChangedFor(nameof(IsToolbarBackgroundVisible))]
-        [NotifyPropertyChangedFor(nameof(CanZoomIn))]
-        [NotifyPropertyChangedFor(nameof(CanZoomOut))]
-        private float pageZoomFactor = 1.0f;
-
-        public string FriendlyPageZoomFactor => string.Format(GetLocalized(ResourcesExtension.KeyEnum.TextZoomFactor), PageZoomFactor * 100);
-
-        public bool IsToolbarBackgroundVisible => PageZoomFactor > 1.0f || IsCropping || IsDrawing || ScrollViewerMainEditingControls?.ScrollableWidth > 0;
-
-        [ObservableProperty]
-        private bool isHoveringZoomControls;
-
-        public bool CanZoomIn => PageZoomFactor < maxZoomFactor - 0.009f;
-        public bool CanZoomOut => PageZoomFactor > minZoomFactor + 0.009f;
-
-        private bool isCropping;
-        public bool IsCropping
+        get => isCropping;
+        set
         {
-            get => isCropping;
-            set
+            if (SetProperty(ref isCropping, value))
             {
-                if (SetProperty(ref isCropping, value))
-                {
-                    ViewModel.ProjectService.IsEditing = value;
+                ViewModel.ProjectService.IsEditing = value;
 
-                    OnPropertyChanged(nameof(IsToolbarBackgroundVisible));
-                    OnPropertyChanged(nameof(IsEditingExperienceActive));
-                }
+                OnPropertyChanged(nameof(IsToolbarBackgroundVisible));
+                OnPropertyChanged(nameof(IsEditingExperienceActive));
             }
         }
+    }
 
-        private bool isDrawing;
-        public bool IsDrawing
+    private bool isDrawing;
+    public bool IsDrawing
+    {
+        get => isDrawing;
+        set
         {
-            get => isDrawing;
-            set
+            if (SetProperty(ref isDrawing, value))
             {
-                if (SetProperty(ref isDrawing, value))
-                {
-                    ViewModel.ProjectService.IsEditing = value;
+                ViewModel.ProjectService.IsEditing = value;
 
-                    OnPropertyChanged(nameof(IsToolbarBackgroundVisible));
-                    OnPropertyChanged(nameof(IsEditingExperienceActive));
-                }
+                OnPropertyChanged(nameof(IsToolbarBackgroundVisible));
+                OnPropertyChanged(nameof(IsEditingExperienceActive));
             }
         }
+    }
 
-        public bool IsEditingExperienceActive => IsCropping || IsDrawing;
+    public bool IsEditingExperienceActive => IsCropping || IsDrawing;
 
-        public bool IsFilterNone
+    public bool IsFilterNone
+    {
+        get
         {
-            get
+            if (ViewModel.ProjectService.SelectedPage is ImagePage imagePage
+                && imagePage.Filter == ImageFilter.None)
             {
-                if (ViewModel.ProjectService.SelectedPage is ImagePage imagePage
-                    && imagePage.Filter == ImageFilter.None)
-                {
-                    return true;
-                }
-                return false;
+                return true;
+            }
+            return false;
+        }
+    }
+
+    public bool IsFilterGrayscale
+    {
+        get
+        {
+            if (ViewModel.ProjectService.SelectedPage is ImagePage imagePage
+                && imagePage.Filter == ImageFilter.Grayscale)
+            {
+                return true;
+            }
+            return false;
+        }
+    }
+
+    public bool IsFilterMonochrome
+    {
+        get
+        {
+            if (ViewModel.ProjectService.SelectedPage is ImagePage imagePage
+                && imagePage.Filter == ImageFilter.Monochrome)
+            {
+                return true;
+            }
+            return false;
+        }
+    }
+
+    public bool IsFilterNoneAvailable
+    {
+        get
+        {
+            if (ViewModel.ProjectService.SelectedPage is ImagePage imagePage)
+            {
+                return imagePage.AvailableFilters.Contains(ImageFilter.None);
+            }
+            return false;
+        }
+    }
+
+    public bool IsFilterGrayscaleAvailable
+    {
+        get
+        {
+            if (ViewModel.ProjectService.SelectedPage is ImagePage imagePage)
+            {
+                return imagePage.AvailableFilters.Contains(ImageFilter.Grayscale);
+            }
+            return false;
+        }
+    }
+
+    public bool IsFilterMonochromeAvailable
+    {
+        get
+        {
+            if (ViewModel.ProjectService.SelectedPage is ImagePage imagePage)
+            {
+                return imagePage.AvailableFilters.Contains(ImageFilter.Monochrome);
+            }
+            return false;
+        }
+    }
+
+    [ObservableProperty]
+    private bool isSimilarPagesFlyoutOpen;
+
+    [ObservableProperty]
+    private bool areSimilarPagesSelectedForCrop;
+
+    public string ProjectNavigationIndicator => string.Format(GetLocalized(ResourcesExtension.KeyEnum.ProjectNavigationIndicator), ViewModel.ProjectService.SelectedPage?.PageNumber, ViewModel.ProjectService.TotalNumberOfPages);
+
+    private ScrollViewer? _selectedItemScrollViewer;
+    private ScrollViewer? selectedItemScrollViewer
+    {
+        get => _selectedItemScrollViewer;
+        set
+        {
+            if (_selectedItemScrollViewer != null)
+            {
+                _selectedItemScrollViewer.ViewChanged -= ScrollViewer_ViewChanged;
+            }
+
+            _selectedItemScrollViewer = value;
+
+            if (value != null)
+            {
+                value.ViewChanged += ScrollViewer_ViewChanged;
             }
         }
+    }
 
-        public bool IsFilterGrayscale
+    private CoreInputDeviceTypes inkCanvasInputDeviceTypes => ViewModel.SettingsService.LastTouchDrawState ?
+        CoreInputDeviceTypes.Pen | CoreInputDeviceTypes.Mouse | CoreInputDeviceTypes.Touch :
+        CoreInputDeviceTypes.Pen;
+
+    private VirtualizingStackPanel? flipViewPanel;
+
+    private Dictionary<IProjectPage, CanvasControl> pageCanvases = [];
+
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public EditorView()
+    {
+        this.InitializeComponent();
+
+        ViewModel.SettingsService.PropertyChanged += SettingsService_PropertyChanged;
+        ViewModel.ProjectService.PropertyChanging += ProjectService_PropertyChanging;
+        ViewModel.ProjectService.PropertyChanged += ProjectService_PropertyChanged;
+    }
+
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    private void ProjectService_PropertyChanging(object? sender, System.ComponentModel.PropertyChangingEventArgs e)
+    {
+        switch (e.PropertyName)
         {
-            get
-            {
-                if (ViewModel.ProjectService.SelectedPage is ImagePage imagePage
-                    && imagePage.Filter == ImageFilter.Grayscale)
+            case nameof(IProjectService.SelectedPage):
+                if (ViewModel.ProjectService.SelectedPage != null)
                 {
-                    return true;
+                    ViewModel.ProjectService.SelectedPage.PropertyChanged -= SelectedPage_PropertyChanged;
                 }
-                return false;
-            }
+                break;
         }
+    }
 
-        public bool IsFilterMonochrome
+
+    private void ProjectService_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+    {
+        switch (e.PropertyName)
         {
-            get
-            {
-                if (ViewModel.ProjectService.SelectedPage is ImagePage imagePage
-                    && imagePage.Filter == ImageFilter.Monochrome)
-                {
-                    return true;
-                }
-                return false;
-            }
+            case nameof(IProjectService.SelectedPage):
+                OnPropertyChanged(nameof(IsFilterNone));
+                OnPropertyChanged(nameof(IsFilterGrayscale));
+                OnPropertyChanged(nameof(IsFilterMonochrome));
+                OnPropertyChanged(nameof(IsFilterNoneAvailable));
+                OnPropertyChanged(nameof(IsFilterGrayscaleAvailable));
+                OnPropertyChanged(nameof(IsFilterMonochromeAvailable));
+                OnPropertyChanged(nameof(ProjectNavigationIndicator));
+
+                if (ViewModel.ProjectService.SelectedPage != null)
+                    ViewModel.ProjectService.SelectedPage.PropertyChanged += SelectedPage_PropertyChanged;
+                break;
+            case nameof(IProjectService.CurrentProject):
+                OnPropertyChanged(nameof(ProjectNavigationIndicator));
+                break;
+            case nameof(IProjectService.TotalNumberOfPages):
+                OnPropertyChanged(nameof(ProjectNavigationIndicator));
+                break;
         }
+    }
 
-        public bool IsFilterNoneAvailable
+    private void SelectedPage_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+    {
+        switch (e.PropertyName)
         {
-            get
-            {
-                if (ViewModel.ProjectService.SelectedPage is ImagePage imagePage)
-                {
-                    return imagePage.AvailableFilters.Contains(ImageFilter.None);
-                }
-                return false;
-            }
+            case nameof(ImagePage.Filter):
+                OnPropertyChanged(nameof(IsFilterNone));
+                OnPropertyChanged(nameof(IsFilterGrayscale));
+                OnPropertyChanged(nameof(IsFilterMonochrome));
+                break;
+            case nameof(IProjectPage.Index):
+                OnPropertyChanged(nameof(ProjectNavigationIndicator));
+                break;
         }
+    }
 
-        public bool IsFilterGrayscaleAvailable
+    private void SettingsService_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+    {
+        switch (e.PropertyName)
         {
-            get
-            {
-                if (ViewModel.ProjectService.SelectedPage is ImagePage imagePage)
-                {
-                    return imagePage.AvailableFilters.Contains(ImageFilter.Grayscale);
-                }
-                return false;
-            }
+            case nameof(ISettingsService.SettingEditorOrientation):
+                _ = ApplyFlipViewOrientationAsync(SettingEditorOrientationToOrientation(ViewModel.SettingsService.SettingEditorOrientation));
+                break;
         }
+    }
 
-        public bool IsFilterMonochromeAvailable
+    private void ButtonRotate_ContextRequested(UIElement sender, ContextRequestedEventArgs args)
+    {
+        FlyoutBase.ShowAttachedFlyout(sender as FrameworkElement);
+    }
+
+    private async Task ApplyFlipViewOrientationAsync(Orientation orientation)
+    {
+        await this.RunOnUIThreadAndWaitAsync(DispatcherQueuePriority.Normal, () =>
         {
-            get
-            {
-                if (ViewModel.ProjectService.SelectedPage is ImagePage imagePage)
-                {
-                    return imagePage.AvailableFilters.Contains(ImageFilter.Monochrome);
-                }
-                return false;
-            }
-        }
-
-        [ObservableProperty]
-        private bool isSimilarPagesFlyoutOpen;
-
-        [ObservableProperty]
-        private bool areSimilarPagesSelectedForCrop;
-
-        public string ProjectNavigationIndicator => string.Format(GetLocalized(ResourcesExtension.KeyEnum.ProjectNavigationIndicator), ViewModel.ProjectService.SelectedPage?.PageNumber, ViewModel.ProjectService.TotalNumberOfPages);
-
-        private ScrollViewer? _selectedItemScrollViewer;
-        private ScrollViewer? selectedItemScrollViewer
-        {
-            get => _selectedItemScrollViewer;
-            set
-            {
-                if (_selectedItemScrollViewer != null)
-                {
-                    _selectedItemScrollViewer.ViewChanged -= ScrollViewer_ViewChanged;
-                }
-
-                _selectedItemScrollViewer = value;
-
-                if (value != null)
-                {
-                    value.ViewChanged += ScrollViewer_ViewChanged;
-                }
-            }
-        }
-
-        private CoreInputDeviceTypes inkCanvasInputDeviceTypes => ViewModel.SettingsService.LastTouchDrawState ?
-            CoreInputDeviceTypes.Pen | CoreInputDeviceTypes.Mouse | CoreInputDeviceTypes.Touch :
-            CoreInputDeviceTypes.Pen;
-
-        private VirtualizingStackPanel? flipViewPanel;
-
-        private Dictionary<IProjectPage, CanvasControl> pageCanvases = [];
-
-
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public EditorView()
-        {
-            this.InitializeComponent();
-
-            ViewModel.SettingsService.PropertyChanged += SettingsService_PropertyChanged;
-            ViewModel.ProjectService.PropertyChanging += ProjectService_PropertyChanging;
-            ViewModel.ProjectService.PropertyChanged += ProjectService_PropertyChanged;
-        }
-
-
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        private void ProjectService_PropertyChanging(object? sender, System.ComponentModel.PropertyChangingEventArgs e)
-        {
-            switch (e.PropertyName)
-            {
-                case nameof(IProjectService.SelectedPage):
-                    if (ViewModel.ProjectService.SelectedPage != null)
-                    {
-                        ViewModel.ProjectService.SelectedPage.PropertyChanged -= SelectedPage_PropertyChanged;
-                    }
-                    break;
-            }
-        }
-
-
-        private void ProjectService_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
-        {
-            switch (e.PropertyName)
-            {
-                case nameof(IProjectService.SelectedPage):
-                    OnPropertyChanged(nameof(IsFilterNone));
-                    OnPropertyChanged(nameof(IsFilterGrayscale));
-                    OnPropertyChanged(nameof(IsFilterMonochrome));
-                    OnPropertyChanged(nameof(IsFilterNoneAvailable));
-                    OnPropertyChanged(nameof(IsFilterGrayscaleAvailable));
-                    OnPropertyChanged(nameof(IsFilterMonochromeAvailable));
-                    OnPropertyChanged(nameof(ProjectNavigationIndicator));
-
-                    if (ViewModel.ProjectService.SelectedPage != null)
-                        ViewModel.ProjectService.SelectedPage.PropertyChanged += SelectedPage_PropertyChanged;
-                    break;
-                case nameof(IProjectService.CurrentProject):
-                    OnPropertyChanged(nameof(ProjectNavigationIndicator));
-                    break;
-                case nameof(IProjectService.TotalNumberOfPages):
-                    OnPropertyChanged(nameof(ProjectNavigationIndicator));
-                    break;
-            }
-        }
-
-        private void SelectedPage_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
-        {
-            switch (e.PropertyName)
-            {
-                case nameof(ImagePage.Filter):
-                    OnPropertyChanged(nameof(IsFilterNone));
-                    OnPropertyChanged(nameof(IsFilterGrayscale));
-                    OnPropertyChanged(nameof(IsFilterMonochrome));
-                    break;
-                case nameof(IProjectPage.Index):
-                    OnPropertyChanged(nameof(ProjectNavigationIndicator));
-                    break;
-            }
-        }
-
-        private void SettingsService_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
-        {
-            switch (e.PropertyName)
-            {
-                case nameof(ISettingsService.SettingEditorOrientation):
-                    _ = ApplyFlipViewOrientationAsync(SettingEditorOrientationToOrientation(ViewModel.SettingsService.SettingEditorOrientation));
-                    break;
-            }
-        }
-
-        private void ButtonRotate_ContextRequested(UIElement sender, ContextRequestedEventArgs args)
-        {
-            FlyoutBase.ShowAttachedFlyout(sender as FrameworkElement);
-        }
-
-        private async Task ApplyFlipViewOrientationAsync(Orientation orientation)
-        {
-            await this.RunOnUIThreadAndWaitAsync(DispatcherQueuePriority.Normal, () =>
-            {
-                if (flipViewPanel != null)
-                {
-                    flipViewPanel.Orientation = orientation;
-                }
-
-                // fix scrolling in vertical mode
-                if (orientation == Orientation.Vertical)
-                {
-                    ((ScrollViewer)VisualTreeHelper.GetChild(VisualTreeHelper.GetChild(FlipViewPages, 0), 0)).HorizontalScrollMode = ScrollMode.Disabled;
-                }
-                else
-                {
-                    ((ScrollViewer)VisualTreeHelper.GetChild(VisualTreeHelper.GetChild(FlipViewPages, 0), 0)).HorizontalScrollMode = ScrollMode.Enabled;
-                }
-            });
-        }
-
-        private Orientation SettingEditorOrientationToOrientation(SettingEditorOrientation setting)
-        {
-            return setting switch
-            {
-                SettingEditorOrientation.Horizontal => Orientation.Horizontal,
-                SettingEditorOrientation.Vertical => Orientation.Vertical,
-                _ => Orientation.Horizontal,
-            };
-        }
-
-        private void VirtualizingStackPanel_Loading(FrameworkElement sender, object args)
-        {
-            flipViewPanel = sender as VirtualizingStackPanel;
-            _ = ApplyFlipViewOrientationAsync(SettingEditorOrientationToOrientation(ViewModel.SettingsService.SettingEditorOrientation));
-
             if (flipViewPanel != null)
             {
-                foreach (FlipViewItem item in flipViewPanel.Children)
-                {
-                    ScrollViewer? scrollViewer = item.FindDescendant<ScrollViewer>();
-                    if (item.IsSelected)
-                    {
-                        selectedItemScrollViewer = scrollViewer;
-                        return;
-                    }
-                }
+                flipViewPanel.Orientation = orientation;
             }
-        }
 
-        private void ScrollViewerPage_SizeChanged(object sender, SizeChangedEventArgs e)
+            // fix scrolling in vertical mode
+            if (orientation == Orientation.Vertical)
+            {
+                ((ScrollViewer)VisualTreeHelper.GetChild(VisualTreeHelper.GetChild(FlipViewPages, 0), 0)).HorizontalScrollMode = ScrollMode.Disabled;
+            }
+            else
+            {
+                ((ScrollViewer)VisualTreeHelper.GetChild(VisualTreeHelper.GetChild(FlipViewPages, 0), 0)).HorizontalScrollMode = ScrollMode.Enabled;
+            }
+        });
+    }
+
+    private Orientation SettingEditorOrientationToOrientation(SettingEditorOrientation setting)
+    {
+        return setting switch
         {
-            ScrollViewer scrollViewer = (ScrollViewer)sender;
+            SettingEditorOrientation.Horizontal => Orientation.Horizontal,
+            SettingEditorOrientation.Vertical => Orientation.Vertical,
+            _ => Orientation.Horizontal,
+        };
+    }
 
-            PageWidth = scrollViewer.ViewportWidth;
-            PageHeight = scrollViewer.ViewportHeight;
-        }
+    private void VirtualizingStackPanel_Loading(FrameworkElement sender, object args)
+    {
+        flipViewPanel = sender as VirtualizingStackPanel;
+        _ = ApplyFlipViewOrientationAsync(SettingEditorOrientationToOrientation(ViewModel.SettingsService.SettingEditorOrientation));
 
-        private void FlipViewPages_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        if (flipViewPanel != null)
         {
-            InitializeZoomProperties();
-        }
-        
-        private void InitializeZoomProperties()
-        {
-            // reset zoom factor for unselected items
-            if (flipViewPanel == null) return;
-
-            selectedItemScrollViewer = null;
-            PageZoomFactor = 1.0f;
             foreach (FlipViewItem item in flipViewPanel.Children)
             {
                 ScrollViewer? scrollViewer = item.FindDescendant<ScrollViewer>();
                 if (item.IsSelected)
                 {
                     selectedItemScrollViewer = scrollViewer;
-                }
-                else
-                {
-                    scrollViewer?.ChangeView(null, null, 1.0f, true);
+                    return;
                 }
             }
         }
+    }
 
-        private void ScrollViewer_ViewChanged(object? sender, ScrollViewerViewChangedEventArgs e)
+    private void ScrollViewerPage_SizeChanged(object sender, SizeChangedEventArgs e)
+    {
+        ScrollViewer scrollViewer = (ScrollViewer)sender;
+
+        PageWidth = scrollViewer.ViewportWidth;
+        PageHeight = scrollViewer.ViewportHeight;
+    }
+
+    private void FlipViewPages_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        InitializeZoomProperties();
+    }
+    
+    private void InitializeZoomProperties()
+    {
+        // reset zoom factor for unselected items
+        if (flipViewPanel == null) return;
+
+        selectedItemScrollViewer = null;
+        PageZoomFactor = 1.0f;
+        foreach (FlipViewItem item in flipViewPanel.Children)
         {
-            if (selectedItemScrollViewer == null || sender is not ScrollViewer scrollViewer) return;
-            PageZoomFactor = selectedItemScrollViewer.ZoomFactor;
+            ScrollViewer? scrollViewer = item.FindDescendant<ScrollViewer>();
+            if (item.IsSelected)
+            {
+                selectedItemScrollViewer = scrollViewer;
+            }
+            else
+            {
+                scrollViewer?.ChangeView(null, null, 1.0f, true);
+            }
         }
+    }
 
-        private void ButtonPageZoomFactor_Click(object sender, RoutedEventArgs e)
-        {
-            selectedItemScrollViewer?.ChangeView(null, null, 1.0f);
-        }
+    private void ScrollViewer_ViewChanged(object? sender, ScrollViewerViewChangedEventArgs e)
+    {
+        if (selectedItemScrollViewer == null || sender is not ScrollViewer scrollViewer) return;
+        PageZoomFactor = selectedItemScrollViewer.ZoomFactor;
+    }
 
-        private void FlipViewPages_Loaded(object sender, RoutedEventArgs e)
+    private void ButtonPageZoomFactor_Click(object sender, RoutedEventArgs e)
+    {
+        selectedItemScrollViewer?.ChangeView(null, null, 1.0f);
+    }
+
+    private void FlipViewPages_Loaded(object sender, RoutedEventArgs e)
+    {
+        InitializeZoomProperties();
+    }
+
+    private void GridToolbarZoom_PointerEntered(object sender, PointerRoutedEventArgs e)
+    {
+        IsHoveringZoomControls = true;
+    }
+
+    private void GridToolbarZoom_PointerExited(object sender, PointerRoutedEventArgs e)
+    {
+        IsHoveringZoomControls = false;
+    }
+
+    private void ButtonPageZoomFactorIncrease_Click(object sender, RoutedEventArgs e)
+    {
+        TryZoomScanAsync(0.5f, true);
+    }
+
+    private void ButtonPageZoomFactorDecrease_Click(object sender, RoutedEventArgs e)
+    {
+        TryZoomScanAsync(-0.5f, true);
+    }
+
+    private void FlipViewItem_DataContextChanged(FrameworkElement sender, DataContextChangedEventArgs args)
+    {
+        InitializeZoomProperties();
+    }
+
+    private void FlipViewItemPage_Loaded(object sender, RoutedEventArgs e)
+    {
+        ((FlipViewItem)sender).RegisterPropertyChangedCallback(FlipViewItem.IsSelectedProperty, (s, e) =>
         {
             InitializeZoomProperties();
+        });
+    }
+
+    private void TryZoomScanAsync(float change, bool animate)
+    {
+        if (selectedItemScrollViewer == null) return;
+
+        float newFactor = selectedItemScrollViewer.ZoomFactor + change;
+        if (newFactor > maxZoomFactor) newFactor = maxZoomFactor;
+        if (newFactor < minZoomFactor) newFactor = minZoomFactor;
+
+        try
+        {
+            // Calculate the center of the viewport in content coordinates before zooming
+            double horizontalCenter = selectedItemScrollViewer.HorizontalOffset + (selectedItemScrollViewer.ViewportWidth / 2);
+            double verticalCenter = selectedItemScrollViewer.VerticalOffset + (selectedItemScrollViewer.ViewportHeight / 2);
+
+            // Preserve the center point correctly after zooming
+            double scaleRatio = newFactor / selectedItemScrollViewer.ZoomFactor;
+
+            double newHorizontalOffset = Math.Max((horizontalCenter * scaleRatio) - (selectedItemScrollViewer.ViewportWidth / 2), 0);
+            double newVerticalOffset = Math.Max((verticalCenter * scaleRatio) - (selectedItemScrollViewer.ViewportHeight / 2), 0);
+
+            selectedItemScrollViewer.ChangeView(newHorizontalOffset, newVerticalOffset, newFactor, !animate);
+        }
+        catch (Exception) { }
+    }
+
+    private async void CanvasPreview_CreateResources(CanvasControl sender, Microsoft.Graphics.Canvas.UI.CanvasCreateResourcesEventArgs args)
+    {
+        IProjectPage? page = sender.DataContext as IProjectPage;
+        if (page == null)
+            return;
+
+        sender.Tag = await CacheCanvasBitmapAsync(sender, page);
+    }
+
+    private void CanvasPreview_Draw(CanvasControl sender, CanvasDrawEventArgs args)
+    {
+        CanvasPageData? canvasPageData = sender.Tag as CanvasPageData;
+        if (canvasPageData == null || canvasPageData.Bitmap == null)
+            return;
+
+        // get effect values
+        float brightness = 0;
+        float contrast = 0;
+        ImageFilter filter = ImageFilter.None;
+
+        if (canvasPageData.Page is ImagePage imagePage)
+        {
+            brightness = imagePage.DisplayedBrightness;
+            contrast = imagePage.DisplayedContrast;
+            filter = imagePage.Filter;
         }
 
-        private void GridToolbarZoom_PointerEntered(object sender, PointerRoutedEventArgs e)
+        // draw image with effects
+        ICanvasImage effectChain = ImageEffectsHelper.CreateEffectChain(canvasPageData.Bitmap, filter, (int)brightness, (int)contrast);
+        args.DrawingSession.DrawImage(effectChain);
+
+        sender.Width = canvasPageData.Bitmap.Size.Width;
+        sender.Height = canvasPageData.Bitmap.Size.Height;
+    }
+
+    private async void CanvasPreview_DataContextChanged(FrameworkElement sender, DataContextChangedEventArgs args)
+    {
+        CanvasControl canvas = (CanvasControl)sender;
+        CanvasPageData? canvasPageData = canvas.Tag as CanvasPageData;
+
+        if (!canvas.ReadyToDraw)
+            return;
+
+        IProjectPage page = (IProjectPage)canvas.DataContext;
+        if (canvasPageData?.Page == page)
+            return;
+
+        // clear canvas to prevent wrong image from briefly being displayed during recycling
+        canvas.Tag = null;
+        canvas.Invalidate();
+
+        // discard old data
+        if (canvasPageData != null)
         {
-            IsHoveringZoomControls = true;
-        }
-
-        private void GridToolbarZoom_PointerExited(object sender, PointerRoutedEventArgs e)
-        {
-            IsHoveringZoomControls = false;
-        }
-
-        private void ButtonPageZoomFactorIncrease_Click(object sender, RoutedEventArgs e)
-        {
-            TryZoomScanAsync(0.5f, true);
-        }
-
-        private void ButtonPageZoomFactorDecrease_Click(object sender, RoutedEventArgs e)
-        {
-            TryZoomScanAsync(-0.5f, true);
-        }
-
-        private void FlipViewItem_DataContextChanged(FrameworkElement sender, DataContextChangedEventArgs args)
-        {
-            InitializeZoomProperties();
-        }
-
-        private void FlipViewItemPage_Loaded(object sender, RoutedEventArgs e)
-        {
-            ((FlipViewItem)sender).RegisterPropertyChangedCallback(FlipViewItem.IsSelectedProperty, (s, e) =>
-            {
-                InitializeZoomProperties();
-            });
-        }
-
-        private void TryZoomScanAsync(float change, bool animate)
-        {
-            if (selectedItemScrollViewer == null) return;
-
-            float newFactor = selectedItemScrollViewer.ZoomFactor + change;
-            if (newFactor > maxZoomFactor) newFactor = maxZoomFactor;
-            if (newFactor < minZoomFactor) newFactor = minZoomFactor;
-
-            try
-            {
-                // Calculate the center of the viewport in content coordinates before zooming
-                double horizontalCenter = selectedItemScrollViewer.HorizontalOffset + (selectedItemScrollViewer.ViewportWidth / 2);
-                double verticalCenter = selectedItemScrollViewer.VerticalOffset + (selectedItemScrollViewer.ViewportHeight / 2);
-
-                // Preserve the center point correctly after zooming
-                double scaleRatio = newFactor / selectedItemScrollViewer.ZoomFactor;
-
-                double newHorizontalOffset = Math.Max((horizontalCenter * scaleRatio) - (selectedItemScrollViewer.ViewportWidth / 2), 0);
-                double newVerticalOffset = Math.Max((verticalCenter * scaleRatio) - (selectedItemScrollViewer.ViewportHeight / 2), 0);
-
-                selectedItemScrollViewer.ChangeView(newHorizontalOffset, newVerticalOffset, newFactor, !animate);
-            }
-            catch (Exception) { }
-        }
-
-        private async void CanvasPreview_CreateResources(CanvasControl sender, Microsoft.Graphics.Canvas.UI.CanvasCreateResourcesEventArgs args)
-        {
-            IProjectPage? page = sender.DataContext as IProjectPage;
-            if (page == null)
-                return;
-
-            sender.Tag = await CacheCanvasBitmapAsync(sender, page);
-        }
-
-        private void CanvasPreview_Draw(CanvasControl sender, CanvasDrawEventArgs args)
-        {
-            CanvasPageData? canvasPageData = sender.Tag as CanvasPageData;
-            if (canvasPageData == null || canvasPageData.Bitmap == null)
-                return;
-
-            // get effect values
-            float brightness = 0;
-            float contrast = 0;
-            ImageFilter filter = ImageFilter.None;
-
-            if (canvasPageData.Page is ImagePage imagePage)
-            {
-                brightness = imagePage.DisplayedBrightness;
-                contrast = imagePage.DisplayedContrast;
-                filter = imagePage.Filter;
-            }
-
-            // draw image with effects
-            ICanvasImage effectChain = ImageEffectsHelper.CreateEffectChain(canvasPageData.Bitmap, filter, (int)brightness, (int)contrast);
-            args.DrawingSession.DrawImage(effectChain);
-
-            sender.Width = canvasPageData.Bitmap.Size.Width;
-            sender.Height = canvasPageData.Bitmap.Size.Height;
-        }
-
-        private async void CanvasPreview_DataContextChanged(FrameworkElement sender, DataContextChangedEventArgs args)
-        {
-            CanvasControl canvas = (CanvasControl)sender;
-            CanvasPageData? canvasPageData = canvas.Tag as CanvasPageData;
-
-            if (!canvas.ReadyToDraw)
-                return;
-
-            IProjectPage page = (IProjectPage)canvas.DataContext;
-            if (canvasPageData?.Page == page)
-                return;
-
-            // clear canvas to prevent wrong image from briefly being displayed during recycling
             canvas.Tag = null;
+            canvasPageData.Bitmap.Dispose();
+        }
+
+        // load new data
+        if (page == null)
+            return;
+
+        // clean up
+        if (canvasPageData?.Page != null)
+        {
+            if (pageCanvases.TryGetValue(canvasPageData.Page, out var trackedCanvas) && trackedCanvas == canvas)
+            {
+                canvasPageData.Page.PropertyChanged -= Page_PropertyChanged;
+                pageCanvases.Remove(canvasPageData.Page);
+            }
+        }
+
+        canvas.Tag = await CacheCanvasBitmapAsync(canvas, page);
+    }
+
+    private async Task<CanvasPageData?> CacheCanvasBitmapAsync(CanvasControl canvas, IProjectPage page)
+    {
+        pageCanvases[page] = canvas;
+        page.PropertyChanged -= Page_PropertyChanged;
+        page.PropertyChanged += Page_PropertyChanged;
+
+        try
+        {
+            // load the image file into a CanvasBitmap
+            CanvasBitmap newBitmap;
+            if (page is ImagePage imagePage)
+            {
+                newBitmap = await CanvasBitmap.LoadAsync(canvas, imagePage.SourceBitmapUri);
+            }
+            else if (page is PdfPage pdfPage && ViewModel.CurrentProject is PdfProject pdfProject)
+            {
+                using IRandomAccessStream fileStream = await pdfProject.SourceFile!.File.OpenAsync(FileAccessMode.Read);
+                Windows.Data.Pdf.PdfDocument document = await Windows.Data.Pdf.PdfDocument.LoadFromStreamAsync(fileStream);
+                InMemoryRandomAccessStream bitmapStream = new();
+                await document.GetPage(pdfPage.IndexInPdf).RenderToStreamAsync(bitmapStream);
+                newBitmap = await CanvasBitmap.LoadAsync(canvas, bitmapStream);
+            }
+            else
+            {
+                throw new NotImplementedException();
+            }
+
+            // update canvas size
+            canvas.Width = newBitmap.Size.Width;
+            canvas.Height = newBitmap.Size.Height;
             canvas.Invalidate();
 
-            // discard old data
-            if (canvasPageData != null)
-            {
-                canvas.Tag = null;
-                canvasPageData.Bitmap.Dispose();
-            }
-
-            // load new data
-            if (page == null)
-                return;
-
-            // clean up
-            if (canvasPageData?.Page != null)
-            {
-                if (pageCanvases.TryGetValue(canvasPageData.Page, out var trackedCanvas) && trackedCanvas == canvas)
-                {
-                    canvasPageData.Page.PropertyChanged -= Page_PropertyChanged;
-                    pageCanvases.Remove(canvasPageData.Page);
-                }
-            }
-
-            canvas.Tag = await CacheCanvasBitmapAsync(canvas, page);
+            return new CanvasPageData(page, newBitmap);
         }
-
-        private async Task<CanvasPageData?> CacheCanvasBitmapAsync(CanvasControl canvas, IProjectPage page)
+        catch (Exception exc)
         {
-            pageCanvases[page] = canvas;
-            page.PropertyChanged -= Page_PropertyChanged;
-            page.PropertyChanged += Page_PropertyChanged;
-
-            try
-            {
-                // load the image file into a CanvasBitmap
-                CanvasBitmap newBitmap;
-                if (page is ImagePage imagePage)
-                {
-                    newBitmap = await CanvasBitmap.LoadAsync(canvas, imagePage.SourceBitmapUri);
-                }
-                else if (page is PdfPage pdfPage && ViewModel.CurrentProject is PdfProject pdfProject)
-                {
-                    using IRandomAccessStream fileStream = await pdfProject.SourceFile!.File.OpenAsync(FileAccessMode.Read);
-                    Windows.Data.Pdf.PdfDocument document = await Windows.Data.Pdf.PdfDocument.LoadFromStreamAsync(fileStream);
-                    InMemoryRandomAccessStream bitmapStream = new();
-                    await document.GetPage(pdfPage.IndexInPdf).RenderToStreamAsync(bitmapStream);
-                    newBitmap = await CanvasBitmap.LoadAsync(canvas, bitmapStream);
-                }
-                else
-                {
-                    throw new NotImplementedException();
-                }
-
-                // update canvas size
-                canvas.Width = newBitmap.Size.Width;
-                canvas.Height = newBitmap.Size.Height;
-                canvas.Invalidate();
-
-                return new CanvasPageData(page, newBitmap);
-            }
-            catch (Exception exc)
-            {
-                ViewModel.LogService?.Log.Warning(exc, "Failed to cahce canvas bitmap");
-                return null;
-            }
+            ViewModel.LogService?.Log.Warning(exc, "Failed to cahce canvas bitmap");
+            return null;
         }
-
-        private void Page_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
-        {
-            this.RunOnUIThread(DispatcherQueuePriority.Normal, async () =>
-            {
-                switch (e.PropertyName)
-                {
-                    case nameof(ImagePage.SourceBitmapUri):
-                        ImagePage? page = sender as ImagePage;
-                        if (page == null)
-                            return;
-
-                        CanvasControl canvas = pageCanvases[page];
-                        CanvasPageData? canvasPageData = canvas.Tag as CanvasPageData;
-
-                        // discard old data
-                        if (canvasPageData != null)
-                        {
-                            canvas.Tag = null;
-                            canvasPageData.Bitmap.Dispose();
-                        }
-
-                        canvas.Tag = await CacheCanvasBitmapAsync(canvas, page);
-                        break;
-                    case nameof(ImagePage.Filter):
-                    case nameof(ImagePage.DisplayedBrightness):
-                    case nameof(ImagePage.DisplayedContrast):
-                        page = sender as ImagePage;
-                        if (page == null)
-                            return;
-
-                        canvas = pageCanvases[page];
-                        canvas.Invalidate();
-                        break;
-                    default:
-                        return;
-                }
-            });        
-        }
-
-        private void ButtonCrop_Click(object sender, RoutedEventArgs e)
-        {
-            IsCropping = true;
-        }
-
-        private async void ImageCropper_Loading(FrameworkElement sender, object args)
-        {
-            if (ViewModel.CurrentProject == null)
-                return;
-            if (ViewModel.ProjectService.SelectedPage == null)
-                return;
-
-            // load image into ImageCropper
-            ((CommunityToolkit.WinUI.Controls.ImageCropper)sender).AspectRatio = ViewModel.SelectedAspectRatioValue;
-            await ((CommunityToolkit.WinUI.Controls.ImageCropper)sender).LoadImageFromFile(ViewModel.ProjectService.SelectedPage.PreviewFile);
-        }
-
-        private void ButtonDiscardCrop_Click(object sender, RoutedEventArgs e)
-        {
-            IsCropping = false;
-        }
-
-        private void ToggleMenuFlyoutItemAspectRatio_Click(object sender, RoutedEventArgs e)
-        {
-            ToggleMenuFlyoutItem item = (ToggleMenuFlyoutItem)sender;
-
-            // prevent unchecking
-            if (!item.IsChecked)
-                item.IsChecked = true;
-
-            // apply selection
-            AspectRatio aspectRatio = (AspectRatio)item.Tag;
-            ViewModel.SelectedAspectRatio = aspectRatio;
-        }
-
-        private void MenuFlyoutItemCropAspectRatioFlip_Click(object sender, RoutedEventArgs e)
-        {
-            if (ImageCropper == null)
-                return;
-
-            ViewModel.SelectedAspectRatioValue = ImageCropper.CroppedRegion.Height / ImageCropper.CroppedRegion.Width;
-
-            // fix aspect ratio locked after flipping custom
-            if (ViewModel.SelectedAspectRatio == AspectRatio.Custom)
-            {
-                ViewModel.SelectedAspectRatioValue = null;
-            }
-        }
-
-        private async void SplitButtonSaveCrop_Click(SplitButton sender, SplitButtonClickEventArgs args)
-        {
-            await SaveCropAsync(false);
-        }
-
-        private async void MenuFlyoutItemSaveCrop_Click(object sender, RoutedEventArgs e)
-        {
-            await SaveCropAsync(false);
-        }
-
-        private async Task SaveCropAsync(bool asCopy)
-        {
-            if (asCopy)
-                await ViewModel.CropCurrentPageAsCopyAsyncCommand.ExecuteAsync(ImageCropper.CroppedRegion);
-            else
-                await ViewModel.CropCurrentPageAsyncCommand.ExecuteAsync(ImageCropper.CroppedRegion);
-
-            IsCropping = false;
-        }
-
-        private void MenuFlyoutItemCropSimilarPages_Click(object sender, RoutedEventArgs e)
-        {
-            FlyoutBase.ShowAttachedFlyout(GridCropToolbar);
-        }
-
-        private void CheckBoxCropSimilarPagesSelectAll_Checked(object sender, RoutedEventArgs e)
-        {
-            ListViewCropSimilarPages.SelectAll();
-        }
-
-        private void CheckBoxCropSimilarPagesSelectAll_Unchecked(object sender, RoutedEventArgs e)
-        {
-            ListViewCropSimilarPages.SelectedItem = null;
-        }
-
-        private void CheckBoxCropSimilarPagesSelectAll_Indeterminate(object sender, RoutedEventArgs e)
-        {
-            // prevent indeterminate state if caused by selecting CheckBox
-            uint selectedItems = 0;
-            foreach (ItemIndexRange range in ListViewCropSimilarPages.SelectedRanges)
-            {
-                selectedItems += range.Length;
-            }
-
-            if (selectedItems == ListViewCropSimilarPages.Items.Count)
-            {
-                CheckBoxCropSimilarPagesSelectAll.IsChecked = false;
-            }
-        }
-
-        private void ListViewCropSimilarPagesCurrent_Loading(FrameworkElement sender, object args)
-        {
-            if (ViewModel.ProjectService.SelectedPage == null) return;
-
-            ((ListView)sender).ItemsSource = new List<IProjectPage>([ViewModel.ProjectService.SelectedPage]);
-            ((ListView)sender).SelectedIndex = 0;
-        }
-
-        private void ListViewCropSimilarPages_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (ListViewCropSimilarPages.SelectedItems.Count == ListViewCropSimilarPages.Items.Count)
-                CheckBoxCropSimilarPagesSelectAll.IsChecked = true;
-            else if (ListViewCropSimilarPages.SelectedItems.Count == 0)
-                CheckBoxCropSimilarPagesSelectAll.IsChecked = false;
-            else
-                CheckBoxCropSimilarPagesSelectAll.IsChecked = null;
-
-            AreSimilarPagesSelectedForCrop = ListViewCropSimilarPages.SelectedItems.Count > 0;
-        }
-
-        private void ButtonCropSimilarPagesCancel_Click(object sender, RoutedEventArgs e)
-        {
-            FlyoutBase.GetAttachedFlyout(GridCropToolbar).Hide();
-        }
-
-        private async void ButtonCropSimilarPagesConfirm_Click(object sender, RoutedEventArgs e)
-        {
-            // collect pages
-            List<IProjectPage> pages = ListViewCropSimilarPages.SelectedItems.OfType<IProjectPage>().ToList();
-            if (ViewModel.ProjectService.SelectedPage != null)
-                pages.Insert(0, ViewModel.ProjectService.SelectedPage);
-
-            // crop
-            FlyoutBase.GetAttachedFlyout(GridCropToolbar).Hide();
-            await ViewModel.CropPagesAsyncCommand.ExecuteAsync((pages, ImageCropper.CroppedRegion));
-        }
-
-        private void FlyoutCropSimilarPages_Opened(object sender, object e)
-        {
-            IsSimilarPagesFlyoutOpen = true;
-        }
-
-        private void FlyoutCropSimilarPages_Closed(object sender, object e)
-        {
-            IsSimilarPagesFlyoutOpen = false;
-        }
-
-        private void MenuFlyoutItemCropSimilarPages_Loading(FrameworkElement sender, object args)
-        {
-            ((MenuFlyoutItem)sender).IsEnabled = ViewModel.AreSimilarPagesForCropAvailable;
-        }
-
-        private void ListViewCropSimilarPages_Loading(FrameworkElement sender, object args)
-        {
-            ((ListView)sender).ItemsSource = ViewModel.SimilarPagesForCrop;
-        }
-
-        private async void MenuFlyoutItemSaveCropAsCopy_Click(object sender, RoutedEventArgs e)
-        {
-            await SaveCropAsync(true);
-        }
-
-        private void ButtonDraw_Click(object sender, RoutedEventArgs e)
-        {
-            IsDrawing = true;
-        }
-
-        private void ButtonDiscardDraw_Click(object sender, RoutedEventArgs e)
-        {
-            IsDrawing = false;
-        }
-
-        private void ScrollViewerMainEditingControls_SizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            OnPropertyChanged(nameof(IsToolbarBackgroundVisible));
-        }
-
-        private void SliderBrightness_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
-        {
-            ViewModel.ResetBrightnessCommand.Execute(null);
-        }
-
-        private void SliderContrast_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
-        {
-            ViewModel.ResetContrastCommand.Execute(null);
-        }
-
-        private void NumberBoxBrightness_ValueChanged(NumberBox sender, NumberBoxValueChangedEventArgs args)
-        {
-            if (double.IsNaN(args.OldValue))    // ignore initial event
-                return;
-
-            _ = ViewModel.SetBrightnessForCurrentPageCommand.ExecuteAsync((int)args.NewValue);
-        }
-
-        private void SliderBrightness_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
-        {
-            _ = ViewModel.SetBrightnessForCurrentPageCommand.ExecuteAsync((int)e.NewValue);
-        }
-
-        private void NumberBoxContrast_ValueChanged(NumberBox sender, NumberBoxValueChangedEventArgs args)
-        {
-            if (double.IsNaN(args.OldValue))    // ignore initial event
-                return;
-
-            _ = ViewModel.SetContrastForCurrentPageCommand.ExecuteAsync((int)args.NewValue);
-        }
-
-        private void SliderContrast_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
-        {
-            _ = ViewModel.SetContrastForCurrentPageCommand.ExecuteAsync((int)e.NewValue);
-        }
-
-        private void FlipViewItemPage_Unloaded(object sender, RoutedEventArgs e)
-        {
-            if (((FlipViewItem)sender).DataContext is not IProjectPage page)
-                return;
-
-            CanvasControl canvas = pageCanvases[page];
-            pageCanvases.Remove(page);
-
-            CanvasPageData? pageData = canvas.Tag as CanvasPageData;
-            if (pageData != null)
-            {
-                canvas.Draw -= CanvasPreview_Draw;
-                canvas.DataContextChanged -= CanvasPreview_DataContextChanged;
-                pageData.Bitmap.Dispose();
-                pageData.Page.PropertyChanged -= Page_PropertyChanged;
-            }
-            canvas.RemoveFromVisualTree();
-        }
-
-
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // MISCELLANEOUS ////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        private record CanvasPageData(IProjectPage Page, CanvasBitmap Bitmap);
     }
+
+    private void Page_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+    {
+        this.RunOnUIThread(DispatcherQueuePriority.Normal, async () =>
+        {
+            switch (e.PropertyName)
+            {
+                case nameof(ImagePage.SourceBitmapUri):
+                    ImagePage? page = sender as ImagePage;
+                    if (page == null)
+                        return;
+
+                    CanvasControl canvas = pageCanvases[page];
+                    CanvasPageData? canvasPageData = canvas.Tag as CanvasPageData;
+
+                    // discard old data
+                    if (canvasPageData != null)
+                    {
+                        canvas.Tag = null;
+                        canvasPageData.Bitmap.Dispose();
+                    }
+
+                    canvas.Tag = await CacheCanvasBitmapAsync(canvas, page);
+                    break;
+                case nameof(ImagePage.Filter):
+                case nameof(ImagePage.DisplayedBrightness):
+                case nameof(ImagePage.DisplayedContrast):
+                    page = sender as ImagePage;
+                    if (page == null)
+                        return;
+
+                    canvas = pageCanvases[page];
+                    canvas.Invalidate();
+                    break;
+                default:
+                    return;
+            }
+        });        
+    }
+
+    private void ButtonCrop_Click(object sender, RoutedEventArgs e)
+    {
+        IsCropping = true;
+    }
+
+    private async void ImageCropper_Loading(FrameworkElement sender, object args)
+    {
+        if (ViewModel.CurrentProject == null)
+            return;
+        if (ViewModel.ProjectService.SelectedPage == null)
+            return;
+
+        // load image into ImageCropper
+        ((CommunityToolkit.WinUI.Controls.ImageCropper)sender).AspectRatio = ViewModel.SelectedAspectRatioValue;
+        await ((CommunityToolkit.WinUI.Controls.ImageCropper)sender).LoadImageFromFile(ViewModel.ProjectService.SelectedPage.PreviewFile);
+    }
+
+    private void ButtonDiscardCrop_Click(object sender, RoutedEventArgs e)
+    {
+        IsCropping = false;
+    }
+
+    private void ToggleMenuFlyoutItemAspectRatio_Click(object sender, RoutedEventArgs e)
+    {
+        ToggleMenuFlyoutItem item = (ToggleMenuFlyoutItem)sender;
+
+        // prevent unchecking
+        if (!item.IsChecked)
+            item.IsChecked = true;
+
+        // apply selection
+        AspectRatio aspectRatio = (AspectRatio)item.Tag;
+        ViewModel.SelectedAspectRatio = aspectRatio;
+    }
+
+    private void MenuFlyoutItemCropAspectRatioFlip_Click(object sender, RoutedEventArgs e)
+    {
+        if (ImageCropper == null)
+            return;
+
+        ViewModel.SelectedAspectRatioValue = ImageCropper.CroppedRegion.Height / ImageCropper.CroppedRegion.Width;
+
+        // fix aspect ratio locked after flipping custom
+        if (ViewModel.SelectedAspectRatio == AspectRatio.Custom)
+        {
+            ViewModel.SelectedAspectRatioValue = null;
+        }
+    }
+
+    private async void SplitButtonSaveCrop_Click(SplitButton sender, SplitButtonClickEventArgs args)
+    {
+        await SaveCropAsync(false);
+    }
+
+    private async void MenuFlyoutItemSaveCrop_Click(object sender, RoutedEventArgs e)
+    {
+        await SaveCropAsync(false);
+    }
+
+    private async Task SaveCropAsync(bool asCopy)
+    {
+        if (asCopy)
+            await ViewModel.CropCurrentPageAsCopyAsyncCommand.ExecuteAsync(ImageCropper.CroppedRegion);
+        else
+            await ViewModel.CropCurrentPageAsyncCommand.ExecuteAsync(ImageCropper.CroppedRegion);
+
+        IsCropping = false;
+    }
+
+    private void MenuFlyoutItemCropSimilarPages_Click(object sender, RoutedEventArgs e)
+    {
+        FlyoutBase.ShowAttachedFlyout(GridCropToolbar);
+    }
+
+    private void CheckBoxCropSimilarPagesSelectAll_Checked(object sender, RoutedEventArgs e)
+    {
+        ListViewCropSimilarPages.SelectAll();
+    }
+
+    private void CheckBoxCropSimilarPagesSelectAll_Unchecked(object sender, RoutedEventArgs e)
+    {
+        ListViewCropSimilarPages.SelectedItem = null;
+    }
+
+    private void CheckBoxCropSimilarPagesSelectAll_Indeterminate(object sender, RoutedEventArgs e)
+    {
+        // prevent indeterminate state if caused by selecting CheckBox
+        uint selectedItems = 0;
+        foreach (ItemIndexRange range in ListViewCropSimilarPages.SelectedRanges)
+        {
+            selectedItems += range.Length;
+        }
+
+        if (selectedItems == ListViewCropSimilarPages.Items.Count)
+        {
+            CheckBoxCropSimilarPagesSelectAll.IsChecked = false;
+        }
+    }
+
+    private void ListViewCropSimilarPagesCurrent_Loading(FrameworkElement sender, object args)
+    {
+        if (ViewModel.ProjectService.SelectedPage == null) return;
+
+        ((ListView)sender).ItemsSource = new List<IProjectPage>([ViewModel.ProjectService.SelectedPage]);
+        ((ListView)sender).SelectedIndex = 0;
+    }
+
+    private void ListViewCropSimilarPages_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (ListViewCropSimilarPages.SelectedItems.Count == ListViewCropSimilarPages.Items.Count)
+            CheckBoxCropSimilarPagesSelectAll.IsChecked = true;
+        else if (ListViewCropSimilarPages.SelectedItems.Count == 0)
+            CheckBoxCropSimilarPagesSelectAll.IsChecked = false;
+        else
+            CheckBoxCropSimilarPagesSelectAll.IsChecked = null;
+
+        AreSimilarPagesSelectedForCrop = ListViewCropSimilarPages.SelectedItems.Count > 0;
+    }
+
+    private void ButtonCropSimilarPagesCancel_Click(object sender, RoutedEventArgs e)
+    {
+        FlyoutBase.GetAttachedFlyout(GridCropToolbar).Hide();
+    }
+
+    private async void ButtonCropSimilarPagesConfirm_Click(object sender, RoutedEventArgs e)
+    {
+        // collect pages
+        List<IProjectPage> pages = ListViewCropSimilarPages.SelectedItems.OfType<IProjectPage>().ToList();
+        if (ViewModel.ProjectService.SelectedPage != null)
+            pages.Insert(0, ViewModel.ProjectService.SelectedPage);
+
+        // crop
+        FlyoutBase.GetAttachedFlyout(GridCropToolbar).Hide();
+        await ViewModel.CropPagesAsyncCommand.ExecuteAsync((pages, ImageCropper.CroppedRegion));
+    }
+
+    private void FlyoutCropSimilarPages_Opened(object sender, object e)
+    {
+        IsSimilarPagesFlyoutOpen = true;
+    }
+
+    private void FlyoutCropSimilarPages_Closed(object sender, object e)
+    {
+        IsSimilarPagesFlyoutOpen = false;
+    }
+
+    private void MenuFlyoutItemCropSimilarPages_Loading(FrameworkElement sender, object args)
+    {
+        ((MenuFlyoutItem)sender).IsEnabled = ViewModel.AreSimilarPagesForCropAvailable;
+    }
+
+    private void ListViewCropSimilarPages_Loading(FrameworkElement sender, object args)
+    {
+        ((ListView)sender).ItemsSource = ViewModel.SimilarPagesForCrop;
+    }
+
+    private async void MenuFlyoutItemSaveCropAsCopy_Click(object sender, RoutedEventArgs e)
+    {
+        await SaveCropAsync(true);
+    }
+
+    private void ButtonDraw_Click(object sender, RoutedEventArgs e)
+    {
+        IsDrawing = true;
+    }
+
+    private void ButtonDiscardDraw_Click(object sender, RoutedEventArgs e)
+    {
+        IsDrawing = false;
+    }
+
+    private void ScrollViewerMainEditingControls_SizeChanged(object sender, SizeChangedEventArgs e)
+    {
+        OnPropertyChanged(nameof(IsToolbarBackgroundVisible));
+    }
+
+    private void SliderBrightness_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
+    {
+        ViewModel.ResetBrightnessCommand.Execute(null);
+    }
+
+    private void SliderContrast_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
+    {
+        ViewModel.ResetContrastCommand.Execute(null);
+    }
+
+    private void NumberBoxBrightness_ValueChanged(NumberBox sender, NumberBoxValueChangedEventArgs args)
+    {
+        if (double.IsNaN(args.OldValue))    // ignore initial event
+            return;
+
+        _ = ViewModel.SetBrightnessForCurrentPageCommand.ExecuteAsync((int)args.NewValue);
+    }
+
+    private void SliderBrightness_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
+    {
+        _ = ViewModel.SetBrightnessForCurrentPageCommand.ExecuteAsync((int)e.NewValue);
+    }
+
+    private void NumberBoxContrast_ValueChanged(NumberBox sender, NumberBoxValueChangedEventArgs args)
+    {
+        if (double.IsNaN(args.OldValue))    // ignore initial event
+            return;
+
+        _ = ViewModel.SetContrastForCurrentPageCommand.ExecuteAsync((int)args.NewValue);
+    }
+
+    private void SliderContrast_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
+    {
+        _ = ViewModel.SetContrastForCurrentPageCommand.ExecuteAsync((int)e.NewValue);
+    }
+
+    private void FlipViewItemPage_Unloaded(object sender, RoutedEventArgs e)
+    {
+        if (((FlipViewItem)sender).DataContext is not IProjectPage page)
+            return;
+
+        CanvasControl canvas = pageCanvases[page];
+        pageCanvases.Remove(page);
+
+        CanvasPageData? pageData = canvas.Tag as CanvasPageData;
+        if (pageData != null)
+        {
+            canvas.Draw -= CanvasPreview_Draw;
+            canvas.DataContextChanged -= CanvasPreview_DataContextChanged;
+            pageData.Bitmap.Dispose();
+            pageData.Page.PropertyChanged -= Page_PropertyChanged;
+        }
+        canvas.RemoveFromVisualTree();
+    }
+
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // MISCELLANEOUS ////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    private record CanvasPageData(IProjectPage Page, CanvasBitmap Bitmap);
 }

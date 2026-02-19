@@ -6,10 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Scanner.Messages
+namespace Scanner.Messages;
+
+internal class SelectedScannerRequestMessage : RequestMessage<IScanningDevice?>
 {
-    internal class SelectedScannerRequestMessage : RequestMessage<IScanningDevice?>
-    {
-        
-    }
+    
 }

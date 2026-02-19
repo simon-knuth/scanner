@@ -17,66 +17,65 @@ using Windows.Storage;
 using Microsoft.UI.Dispatching;
 using Microsoft.UI.Xaml;
 
-namespace Scanner.Services.Interfaces
+namespace Scanner.Services.Interfaces;
+
+/// <summary>
+///     Manages and exposes save locations.
+/// </summary>
+public interface ISaveLocationService
 {
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /// <summary>
-    ///     Manages and exposes save locations.
+    ///     Determines the save location to use for a scan. This can result in a file picker dialog opening and even the user
+    ///     cancelling the operation.
     /// </summary>
-    public interface ISaveLocationService
-    {
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /// <returns>The <see cref="SaveOptions?"/> to use for saving.</returns>
+    Task<SaveOptions?> GetSaveOptionsAsync(Window window, ScanOptions scanOptions, ProjectBase? existingProject,
+        bool forceTargetFolder, DispatcherQueue uiDispatcherQueue, bool saveAs = false, string? desiredFileDisplayName = null);
+
+    /// <summary>
+    ///     Gets the currently selected fixed save location regardless of whether it's used or not. Can be null if unsupported.
+    /// </summary>
+    /// <returns>The <see cref="StorageFolder"/> that is used as the fixed save location.</returns>
+    Task<StorageFolder?> GetFixedSaveLocationAsync();
+
+    /// <summary>
+    ///    Allows the user to select a new fixed save location.
+    /// </summary>
+    /// <returns>
+    ///     The updated save location. This can be the same as before or null, especially if the user cancelled the operation.
+    /// </returns>
+    Task<StorageFolder?> SelectFixedSaveLocationAsync(Window window, DispatcherQueue uiDispatcherQueue);
+
+    /// <summary>
+    ///     Resets the save location to a default value.
+    /// </summary>
+    /// <returns>The updated save location. Can be null if fixed save locations aren't supported.</returns>
+    Task<StorageFolder?> TryResetSaveLocationAsync();
 
 
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// <summary>
-        ///     Determines the save location to use for a scan. This can result in a file picker dialog opening and even the user
-        ///     cancelling the operation.
-        /// </summary>
-        /// <returns>The <see cref="SaveOptions?"/> to use for saving.</returns>
-        Task<SaveOptions?> GetSaveOptionsAsync(Window window, ScanOptions scanOptions, ProjectBase? existingProject,
-            bool forceTargetFolder, DispatcherQueue uiDispatcherQueue, bool saveAs = false, string? desiredFileDisplayName = null);
-
-        /// <summary>
-        ///     Gets the currently selected fixed save location regardless of whether it's used or not. Can be null if unsupported.
-        /// </summary>
-        /// <returns>The <see cref="StorageFolder"/> that is used as the fixed save location.</returns>
-        Task<StorageFolder?> GetFixedSaveLocationAsync();
-
-        /// <summary>
-        ///    Allows the user to select a new fixed save location.
-        /// </summary>
-        /// <returns>
-        ///     The updated save location. This can be the same as before or null, especially if the user cancelled the operation.
-        /// </returns>
-        Task<StorageFolder?> SelectFixedSaveLocationAsync(Window window, DispatcherQueue uiDispatcherQueue);
-
-        /// <summary>
-        ///     Resets the save location to a default value.
-        /// </summary>
-        /// <returns>The updated save location. Can be null if fixed save locations aren't supported.</returns>
-        Task<StorageFolder?> TryResetSaveLocationAsync();
+    /// <summary>
+    ///    Determines if using a fixed save location is supported.
+    /// </summary>
+    Task<bool> GetIsFixedSaveLocationSupportedAsync();
 
 
-        /// <summary>
-        ///    Determines if using a fixed save location is supported.
-        /// </summary>
-        Task<bool> GetIsFixedSaveLocationSupportedAsync();
-
-
-        /// <summary>
-        ///     Provides a list of recently confirmed save locations, with the most recent one at the top. Can include the fixed
-        ///     save location.
-        /// </summary>
-        Task<List<StorageFolder>> GetRecentFoldersAsync();
-    }
-
-
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // MISCELLANEOUS ////////////////////////////////////////////////////////////////////////////////////////////////////////
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    public record SaveOptions(StorageFolder? TargetFolder, string? SubFolderName, string FileName, bool GenerateAIFileName);    
+    /// <summary>
+    ///     Provides a list of recently confirmed save locations, with the most recent one at the top. Can include the fixed
+    ///     save location.
+    /// </summary>
+    Task<List<StorageFolder>> GetRecentFoldersAsync();
 }
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// MISCELLANEOUS ////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+public record SaveOptions(StorageFolder? TargetFolder, string? SubFolderName, string FileName, bool GenerateAIFileName);    

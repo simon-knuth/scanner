@@ -17,61 +17,60 @@ using Windows.Graphics.Imaging;
 using Microsoft.UI.Dispatching;
 using static Scanner.Helpers.Helpers;
 
-namespace Scanner.Models
+namespace Scanner.Models;
+
+public partial class ApplyOrderOfPagesAction : IProjectAction
 {
-    public partial class ApplyOrderOfPagesAction : IProjectAction
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////        
+    #region Services
+    private static readonly IAppDataService AppDataService = Ioc.Default.GetRequiredService<IAppDataService>();
+    private static readonly ILogService? LogService = Ioc.Default.GetService<ILogService>();
+    #endregion
+
+    private List<IProjectPage> targetOrder;
+
+    private List<IProjectPage>? previousOrder;
+
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /// <summary>
+    /// Applies a specified order of pages to the project.
+    /// </summary>
+    /// <param name="pages">
+    /// The taregt page order.
+    /// </param>
+    public ApplyOrderOfPagesAction(List<IProjectPage> targetOrder)
     {
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////        
-        #region Services
-        private static readonly IAppDataService AppDataService = Ioc.Default.GetRequiredService<IAppDataService>();
-        private static readonly ILogService? LogService = Ioc.Default.GetService<ILogService>();
-        #endregion
-
-        private List<IProjectPage> targetOrder;
-
-        private List<IProjectPage>? previousOrder;
+        this.targetOrder = targetOrder;
+    }
 
 
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// <summary>
-        /// Applies a specified order of pages to the project.
-        /// </summary>
-        /// <param name="pages">
-        /// The taregt page order.
-        /// </param>
-        public ApplyOrderOfPagesAction(List<IProjectPage> targetOrder)
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public async Task<bool> ExecuteAsync(ProjectBase project, DispatcherQueue uiDispatcherQueue)
+    {
+        previousOrder = [.. project.Pages];
+
+        return await project.ApplyOrderOfPagesAsync(targetOrder, uiDispatcherQueue);
+    }
+
+    public async Task UndoAsync(ProjectBase project, DispatcherQueue uiDispatcherQueue)
+    {
+        if (previousOrder == null)
         {
-            this.targetOrder = targetOrder;
+            throw new ActionFailedAndRolledBackException($"Can't undo {nameof(ApplyOrderOfPagesAction)} without previous order");
         }
 
+        await project.ApplyOrderOfPagesAsync(previousOrder, uiDispatcherQueue);
+    }
 
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public async Task<bool> ExecuteAsync(ProjectBase project, DispatcherQueue uiDispatcherQueue)
-        {
-            previousOrder = [.. project.Pages];
-
-            return await project.ApplyOrderOfPagesAsync(targetOrder, uiDispatcherQueue);
-        }
-
-        public async Task UndoAsync(ProjectBase project, DispatcherQueue uiDispatcherQueue)
-        {
-            if (previousOrder == null)
-            {
-                throw new ActionFailedAndRolledBackException($"Can't undo {nameof(ApplyOrderOfPagesAction)} without previous order");
-            }
-
-            await project.ApplyOrderOfPagesAsync(previousOrder, uiDispatcherQueue);
-        }
-
-        public string GetFriendlyName()
-        {
-            return GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.ProjectActionApplyOrderToPages);
-        }
+    public string GetFriendlyName()
+    {
+        return GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.ProjectActionApplyOrderToPages);
     }
 }

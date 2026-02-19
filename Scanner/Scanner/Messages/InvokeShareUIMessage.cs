@@ -7,16 +7,15 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage;
 
-namespace Scanner.Messages
+namespace Scanner.Messages;
+
+/// <summary>
+/// Invokes the Windows share sheet. Must be predeced by a <see cref="SetShareFilesMessage"/> to set the share sheet content.
+/// </summary>
+internal class InvokeShareUIMessage
 {
-    /// <summary>
-    /// Invokes the Windows share sheet. Must be predeced by a <see cref="SetShareFilesMessage"/> to set the share sheet content.
-    /// </summary>
-    internal class InvokeShareUIMessage
+    public InvokeShareUIMessage()
     {
-        public InvokeShareUIMessage()
-        {
-            
-        }
+        
     }
 }

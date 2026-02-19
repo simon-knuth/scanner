@@ -20,67 +20,66 @@ using WinRT.Interop;
 using static Scanner.Helpers.RotationHelpers;
 using static Scanner.Helpers.Helpers;
 
-namespace Scanner.Models
+namespace Scanner.Models;
+
+public partial class CropPagesAsCopyAction : IProjectAction
 {
-    public partial class CropPagesAsCopyAction : IProjectAction
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////        
+    #region Services
+    private static readonly IAppDataService AppDataService = Ioc.Default.GetRequiredService<IAppDataService>();
+    private static readonly ILogService? LogService = Ioc.Default.GetService<ILogService>();
+    #endregion
+
+    private List<ImagePage> pages;
+    private Rect cropRegion;
+
+    private List<ImagePage>? addedPages;
+
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /// <summary>
+    /// Crops a set of pages.
+    /// </summary>
+    /// <param name="pages">
+    /// A list of pages to crop.
+    /// </param>
+    /// <param name="cropRegion">
+    /// The crop to apply to all pages.
+    /// </param>
+    public CropPagesAsCopyAction(List<ImagePage> pages, Rect cropRegion)
     {
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////        
-        #region Services
-        private static readonly IAppDataService AppDataService = Ioc.Default.GetRequiredService<IAppDataService>();
-        private static readonly ILogService? LogService = Ioc.Default.GetService<ILogService>();
-        #endregion
-
-        private List<ImagePage> pages;
-        private Rect cropRegion;
-
-        private List<ImagePage>? addedPages;
+        this.pages = pages;
+        this.cropRegion = cropRegion;
+    }
 
 
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// <summary>
-        /// Crops a set of pages.
-        /// </summary>
-        /// <param name="pages">
-        /// A list of pages to crop.
-        /// </param>
-        /// <param name="cropRegion">
-        /// The crop to apply to all pages.
-        /// </param>
-        public CropPagesAsCopyAction(List<ImagePage> pages, Rect cropRegion)
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public async Task<bool> ExecuteAsync(ProjectBase project, DispatcherQueue uiDispatcherQueue)
+    {
+        addedPages = await project.CropPagesAsCopyAsync(pages, cropRegion, AppDataService.ChangesFolder, uiDispatcherQueue);
+
+        return addedPages.Count > 0;
+    }
+
+    public async Task UndoAsync(ProjectBase project, DispatcherQueue uiDispatcherQueue)
+    {
+        if (addedPages == null)
         {
-            this.pages = pages;
-            this.cropRegion = cropRegion;
+            throw new ActionFailedAndRolledBackException("Can't undo CropPagesAsCopyAction without list of applied crops");
         }
 
+        // remove added pages
+        await project.RemovePagesAsync(addedPages, false, uiDispatcherQueue);
+    }
 
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public async Task<bool> ExecuteAsync(ProjectBase project, DispatcherQueue uiDispatcherQueue)
-        {
-            addedPages = await project.CropPagesAsCopyAsync(pages, cropRegion, AppDataService.ChangesFolder, uiDispatcherQueue);
-
-            return addedPages.Count > 0;
-        }
-
-        public async Task UndoAsync(ProjectBase project, DispatcherQueue uiDispatcherQueue)
-        {
-            if (addedPages == null)
-            {
-                throw new ActionFailedAndRolledBackException("Can't undo CropPagesAsCopyAction without list of applied crops");
-            }
-
-            // remove added pages
-            await project.RemovePagesAsync(addedPages, false, uiDispatcherQueue);
-        }
-
-        public string GetFriendlyName()
-        { 
-            return GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.ProjectActionCropPageAsCopy);
-        }
+    public string GetFriendlyName()
+    { 
+        return GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.ProjectActionCropPageAsCopy);
     }
 }

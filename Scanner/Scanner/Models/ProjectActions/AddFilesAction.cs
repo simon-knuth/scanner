@@ -16,67 +16,66 @@ using System.ComponentModel;
 using Microsoft.UI.Dispatching;
 using static Scanner.Helpers.Helpers;
 
-namespace Scanner.Models
+namespace Scanner.Models;
+
+public partial class AddFilesAction : IProjectAction
 {
-    public partial class AddFilesAction : IProjectAction
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////        
+    #region Services
+    private static readonly ILogService? LogService = Ioc.Default.GetService<ILogService>();
+    #endregion
+
+    private List<ProjectFileInsertion> insertions;
+    private bool keepSourceFiles;
+
+    private List<ImagePage>? addedPages;
+
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /// <summary>
+    /// Adds a set of files to a <see cref="ProjectBase"/> at specific indices.
+    /// </summary>
+    /// <param name="insertions">
+    /// A sorted list of files to add to the project, with their respective FINAL indices. Insertions are applied in the order they are listed.
+    /// Ensure that the indices are valid when the insertion happens.
+    /// </param>
+    public AddFilesAction(List<ProjectFileInsertion> insertions, bool keepSourceFiles)
     {
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////        
-        #region Services
-        private static readonly ILogService? LogService = Ioc.Default.GetService<ILogService>();
-        #endregion
-
-        private List<ProjectFileInsertion> insertions;
-        private bool keepSourceFiles;
-
-        private List<ImagePage>? addedPages;
+        this.insertions = insertions;
+        this.keepSourceFiles = keepSourceFiles;
+    }
 
 
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// <summary>
-        /// Adds a set of files to a <see cref="ProjectBase"/> at specific indices.
-        /// </summary>
-        /// <param name="insertions">
-        /// A sorted list of files to add to the project, with their respective FINAL indices. Insertions are applied in the order they are listed.
-        /// Ensure that the indices are valid when the insertion happens.
-        /// </param>
-        public AddFilesAction(List<ProjectFileInsertion> insertions, bool keepSourceFiles)
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public async Task<bool> ExecuteAsync(ProjectBase project, DispatcherQueue uiDispatcherQueue)
+    {
+        addedPages = await project.AddFilesAsync(insertions, keepSourceFiles, uiDispatcherQueue);
+        
+        return addedPages != null && addedPages.Count > 0;
+    }
+
+    public async Task UndoAsync(ProjectBase project, DispatcherQueue uiDispatcherQueue)
+    {
+        if (addedPages == null)
         {
-            this.insertions = insertions;
-            this.keepSourceFiles = keepSourceFiles;
+            throw new ActionFailedAndRolledBackException("Can't undo AddFilesAction without list of added pages");
         }
 
+        await project.RemovePagesAsync(addedPages, true, uiDispatcherQueue);
+        addedPages = null;
+    }
 
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public async Task<bool> ExecuteAsync(ProjectBase project, DispatcherQueue uiDispatcherQueue)
-        {
-            addedPages = await project.AddFilesAsync(insertions, keepSourceFiles, uiDispatcherQueue);
-            
-            return addedPages != null && addedPages.Count > 0;
-        }
-
-        public async Task UndoAsync(ProjectBase project, DispatcherQueue uiDispatcherQueue)
-        {
-            if (addedPages == null)
-            {
-                throw new ActionFailedAndRolledBackException("Can't undo AddFilesAction without list of added pages");
-            }
-
-            await project.RemovePagesAsync(addedPages, true, uiDispatcherQueue);
-            addedPages = null;
-        }
-
-        public string GetFriendlyName()
-        {
-            if (insertions.Count >= 2)
-                return string.Format(GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.ProjectActionAddFiles), insertions.Count);
-            else
-                return GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.ProjectActionAddFile);
-        }
+    public string GetFriendlyName()
+    {
+        if (insertions.Count >= 2)
+            return string.Format(GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.ProjectActionAddFiles), insertions.Count);
+        else
+            return GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.ProjectActionAddFile);
     }
 }

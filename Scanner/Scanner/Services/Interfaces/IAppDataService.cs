@@ -14,85 +14,84 @@ using System.Globalization;
 using Windows.Storage;
 using Serilog;
 
-namespace Scanner.Services.Interfaces
+namespace Scanner.Services.Interfaces;
+
+/// <summary>
+///     Manages the app's internal storage.
+/// </summary>
+public interface IAppDataService
 {
-    /// <summary>
-    ///     Manages the app's internal storage.
-    /// </summary>
-    public interface IAppDataService
+    StorageFolder TempFolder
     {
-        StorageFolder TempFolder
-        {
-            get;
-        }
-
-        /// <summary>
-        /// Holds the raw files that are ready to be saved to their target.
-        /// </summary>
-        StorageFolder ProjectFolder
-        {
-            get;
-        }
-
-        /// <summary>
-        /// Holds raw files that need to be added to the project.
-        /// </summary>
-        StorageFolder IncomingFolder
-        {
-            get;
-        }
-
-        /// <summary>
-        /// Holds updated files that need to be reintegrated the next time the project is saved.
-        /// </summary>
-        StorageFolder ChangesFolder
-        {
-            get;
-        }
-
-        /// <summary>
-        /// Holds preview files that are needed if destructive effects are applied to generate a target file.
-        /// Also used for thumbnails of opened PDFs' pages.
-        /// </summary>
-        StorageFolder PreviewFolder
-        {
-            get;
-        }
-
-        /// <summary>
-        /// Contains the generated PDF file.
-        /// </summary>
-        StorageFolder PdfOutputFolder
-        {
-            get;
-        }
-
-        /// <summary>
-        /// Holds scans for previews, including the one for scan area alignment.
-        /// </summary>
-        StorageFolder PreviewScanFolder
-        {
-            get;
-        }
-
-        /// <summary>
-        /// Holds prior file states for undo.
-        /// </summary>
-        StorageFolder UndoFolder
-        {
-            get;
-        }
-
-        /// <summary>
-        /// Holds prior file states for redo.
-        /// </summary>
-        StorageFolder RedoFolder
-        {
-            get;
-        }
-
-        Task InitializeAsync();
-        Task EmptyFolderAsync(StorageFolder folder);
-        string GetUriForAppDataFolder(StorageFolder folder, string fileName);
+        get;
     }
+
+    /// <summary>
+    /// Holds the raw files that are ready to be saved to their target.
+    /// </summary>
+    StorageFolder ProjectFolder
+    {
+        get;
+    }
+
+    /// <summary>
+    /// Holds raw files that need to be added to the project.
+    /// </summary>
+    StorageFolder IncomingFolder
+    {
+        get;
+    }
+
+    /// <summary>
+    /// Holds updated files that need to be reintegrated the next time the project is saved.
+    /// </summary>
+    StorageFolder ChangesFolder
+    {
+        get;
+    }
+
+    /// <summary>
+    /// Holds preview files that are needed if destructive effects are applied to generate a target file.
+    /// Also used for thumbnails of opened PDFs' pages.
+    /// </summary>
+    StorageFolder PreviewFolder
+    {
+        get;
+    }
+
+    /// <summary>
+    /// Contains the generated PDF file.
+    /// </summary>
+    StorageFolder PdfOutputFolder
+    {
+        get;
+    }
+
+    /// <summary>
+    /// Holds scans for previews, including the one for scan area alignment.
+    /// </summary>
+    StorageFolder PreviewScanFolder
+    {
+        get;
+    }
+
+    /// <summary>
+    /// Holds prior file states for undo.
+    /// </summary>
+    StorageFolder UndoFolder
+    {
+        get;
+    }
+
+    /// <summary>
+    /// Holds prior file states for redo.
+    /// </summary>
+    StorageFolder RedoFolder
+    {
+        get;
+    }
+
+    Task InitializeAsync();
+    Task EmptyFolderAsync(StorageFolder folder);
+    string GetUriForAppDataFolder(StorageFolder folder, string fileName);
 }

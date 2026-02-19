@@ -19,17 +19,16 @@ using Windows.Graphics.Imaging;
 using Windows.Storage;
 using WinRT.Interop;
 
-namespace Scanner.Services.Interfaces
+namespace Scanner.Services.Interfaces;
+
+/// <summary>
+///     Simplifies meeting accessibility requirements.
+/// </summary>
+public interface IAccessibilityService
 {
-    /// <summary>
-    ///     Simplifies meeting accessibility requirements.
-    /// </summary>
-    public interface IAccessibilityService
-    {
-        FlowDirection DefaultFlowDirection { get; }
+    FlowDirection DefaultFlowDirection { get; }
 
-        FlowDirection InvertedFlowDirection { get; }
+    FlowDirection InvertedFlowDirection { get; }
 
-        Task InitializeForLanguageTagAsync(DispatcherQueue uiDispatcherQueue, string languageTag);
-    }
+    Task InitializeForLanguageTagAsync(DispatcherQueue uiDispatcherQueue, string languageTag);
 }

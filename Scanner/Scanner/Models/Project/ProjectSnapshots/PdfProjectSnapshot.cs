@@ -19,64 +19,63 @@ using Windows.Storage;
 using Windows.Storage.Streams;
 using WinRT.Interop;
 
-namespace Scanner.Models
+namespace Scanner.Models;
+
+public partial class PdfProjectSnapshot : IProjectSnapshot
 {
-    public partial class PdfProjectSnapshot : IProjectSnapshot
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    #region Services
+    private static readonly IAppDataService AppDataService = Ioc.Default.GetRequiredService<IAppDataService>();
+    private static readonly ILogService? LogService = Ioc.Default.GetService<ILogService>();
+    private static readonly IOcrService OcrService = Ioc.Default.GetRequiredService<IOcrService>();
+    private static readonly ISettingsService SettingsService = Ioc.Default.GetRequiredService<ISettingsService>();
+    #endregion
+
+    public TargetFormat Format { get; private set; } = TargetFormat.PDF;
+
+    public string? DesiredFileName { get; private set; }
+    public StorageFolder? TargetFolder { get; private set; }
+    public FileHandle? TargetFile { get; private set; }
+
+    /// <remarks>
+    /// Editing the <see cref="IProjectPage"/> references from the snapshot is not allowed.
+    /// </remarks>
+    public Dictionary<IProjectPage, PdfProjectSnapshotPage> Pages { get; private set; } = new();
+
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public PdfProjectSnapshot(PdfProject project)
     {
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        #region Services
-        private static readonly IAppDataService AppDataService = Ioc.Default.GetRequiredService<IAppDataService>();
-        private static readonly ILogService? LogService = Ioc.Default.GetService<ILogService>();
-        private static readonly IOcrService OcrService = Ioc.Default.GetRequiredService<IOcrService>();
-        private static readonly ISettingsService SettingsService = Ioc.Default.GetRequiredService<ISettingsService>();
-        #endregion
+        DesiredFileName = project.FileNameInfo!.DesiredName;
+        TargetFolder = project.TargetFolder!;
+        TargetFile = project.TargetFile;
 
-        public TargetFormat Format { get; private set; } = TargetFormat.PDF;
-
-        public string? DesiredFileName { get; private set; }
-        public StorageFolder? TargetFolder { get; private set; }
-        public FileHandle? TargetFile { get; private set; }
-
-        /// <remarks>
-        /// Editing the <see cref="IProjectPage"/> references from the snapshot is not allowed.
-        /// </remarks>
-        public Dictionary<IProjectPage, PdfProjectSnapshotPage> Pages { get; private set; } = new();
-
-
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public PdfProjectSnapshot(PdfProject project)
+        foreach (IProjectPage page in project.Pages)
         {
-            DesiredFileName = project.FileNameInfo!.DesiredName;
-            TargetFolder = project.TargetFolder!;
-            TargetFile = project.TargetFile;
-
-            foreach (IProjectPage page in project.Pages)
+            if (page is ImagePage imagePage)
             {
-                if (page is ImagePage imagePage)
-                {
-                    Pages.Add(page, new(imagePage.SourceFile, null, imagePage.Filter, imagePage.Brightness, imagePage.Contrast));
-                }
-                else if (page is PdfPage pdfPage)
-                {
-                    Pages.Add(page, new(project.SourceFile!.File, pdfPage.IndexInPdf, ImageFilter.None, 0, 0));
-                }
+                Pages.Add(page, new(imagePage.SourceFile, null, imagePage.Filter, imagePage.Brightness, imagePage.Contrast));
+            }
+            else if (page is PdfPage pdfPage)
+            {
+                Pages.Add(page, new(project.SourceFile!.File, pdfPage.IndexInPdf, ImageFilter.None, 0, 0));
             }
         }
+    }
 
 
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public Task<Dictionary<IProjectPage, FileHandle?>> TrySaveAsync(DispatcherQueue uiDispatcherQueue)
-        {
-            Dictionary<IProjectPage, IProjectSnapshotPage> pdfPages = Pages.ToDictionary(
-                x => x.Key,
-                x => (IProjectSnapshotPage)x.Value);
-            return PdfProject.CreatePdfFromPagesAsync(pdfPages, TargetFile, DesiredFileName, TargetFolder, SettingsService.SettingOcrPdfs, uiDispatcherQueue);
-        }
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public Task<Dictionary<IProjectPage, FileHandle?>> TrySaveAsync(DispatcherQueue uiDispatcherQueue)
+    {
+        Dictionary<IProjectPage, IProjectSnapshotPage> pdfPages = Pages.ToDictionary(
+            x => x.Key,
+            x => (IProjectSnapshotPage)x.Value);
+        return PdfProject.CreatePdfFromPagesAsync(pdfPages, TargetFile, DesiredFileName, TargetFolder, SettingsService.SettingOcrPdfs, uiDispatcherQueue);
     }
 }

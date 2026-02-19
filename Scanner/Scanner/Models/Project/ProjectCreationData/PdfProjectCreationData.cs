@@ -24,83 +24,82 @@ using Windows.Storage.Streams;
 using WinRT.Interop;
 using static Scanner.Helpers.Helpers;
 
-namespace Scanner.Models
+namespace Scanner.Models;
+
+public partial class PdfProjectCreationData : IProjectCreationData
 {
-    public partial class PdfProjectCreationData : IProjectCreationData
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    #region Services
+    private static readonly ILogService? LogService = Ioc.Default.GetService<ILogService>();
+    #endregion
+
+    public List<PageCreationData> Pages { get; } = [];
+
+    public TargetFormat Format { get; private set; } = TargetFormat.PDF;
+
+    public ScanOptions InitialScanOptions { get; }
+
+    public bool IsAlreadySaved { get; }
+
+    public string TargetFileName { get; }
+
+    public StorageFolder? TargetFolder { get; }
+
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public PdfProjectCreationData(IReadOnlyList<StorageFile> files, string targetFileName, StorageFolder? targetFolder, ScanOptions initialScanOptions, bool isAlreadySaved)
     {
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        #region Services
-        private static readonly ILogService? LogService = Ioc.Default.GetService<ILogService>();
-        #endregion
+        TargetFileName = targetFileName;
+        TargetFolder = targetFolder;
+        InitialScanOptions = initialScanOptions;
+        IsAlreadySaved = isAlreadySaved;
 
-        public List<PageCreationData> Pages { get; } = [];
-
-        public TargetFormat Format { get; private set; } = TargetFormat.PDF;
-
-        public ScanOptions InitialScanOptions { get; }
-
-        public bool IsAlreadySaved { get; }
-
-        public string TargetFileName { get; }
-
-        public StorageFolder? TargetFolder { get; }
-
-
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public PdfProjectCreationData(IReadOnlyList<StorageFile> files, string targetFileName, StorageFolder? targetFolder, ScanOptions initialScanOptions, bool isAlreadySaved)
+        foreach (StorageFile file in files)
         {
-            TargetFileName = targetFileName;
-            TargetFolder = targetFolder;
-            InitialScanOptions = initialScanOptions;
-            IsAlreadySaved = isAlreadySaved;
+            Pages.Add(new PageCreationData(file, targetFileName, null, targetFolder, initialScanOptions.GetBaseFilter(), initialScanOptions.GetFilter(), initialScanOptions.Brightness, initialScanOptions.Contrast));
+        }
+    }
 
-            foreach (StorageFile file in files)
+    public PdfProjectCreationData(StorageFile pdfFile, uint pagesInPdf, StorageFolder? targetFolder, ScanOptions initialScanOptions, bool isAlreadySaved)
+    {
+        TargetFileName = pdfFile.Name;
+        TargetFolder = targetFolder;
+        InitialScanOptions = initialScanOptions;
+        IsAlreadySaved = isAlreadySaved;
+
+        for (int i = 0; i < pagesInPdf; i++)
+        {
+            Pages.Add(new PageCreationData(pdfFile, TargetFileName, null, targetFolder, initialScanOptions.GetBaseFilter(), initialScanOptions.GetFilter(), initialScanOptions.Brightness, initialScanOptions.Contrast));
+        }
+    }
+
+    public PdfProjectCreationData(Collection<IProjectPage> pages, string targetFileName, StorageFolder? targetFolder, ScanOptions initialScanOptions, bool isAlreadySaved)
+    {
+        TargetFileName = targetFileName;
+        TargetFolder = targetFolder;
+        InitialScanOptions = initialScanOptions;
+        IsAlreadySaved = isAlreadySaved;
+
+        foreach (IProjectPage page in pages)
+        {
+            if (page is ImagePage imagePage)
             {
-                Pages.Add(new PageCreationData(file, targetFileName, null, targetFolder, initialScanOptions.GetBaseFilter(), initialScanOptions.GetFilter(), initialScanOptions.Brightness, initialScanOptions.Contrast));
+                Pages.Add(new PageCreationData(imagePage.SourceFile, imagePage.TargetFile?.File.Name, null, imagePage.TargetFolder,
+                    imagePage.BaseFilter, imagePage.Filter, imagePage.Brightness, imagePage.Contrast));
             }
         }
-
-        public PdfProjectCreationData(StorageFile pdfFile, uint pagesInPdf, StorageFolder? targetFolder, ScanOptions initialScanOptions, bool isAlreadySaved)
-        {
-            TargetFileName = pdfFile.Name;
-            TargetFolder = targetFolder;
-            InitialScanOptions = initialScanOptions;
-            IsAlreadySaved = isAlreadySaved;
-
-            for (int i = 0; i < pagesInPdf; i++)
-            {
-                Pages.Add(new PageCreationData(pdfFile, TargetFileName, null, targetFolder, initialScanOptions.GetBaseFilter(), initialScanOptions.GetFilter(), initialScanOptions.Brightness, initialScanOptions.Contrast));
-            }
-        }
-
-        public PdfProjectCreationData(Collection<IProjectPage> pages, string targetFileName, StorageFolder? targetFolder, ScanOptions initialScanOptions, bool isAlreadySaved)
-        {
-            TargetFileName = targetFileName;
-            TargetFolder = targetFolder;
-            InitialScanOptions = initialScanOptions;
-            IsAlreadySaved = isAlreadySaved;
-
-            foreach (IProjectPage page in pages)
-            {
-                if (page is ImagePage imagePage)
-                {
-                    Pages.Add(new PageCreationData(imagePage.SourceFile, imagePage.TargetFile?.File.Name, null, imagePage.TargetFolder,
-                        imagePage.BaseFilter, imagePage.Filter, imagePage.Brightness, imagePage.Contrast));
-                }
-            }
-        }
+    }
 
 
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public async Task<ProjectBase> CreateProjectAsync(bool keepSourceFiles, DispatcherQueue uiDispatcherQueue)
-        {
-            return await PdfProject.CreateAsync(this, keepSourceFiles, IsAlreadySaved, uiDispatcherQueue);
-        }
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public async Task<ProjectBase> CreateProjectAsync(bool keepSourceFiles, DispatcherQueue uiDispatcherQueue)
+    {
+        return await PdfProject.CreateAsync(this, keepSourceFiles, IsAlreadySaved, uiDispatcherQueue);
     }
 }

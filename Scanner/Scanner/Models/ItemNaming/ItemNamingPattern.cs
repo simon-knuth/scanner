@@ -9,123 +9,122 @@ using System.Linq;
 using Windows.Devices.Scanners;
 using static Scanner.Helpers.Helpers;
 
-namespace Scanner.Models.ItemNaming
+namespace Scanner.Models.ItemNaming;
+
+public class ItemNamingPattern
 {
-    public class ItemNamingPattern
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    [Required(ErrorMessage = "Blocks is required")]
+    public IReadOnlyList<IItemNamingBlock> Blocks;
+
+    public bool IsValid;
+
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public ItemNamingPattern(List<IItemNamingBlock> blocks)
     {
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        [Required(ErrorMessage = "Blocks is required")]
-        public IReadOnlyList<IItemNamingBlock> Blocks;
+        Blocks = blocks;
+        IsValid = CheckValidity();
+    }
 
-        public bool IsValid;
-
-
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public ItemNamingPattern(List<IItemNamingBlock> blocks)
+    public ItemNamingPattern(string serialized)
+    {
+        try
         {
-            Blocks = blocks;
+            string[] parts = serialized.Split('*', StringSplitOptions.RemoveEmptyEntries);
+            Type[] types = new Type[]
+            {
+            typeof(string),
+            };
+
+            // iterate through blocks
+            List<IItemNamingBlock> newList = new List<IItemNamingBlock>();
+            foreach (string part in parts)
+            {
+                Type blockType = ItemNamingStatics.ItemNamingBlocksDictionary[part.Split("|", StringSplitOptions.RemoveEmptyEntries)[0]];
+                string[] partArray = new string[1] { part };
+                newList.Add(blockType.GetConstructor(types).Invoke(partArray) as IItemNamingBlock);
+            }
+
+            Blocks = newList;
             IsValid = CheckValidity();
         }
-
-        public ItemNamingPattern(string serialized)
+        catch (Exception exc)
         {
-            try
-            {
-                string[] parts = serialized.Split('*', StringSplitOptions.RemoveEmptyEntries);
-                Type[] types = new Type[]
-                {
-                typeof(string),
-                };
+            Ioc.Default.GetService<ILogService>()?.Log.Error(exc, "Failed to generate file naming pattern");
+            Ioc.Default.GetService<ISentryService>()?.TrackError(exc);
+            throw;
+        }
+    }
 
-                // iterate through blocks
-                List<IItemNamingBlock> newList = new List<IItemNamingBlock>();
-                foreach (string part in parts)
-                {
-                    Type blockType = ItemNamingStatics.ItemNamingBlocksDictionary[part.Split("|", StringSplitOptions.RemoveEmptyEntries)[0]];
-                    string[] partArray = new string[1] { part };
-                    newList.Add(blockType.GetConstructor(types).Invoke(partArray) as IItemNamingBlock);
-                }
 
-                Blocks = newList;
-                IsValid = CheckValidity();
-            }
-            catch (Exception exc)
-            {
-                Ioc.Default.GetService<ILogService>()?.Log.Error(exc, "Failed to generate file naming pattern");
-                Ioc.Default.GetService<ISentryService>()?.TrackError(exc);
-                throw;
-            }
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////        
+    private bool CheckValidity()
+    {
+        if (Blocks == null)
+        {
+            return false;
         }
 
-
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////        
-        private bool CheckValidity()
+        if (Blocks.Count == 0)
         {
-            if (Blocks == null)
+            return false;
+        }
+
+        foreach (IItemNamingBlock block in Blocks)
+        {
+            if (!block.IsValid)
             {
                 return false;
             }
+        }
 
-            if (Blocks.Count == 0)
-            {
-                return false;
-            }
+        return true;
+    }
+    
+    public string GenerateResult(ScanOptions scanOptions, bool includeFileExtension)
+    {
+        try
+        {
+            string result = "";
 
             foreach (IItemNamingBlock block in Blocks)
             {
-                if (!block.IsValid)
-                {
-                    return false;
-                }
+                result += block.ToString(scanOptions);
             }
 
-            return true;
+            if (includeFileExtension)
+            {
+                result = result + TargetFormatToFileExtension(scanOptions.TargetFormat);
+            }
+
+            return result;
         }
-        
-        public string GenerateResult(ScanOptions scanOptions, bool includeFileExtension)
+        catch (Exception exc)
         {
-            try
-            {
-                string result = "";
+            Ioc.Default.GetService<ILogService>()?.Log.Error(exc, "Failed to generate file name");
+            Ioc.Default.GetService<ISentryService>()?.TrackError(exc);
 
-                foreach (IItemNamingBlock block in Blocks)
-                {
-                    result += block.ToString(scanOptions);
-                }
-
-                if (includeFileExtension)
-                {
-                    result = result + TargetFormatToFileExtension(scanOptions.TargetFormat);
-                }
-
-                return result;
-            }
-            catch (Exception exc)
-            {
-                Ioc.Default.GetService<ILogService>()?.Log.Error(exc, "Failed to generate file name");
-                Ioc.Default.GetService<ISentryService>()?.TrackError(exc);
-
-                // fallback to rudimentary legacy file naming
-                return "SCN" + DateTime.Now.Hour.ToString("00") + DateTime.Now.Minute.ToString("00") + DateTime.Now.Second.ToString("00"); ;
-            }
+            // fallback to rudimentary legacy file naming
+            return "SCN" + DateTime.Now.Hour.ToString("00") + DateTime.Now.Minute.ToString("00") + DateTime.Now.Second.ToString("00"); ;
         }
+    }
 
-        public string GetSerialized(bool obfuscated)
+    public string GetSerialized(bool obfuscated)
+    {
+        string serialized = "";
+
+        foreach (IItemNamingBlock block in Blocks)
         {
-            string serialized = "";
-
-            foreach (IItemNamingBlock block in Blocks)
-            {
-                serialized += block.GetSerialized(obfuscated);
-            }
-
-            return serialized;
+            serialized += block.GetSerialized(obfuscated);
         }
+
+        return serialized;
     }
 }

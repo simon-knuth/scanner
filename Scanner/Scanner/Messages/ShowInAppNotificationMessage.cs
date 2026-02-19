@@ -6,15 +6,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Scanner.Messages
-{
-    internal class ShowInAppNotificationMessage
-    {
-        public readonly Notification Notification;
+namespace Scanner.Messages;
 
-        public ShowInAppNotificationMessage(Notification notification)
-        {
-            Notification = notification;
-        }
+internal class ShowInAppNotificationMessage
+{
+    public readonly Notification Notification;
+
+    public ShowInAppNotificationMessage(Notification notification)
+    {
+        Notification = notification;
     }
 }

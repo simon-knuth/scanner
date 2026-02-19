@@ -27,112 +27,111 @@ using WinUIEx;
 using static Scanner.Helpers.Helpers;
 
 
-namespace Scanner.AppWindows
+namespace Scanner.AppWindows;
+
+[ObservableRecipientAttribute]
+[ObservableObjectAttribute]
+public sealed partial class MainWindow : WindowEx
 {
-    [ObservableRecipientAttribute]
-    [ObservableObjectAttribute]
-    public sealed partial class MainWindow : WindowEx
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public bool IsInForeground { get; private set; }
+    
+    public IDataTransferManagerInterop DataTransferManagerInterop { get; private set; }
+
+
+    private AppWindowTitleBar titlebar;
+
+    private List<StorageFile> shareFiles;
+
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public MainWindow()
     {
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public bool IsInForeground { get; private set; }
-        
-        public IDataTransferManagerInterop DataTransferManagerInterop { get; private set; }
+        this.InitializeComponent();
+        PersistenceId = "MainWindow";
 
-
-        private AppWindowTitleBar titlebar;
-
-        private List<StorageFile> shareFiles;
-
-
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public MainWindow()
+        // backdrop
+        if (IsWindows11())
         {
-            this.InitializeComponent();
-            PersistenceId = "MainWindow";
+            SystemBackdrop = new MicaBackdrop();
+        }
+        else
+        {
+            SystemBackdrop = new DesktopAcrylicBackdrop();
+        }
 
-            // backdrop
-            if (IsWindows11())
-            {
-                SystemBackdrop = new MicaBackdrop();
-            }
-            else
-            {
-                SystemBackdrop = new DesktopAcrylicBackdrop();
-            }
+        // titlebar
+        IntPtr hWnd = WindowNative.GetWindowHandle(this);
+        WindowId wndId = Win32Interop.GetWindowIdFromWindow(hWnd);
+        AppWindow appWindow = AppWindow.GetFromWindowId(wndId);
+        titlebar = appWindow.TitleBar;
+        titlebar.ExtendsContentIntoTitleBar = true;
+        titlebar.PreferredHeightOption = TitleBarHeightOption.Tall;
+        titlebar.ButtonBackgroundColor = Colors.Transparent;
+        titlebar.ButtonInactiveBackgroundColor = Colors.Transparent;
 
-            // titlebar
-            IntPtr hWnd = WindowNative.GetWindowHandle(this);
-            WindowId wndId = Win32Interop.GetWindowIdFromWindow(hWnd);
-            AppWindow appWindow = AppWindow.GetFromWindowId(wndId);
-            titlebar = appWindow.TitleBar;
-            titlebar.ExtendsContentIntoTitleBar = true;
-            titlebar.PreferredHeightOption = TitleBarHeightOption.Tall;
-            titlebar.ButtonBackgroundColor = Colors.Transparent;
-            titlebar.ButtonInactiveBackgroundColor = Colors.Transparent;
+        // icon
+        string? iconPath = Environment.ProcessPath;
+        if (iconPath != null)
+        {
+            iconPath = Path.GetDirectoryName(iconPath);
 
-            // icon
-            string? iconPath = Environment.ProcessPath;
             if (iconPath != null)
             {
-                iconPath = Path.GetDirectoryName(iconPath);
-
-                if (iconPath != null)
-                {
-                    iconPath = Path.Combine(iconPath, "Assets/Icon.ico");
-                    AppWindow.SetIcon(iconPath);
-                }
-            }
-
-            SetUpSharing();
-        }
-
-
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        private void SetUpSharing()
-        {
-            WeakReferenceMessenger.Default.Register<SetShareFilesMessage>(this, (r, m) => shareFiles = m.Files);
-            DataTransferManagerInterop = Windows.ApplicationModel.DataTransfer.DataTransferManager.As
-                <IDataTransferManagerInterop>();
-
-            IntPtr result = DataTransferManagerInterop.GetForWindow(WindowNative.GetWindowHandle(this), DataTransferManagerInteropGuids.Dtm_iid);
-            Windows.ApplicationModel.DataTransfer.DataTransferManager dataTransferManager = WinRT.MarshalInterface
-                <Windows.ApplicationModel.DataTransfer.DataTransferManager>.FromAbi(result);
-
-            dataTransferManager.DataRequested += DataTransferManager_DataRequested;
-        }
-
-        private void DataTransferManager_DataRequested(Windows.ApplicationModel.DataTransfer.DataTransferManager sender, Windows.ApplicationModel.DataTransfer.DataRequestedEventArgs args)
-        {
-            if (shareFiles != null && shareFiles.Count >= 1)
-            {
-                args.Request.Data.SetStorageItems(shareFiles);
-
-                if (shareFiles.Count == 1)
-                    args.Request.Data.Properties.Title = shareFiles[0].Name;
-                else
-                    args.Request.Data.Properties.Title = GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.ShareUITitleMultipleFiles);
+                iconPath = Path.Combine(iconPath, "Assets/Icon.ico");
+                AppWindow.SetIcon(iconPath);
             }
         }
 
-        private void WindowEx_Activated(object sender, WindowActivatedEventArgs args)
+        SetUpSharing();
+    }
+
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    private void SetUpSharing()
+    {
+        WeakReferenceMessenger.Default.Register<SetShareFilesMessage>(this, (r, m) => shareFiles = m.Files);
+        DataTransferManagerInterop = Windows.ApplicationModel.DataTransfer.DataTransferManager.As
+            <IDataTransferManagerInterop>();
+
+        IntPtr result = DataTransferManagerInterop.GetForWindow(WindowNative.GetWindowHandle(this), DataTransferManagerInteropGuids.Dtm_iid);
+        Windows.ApplicationModel.DataTransfer.DataTransferManager dataTransferManager = WinRT.MarshalInterface
+            <Windows.ApplicationModel.DataTransfer.DataTransferManager>.FromAbi(result);
+
+        dataTransferManager.DataRequested += DataTransferManager_DataRequested;
+    }
+
+    private void DataTransferManager_DataRequested(Windows.ApplicationModel.DataTransfer.DataTransferManager sender, Windows.ApplicationModel.DataTransfer.DataRequestedEventArgs args)
+    {
+        if (shareFiles != null && shareFiles.Count >= 1)
         {
-            switch (args.WindowActivationState)
-            {
-                case WindowActivationState.CodeActivated:
-                case WindowActivationState.PointerActivated:
-                    IsInForeground = true;
-                    break;
-                case WindowActivationState.Deactivated:
-                default:
-                    IsInForeground = false;
-                    break;
-            }
+            args.Request.Data.SetStorageItems(shareFiles);
+
+            if (shareFiles.Count == 1)
+                args.Request.Data.Properties.Title = shareFiles[0].Name;
+            else
+                args.Request.Data.Properties.Title = GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.ShareUITitleMultipleFiles);
+        }
+    }
+
+    private void WindowEx_Activated(object sender, WindowActivatedEventArgs args)
+    {
+        switch (args.WindowActivationState)
+        {
+            case WindowActivationState.CodeActivated:
+            case WindowActivationState.PointerActivated:
+                IsInForeground = true;
+                break;
+            case WindowActivationState.Deactivated:
+            default:
+                IsInForeground = false;
+                break;
         }
     }
 }

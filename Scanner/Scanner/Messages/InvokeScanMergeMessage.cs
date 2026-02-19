@@ -7,16 +7,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Scanner.Messages
+namespace Scanner.Messages;
+
+internal class InvokeScanMergeMessage
 {
-    internal class InvokeScanMergeMessage
+    public ScanMergeConfig ScanMergeConfig;
+
+
+    public InvokeScanMergeMessage(ScanMergeConfig scanMergeConfig)
     {
-        public ScanMergeConfig ScanMergeConfig;
-
-
-        public InvokeScanMergeMessage(ScanMergeConfig scanMergeConfig)
-        {
-            ScanMergeConfig = scanMergeConfig;
-        }
+        ScanMergeConfig = scanMergeConfig;
     }
 }

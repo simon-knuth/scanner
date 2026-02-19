@@ -16,99 +16,98 @@ using Microsoft.UI.Xaml.Documents;
 using Microsoft.UI.Dispatching;
 using Windows.ApplicationModel;
 
-namespace Scanner.Services.Interfaces
+namespace Scanner.Services.Interfaces;
+
+/// <summary>
+///     Manages the current <see cref="ProjectBase"/>.
+/// </summary>
+public interface IProjectService : INotifyPropertyChanged, INotifyPropertyChanging
 {
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ProjectBase? CurrentProject { get; }
+
+    int TotalNumberOfPages { get; }
+
     /// <summary>
-    ///     Manages the current <see cref="ProjectBase"/>.
+    /// The currently selected <see cref="IProjectPage"/>.
+    /// Null if no page or multiple pages are selected.
     /// </summary>
-    public interface IProjectService : INotifyPropertyChanged, INotifyPropertyChanging
-    {
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        ProjectBase? CurrentProject { get; }
+    IProjectPage? SelectedPage { get; set; }
 
-        int TotalNumberOfPages { get; }
+    /// <summary>
+    /// The currently selected <see cref="IProjectPage"/>s.
+    /// Null if no page or just one page is selected.
+    /// </summary>
+    ObservableCollection<IProjectPage>? SelectedPages { get; set; }
 
-        /// <summary>
-        /// The currently selected <see cref="IProjectPage"/>.
-        /// Null if no page or multiple pages are selected.
-        /// </summary>
-        IProjectPage? SelectedPage { get; set; }
+    int SelectedPagesCount { get; }
 
-        /// <summary>
-        /// The currently selected <see cref="IProjectPage"/>s.
-        /// Null if no page or just one page is selected.
-        /// </summary>
-        ObservableCollection<IProjectPage>? SelectedPages { get; set; }
+    bool IsActionRunning { get; }               // scan/action in progres
+    bool IsProcessRunning { get; }              // scan/action/edit in progres
+    bool IsProcessRunningOrEditing { get; }     // scan/action/edit in progres
+    bool IsScanProcessRunning { get; }          // scan in progress
+    bool IsEditing { get; set; }                // edit in progress
 
-        int SelectedPagesCount { get; }
+    ScanState CurrentScanState { get; }
+    string FriendlyCurrentScanState { get; }
 
-        bool IsActionRunning { get; }               // scan/action in progres
-        bool IsProcessRunning { get; }              // scan/action/edit in progres
-        bool IsProcessRunningOrEditing { get; }     // scan/action/edit in progres
-        bool IsScanProcessRunning { get; }          // scan in progress
-        bool IsEditing { get; set; }                // edit in progress
+    bool CanSelectPreviousPage { get; }
+    bool CanSelectNextPage { get; }
 
-        ScanState CurrentScanState { get; }
-        string FriendlyCurrentScanState { get; }
+    Stack<IProjectAction> UndoStack { get; }
+    Stack<IProjectAction> RedoStack { get; }
+    bool CanUndo { get; }
+    bool CanRedo { get; }
 
-        bool CanSelectPreviousPage { get; }
-        bool CanSelectNextPage { get; }
+    bool CanSaveProject { get; }
+    bool CanSaveAsProject { get; }
 
-        Stack<IProjectAction> UndoStack { get; }
-        Stack<IProjectAction> RedoStack { get; }
-        bool CanUndo { get; }
-        bool CanRedo { get; }
-
-        bool CanSaveProject { get; }
-        bool CanSaveAsProject { get; }
-
-        DispatcherQueue? UiDispatcherQueue { get; set; }
-
-
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        Task ApplyActionAsync(IProjectAction action);
-        Task TryUndoAsync(IProjectAction? upUntil = null);
-        Task TryRedoAsync(IProjectAction? upUntil = null);
-        
-        Task<bool> TryCreateProjectAsync(IProjectCreationData creationData, bool keepSourceFiles, bool isAlreadySaved, DispatcherQueue uiDispatcherQueue);
-        Task<bool> TryCreateProjectFromScanAsync(ScanOptions scanOptions, DispatcherQueue uiDispatcherQueue);
-        Task<bool> TryScanToProjectAsync(ScanOptions scanOptions, DispatcherQueue uiDispatcherQueue);
-
-        Task<bool> ConvertProjectAsync(TargetFormat targetFormat, DispatcherQueue uiDispatcherQueue);
-
-        Task<bool> TryDeleteProjectAsync();
-        Task<bool> TrySaveProjectAsync();
-
-        Task<bool> TryCopyProjectAsync();
-        Task<bool> TryCopyPagesAsync(List<ImagePage> pages);
-
-        Task<bool> TryOpenWithProjectAsync(AppInfo? app);
-        Task<bool> TryOpenWithPageAsync(AppInfo? app, ImagePage page);
-
-        Task<bool> TryShareProjectAsync();
-        Task<bool> TrySharePagesAsync(List<ImagePage> pages);
-
-        Task<bool> TryCloseProjectAsync(bool preserveSourceFilesInIncomingFolder = false, bool ignoreUnsavedChanges = false);
-
-        void SelectPreviousPage();
-        void SelectNextPage();
-        void MakeDefaultSelection();
-    }
+    DispatcherQueue? UiDispatcherQueue { get; set; }
 
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // MISCELLANEOUS ////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    public enum ScanState
-    {
-        Scanning,
-        AutomaticRotation,
-        GeneratingPDF,
-        Processing,
-        Saving
-    }
+    Task ApplyActionAsync(IProjectAction action);
+    Task TryUndoAsync(IProjectAction? upUntil = null);
+    Task TryRedoAsync(IProjectAction? upUntil = null);
+    
+    Task<bool> TryCreateProjectAsync(IProjectCreationData creationData, bool keepSourceFiles, bool isAlreadySaved, DispatcherQueue uiDispatcherQueue);
+    Task<bool> TryCreateProjectFromScanAsync(ScanOptions scanOptions, DispatcherQueue uiDispatcherQueue);
+    Task<bool> TryScanToProjectAsync(ScanOptions scanOptions, DispatcherQueue uiDispatcherQueue);
+
+    Task<bool> ConvertProjectAsync(TargetFormat targetFormat, DispatcherQueue uiDispatcherQueue);
+
+    Task<bool> TryDeleteProjectAsync();
+    Task<bool> TrySaveProjectAsync();
+
+    Task<bool> TryCopyProjectAsync();
+    Task<bool> TryCopyPagesAsync(List<ImagePage> pages);
+
+    Task<bool> TryOpenWithProjectAsync(AppInfo? app);
+    Task<bool> TryOpenWithPageAsync(AppInfo? app, ImagePage page);
+
+    Task<bool> TryShareProjectAsync();
+    Task<bool> TrySharePagesAsync(List<ImagePage> pages);
+
+    Task<bool> TryCloseProjectAsync(bool preserveSourceFilesInIncomingFolder = false, bool ignoreUnsavedChanges = false);
+
+    void SelectPreviousPage();
+    void SelectNextPage();
+    void MakeDefaultSelection();
+}
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// MISCELLANEOUS ////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+public enum ScanState
+{
+    Scanning,
+    AutomaticRotation,
+    GeneratingPDF,
+    Processing,
+    Saving
 }

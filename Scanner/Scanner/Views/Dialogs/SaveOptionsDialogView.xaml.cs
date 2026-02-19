@@ -27,130 +27,129 @@ using WinUIEx;
 using static Scanner.Helpers.Helpers;
 
 
-namespace Scanner.Views.Dialogs
+namespace Scanner.Views.Dialogs;
+
+[ObservableObjectAttribute]
+public partial class SaveOptionsDialogView : ContentDialog
 {
-    [ObservableObjectAttribute]
-    public partial class SaveOptionsDialogView : ContentDialog
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////        
+    private int SelectedFileNamingPatternIndex
     {
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////        
-        private int SelectedFileNamingPatternIndex
+        get => ViewModel.SelectedFileNamingPattern != null ? (int)ViewModel.SelectedFileNamingPattern : -1;
+        set => ViewModel.SelectedFileNamingPattern = value != -1 ? (SettingFileNamingPattern)value : null;
+    }
+
+    private int SelectedSubFolderNamingPatternIndex
+    {
+        get => ViewModel.SelectedSubFolderNamingPattern != null ? (int)ViewModel.SelectedSubFolderNamingPattern : -1;
+        set => ViewModel.SelectedSubFolderNamingPattern = value != -1 ? (SettingSubFolderNamingPattern)value : null;
+    }
+
+    [ObservableProperty]
+    private double folderFlyoutWidth;
+
+    public CornerRadius TextBoxFileNameCornerRadius => ViewModel.IsFileNameCollision ? new(0, 0, 0, 0) : new(0, 0, 4, 4);
+
+    public SaveOptions? SaveOptions => ViewModel.SaveOptions;
+
+    private SaveOptionsDialogViewModel ViewModel;
+
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public SaveOptionsDialogView(ScanOptions scanOptions, ProjectBase? project, string? desiredFileDisplayName)
+    {
+        ViewModel = new SaveOptionsDialogViewModel(scanOptions, project, desiredFileDisplayName);
+        ViewModel.PropertyChanged += ViewModel_PropertyChanged;
+
+        this.InitializeComponent();
+    }
+
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    private void ViewModel_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+    {
+        switch (e.PropertyName)
         {
-            get => ViewModel.SelectedFileNamingPattern != null ? (int)ViewModel.SelectedFileNamingPattern : -1;
-            set => ViewModel.SelectedFileNamingPattern = value != -1 ? (SettingFileNamingPattern)value : null;
+            case nameof(ViewModel.SelectedFileNamingPattern):
+                OnPropertyChanged(nameof(SelectedFileNamingPatternIndex));
+                break;
+            case nameof(ViewModel.SelectedSubFolderNamingPattern):
+                OnPropertyChanged(nameof(SelectedSubFolderNamingPatternIndex));
+                break;
+            case nameof(ViewModel.IsFileNameCollision):
+                OnPropertyChanged(nameof(TextBoxFileNameCornerRadius));
+                break;
+        }
+    }
+
+    private void TextBox_GotFocus(object sender, RoutedEventArgs e)
+    {
+        ((TextBox)sender).SelectAll();
+    }
+
+    private void DropDownButtonFolder_SizeChanged(object sender, SizeChangedEventArgs e)
+    {
+        FolderFlyoutWidth = e.NewSize.Width;
+    }
+
+    private void MenuFlyoutFolder_Opening(object sender, object e)
+    {
+        MenuFlyout menuFlyout = (MenuFlyout)sender;
+
+        // clear entries
+        while (menuFlyout.Items.Count > 2)
+        {
+            menuFlyout.Items.RemoveAt(0);
         }
 
-        private int SelectedSubFolderNamingPatternIndex
+        // generate entries
+        if (ViewModel.RecentFolders != null)
         {
-            get => ViewModel.SelectedSubFolderNamingPattern != null ? (int)ViewModel.SelectedSubFolderNamingPattern : -1;
-            set => ViewModel.SelectedSubFolderNamingPattern = value != -1 ? (SettingSubFolderNamingPattern)value : null;
-        }
-
-        [ObservableProperty]
-        private double folderFlyoutWidth;
-
-        public CornerRadius TextBoxFileNameCornerRadius => ViewModel.IsFileNameCollision ? new(0, 0, 0, 0) : new(0, 0, 4, 4);
-
-        public SaveOptions? SaveOptions => ViewModel.SaveOptions;
-
-        private SaveOptionsDialogViewModel ViewModel;
-
-
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public SaveOptionsDialogView(ScanOptions scanOptions, ProjectBase? project, string? desiredFileDisplayName)
-        {
-            ViewModel = new SaveOptionsDialogViewModel(scanOptions, project, desiredFileDisplayName);
-            ViewModel.PropertyChanged += ViewModel_PropertyChanged;
-
-            this.InitializeComponent();
-        }
-
-
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        private void ViewModel_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
-        {
-            switch (e.PropertyName)
+            for (int i = 0; i < ViewModel.RecentFolders.Count; i++)
             {
-                case nameof(ViewModel.SelectedFileNamingPattern):
-                    OnPropertyChanged(nameof(SelectedFileNamingPatternIndex));
-                    break;
-                case nameof(ViewModel.SelectedSubFolderNamingPattern):
-                    OnPropertyChanged(nameof(SelectedSubFolderNamingPatternIndex));
-                    break;
-                case nameof(ViewModel.IsFileNameCollision):
-                    OnPropertyChanged(nameof(TextBoxFileNameCornerRadius));
-                    break;
+                MenuFlyoutItemBase item = (MenuFlyoutItemBase)DataTemplateRecentFolder.LoadContent();
+                item.DataContext = ViewModel.RecentFolders[i];
+                menuFlyout.Items.Insert(i, item);
             }
         }
 
-        private void TextBox_GotFocus(object sender, RoutedEventArgs e)
+        // remove separator if list is empty
+        if (menuFlyout.Items.Count == 2)
         {
-            ((TextBox)sender).SelectAll();
+            menuFlyout.Items.RemoveAt(0);
         }
+    }
 
-        private void DropDownButtonFolder_SizeChanged(object sender, SizeChangedEventArgs e)
+    private void MenuFlyoutItemRecentFolder_Click(object sender, RoutedEventArgs e)
+    {
+        ViewModel.SelectedFolder = (StorageFolder)((MenuFlyoutItem)sender).CommandParameter;
+    }
+
+    private void CheckBoxAIFileNameGeneration_Checked(object sender, RoutedEventArgs e)
+    {
+        if (!ViewModel.CopilotRuntimeService.AreModelsInstalled)
         {
-            FolderFlyoutWidth = e.NewSize.Width;
+            CheckBoxAIFileNameGeneration.IsChecked = false;
+
+            TeachingTipCopilotRuntimeDownload.Target = CheckBoxAIFileNameGeneration;
+            TeachingTipCopilotRuntimeDownload.IsOpen = true;
         }
+    }
 
-        private void MenuFlyoutFolder_Opening(object sender, object e)
-        {
-            MenuFlyout menuFlyout = (MenuFlyout)sender;
+    private void HyperlinkButtonAIDisclaimer_Click(object sender, RoutedEventArgs e)
+    {
+        TeachingTipAIDisclaimer.Target = HyperlinkButtonAIDisclaimer;
+        TeachingTipAIDisclaimer.IsOpen = true;
+    }
 
-            // clear entries
-            while (menuFlyout.Items.Count > 2)
-            {
-                menuFlyout.Items.RemoveAt(0);
-            }
-
-            // generate entries
-            if (ViewModel.RecentFolders != null)
-            {
-                for (int i = 0; i < ViewModel.RecentFolders.Count; i++)
-                {
-                    MenuFlyoutItemBase item = (MenuFlyoutItemBase)DataTemplateRecentFolder.LoadContent();
-                    item.DataContext = ViewModel.RecentFolders[i];
-                    menuFlyout.Items.Insert(i, item);
-                }
-            }
-
-            // remove separator if list is empty
-            if (menuFlyout.Items.Count == 2)
-            {
-                menuFlyout.Items.RemoveAt(0);
-            }
-        }
-
-        private void MenuFlyoutItemRecentFolder_Click(object sender, RoutedEventArgs e)
-        {
-            ViewModel.SelectedFolder = (StorageFolder)((MenuFlyoutItem)sender).CommandParameter;
-        }
-
-        private void CheckBoxAIFileNameGeneration_Checked(object sender, RoutedEventArgs e)
-        {
-            if (!ViewModel.CopilotRuntimeService.AreModelsInstalled)
-            {
-                CheckBoxAIFileNameGeneration.IsChecked = false;
-
-                TeachingTipCopilotRuntimeDownload.Target = CheckBoxAIFileNameGeneration;
-                TeachingTipCopilotRuntimeDownload.IsOpen = true;
-            }
-        }
-
-        private void HyperlinkButtonAIDisclaimer_Click(object sender, RoutedEventArgs e)
-        {
-            TeachingTipAIDisclaimer.Target = HyperlinkButtonAIDisclaimer;
-            TeachingTipAIDisclaimer.IsOpen = true;
-        }
-
-        private void TextBoxFileName_Loaded(object sender, RoutedEventArgs e)
-        {
-            TextBoxFileName.Focus(FocusState.Programmatic);
-        }
+    private void TextBoxFileName_Loaded(object sender, RoutedEventArgs e)
+    {
+        TextBoxFileName.Focus(FocusState.Programmatic);
     }
 }

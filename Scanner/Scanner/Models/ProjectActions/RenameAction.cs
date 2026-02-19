@@ -18,77 +18,76 @@ using Microsoft.UI.Dispatching;
 using static Scanner.Helpers.RotationHelpers;
 using static Scanner.Helpers.Helpers;
 
-namespace Scanner.Models
+namespace Scanner.Models;
+
+public partial class RenameAction : IProjectAction
 {
-    public partial class RenameAction : IProjectAction
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////        
+    #region Services
+    private static readonly ILogService? LogService = Ioc.Default.GetService<ILogService>();
+    #endregion
+
+    private IProjectPage? page;
+    private string newName;
+
+    private string? oldName;
+
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /// <summary>
+    /// Renames a page.
+    /// </summary>
+    public RenameAction(IProjectPage? page, string newName)
     {
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////        
-        #region Services
-        private static readonly ILogService? LogService = Ioc.Default.GetService<ILogService>();
-        #endregion
-
-        private IProjectPage? page;
-        private string newName;
-
-        private string? oldName;
+        this.page = page;
+        this.newName = newName;
+    }
 
 
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// <summary>
-        /// Renames a page.
-        /// </summary>
-        public RenameAction(IProjectPage? page, string newName)
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public async Task<bool> ExecuteAsync(ProjectBase project, DispatcherQueue uiDispatcherQueue)
+    {
+        if (project is PdfProject pdfProject)
         {
-            this.page = page;
-            this.newName = newName;
+            pdfProject.FileNameInfo!.NameGenerationCts?.Cancel();
+            oldName = pdfProject.FileNameInfo!.DesiredName;
+            await pdfProject.FileNameInfo!.UpdateNamesAsync(newName, pdfProject.FileNameInfo.ActualName, false, uiDispatcherQueue);
+        }
+        else if (page is ImagePage imagePage)
+        {
+            imagePage.FileNameInfo.NameGenerationCts?.Cancel();
+            oldName = imagePage.FileNameInfo.DesiredName;
+            await imagePage.FileNameInfo.UpdateNamesAsync(newName, imagePage.FileNameInfo.ActualName, false, uiDispatcherQueue);
         }
 
+        return true;
+    }
 
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public async Task<bool> ExecuteAsync(ProjectBase project, DispatcherQueue uiDispatcherQueue)
+    public async Task UndoAsync(ProjectBase project, DispatcherQueue uiDispatcherQueue)
+    {
+        if (oldName == null)
         {
-            if (project is PdfProject pdfProject)
-            {
-                pdfProject.FileNameInfo!.NameGenerationCts?.Cancel();
-                oldName = pdfProject.FileNameInfo!.DesiredName;
-                await pdfProject.FileNameInfo!.UpdateNamesAsync(newName, pdfProject.FileNameInfo.ActualName, false, uiDispatcherQueue);
-            }
-            else if (page is ImagePage imagePage)
-            {
-                imagePage.FileNameInfo.NameGenerationCts?.Cancel();
-                oldName = imagePage.FileNameInfo.DesiredName;
-                await imagePage.FileNameInfo.UpdateNamesAsync(newName, imagePage.FileNameInfo.ActualName, false, uiDispatcherQueue);
-            }
-
-            return true;
+            throw new ActionFailedAndRolledBackException("Can't undo RenameAction without old name");
         }
 
-        public async Task UndoAsync(ProjectBase project, DispatcherQueue uiDispatcherQueue)
+        if (project is PdfProject pdfProject)
         {
-            if (oldName == null)
-            {
-                throw new ActionFailedAndRolledBackException("Can't undo RenameAction without old name");
-            }
-
-            if (project is PdfProject pdfProject)
-            {
-                await pdfProject.FileNameInfo.UpdateNamesAsync(oldName, pdfProject.FileNameInfo.ActualName, false, uiDispatcherQueue);
-            }
-            else if (page is ImagePage imagePage)
-            {
-                await imagePage.FileNameInfo.UpdateNamesAsync(oldName, imagePage.FileNameInfo.ActualName, false, uiDispatcherQueue);
-            }
+            await pdfProject.FileNameInfo.UpdateNamesAsync(oldName, pdfProject.FileNameInfo.ActualName, false, uiDispatcherQueue);
         }
-
-        public string GetFriendlyName()
+        else if (page is ImagePage imagePage)
         {
-            return GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.ProjectActionRename);
+            await imagePage.FileNameInfo.UpdateNamesAsync(oldName, imagePage.FileNameInfo.ActualName, false, uiDispatcherQueue);
         }
+    }
+
+    public string GetFriendlyName()
+    {
+        return GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.ProjectActionRename);
     }
 }

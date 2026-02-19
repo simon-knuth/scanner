@@ -20,86 +20,85 @@ using Windows.Foundation;
 using Windows.Foundation.Collections;
 
 
-namespace Scanner.Views
+namespace Scanner.Views;
+
+[ObservableObjectAttribute]
+public sealed partial class FeedbackView : Page
 {
-    [ObservableObjectAttribute]
-    public sealed partial class FeedbackView : Page
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    #region Services
+    public readonly IAccessibilityService AccessibilityService = Ioc.Default.GetRequiredService<IAccessibilityService>();
+    private readonly ISentryService? SentryService = Ioc.Default.GetService<ISentryService>();
+    #endregion
+
+    #region Events
+    public event EventHandler FeedbackSent;
+    #endregion
+
+    [ObservableProperty]
+    private string name;
+
+    [ObservableProperty]
+    private string email;
+
+    [ObservableProperty]
+    private int selectedFeedbackTypeIndex = 0;
+
+    public FeedbackType SelectedFeedbackType => (FeedbackType)SelectedFeedbackTypeIndex;
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(CanSend))]
+    private string message;
+
+    public bool CanSend => !string.IsNullOrEmpty(Message) && Message.Length > 24;
+
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public FeedbackView()
     {
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        #region Services
-        public readonly IAccessibilityService AccessibilityService = Ioc.Default.GetRequiredService<IAccessibilityService>();
-        private readonly ISentryService? SentryService = Ioc.Default.GetService<ISentryService>();
-        #endregion
-
-        #region Events
-        public event EventHandler FeedbackSent;
-        #endregion
-
-        [ObservableProperty]
-        private string name;
-
-        [ObservableProperty]
-        private string email;
-
-        [ObservableProperty]
-        private int selectedFeedbackTypeIndex = 0;
-
-        public FeedbackType SelectedFeedbackType => (FeedbackType)SelectedFeedbackTypeIndex;
-
-        [ObservableProperty]
-        [NotifyPropertyChangedFor(nameof(CanSend))]
-        private string message;
-
-        public bool CanSend => !string.IsNullOrEmpty(Message) && Message.Length > 24;
+        this.InitializeComponent();
+    }
 
 
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public FeedbackView()
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    private void Page_Loading(FrameworkElement sender, object args)
+    {
+        // update titlebar spacing
+        AppWindowTitleBar? titlebar = ((App)Application.Current).FeedbackWindow?.AppWindow.TitleBar;
+
+        if (titlebar != null)
         {
-            this.InitializeComponent();
+            double scaleAdjustment = this.XamlRoot.RasterizationScale;
+            double headerInset = AccessibilityService.DefaultFlowDirection == FlowDirection.LeftToRight ? titlebar.LeftInset : titlebar.RightInset;
+            double footerInset = AccessibilityService.DefaultFlowDirection == FlowDirection.LeftToRight ? titlebar.RightInset : titlebar.LeftInset;
+            ColumnDefinitionTitlebarInsetHeader.Width = new GridLength(headerInset / scaleAdjustment);
+            ColumnDefinitionTitlebarInsetFooter.Width = new GridLength(footerInset / scaleAdjustment);
         }
+    }
+
+    private void ButtonSend_Click(object sender, RoutedEventArgs e)
+    {
+        if (SelectedFeedbackType == FeedbackType.Error)
+            SentryService?.SendErrorFeedback(Message, Email, Name);
+        else
+            SentryService?.SendSuggestionFeedback(Message, Email, Name);
+
+        FeedbackSent?.Invoke(this, EventArgs.Empty);
+    }
 
 
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        private void Page_Loading(FrameworkElement sender, object args)
-        {
-            // update titlebar spacing
-            AppWindowTitleBar? titlebar = ((App)Application.Current).FeedbackWindow?.AppWindow.TitleBar;
-
-            if (titlebar != null)
-            {
-                double scaleAdjustment = this.XamlRoot.RasterizationScale;
-                double headerInset = AccessibilityService.DefaultFlowDirection == FlowDirection.LeftToRight ? titlebar.LeftInset : titlebar.RightInset;
-                double footerInset = AccessibilityService.DefaultFlowDirection == FlowDirection.LeftToRight ? titlebar.RightInset : titlebar.LeftInset;
-                ColumnDefinitionTitlebarInsetHeader.Width = new GridLength(headerInset / scaleAdjustment);
-                ColumnDefinitionTitlebarInsetFooter.Width = new GridLength(footerInset / scaleAdjustment);
-            }
-        }
-
-        private void ButtonSend_Click(object sender, RoutedEventArgs e)
-        {
-            if (SelectedFeedbackType == FeedbackType.Error)
-                SentryService?.SendErrorFeedback(Message, Email, Name);
-            else
-                SentryService?.SendSuggestionFeedback(Message, Email, Name);
-
-            FeedbackSent?.Invoke(this, EventArgs.Empty);
-        }
-
-
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // MISCELLANEOUS ////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public enum FeedbackType
-        {
-            Error = 0,
-            Suggestion = 1
-        }
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // MISCELLANEOUS ////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public enum FeedbackType
+    {
+        Error = 0,
+        Suggestion = 1
     }
 }

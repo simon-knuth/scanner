@@ -8,15 +8,14 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage;
 
-namespace Scanner.Messages
-{
-    internal class ShowProjectDeletionDialogMessage : RequestMessage<Task<bool>>
-    {
-        public readonly ProjectBase Project;
+namespace Scanner.Messages;
 
-        public ShowProjectDeletionDialogMessage(ProjectBase project)
-        {
-            this.Project = project;
-        }
+internal class ShowProjectDeletionDialogMessage : RequestMessage<Task<bool>>
+{
+    public readonly ProjectBase Project;
+
+    public ShowProjectDeletionDialogMessage(ProjectBase project)
+    {
+        this.Project = project;
     }
 }

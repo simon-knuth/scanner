@@ -13,78 +13,77 @@ using System.Globalization;
 using Windows.Storage;
 using System.ComponentModel;
 
-namespace Scanner.Services.Interfaces
+namespace Scanner.Services.Interfaces;
+
+/// <summary>
+///     Manages the Sentry integration.
+/// </summary>
+public interface ISentryService
 {
-    /// <summary>
-    ///     Manages the Sentry integration.
-    /// </summary>
-    public interface ISentryService
+    bool HasConsent
     {
-        bool HasConsent
-        {
-            get;
-        }
-
-        string UserId
-        {
-            get;
-        }
-
-        void TrackWarning(Exception exception);
-        void TrackError(Exception exception, bool isFatal = false);
-        void TrackEvent(AnalyticsEvent sentryEvent, IDictionary<string, string> properties = null);
-        void SendErrorFeedback(string message, string? contactEmail, string? name);
-        void SendSuggestionFeedback(string message, string? contactEmail, string? name);
-        Task<string> GetCurrentLogPathAsync(bool flush);
-        void GenerateTestCrash();
-        void Initialize();
+        get;
     }
 
-
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // MISCELLANEOUS ////////////////////////////////////////////////////////////////////////////////////////////////////////
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    public enum AnalyticsEvent
+    string UserId
     {
-        AppUpdateAvailable,
-        AppUpdateDownloaded,
-        AppUpdateStarted,
-        SetupFinished,
-        RatingStoreOpened,
-        RatingStoreNotNow,
-        RatingStoreNeverAskAgain,
-        RatingStoreRate,
-        Close,
-        Launch,
-        SettingsStats,
-        ScannerAdded,
-        ScanCompleted,
-        Share,
-        Preview,
-        RotatePages,
-        RenamePage,
-        RenamePDF,
-        Crop,
-        CropMultiple,
-        CropAsCopy,
-        DeletePages,
-        DeletePage,
-        DrawOnPage,
-        DrawOnPageAsCopy,
-        CopyPages,
-        CopyPage,
-        CopyDocument,
-        OpenWith,
-        DuplicatePage,
-        DonationDialogOpened,
-        DonationLinkClicked,
-        HelpRequested,
-        AutoRotatedPage,
-        CorrectedAutoRotation,
-        SetSaveLocationUnavailable,
-        SettingsRequested,
-        ChangelogOpened,
-        ArchitectureDetected,
-        OtherAppsDialogOpened,
+        get;
     }
+
+    void TrackWarning(Exception exception);
+    void TrackError(Exception exception, bool isFatal = false);
+    void TrackEvent(AnalyticsEvent sentryEvent, IDictionary<string, string> properties = null);
+    void SendErrorFeedback(string message, string? contactEmail, string? name);
+    void SendSuggestionFeedback(string message, string? contactEmail, string? name);
+    Task<string> GetCurrentLogPathAsync(bool flush);
+    void GenerateTestCrash();
+    void Initialize();
+}
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// MISCELLANEOUS ////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+public enum AnalyticsEvent
+{
+    AppUpdateAvailable,
+    AppUpdateDownloaded,
+    AppUpdateStarted,
+    SetupFinished,
+    RatingStoreOpened,
+    RatingStoreNotNow,
+    RatingStoreNeverAskAgain,
+    RatingStoreRate,
+    Close,
+    Launch,
+    SettingsStats,
+    ScannerAdded,
+    ScanCompleted,
+    Share,
+    Preview,
+    RotatePages,
+    RenamePage,
+    RenamePDF,
+    Crop,
+    CropMultiple,
+    CropAsCopy,
+    DeletePages,
+    DeletePage,
+    DrawOnPage,
+    DrawOnPageAsCopy,
+    CopyPages,
+    CopyPage,
+    CopyDocument,
+    OpenWith,
+    DuplicatePage,
+    DonationDialogOpened,
+    DonationLinkClicked,
+    HelpRequested,
+    AutoRotatedPage,
+    CorrectedAutoRotation,
+    SetSaveLocationUnavailable,
+    SettingsRequested,
+    ChangelogOpened,
+    ArchitectureDetected,
+    OtherAppsDialogOpened,
 }

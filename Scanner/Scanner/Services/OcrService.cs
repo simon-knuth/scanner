@@ -31,150 +31,149 @@ using Windows.Storage.Streams;
 using WinRT.Interop;
 using static Scanner.Models.PdfProjectSnapshot;
 
-namespace Scanner.Services
+namespace Scanner.Services;
+
+internal class OcrService : IOcrService
 {
-    internal class OcrService : IOcrService
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    #region Services
+    private readonly ILogService? LogService = Ioc.Default.GetService<ILogService>();
+    #endregion
+
+    #region Constants
+    private const float minOrientationConfidence = 3;
+    private const double tesseractDpi = 72;
+    #endregion
+
+    private TesseractEngine osdEngine = new TesseractEngine(trainingDataFolderPath, "osd");
+
+    private static string trainingDataFolderPath = Path.GetDirectoryName(Environment.ProcessPath)
+            + Path.DirectorySeparatorChar
+            + "Resources"
+            + Path.DirectorySeparatorChar
+            + "Tesseract Training Data"
+            + Path.DirectorySeparatorChar
+            + "tessdata";
+
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public OcrService()
     {
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        #region Services
-        private readonly ILogService? LogService = Ioc.Default.GetService<ILogService>();
-        #endregion
 
-        #region Constants
-        private const float minOrientationConfidence = 3;
-        private const double tesseractDpi = 72;
-        #endregion
-
-        private TesseractEngine osdEngine = new TesseractEngine(trainingDataFolderPath, "osd");
-
-        private static string trainingDataFolderPath = Path.GetDirectoryName(Environment.ProcessPath)
-                + Path.DirectorySeparatorChar
-                + "Resources"
-                + Path.DirectorySeparatorChar
-                + "Tesseract Training Data"
-                + Path.DirectorySeparatorChar
-                + "tessdata";
+    }
 
 
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public OcrService()
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public BitmapRotation? GetRecommendedRotation(StorageFile file)
+    {
+        // load file
+        using (Pix image = Pix.LoadFromFile(file.Path))
         {
+            // limit area for processing
+            Rect region = new Rect(0, 0, image.Width / 2, image.Height / 2);
 
-        }
-
-
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public BitmapRotation? GetRecommendedRotation(StorageFile file)
-        {
-            // load file
-            using (Pix image = Pix.LoadFromFile(file.Path))
+            // analyze orientation
+            using (Page page = osdEngine.Process(image, region, PageSegMode.AutoOsd))
             {
-                // limit area for processing
-                Rect region = new Rect(0, 0, image.Width / 2, image.Height / 2);
-
-                // analyze orientation
-                using (Page page = osdEngine.Process(image, region, PageSegMode.AutoOsd))
+                int orientation = 0;
+                float confidence = 0;
+                try
                 {
-                    int orientation = 0;
-                    float confidence = 0;
-                    try
-                    {
-                        page.DetectBestOrientation(out orientation, out confidence);
-                    }
-                    catch (Exception) { }
-
-                    if (confidence < minOrientationConfidence) return null;         // confidence too low
-
-                    switch (orientation)
-                    {
-                        case 0:
-                            return BitmapRotation.None;
-                        case 90:
-                            return BitmapRotation.Clockwise270Degrees;
-                        case 180:
-                            return BitmapRotation.Clockwise180Degrees;
-                        case 270:
-                            return BitmapRotation.Clockwise90Degrees;
-                        default:
-                            return null;
-                    }
+                    page.DetectBestOrientation(out orientation, out confidence);
                 }
-            }
-        }
+                catch (Exception) { }
 
-        public async Task GenerateOcrPdfAsync(List<IProjectSnapshotPage> pages, string targetFilePath, DispatcherQueue uiDispatcherQueue)
-        {
-            using (TesseractEngine engine = new(trainingDataFolderPath, "eng"))
-            {
-                using (IResultRenderer renderer = PdfResultRenderer.CreatePdfRenderer(targetFilePath, trainingDataFolderPath, true))
+                if (confidence < minOrientationConfidence) return null;         // confidence too low
+
+                switch (orientation)
                 {
-                    renderer.BeginDocument("Scan");
-
-                    int i = 0;
-                    foreach (IProjectSnapshotPage snapshotPage in pages)
-                    {
-                        if (snapshotPage is PdfProjectSnapshotPage pdfSnapshotPage && pdfSnapshotPage.IndexInSourceFile != null)
-                            continue;
-
-                        if (snapshotPage.Filter == ImageFilter.None && snapshotPage.Brightness == 0 && snapshotPage.Contrast == 0)
-                        {
-                            // source file can be used directly
-                            using (Pix image = Pix.LoadFromFile(snapshotPage.SourceFile.Path))
-                            {
-                                using (Page pdfPage = engine.Process(image))
-                                {
-                                    renderer.AddPage(pdfPage);
-                                }
-                            }
-                        }
-                        else
-                        {
-                            // source file needs to be adjusted first
-                            using (IRandomAccessStream sourceStream = await snapshotPage.SourceFile.OpenAsync(FileAccessMode.Read))
-                            using (IRandomAccessStream targetStream = new InMemoryRandomAccessStream())
-                            {
-                                await uiDispatcherQueue.RunOnThreadAndWaitAsync(DispatcherQueuePriority.Low, async () =>
-                                {
-                                    BitmapEncoder encoder = await BitmapEncoder.CreateAsync(ProjectBase.GetBitmapEncoderIdForFile(snapshotPage.SourceFile), targetStream);
-                                    await ProjectBase.ApplyEffectsAsync(sourceStream, encoder, snapshotPage.Filter, snapshotPage.Brightness, snapshotPage.Contrast);
-                                });
-
-                                // reset stream position and load into a byte array
-                                targetStream.Seek(0);
-                                using (DataReader reader = new DataReader(targetStream.GetInputStreamAt(0)))
-                                {
-                                    uint size = (uint)targetStream.Size;
-                                    await reader.LoadAsync(size);
-                                    byte[] imageBytes = new byte[size];
-                                    reader.ReadBytes(imageBytes);
-
-                                    // load the processed image into Tesseract
-                                    using (Pix image = Pix.LoadFromMemory(imageBytes))
-                                    {
-                                        using (Page pdfPage = engine.Process(image))
-                                        {
-                                            renderer.AddPage(pdfPage);
-                                        }                                    
-                                    }
-                                }
-                            }
-                        }
-                        i++;
-                    }
+                    case 0:
+                        return BitmapRotation.None;
+                    case 90:
+                        return BitmapRotation.Clockwise270Degrees;
+                    case 180:
+                        return BitmapRotation.Clockwise180Degrees;
+                    case 270:
+                        return BitmapRotation.Clockwise90Degrees;
+                    default:
+                        return null;
                 }
             }
         }
     }
 
+    public async Task GenerateOcrPdfAsync(List<IProjectSnapshotPage> pages, string targetFilePath, DispatcherQueue uiDispatcherQueue)
+    {
+        using (TesseractEngine engine = new(trainingDataFolderPath, "eng"))
+        {
+            using (IResultRenderer renderer = PdfResultRenderer.CreatePdfRenderer(targetFilePath, trainingDataFolderPath, true))
+            {
+                renderer.BeginDocument("Scan");
 
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // MISCELLANEOUS ////////////////////////////////////////////////////////////////////////////////////////////////////////
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    public record PageTextElement(Rect Bounds, double Angle, string Text);
+                int i = 0;
+                foreach (IProjectSnapshotPage snapshotPage in pages)
+                {
+                    if (snapshotPage is PdfProjectSnapshotPage pdfSnapshotPage && pdfSnapshotPage.IndexInSourceFile != null)
+                        continue;
+
+                    if (snapshotPage.Filter == ImageFilter.None && snapshotPage.Brightness == 0 && snapshotPage.Contrast == 0)
+                    {
+                        // source file can be used directly
+                        using (Pix image = Pix.LoadFromFile(snapshotPage.SourceFile.Path))
+                        {
+                            using (Page pdfPage = engine.Process(image))
+                            {
+                                renderer.AddPage(pdfPage);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        // source file needs to be adjusted first
+                        using (IRandomAccessStream sourceStream = await snapshotPage.SourceFile.OpenAsync(FileAccessMode.Read))
+                        using (IRandomAccessStream targetStream = new InMemoryRandomAccessStream())
+                        {
+                            await uiDispatcherQueue.RunOnThreadAndWaitAsync(DispatcherQueuePriority.Low, async () =>
+                            {
+                                BitmapEncoder encoder = await BitmapEncoder.CreateAsync(ProjectBase.GetBitmapEncoderIdForFile(snapshotPage.SourceFile), targetStream);
+                                await ProjectBase.ApplyEffectsAsync(sourceStream, encoder, snapshotPage.Filter, snapshotPage.Brightness, snapshotPage.Contrast);
+                            });
+
+                            // reset stream position and load into a byte array
+                            targetStream.Seek(0);
+                            using (DataReader reader = new DataReader(targetStream.GetInputStreamAt(0)))
+                            {
+                                uint size = (uint)targetStream.Size;
+                                await reader.LoadAsync(size);
+                                byte[] imageBytes = new byte[size];
+                                reader.ReadBytes(imageBytes);
+
+                                // load the processed image into Tesseract
+                                using (Pix image = Pix.LoadFromMemory(imageBytes))
+                                {
+                                    using (Page pdfPage = engine.Process(image))
+                                    {
+                                        renderer.AddPage(pdfPage);
+                                    }                                    
+                                }
+                            }
+                        }
+                    }
+                    i++;
+                }
+            }
+        }
+    }
 }
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// MISCELLANEOUS ////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+public record PageTextElement(Rect Bounds, double Angle, string Text);

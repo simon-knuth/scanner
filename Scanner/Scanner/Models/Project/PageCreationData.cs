@@ -17,43 +17,42 @@ using System.ComponentModel;
 using Microsoft.UI.Dispatching;
 using Scanner.Models.Interfaces;
 
-namespace Scanner.Models.Project
+namespace Scanner.Models.Project;
+
+/// <summary>
+/// All data that's necessary to create an <see cref="IProjectPage"/>.
+/// </summary>
+public class PageCreationData
 {
-    /// <summary>
-    /// All data that's necessary to create an <see cref="IProjectPage"/>.
-    /// </summary>
-    public class PageCreationData
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public StorageFile File { get; }
+
+    public string? TargetFileName { get; }
+    public StorageFile? TargetFile { get; }
+    public StorageFolder? TargetFolder { get; }
+
+    public ImageFilter BaseFilter { get; }
+    public ImageFilter Filter { get; }
+
+    public int Brightness { get; }
+    public int Contrast { get; }
+
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public PageCreationData(StorageFile file, string? targetFileName, StorageFile? targetFile, StorageFolder? targetFolder,
+        ImageFilter baseFilter, ImageFilter filter, int brightness, int contrast)
     {
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public StorageFile File { get; }
-
-        public string? TargetFileName { get; }
-        public StorageFile? TargetFile { get; }
-        public StorageFolder? TargetFolder { get; }
-
-        public ImageFilter BaseFilter { get; }
-        public ImageFilter Filter { get; }
-
-        public int Brightness { get; }
-        public int Contrast { get; }
-
-
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public PageCreationData(StorageFile file, string? targetFileName, StorageFile? targetFile, StorageFolder? targetFolder,
-            ImageFilter baseFilter, ImageFilter filter, int brightness, int contrast)
-        {
-            File = file;
-            TargetFileName = targetFileName;
-            TargetFile = targetFile;
-            TargetFolder = targetFolder;
-            BaseFilter = baseFilter;
-            Filter = filter;
-            Brightness = brightness;
-            Contrast = contrast;
-        }
+        File = file;
+        TargetFileName = targetFileName;
+        TargetFile = targetFile;
+        TargetFolder = targetFolder;
+        BaseFilter = baseFilter;
+        Filter = filter;
+        Brightness = brightness;
+        Contrast = contrast;
     }
 }

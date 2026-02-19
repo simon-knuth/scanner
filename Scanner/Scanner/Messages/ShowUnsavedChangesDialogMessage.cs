@@ -5,10 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Scanner.Messages
+namespace Scanner.Messages;
+
+internal class ShowUnsavedChangesDialogMessage : RequestMessage<Task<bool>>
 {
-    internal class ShowUnsavedChangesDialogMessage : RequestMessage<Task<bool>>
-    {
-        
-    }
+    
 }

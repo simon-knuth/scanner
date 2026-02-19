@@ -8,19 +8,18 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage;
 
-namespace Scanner.Messages
-{
-    internal class ShowSaveOptionsDialogMessage : RequestMessage<Task<SaveOptions?>>
-    {
-        public readonly ScanOptions ScanOptions;
-        public readonly ProjectBase? Project;
-        public readonly string? DesiredFileDisplayName;
+namespace Scanner.Messages;
 
-        public ShowSaveOptionsDialogMessage(ScanOptions scanOptions, ProjectBase? project, string? desiredFileDisplayName)
-        {
-            ScanOptions = scanOptions;
-            Project = project;
-            DesiredFileDisplayName = desiredFileDisplayName;
-        }
+internal class ShowSaveOptionsDialogMessage : RequestMessage<Task<SaveOptions?>>
+{
+    public readonly ScanOptions ScanOptions;
+    public readonly ProjectBase? Project;
+    public readonly string? DesiredFileDisplayName;
+
+    public ShowSaveOptionsDialogMessage(ScanOptions scanOptions, ProjectBase? project, string? desiredFileDisplayName)
+    {
+        ScanOptions = scanOptions;
+        Project = project;
+        DesiredFileDisplayName = desiredFileDisplayName;
     }
 }

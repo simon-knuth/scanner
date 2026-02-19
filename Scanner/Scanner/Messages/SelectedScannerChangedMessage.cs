@@ -7,15 +7,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Scanner.Messages
-{
-    internal class SelectedScannerChangedMessage
-    {
-        public readonly IScanningDevice? SelectedScanner;
+namespace Scanner.Messages;
 
-        public SelectedScannerChangedMessage(IScanningDevice? selectedScanner)
-        {
-            SelectedScanner = selectedScanner;
-        }
+internal class SelectedScannerChangedMessage
+{
+    public readonly IScanningDevice? SelectedScanner;
+
+    public SelectedScannerChangedMessage(IScanningDevice? selectedScanner)
+    {
+        SelectedScanner = selectedScanner;
     }
 }

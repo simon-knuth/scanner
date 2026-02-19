@@ -19,89 +19,88 @@ using Windows.Storage;
 using Windows.Storage.FileProperties;
 using WinRT.Interop;
 
-namespace Scanner.Models
+namespace Scanner.Models;
+
+/// <summary>
+/// An <see cref="IProjectPage"/> created from a PDF page.
+/// </summary>
+public partial class PdfPage : ObservableObject, IProjectPage
 {
-    /// <summary>
-    /// An <see cref="IProjectPage"/> created from a PDF page.
-    /// </summary>
-    public partial class PdfPage : ObservableObject, IProjectPage
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    #region Services
+    private static readonly IAppDataService AppDataService = Ioc.Default.GetRequiredService<IAppDataService>();
+    private static readonly ILogService? LogService = Ioc.Default.GetService<ILogService>();
+    #endregion
+
+    private static string[] allowedFileExtensions = [".pdf"];
+
+    private StorageFile previewFile;
+    public StorageFile PreviewFile
     {
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        #region Services
-        private static readonly IAppDataService AppDataService = Ioc.Default.GetRequiredService<IAppDataService>();
-        private static readonly ILogService? LogService = Ioc.Default.GetService<ILogService>();
-        #endregion
-
-        private static string[] allowedFileExtensions = [".pdf"];
-
-        private StorageFile previewFile;
-        public StorageFile PreviewFile
+        get => previewFile;
+        private set
         {
-            get => previewFile;
-            private set
-            {
-                SetProperty(ref previewFile, value);
-            }
-        }
-
-        [ObservableProperty]
-        private Uri previewBitmapUri;
-
-        [ObservableProperty]
-        [NotifyPropertyChangedFor(nameof(PageNumber))]
-        private int index;
-
-        public int PageNumber => Index + 1;
-
-        public bool IsReadOnly { get; } = true;
-
-        public uint IndexInPdf { get; }
-
-
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        private PdfPage(uint indexInPdf, int index)
-        {
-            IndexInPdf = indexInPdf;
-            Index = index;
-        }
-
-        /// <summary>
-        ///    Creates a new <see cref="PdfPage"/> from a file.
-        /// </summary>
-        public static async Task<IProjectPage> CreateAsync(uint indexInPdf, int index)
-        {
-            PdfPage result = await CreateAsyncInternal(indexInPdf, index);
-            return result;
-        }
-
-        private static async Task<PdfPage> CreateAsyncInternal(uint indexInPdf, int index)
-        {
-            // create PdfPage
-            PdfPage result = new(indexInPdf, index);
-            
-            return result;
-        }
-
-
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public async Task UpdatePreviewFileAsync(StorageFile newPreviewFile, DispatcherQueue uiDispatcherQueue)
-        {
-            // change file
-            await uiDispatcherQueue.RunOnThreadAndWaitAsync(DispatcherQueuePriority.Normal, () =>
-            {
-                PreviewFile = newPreviewFile;
-                PreviewBitmapUri = new Uri(AppDataService.GetUriForAppDataFolder(AppDataService.PreviewFolder, newPreviewFile.Name));
-            });
+            SetProperty(ref previewFile, value);
         }
     }
 
+    [ObservableProperty]
+    private Uri previewBitmapUri;
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(PageNumber))]
+    private int index;
+
+    public int PageNumber => Index + 1;
+
+    public bool IsReadOnly { get; } = true;
+
+    public uint IndexInPdf { get; }
+
+
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // MISCELLANEOUS ////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    private PdfPage(uint indexInPdf, int index)
+    {
+        IndexInPdf = indexInPdf;
+        Index = index;
+    }
+
+    /// <summary>
+    ///    Creates a new <see cref="PdfPage"/> from a file.
+    /// </summary>
+    public static async Task<IProjectPage> CreateAsync(uint indexInPdf, int index)
+    {
+        PdfPage result = await CreateAsyncInternal(indexInPdf, index);
+        return result;
+    }
+
+    private static async Task<PdfPage> CreateAsyncInternal(uint indexInPdf, int index)
+    {
+        // create PdfPage
+        PdfPage result = new(indexInPdf, index);
+        
+        return result;
+    }
+
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public async Task UpdatePreviewFileAsync(StorageFile newPreviewFile, DispatcherQueue uiDispatcherQueue)
+    {
+        // change file
+        await uiDispatcherQueue.RunOnThreadAndWaitAsync(DispatcherQueuePriority.Normal, () =>
+        {
+            PreviewFile = newPreviewFile;
+            PreviewBitmapUri = new Uri(AppDataService.GetUriForAppDataFolder(AppDataService.PreviewFolder, newPreviewFile.Name));
+        });
+    }
 }
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// MISCELLANEOUS ////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

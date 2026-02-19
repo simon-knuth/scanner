@@ -19,86 +19,85 @@ using static Scanner.Helpers.RotationHelpers;
 using static Scanner.Models.ImagePage;
 using static Scanner.Helpers.Helpers;
 
-namespace Scanner.Models
+namespace Scanner.Models;
+
+public partial class SetBrightnessAction : IAtomicProjectAction
 {
-    public partial class SetBrightnessAction : IAtomicProjectAction
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////        
+    #region Services
+    private static readonly IAppDataService AppDataService = Ioc.Default.GetRequiredService<IAppDataService>();
+    private static readonly ILogService? LogService = Ioc.Default.GetService<ILogService>();
+    #endregion
+
+    public DateTime MostRecentExecution { get; private set; } = DateTime.MinValue;
+
+    public ImagePage Page { get; private set; }
+    public int TargetValue { get; private set; }
+
+    private int? previousValue;
+
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /// <summary>
+    /// Adjusts a page's brightness.
+    /// </summary>
+    /// <param name="page">
+    /// The page to modify.
+    /// </param>
+    /// <param name="targetValue">
+    /// The brightness value to apply.
+    /// </param>
+    public SetBrightnessAction(ImagePage page, int targetValue)
     {
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////        
-        #region Services
-        private static readonly IAppDataService AppDataService = Ioc.Default.GetRequiredService<IAppDataService>();
-        private static readonly ILogService? LogService = Ioc.Default.GetService<ILogService>();
-        #endregion
-
-        public DateTime MostRecentExecution { get; private set; } = DateTime.MinValue;
-
-        public ImagePage Page { get; private set; }
-        public int TargetValue { get; private set; }
-
-        private int? previousValue;
+        Page = page;
+        TargetValue = targetValue;
+    }
 
 
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// <summary>
-        /// Adjusts a page's brightness.
-        /// </summary>
-        /// <param name="page">
-        /// The page to modify.
-        /// </param>
-        /// <param name="targetValue">
-        /// The brightness value to apply.
-        /// </param>
-        public SetBrightnessAction(ImagePage page, int targetValue)
-        {
-            Page = page;
-            TargetValue = targetValue;
-        }
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public bool Execute(ProjectBase project, DispatcherQueue uiDispatcherQueue)
+    {
+        previousValue ??= Page.Brightness;
+        project.SetBrightness(Page, TargetValue, uiDispatcherQueue);
+        MostRecentExecution = DateTime.Now;
+        return true;
+    }
 
+    public Task<bool> ExecuteAsync(ProjectBase project, DispatcherQueue uiDispatcherQueue)
+    {
+        return Task.FromResult(Execute(project, uiDispatcherQueue));
+    }
 
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public bool Execute(ProjectBase project, DispatcherQueue uiDispatcherQueue)
-        {
-            previousValue ??= Page.Brightness;
-            project.SetBrightness(Page, TargetValue, uiDispatcherQueue);
-            MostRecentExecution = DateTime.Now;
-            return true;
-        }
+    public bool MergeAndExecute(ProjectBase projectBase, IAtomicProjectAction action, DispatcherQueue uiDispatcherQueue)
+    {
+        if (action is not SetBrightnessAction)
+            throw new ArgumentException("Only actions of the same type can be merged");
 
-        public Task<bool> ExecuteAsync(ProjectBase project, DispatcherQueue uiDispatcherQueue)
-        {
-            return Task.FromResult(Execute(project, uiDispatcherQueue));
-        }
+        TargetValue = action.TargetValue;
+        return Execute(projectBase, uiDispatcherQueue);
+    }
 
-        public bool MergeAndExecute(ProjectBase projectBase, IAtomicProjectAction action, DispatcherQueue uiDispatcherQueue)
-        {
-            if (action is not SetBrightnessAction)
-                throw new ArgumentException("Only actions of the same type can be merged");
+    public async Task UndoAsync(ProjectBase project, DispatcherQueue uiDispatcherQueue)
+    {
+        if (previousValue == null)
+            throw new ActionFailedAndRolledBackException($"Can't undo {nameof(SetBrightnessAction)} without previous value");
 
-            TargetValue = action.TargetValue;
-            return Execute(projectBase, uiDispatcherQueue);
-        }
+        project.SetBrightness(Page, (int)previousValue, uiDispatcherQueue);
+    }
 
-        public async Task UndoAsync(ProjectBase project, DispatcherQueue uiDispatcherQueue)
-        {
-            if (previousValue == null)
-                throw new ActionFailedAndRolledBackException($"Can't undo {nameof(SetBrightnessAction)} without previous value");
+    public string GetFriendlyName()
+    {
+        return GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.ProjectActionSetBrightness);
+    }
 
-            project.SetBrightness(Page, (int)previousValue, uiDispatcherQueue);
-        }
-
-        public string GetFriendlyName()
-        {
-            return GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.ProjectActionSetBrightness);
-        }
-
-        public bool IsActionCompatibleForMerge(IAtomicProjectAction action)
-        {
-            return action is SetBrightnessAction;
-        }
+    public bool IsActionCompatibleForMerge(IAtomicProjectAction action)
+    {
+        return action is SetBrightnessAction;
     }
 }

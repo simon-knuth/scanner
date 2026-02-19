@@ -24,64 +24,63 @@ using Windows.Storage.Streams;
 using WinRT.Interop;
 using static Scanner.Helpers.Helpers;
 
-namespace Scanner.Models
+namespace Scanner.Models;
+
+public partial class MultiFileProjectCreationData : IProjectCreationData
 {
-    public partial class MultiFileProjectCreationData : IProjectCreationData
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    #region Services
+    private static readonly ILogService? LogService = Ioc.Default.GetService<ILogService>();
+    #endregion
+
+    public List<PageCreationData> Pages { get; } = [];
+
+    public TargetFormat Format { get; private set; }
+
+    public ScanOptions InitialScanOptions { get; }
+
+    public bool IsAlreadySaved { get; }
+
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public MultiFileProjectCreationData(List<(StorageFile SourceFile, string? TargetFileName, StorageFile? TargetFile)> pages, TargetFormat format, StorageFolder? targetFolder, ScanOptions initialScanOptions, bool isAlreadySaved)
     {
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        #region Services
-        private static readonly ILogService? LogService = Ioc.Default.GetService<ILogService>();
-        #endregion
+        Format = format;
+        InitialScanOptions = initialScanOptions;
+        IsAlreadySaved = isAlreadySaved;
 
-        public List<PageCreationData> Pages { get; } = [];
-
-        public TargetFormat Format { get; private set; }
-
-        public ScanOptions InitialScanOptions { get; }
-
-        public bool IsAlreadySaved { get; }
-
-
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public MultiFileProjectCreationData(List<(StorageFile SourceFile, string? TargetFileName, StorageFile? TargetFile)> pages, TargetFormat format, StorageFolder? targetFolder, ScanOptions initialScanOptions, bool isAlreadySaved)
+        foreach ((StorageFile SourceFile, string? TargetFileName, StorageFile? TargetFile) page in pages)
         {
-            Format = format;
-            InitialScanOptions = initialScanOptions;
-            IsAlreadySaved = isAlreadySaved;
+            Pages.Add(new PageCreationData(page.SourceFile, page.TargetFileName, page.TargetFile, targetFolder, initialScanOptions.GetBaseFilter(), initialScanOptions.GetFilter(), initialScanOptions.Brightness, initialScanOptions.Contrast));
+        }
+    }
 
-            foreach ((StorageFile SourceFile, string? TargetFileName, StorageFile? TargetFile) page in pages)
+    public MultiFileProjectCreationData(Collection<IProjectPage> pages, TargetFormat format, string? targetFileName, ScanOptions initialScanOptions, bool isAlreadySaved)
+    {
+        Format = format;
+        InitialScanOptions = initialScanOptions;
+        IsAlreadySaved = isAlreadySaved;
+
+        foreach (IProjectPage page in pages)
+        {
+            if (page is ImagePage imagePage)
             {
-                Pages.Add(new PageCreationData(page.SourceFile, page.TargetFileName, page.TargetFile, targetFolder, initialScanOptions.GetBaseFilter(), initialScanOptions.GetFilter(), initialScanOptions.Brightness, initialScanOptions.Contrast));
+                Pages.Add(new PageCreationData(imagePage.SourceFile, targetFileName ?? imagePage.FileNameInfo?.DesiredName, null, imagePage.TargetFolder,
+                    imagePage.BaseFilter, imagePage.Filter, imagePage.Brightness, imagePage.Contrast));
             }
         }
-
-        public MultiFileProjectCreationData(Collection<IProjectPage> pages, TargetFormat format, string? targetFileName, ScanOptions initialScanOptions, bool isAlreadySaved)
-        {
-            Format = format;
-            InitialScanOptions = initialScanOptions;
-            IsAlreadySaved = isAlreadySaved;
-
-            foreach (IProjectPage page in pages)
-            {
-                if (page is ImagePage imagePage)
-                {
-                    Pages.Add(new PageCreationData(imagePage.SourceFile, targetFileName ?? imagePage.FileNameInfo?.DesiredName, null, imagePage.TargetFolder,
-                        imagePage.BaseFilter, imagePage.Filter, imagePage.Brightness, imagePage.Contrast));
-                }
-            }
-        }
+    }
 
 
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public async Task<ProjectBase> CreateProjectAsync(bool keepSourceFiles, DispatcherQueue uiDispatcherQueue)
-        {
-            return await MultiFileProject.CreateAsync(this, keepSourceFiles, IsAlreadySaved, uiDispatcherQueue);
-        }
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public async Task<ProjectBase> CreateProjectAsync(bool keepSourceFiles, DispatcherQueue uiDispatcherQueue)
+    {
+        return await MultiFileProject.CreateAsync(this, keepSourceFiles, IsAlreadySaved, uiDispatcherQueue);
     }
 }

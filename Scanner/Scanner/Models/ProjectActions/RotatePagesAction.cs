@@ -18,71 +18,70 @@ using Microsoft.UI.Dispatching;
 using static Scanner.Helpers.RotationHelpers;
 using static Scanner.Helpers.Helpers;
 
-namespace Scanner.Models
+namespace Scanner.Models;
+
+public partial class RotatePagesAction : IProjectAction
 {
-    public partial class RotatePagesAction : IProjectAction
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////        
+    #region Services
+    private static readonly IAppDataService AppDataService = Ioc.Default.GetRequiredService<IAppDataService>();
+    private static readonly ILogService? LogService = Ioc.Default.GetService<ILogService>();
+    #endregion
+
+    private Dictionary<ImagePage, RotationIntent> rotations;
+
+    private Dictionary<ImagePage, BitmapRotation>? appliedRotations;
+
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /// <summary>
+    /// Rotates a set of pages.
+    /// </summary>
+    /// <param name="rotations">
+    /// A sorted list of pages to rotate, with their respective rotation amounts. Rotations are applied in the order they are listed.
+    /// </param>
+    public RotatePagesAction(Dictionary<ImagePage, RotationIntent> rotations)
     {
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////        
-        #region Services
-        private static readonly IAppDataService AppDataService = Ioc.Default.GetRequiredService<IAppDataService>();
-        private static readonly ILogService? LogService = Ioc.Default.GetService<ILogService>();
-        #endregion
-
-        private Dictionary<ImagePage, RotationIntent> rotations;
-
-        private Dictionary<ImagePage, BitmapRotation>? appliedRotations;
+        this.rotations = rotations;
+    }
 
 
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// <summary>
-        /// Rotates a set of pages.
-        /// </summary>
-        /// <param name="rotations">
-        /// A sorted list of pages to rotate, with their respective rotation amounts. Rotations are applied in the order they are listed.
-        /// </param>
-        public RotatePagesAction(Dictionary<ImagePage, RotationIntent> rotations)
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public async Task<bool> ExecuteAsync(ProjectBase project, DispatcherQueue uiDispatcherQueue)
+    {
+        appliedRotations = await project.RotatePagesAsync(rotations, AppDataService.ChangesFolder, uiDispatcherQueue);
+
+        return appliedRotations.Count > 0 && appliedRotations.Values.Any((x) => x != BitmapRotation.None);
+    }
+
+    public async Task UndoAsync(ProjectBase project, DispatcherQueue uiDispatcherQueue)
+    {
+        if (appliedRotations == null)
         {
-            this.rotations = rotations;
+            throw new ActionFailedAndRolledBackException("Can't undo RotatePagesAction without list of applied rotations");
         }
 
-
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public async Task<bool> ExecuteAsync(ProjectBase project, DispatcherQueue uiDispatcherQueue)
+        // gather instructions
+        Dictionary<ImagePage, BitmapRotation> invertedRotations = new();
+        foreach (KeyValuePair<ImagePage, BitmapRotation> rotation in appliedRotations)
         {
-            appliedRotations = await project.RotatePagesAsync(rotations, AppDataService.ChangesFolder, uiDispatcherQueue);
-
-            return appliedRotations.Count > 0 && appliedRotations.Values.Any((x) => x != BitmapRotation.None);
+            invertedRotations.Add(rotation.Key, InvertRotation(rotation.Value));
         }
 
-        public async Task UndoAsync(ProjectBase project, DispatcherQueue uiDispatcherQueue)
-        {
-            if (appliedRotations == null)
-            {
-                throw new ActionFailedAndRolledBackException("Can't undo RotatePagesAction without list of applied rotations");
-            }
+        await project.RotatePagesAsync(invertedRotations, AppDataService.ChangesFolder, uiDispatcherQueue);
+    }
 
-            // gather instructions
-            Dictionary<ImagePage, BitmapRotation> invertedRotations = new();
-            foreach (KeyValuePair<ImagePage, BitmapRotation> rotation in appliedRotations)
-            {
-                invertedRotations.Add(rotation.Key, InvertRotation(rotation.Value));
-            }
-
-            await project.RotatePagesAsync(invertedRotations, AppDataService.ChangesFolder, uiDispatcherQueue);
-        }
-
-        public string GetFriendlyName()
-        {
-            if (rotations.Count >= 2)
-                return string.Format(GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.ProjectActionRotatePages), rotations.Count);
-            else
-                return GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.ProjectActionRotatePage);
-        }
+    public string GetFriendlyName()
+    {
+        if (rotations.Count >= 2)
+            return string.Format(GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.ProjectActionRotatePages), rotations.Count);
+        else
+            return GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.ProjectActionRotatePage);
     }
 }

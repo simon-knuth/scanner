@@ -29,70 +29,69 @@ using WinUIEx;
 using static Scanner.Helpers.Helpers;
 
 
-namespace Scanner.Views.Dialogs
+namespace Scanner.Views.Dialogs;
+
+public partial class ScanMergeDialogView : ContentDialog
 {
-    public partial class ScanMergeDialogView : ContentDialog
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////        
+
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public ScanMergeDialogView()
     {
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////        
+        this.InitializeComponent();
+
+        ViewModel.CloseRequested += ViewModel_CloseRequested;
+    }
 
 
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public ScanMergeDialogView()
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    private async void ViewModel_CloseRequested(object sender, EventArgs e)
+    {
+        await this.RunOnUIThreadAndWaitAsync(Microsoft.UI.Dispatching.DispatcherQueuePriority.Normal, () =>
         {
-            this.InitializeComponent();
+            this.Hide();
+        });
+    }
 
-            ViewModel.CloseRequested += ViewModel_CloseRequested;
-        }
-
-
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        private async void ViewModel_CloseRequested(object sender, EventArgs e)
+    private void ContentDialog_Closed(ContentDialog sender, ContentDialogClosedEventArgs args)
+    {
+        if (args.Result == ContentDialogResult.Primary)
         {
-            await this.RunOnUIThreadAndWaitAsync(Microsoft.UI.Dispatching.DispatcherQueuePriority.Normal, () =>
-            {
-                this.Hide();
-            });
+            ViewModel.AcceptCommand.Execute(null);
         }
-
-        private void ContentDialog_Closed(ContentDialog sender, ContentDialogClosedEventArgs args)
+        else
         {
-            if (args.Result == ContentDialogResult.Primary)
-            {
-                ViewModel.AcceptCommand.Execute(null);
-            }
-            else
-            {
-                ViewModel.CancelCommand.Execute(null);
-            }
+            ViewModel.CancelCommand.Execute(null);
         }
+    }
 
-        private void NumberBox_Loaded(object sender, RoutedEventArgs e)
+    private void NumberBox_Loaded(object sender, RoutedEventArgs e)
+    {
+        NumberBox? numberBox = sender as NumberBox;
+        if (numberBox == null)
+            return;
+
+        // define rounding
+        IncrementNumberRounder numberRounder = new IncrementNumberRounder
         {
-            NumberBox? numberBox = sender as NumberBox;
-            if (numberBox == null)
-                return;
+            Increment = 1
+        };
 
-            // define rounding
-            IncrementNumberRounder numberRounder = new IncrementNumberRounder
-            {
-                Increment = 1
-            };
-
-            // define formatting
-            DecimalFormatter formatter = new DecimalFormatter
-            {
-                IntegerDigits = 1,
-                FractionDigits = 0,
-                IsGrouped = false,
-                NumberRounder = numberRounder
-            };
-            numberBox.NumberFormatter = formatter;
-        }
+        // define formatting
+        DecimalFormatter formatter = new DecimalFormatter
+        {
+            IntegerDigits = 1,
+            FractionDigits = 0,
+            IsGrouped = false,
+            NumberRounder = numberRounder
+        };
+        numberBox.NumberFormatter = formatter;
     }
 }

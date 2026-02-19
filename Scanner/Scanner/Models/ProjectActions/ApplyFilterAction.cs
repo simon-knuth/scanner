@@ -19,83 +19,82 @@ using static Scanner.Helpers.RotationHelpers;
 using static Scanner.Models.ImagePage;
 using static Scanner.Helpers.Helpers;
 
-namespace Scanner.Models
+namespace Scanner.Models;
+
+public partial class ApplyFilterAction : IProjectAction
 {
-    public partial class ApplyFilterAction : IProjectAction
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////        
+    #region Services
+    private static readonly IAppDataService AppDataService = Ioc.Default.GetRequiredService<IAppDataService>();
+    private static readonly ILogService? LogService = Ioc.Default.GetService<ILogService>();
+    #endregion
+
+    private List<ImagePage> pages;
+    private ImageFilter filter;
+
+    private Dictionary<ImagePage, ImageFilter>? previousFilters;
+
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /// <summary>
+    /// Applies a filter to a set of pages.
+    /// </summary>
+    /// <param name="pages">
+    /// The pages to apply the <paramref name="filter"/> to.
+    /// </param>
+    /// <param name="filter">
+    /// The filter to apply.
+    /// </param>
+    public ApplyFilterAction(List<ImagePage> pages, ImageFilter filter)
     {
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////        
-        #region Services
-        private static readonly IAppDataService AppDataService = Ioc.Default.GetRequiredService<IAppDataService>();
-        private static readonly ILogService? LogService = Ioc.Default.GetService<ILogService>();
-        #endregion
-
-        private List<ImagePage> pages;
-        private ImageFilter filter;
-
-        private Dictionary<ImagePage, ImageFilter>? previousFilters;
+        this.pages = pages;
+        this.filter = filter;
+    }
 
 
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// <summary>
-        /// Applies a filter to a set of pages.
-        /// </summary>
-        /// <param name="pages">
-        /// The pages to apply the <paramref name="filter"/> to.
-        /// </param>
-        /// <param name="filter">
-        /// The filter to apply.
-        /// </param>
-        public ApplyFilterAction(List<ImagePage> pages, ImageFilter filter)
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public async Task<bool> ExecuteAsync(ProjectBase project, DispatcherQueue uiDispatcherQueue)
+    {
+        bool performedChanges = false;
+
+        previousFilters = new();
+        foreach (ImagePage page in pages)
         {
-            this.pages = pages;
-            this.filter = filter;
-        }
-
-
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public async Task<bool> ExecuteAsync(ProjectBase project, DispatcherQueue uiDispatcherQueue)
-        {
-            bool performedChanges = false;
-
-            previousFilters = new();
-            foreach (ImagePage page in pages)
+            if (page.Filter != filter)
             {
-                if (page.Filter != filter)
-                {
-                    previousFilters.Add(page, page.Filter);
-                    performedChanges = true;
-                }
-            }
-
-            await project.ApplyFilterToPagesAsync(pages, filter, uiDispatcherQueue);
-            return performedChanges;
-        }
-
-        public async Task UndoAsync(ProjectBase project, DispatcherQueue uiDispatcherQueue)
-        {
-            if (previousFilters == null)
-            {
-                throw new ActionFailedAndRolledBackException("Can't undo ApplyFilterAction without list of previous filters");
-            }
-
-            foreach (KeyValuePair<ImagePage, ImageFilter> pair in previousFilters)
-            {
-                await project.ApplyFilterToPagesAsync([pair.Key], pair.Value, uiDispatcherQueue);
+                previousFilters.Add(page, page.Filter);
+                performedChanges = true;
             }
         }
 
-        public string GetFriendlyName()
+        await project.ApplyFilterToPagesAsync(pages, filter, uiDispatcherQueue);
+        return performedChanges;
+    }
+
+    public async Task UndoAsync(ProjectBase project, DispatcherQueue uiDispatcherQueue)
+    {
+        if (previousFilters == null)
         {
-            if (pages.Count >= 2)
-                return string.Format(GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.ProjectActionApplyFilterToPages), pages.Count);
-            else
-                return GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.ProjectActionApplyFilterToPage);
+            throw new ActionFailedAndRolledBackException("Can't undo ApplyFilterAction without list of previous filters");
         }
+
+        foreach (KeyValuePair<ImagePage, ImageFilter> pair in previousFilters)
+        {
+            await project.ApplyFilterToPagesAsync([pair.Key], pair.Value, uiDispatcherQueue);
+        }
+    }
+
+    public string GetFriendlyName()
+    {
+        if (pages.Count >= 2)
+            return string.Format(GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.ProjectActionApplyFilterToPages), pages.Count);
+        else
+            return GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.ProjectActionApplyFilterToPage);
     }
 }

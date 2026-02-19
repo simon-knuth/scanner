@@ -19,292 +19,291 @@ using Windows.Storage;
 using Windows.Storage.FileProperties;
 using WinRT.Interop;
 
-namespace Scanner.Models
+namespace Scanner.Models;
+
+/// <summary>
+/// An <see cref="IProjectPage"/> created from an image file.
+/// </summary>
+public partial class ImagePage : ObservableObject, IProjectPage
 {
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    #region Services
+    private static readonly IAppDataService AppDataService = Ioc.Default.GetRequiredService<IAppDataService>();
+    private static readonly ILogService? LogService = Ioc.Default.GetService<ILogService>();
+    #endregion
+
+    private static string[] allowedFileExtensions = [".jpg", ".jpeg", ".png", ".bmp", ".tif", ".tiff"];
+
+    private StorageFile sourceFile;
     /// <summary>
-    /// An <see cref="IProjectPage"/> created from an image file.
+    /// The page's source file with all information intact and without any destructive effects applied.
     /// </summary>
-    public partial class ImagePage : ObservableObject, IProjectPage
+    public StorageFile SourceFile
     {
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        #region Services
-        private static readonly IAppDataService AppDataService = Ioc.Default.GetRequiredService<IAppDataService>();
-        private static readonly ILogService? LogService = Ioc.Default.GetService<ILogService>();
-        #endregion
-
-        private static string[] allowedFileExtensions = [".jpg", ".jpeg", ".png", ".bmp", ".tif", ".tiff"];
-
-        private StorageFile sourceFile;
-        /// <summary>
-        /// The page's source file with all information intact and without any destructive effects applied.
-        /// </summary>
-        public StorageFile SourceFile
+        get => sourceFile;
+        private set
         {
-            get => sourceFile;
-            private set
-            {
-                SetProperty(ref sourceFile, value);
-            }
+            SetProperty(ref sourceFile, value);
+        }
+    }
+
+    private StorageFile previewFile;
+    public StorageFile PreviewFile
+    {
+        get => previewFile;
+        private set
+        {
+            SetProperty(ref previewFile, value);
+        }
+    }
+
+    /// <summary>
+    /// If the current <see cref="SourceFile"/> needs to be committed to the <see cref="IAppDataService.ProjectFolder"/>
+    /// and a file already exists, this is the file it will replace there.
+    /// </summary>
+    public StorageFile? OutOfDateSourceFile {  get; private set; }
+
+    /// <summary>
+    /// Whether the current <see cref="SourceFile"/> needs to be committed to the <see cref="IAppDataService.ProjectFolder"/>.
+    /// </summary>
+    public bool CommitNeeded => Path.GetDirectoryName(SourceFile.Path) == AppDataService.ChangesFolder.Path;
+
+    /// <summary>
+    /// The file to save changes to, including destructive effects.
+    /// </summary>
+    public FileHandle? TargetFile { get; set; }
+
+    public StorageFolder? TargetFolder { get; set; }
+
+    /// <summary>
+    /// The URI for the bitmap representing the <see cref="SourceFile"/>.
+    /// Will raise <see cref="INotifyPropertyChanged"/> event every
+    /// time the bitmap changes, even if the file is the same.
+    /// </summary>
+    [ObservableProperty]
+    private Uri sourceBitmapUri;
+
+    [ObservableProperty]
+    private Uri previewBitmapUri;
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(PageNumber))]
+    private int index;
+
+    public FileNameInfo? FileNameInfo { get; set; }
+
+    public int PageNumber => Index + 1;
+
+    public bool IsReadOnly { get; }
+
+    public BitmapRotation Rotation { get; set; } = BitmapRotation.None;
+    public BitmapRotation? RecommendedRotation { get; set; } = null;
+
+    public bool IsUsingDestructiveEffects => Filter != ImageFilter.None || Brightness != 0 || Contrast != 0;
+
+    /// <summary>
+    /// The <see cref="ImageFilter"/> used by the source file, usually <see cref="ImageFilter.None"/>.
+    /// For example, if a scanner only supports grayscale, this will be set to <see cref="ImageFilter.Grayscale"/> and
+    /// indicate that <see cref="ImageFilter.None"/> is unavailable due to the lack of color information.
+    /// </summary>
+    public ImageFilter BaseFilter { get; private set; }
+
+    /// <summary>
+    /// The currently applied <see cref="ImageFilter"/>. Has to be one of the elements in <see cref="AvailableFilters"/>.
+    /// </summary>
+    [ObservableProperty]
+    private ImageFilter filter = ImageFilter.None;
+
+    public ImageFilter[] AvailableFilters { get; private set; }
+
+    [ObservableProperty]
+    private uint width;
+
+    [ObservableProperty]
+    private uint height;
+
+    [ObservableProperty]
+    private int brightness = AppConfig.DefaultBrightness;
+
+    [ObservableProperty]
+    private int contrast = AppConfig.DefaultContrast;
+
+    /// <summary>
+    /// Used for two-way binding in the UI. Value is copied to <see cref="Brightness"/> after a short delay.
+    /// </summary>
+    [ObservableProperty]
+    private int displayedBrightness = AppConfig.DefaultBrightness;
+
+    /// <summary>
+    /// Used for two-way binding in the UI. Value is copied to <see cref="Contrast"/> after a short delay.
+    /// </summary>
+    [ObservableProperty]
+    private int displayedContrast = AppConfig.DefaultContrast;
+
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    private ImagePage(StorageFile sourceFile, FileHandle? targetFile, Uri sourceBitmapUri, int index, string? targetFileName, StorageFolder? targetFolder, ImageFilter baseFilter, ImageFilter filter, int brightness, int contrast, uint width, uint height)
+    {
+        SourceFile = PreviewFile = sourceFile;
+        TargetFile = targetFile;
+        SourceBitmapUri = PreviewBitmapUri = sourceBitmapUri;
+        Index = index;
+        if (targetFileName != null) FileNameInfo = new FileNameInfo(targetFileName);
+        TargetFolder = targetFolder;
+        BaseFilter = baseFilter;
+        Filter = filter;
+        AvailableFilters = GetAvailableFilters();
+        Brightness = brightness;
+        Contrast = contrast;
+        DisplayedBrightness = brightness;
+        DisplayedContrast = contrast;
+        Width = width;
+        Height = height;
+    }
+
+    /// <summary>
+    ///    Creates a new <see cref="ImagePage"/> from a file.
+    /// </summary>
+    public static async Task<IProjectPage> CreateAsync(StorageFile sourceFile, StorageFile? targetFile, StorageFolder? targetFolder, int index, string? targetFileName, bool keepSourceFile, StorageFolder pagesFolder, ImageFilter baseFilter, ImageFilter filter, int brightness, int contrast)
+    {
+        ImagePage result = await CreateAsyncInternal(sourceFile, targetFile, targetFolder, index, targetFileName, keepSourceFile, pagesFolder, baseFilter, filter, brightness, contrast);
+        return result;
+    }
+
+    private static async Task<ImagePage> CreateAsyncInternal(StorageFile sourceFile, StorageFile? targetFile, StorageFolder? targetFolder, int index, string? targetFileName, bool keepSourceFile, StorageFolder pagesFolder, ImageFilter baseFilter, ImageFilter filter, int brightness, int contrast)
+    {
+        // check file
+        if (sourceFile == null)
+        {
+            throw new ArgumentException("Can't create ImagePage from null file");
         }
 
-        private StorageFile previewFile;
-        public StorageFile PreviewFile
+        // check file extension
+        string extension = sourceFile.FileType.ToLower();
+        if (!allowedFileExtensions.Contains(extension))
         {
-            get => previewFile;
-            private set
-            {
-                SetProperty(ref previewFile, value);
-            }
+            // unknown format
+            throw new ArgumentException("Failed to create ImagePage due to incompatible file format");
         }
 
-        /// <summary>
-        /// If the current <see cref="SourceFile"/> needs to be committed to the <see cref="IAppDataService.ProjectFolder"/>
-        /// and a file already exists, this is the file it will replace there.
-        /// </summary>
-        public StorageFile? OutOfDateSourceFile {  get; private set; }
-
-        /// <summary>
-        /// Whether the current <see cref="SourceFile"/> needs to be committed to the <see cref="IAppDataService.ProjectFolder"/>.
-        /// </summary>
-        public bool CommitNeeded => Path.GetDirectoryName(SourceFile.Path) == AppDataService.ChangesFolder.Path;
-
-        /// <summary>
-        /// The file to save changes to, including destructive effects.
-        /// </summary>
-        public FileHandle? TargetFile { get; set; }
-
-        public StorageFolder? TargetFolder { get; set; }
-
-        /// <summary>
-        /// The URI for the bitmap representing the <see cref="SourceFile"/>.
-        /// Will raise <see cref="INotifyPropertyChanged"/> event every
-        /// time the bitmap changes, even if the file is the same.
-        /// </summary>
-        [ObservableProperty]
-        private Uri sourceBitmapUri;
-
-        [ObservableProperty]
-        private Uri previewBitmapUri;
-
-        [ObservableProperty]
-        [NotifyPropertyChangedFor(nameof(PageNumber))]
-        private int index;
-
-        public FileNameInfo? FileNameInfo { get; set; }
-
-        public int PageNumber => Index + 1;
-
-        public bool IsReadOnly { get; }
-
-        public BitmapRotation Rotation { get; set; } = BitmapRotation.None;
-        public BitmapRotation? RecommendedRotation { get; set; } = null;
-
-        public bool IsUsingDestructiveEffects => Filter != ImageFilter.None || Brightness != 0 || Contrast != 0;
-
-        /// <summary>
-        /// The <see cref="ImageFilter"/> used by the source file, usually <see cref="ImageFilter.None"/>.
-        /// For example, if a scanner only supports grayscale, this will be set to <see cref="ImageFilter.Grayscale"/> and
-        /// indicate that <see cref="ImageFilter.None"/> is unavailable due to the lack of color information.
-        /// </summary>
-        public ImageFilter BaseFilter { get; private set; }
-
-        /// <summary>
-        /// The currently applied <see cref="ImageFilter"/>. Has to be one of the elements in <see cref="AvailableFilters"/>.
-        /// </summary>
-        [ObservableProperty]
-        private ImageFilter filter = ImageFilter.None;
-
-        public ImageFilter[] AvailableFilters { get; private set; }
-
-        [ObservableProperty]
-        private uint width;
-
-        [ObservableProperty]
-        private uint height;
-
-        [ObservableProperty]
-        private int brightness = AppConfig.DefaultBrightness;
-
-        [ObservableProperty]
-        private int contrast = AppConfig.DefaultContrast;
-
-        /// <summary>
-        /// Used for two-way binding in the UI. Value is copied to <see cref="Brightness"/> after a short delay.
-        /// </summary>
-        [ObservableProperty]
-        private int displayedBrightness = AppConfig.DefaultBrightness;
-
-        /// <summary>
-        /// Used for two-way binding in the UI. Value is copied to <see cref="Contrast"/> after a short delay.
-        /// </summary>
-        [ObservableProperty]
-        private int displayedContrast = AppConfig.DefaultContrast;
-
-
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        private ImagePage(StorageFile sourceFile, FileHandle? targetFile, Uri sourceBitmapUri, int index, string? targetFileName, StorageFolder? targetFolder, ImageFilter baseFilter, ImageFilter filter, int brightness, int contrast, uint width, uint height)
+        // copy file to pages folder
+        if (keepSourceFile)
         {
-            SourceFile = PreviewFile = sourceFile;
-            TargetFile = targetFile;
-            SourceBitmapUri = PreviewBitmapUri = sourceBitmapUri;
-            Index = index;
-            if (targetFileName != null) FileNameInfo = new FileNameInfo(targetFileName);
-            TargetFolder = targetFolder;
-            BaseFilter = baseFilter;
-            Filter = filter;
-            AvailableFilters = GetAvailableFilters();
-            Brightness = brightness;
-            Contrast = contrast;
-            DisplayedBrightness = brightness;
-            DisplayedContrast = contrast;
-            Width = width;
-            Height = height;
+            sourceFile = await sourceFile.CopyAsync(pagesFolder, index.ToString() + sourceFile.FileType, NameCollisionOption.GenerateUniqueName);
+        }
+        else
+        {
+            await sourceFile.MoveAsync(pagesFolder, index.ToString() + sourceFile.FileType, NameCollisionOption.GenerateUniqueName);
         }
 
-        /// <summary>
-        ///    Creates a new <see cref="ImagePage"/> from a file.
-        /// </summary>
-        public static async Task<IProjectPage> CreateAsync(StorageFile sourceFile, StorageFile? targetFile, StorageFolder? targetFolder, int index, string? targetFileName, bool keepSourceFile, StorageFolder pagesFolder, ImageFilter baseFilter, ImageFilter filter, int brightness, int contrast)
+        // get image attributes
+        ImageProperties imageProperties = await sourceFile.Properties.GetImagePropertiesAsync();
+
+        // get target file
+        FileHandle? target = null;
+        if (targetFile != null)
+            target = new(targetFile, await targetFile.OpenAsync(FileAccessMode.ReadWrite, StorageOpenOptions.AllowOnlyReaders));
+
+        // create ImagePage
+        ImagePage result = new(sourceFile, target, new Uri(AppDataService.GetUriForAppDataFolder(pagesFolder, sourceFile.Name)), index, targetFileName, targetFolder, baseFilter, filter, brightness, contrast, imageProperties.Width, imageProperties.Height);
+        
+        return result;
+    }
+
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public async Task ChangeSourceFileAsync(StorageFolder parentFolder, StorageFile file, DispatcherQueue uiDispatcherQueue)
+    {
+        if (OutOfDateSourceFile == null && parentFolder == AppDataService.ChangesFolder)
         {
-            ImagePage result = await CreateAsyncInternal(sourceFile, targetFile, targetFolder, index, targetFileName, keepSourceFile, pagesFolder, baseFilter, filter, brightness, contrast);
-            return result;
+            // keep track of file that needs to be replaced once changes are committed
+            OutOfDateSourceFile = SourceFile;
         }
 
-        private static async Task<ImagePage> CreateAsyncInternal(StorageFile sourceFile, StorageFile? targetFile, StorageFolder? targetFolder, int index, string? targetFileName, bool keepSourceFile, StorageFolder pagesFolder, ImageFilter baseFilter, ImageFilter filter, int brightness, int contrast)
+        Uri previewBitmapUri = new Uri(AppDataService.GetUriForAppDataFolder(parentFolder, file.Name));
+        if (PreviewFile == SourceFile)
         {
-            // check file
-            if (sourceFile == null)
+            // no separate preview ~> preview bitmap URI changes
+            PreviewFile = file;
+            await uiDispatcherQueue.RunOnThreadAndWaitAsync(DispatcherQueuePriority.Normal, () =>
             {
-                throw new ArgumentException("Can't create ImagePage from null file");
-            }
+                PreviewBitmapUri = previewBitmapUri;
+            });
+        }
 
-            // check file extension
-            string extension = sourceFile.FileType.ToLower();
-            if (!allowedFileExtensions.Contains(extension))
-            {
-                // unknown format
-                throw new ArgumentException("Failed to create ImagePage due to incompatible file format");
-            }
+        SourceFile = file;
+        await uiDispatcherQueue.RunOnThreadAndWaitAsync(DispatcherQueuePriority.Normal, () =>
+        {
+            SourceBitmapUri = previewBitmapUri;
+        });
+    }
 
-            // copy file to pages folder
-            if (keepSourceFile)
+    public async Task UpdatePreviewFileAsync(StorageFile? newPreviewFile, DispatcherQueue uiDispatcherQueue)
+    {
+        StorageFile? previousFile = PreviewFile != SourceFile ? PreviewFile : null;
+
+        // change file
+        await uiDispatcherQueue.RunOnThreadAndWaitAsync(DispatcherQueuePriority.Normal, () =>
+        {
+            if (newPreviewFile != null)
             {
-                sourceFile = await sourceFile.CopyAsync(pagesFolder, index.ToString() + sourceFile.FileType, NameCollisionOption.GenerateUniqueName);
+                PreviewFile = newPreviewFile;
+                PreviewBitmapUri = new Uri(AppDataService.GetUriForAppDataFolder(AppDataService.PreviewFolder, newPreviewFile.Name));
             }
             else
             {
-                await sourceFile.MoveAsync(pagesFolder, index.ToString() + sourceFile.FileType, NameCollisionOption.GenerateUniqueName);
-            }
-
-            // get image attributes
-            ImageProperties imageProperties = await sourceFile.Properties.GetImagePropertiesAsync();
-
-            // get target file
-            FileHandle? target = null;
-            if (targetFile != null)
-                target = new(targetFile, await targetFile.OpenAsync(FileAccessMode.ReadWrite, StorageOpenOptions.AllowOnlyReaders));
-
-            // create ImagePage
-            ImagePage result = new(sourceFile, target, new Uri(AppDataService.GetUriForAppDataFolder(pagesFolder, sourceFile.Name)), index, targetFileName, targetFolder, baseFilter, filter, brightness, contrast, imageProperties.Width, imageProperties.Height);
-            
-            return result;
-        }
-
-
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public async Task ChangeSourceFileAsync(StorageFolder parentFolder, StorageFile file, DispatcherQueue uiDispatcherQueue)
-        {
-            if (OutOfDateSourceFile == null && parentFolder == AppDataService.ChangesFolder)
-            {
-                // keep track of file that needs to be replaced once changes are committed
-                OutOfDateSourceFile = SourceFile;
-            }
-
-            Uri previewBitmapUri = new Uri(AppDataService.GetUriForAppDataFolder(parentFolder, file.Name));
-            if (PreviewFile == SourceFile)
-            {
-                // no separate preview ~> preview bitmap URI changes
-                PreviewFile = file;
-                await uiDispatcherQueue.RunOnThreadAndWaitAsync(DispatcherQueuePriority.Normal, () =>
+                PreviewFile = SourceFile;
+                if (CommitNeeded)
                 {
-                    PreviewBitmapUri = previewBitmapUri;
-                });
-            }
-
-            SourceFile = file;
-            await uiDispatcherQueue.RunOnThreadAndWaitAsync(DispatcherQueuePriority.Normal, () =>
-            {
-                SourceBitmapUri = previewBitmapUri;
-            });
-        }
-
-        public async Task UpdatePreviewFileAsync(StorageFile? newPreviewFile, DispatcherQueue uiDispatcherQueue)
-        {
-            StorageFile? previousFile = PreviewFile != SourceFile ? PreviewFile : null;
-
-            // change file
-            await uiDispatcherQueue.RunOnThreadAndWaitAsync(DispatcherQueuePriority.Normal, () =>
-            {
-                if (newPreviewFile != null)
-                {
-                    PreviewFile = newPreviewFile;
-                    PreviewBitmapUri = new Uri(AppDataService.GetUriForAppDataFolder(AppDataService.PreviewFolder, newPreviewFile.Name));
+                    PreviewBitmapUri = new Uri(AppDataService.GetUriForAppDataFolder(AppDataService.ChangesFolder, SourceFile.Name));
                 }
                 else
                 {
-                    PreviewFile = SourceFile;
-                    if (CommitNeeded)
-                    {
-                        PreviewBitmapUri = new Uri(AppDataService.GetUriForAppDataFolder(AppDataService.ChangesFolder, SourceFile.Name));
-                    }
-                    else
-                    {
-                        PreviewBitmapUri = new Uri(AppDataService.GetUriForAppDataFolder(AppDataService.ProjectFolder, SourceFile.Name));
-                    }
+                    PreviewBitmapUri = new Uri(AppDataService.GetUriForAppDataFolder(AppDataService.ProjectFolder, SourceFile.Name));
                 }
-            });
-
-            // remove previous one
-            if (previousFile != null)
-            {
-                await previousFile.DeleteAsync(StorageDeleteOption.PermanentDelete);
             }
-        }
+        });
 
-        public void ClearOutOfDateSourceFile()
+        // remove previous one
+        if (previousFile != null)
         {
-            OutOfDateSourceFile = null;
-        }
-
-        private ImageFilter[] GetAvailableFilters()
-        {
-            switch (BaseFilter)
-            {
-                case ImageFilter.None:
-                    return [ImageFilter.None, ImageFilter.Grayscale, ImageFilter.Monochrome];
-                case ImageFilter.Grayscale:
-                    return [ImageFilter.Grayscale, ImageFilter.Monochrome];
-                case ImageFilter.Monochrome:
-                    return [ImageFilter.Monochrome];
-                default:
-                    throw new ArgumentException($"Failed to get available ImageFilters for BaseFilter {BaseFilter}");
-            }
+            await previousFile.DeleteAsync(StorageDeleteOption.PermanentDelete);
         }
     }
 
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // MISCELLANEOUS ////////////////////////////////////////////////////////////////////////////////////////////////////////
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    public enum ImageFilter
+    public void ClearOutOfDateSourceFile()
     {
-        None,
-        Grayscale,
-        Monochrome
+        OutOfDateSourceFile = null;
     }
+
+    private ImageFilter[] GetAvailableFilters()
+    {
+        switch (BaseFilter)
+        {
+            case ImageFilter.None:
+                return [ImageFilter.None, ImageFilter.Grayscale, ImageFilter.Monochrome];
+            case ImageFilter.Grayscale:
+                return [ImageFilter.Grayscale, ImageFilter.Monochrome];
+            case ImageFilter.Monochrome:
+                return [ImageFilter.Monochrome];
+            default:
+                throw new ArgumentException($"Failed to get available ImageFilters for BaseFilter {BaseFilter}");
+        }
+    }
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// MISCELLANEOUS ////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+public enum ImageFilter
+{
+    None,
+    Grayscale,
+    Monochrome
 }

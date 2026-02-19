@@ -20,298 +20,297 @@ using static Scanner.Helpers.PageDimensionsHelper;
 using static Scanner.Helpers.RotationHelpers;
 using static Scanner.Models.ImagePage;
 
-namespace Scanner.ViewModels
+namespace Scanner.ViewModels;
+
+partial class EditorViewModel : ObservableRecipient, IDisposable
 {
-    partial class EditorViewModel : ObservableRecipient, IDisposable
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    #region Services
+    public readonly ILogService? LogService = Ioc.Default.GetService<ILogService>();
+    public readonly IProjectService ProjectService = Ioc.Default.GetRequiredService<IProjectService>();
+    public readonly ISettingsService SettingsService = Ioc.Default.GetRequiredService<ISettingsService>();
+    #endregion
+
+    #region Commands
+    public AsyncRelayCommand RotateCurrentPage90DegreesAsyncCommand => new AsyncRelayCommand(async (x) => await RotateCurrentPageAsync(RotationIntent.Degrees90));
+    public AsyncRelayCommand RotateCurrentPage180DegreesAsyncCommand => new AsyncRelayCommand(async (x) => await RotateCurrentPageAsync(RotationIntent.Degrees180));
+    public AsyncRelayCommand RotateCurrentPage270DegreesAsyncCommand => new AsyncRelayCommand(async (x) => await RotateCurrentPageAsync(RotationIntent.Degrees270));
+    public AsyncRelayCommand RotateCurrentPageAutomaticallyAsyncCommand => new AsyncRelayCommand(async (x) => await RotateCurrentPageAsync(RotationIntent.Automatic));
+    public AsyncRelayCommand RemoveCurrentPageAsyncCommand => new AsyncRelayCommand(RemoveCurrentPageAsync);
+    public AsyncRelayCommand<ImageFilter> ApplyFilterToCurrentPageAsyncCommand => new AsyncRelayCommand<ImageFilter>(ApplyFilterToCurrentPageAsync);
+    public AsyncRelayCommand<Rect> CropCurrentPageAsyncCommand => new AsyncRelayCommand<Rect>(async (x) => await CropPagesAsync(ProjectService.SelectedPage != null ? [(ImagePage)ProjectService.SelectedPage] : [], x, false));
+    public AsyncRelayCommand<Rect> CropCurrentPageAsCopyAsyncCommand => new AsyncRelayCommand<Rect>(async (x) => await CropPagesAsync(ProjectService.SelectedPage != null ? [(ImagePage)ProjectService.SelectedPage] : [], x, true));
+    public AsyncRelayCommand<(List<ImagePage>, Rect)> CropPagesAsyncCommand => new AsyncRelayCommand<(List<ImagePage>, Rect)>(async (x) => await CropPagesAsync(x.Item1, x.Item2, false));
+    public AsyncRelayCommand<int> SetBrightnessForCurrentPageCommand => new AsyncRelayCommand<int>(SetBrightnessForCurrentPageAsync);
+    public AsyncRelayCommand<int> SetContrastForCurrentPageCommand => new AsyncRelayCommand<int>(SetContrastForCurrentPageAsync);
+    public AsyncRelayCommand ResetBrightnessCommand => new AsyncRelayCommand(async () => await SetBrightnessForCurrentPageAsync(AppConfig.DefaultBrightness));
+    public AsyncRelayCommand ResetContrastCommand => new AsyncRelayCommand(async () => await SetContrastForCurrentPageAsync(AppConfig.DefaultContrast));
+    public RelayCommand ShowSettingsCommand => new RelayCommand(ShowSettings);
+    public RelayCommand DisposeCommand => new RelayCommand(Dispose);
+    #endregion
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(AreSimilarPagesForCropAvailable))]
+    [NotifyPropertyChangedFor(nameof(SimilarPagesForCrop))]
+    [NotifyPropertyChangedFor(nameof(AreEditingOptionsAvailable))]
+    [NotifyPropertyChangedFor(nameof(IsPdfPageSelected))]
+    private ProjectBase? currentProject;
+
+    public bool AreEditingOptionsAvailable => CurrentProject != null && ProjectService.SelectedPage != null 
+        && ProjectService.SelectedPage is ImagePage && !ProjectService.IsProcessRunningOrEditing;
+
+    public bool IsPdfPageSelected => CurrentProject != null && ProjectService.SelectedPage != null
+        && ProjectService.SelectedPage is PdfPage;
+
+    private AspectRatio selectedAspectRatio;
+    public AspectRatio SelectedAspectRatio
     {
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        #region Services
-        public readonly ILogService? LogService = Ioc.Default.GetService<ILogService>();
-        public readonly IProjectService ProjectService = Ioc.Default.GetRequiredService<IProjectService>();
-        public readonly ISettingsService SettingsService = Ioc.Default.GetRequiredService<ISettingsService>();
-        #endregion
-
-        #region Commands
-        public AsyncRelayCommand RotateCurrentPage90DegreesAsyncCommand => new AsyncRelayCommand(async (x) => await RotateCurrentPageAsync(RotationIntent.Degrees90));
-        public AsyncRelayCommand RotateCurrentPage180DegreesAsyncCommand => new AsyncRelayCommand(async (x) => await RotateCurrentPageAsync(RotationIntent.Degrees180));
-        public AsyncRelayCommand RotateCurrentPage270DegreesAsyncCommand => new AsyncRelayCommand(async (x) => await RotateCurrentPageAsync(RotationIntent.Degrees270));
-        public AsyncRelayCommand RotateCurrentPageAutomaticallyAsyncCommand => new AsyncRelayCommand(async (x) => await RotateCurrentPageAsync(RotationIntent.Automatic));
-        public AsyncRelayCommand RemoveCurrentPageAsyncCommand => new AsyncRelayCommand(RemoveCurrentPageAsync);
-        public AsyncRelayCommand<ImageFilter> ApplyFilterToCurrentPageAsyncCommand => new AsyncRelayCommand<ImageFilter>(ApplyFilterToCurrentPageAsync);
-        public AsyncRelayCommand<Rect> CropCurrentPageAsyncCommand => new AsyncRelayCommand<Rect>(async (x) => await CropPagesAsync(ProjectService.SelectedPage != null ? [(ImagePage)ProjectService.SelectedPage] : [], x, false));
-        public AsyncRelayCommand<Rect> CropCurrentPageAsCopyAsyncCommand => new AsyncRelayCommand<Rect>(async (x) => await CropPagesAsync(ProjectService.SelectedPage != null ? [(ImagePage)ProjectService.SelectedPage] : [], x, true));
-        public AsyncRelayCommand<(List<ImagePage>, Rect)> CropPagesAsyncCommand => new AsyncRelayCommand<(List<ImagePage>, Rect)>(async (x) => await CropPagesAsync(x.Item1, x.Item2, false));
-        public AsyncRelayCommand<int> SetBrightnessForCurrentPageCommand => new AsyncRelayCommand<int>(SetBrightnessForCurrentPageAsync);
-        public AsyncRelayCommand<int> SetContrastForCurrentPageCommand => new AsyncRelayCommand<int>(SetContrastForCurrentPageAsync);
-        public AsyncRelayCommand ResetBrightnessCommand => new AsyncRelayCommand(async () => await SetBrightnessForCurrentPageAsync(AppConfig.DefaultBrightness));
-        public AsyncRelayCommand ResetContrastCommand => new AsyncRelayCommand(async () => await SetContrastForCurrentPageAsync(AppConfig.DefaultContrast));
-        public RelayCommand ShowSettingsCommand => new RelayCommand(ShowSettings);
-        public RelayCommand DisposeCommand => new RelayCommand(Dispose);
-        #endregion
-
-        [ObservableProperty]
-        [NotifyPropertyChangedFor(nameof(AreSimilarPagesForCropAvailable))]
-        [NotifyPropertyChangedFor(nameof(SimilarPagesForCrop))]
-        [NotifyPropertyChangedFor(nameof(AreEditingOptionsAvailable))]
-        [NotifyPropertyChangedFor(nameof(IsPdfPageSelected))]
-        private ProjectBase? currentProject;
-
-        public bool AreEditingOptionsAvailable => CurrentProject != null && ProjectService.SelectedPage != null 
-            && ProjectService.SelectedPage is ImagePage && !ProjectService.IsProcessRunningOrEditing;
-
-        public bool IsPdfPageSelected => CurrentProject != null && ProjectService.SelectedPage != null
-            && ProjectService.SelectedPage is PdfPage;
-
-        private AspectRatio selectedAspectRatio;
-        public AspectRatio SelectedAspectRatio
+        get => selectedAspectRatio;
+        set
         {
-            get => selectedAspectRatio;
-            set
+            if (SetProperty(ref selectedAspectRatio, value))
             {
-                if (SetProperty(ref selectedAspectRatio, value))
-                {
-                    SelectedAspectRatioValue = value.ToValue();
-                    SettingsService.LastUsedCropAspectRatio = value;
-                }
+                SelectedAspectRatioValue = value.ToValue();
+                SettingsService.LastUsedCropAspectRatio = value;
+            }
+        }
+    }
+
+    [ObservableProperty]
+    private double? selectedAspectRatioValue;
+
+    public bool AreSimilarPagesForCropAvailable => GetAreSimilarPagesForCropAvailable();
+    public List<IProjectPage> SimilarPagesForCrop => GetSimilarPagesForCrop();
+
+    public int DisplayedPageBrightness
+    {
+        get
+        {
+            if (ProjectService.SelectedPage is not ImagePage imagePage)
+                return AppConfig.DefaultBrightness;
+
+            return imagePage.DisplayedBrightness;
+        }
+    }
+
+    public int DisplayedPageContrast
+    {
+        get
+        {
+            if (ProjectService.SelectedPage is not ImagePage imagePage)
+                return AppConfig.DefaultContrast;
+
+            return imagePage.DisplayedContrast;
+        }
+    }
+
+    public double DisplayedPageBrightnessDouble
+    {
+        get => DisplayedPageBrightness;
+    }
+
+    public double DisplayedPageContrastDouble
+    {
+        get => DisplayedPageContrast;
+    }
+
+    public bool CanResetBrightness => DisplayedPageBrightness != AppConfig.DefaultBrightness;
+    public bool CanResetContrast => DisplayedPageContrast != AppConfig.DefaultContrast;
+
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public EditorViewModel()
+    {
+        ProjectService.PropertyChanging += ProjectService_PropertyChanging;
+        ProjectService.PropertyChanged += ProjectService_PropertyChanged;
+        CurrentProject = ProjectService.CurrentProject;
+
+        SelectedAspectRatio = SettingsService.LastUsedCropAspectRatio;
+    }
+
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public void Dispose()
+    {
+        Messenger.UnregisterAll(this);
+    }
+
+    private void ProjectService_PropertyChanging(object? sender, System.ComponentModel.PropertyChangingEventArgs e)
+    {
+        switch (e.PropertyName)
+        {
+            case nameof(IProjectService.SelectedPage):
+                if (ProjectService.SelectedPage != null)
+                    ProjectService.SelectedPage.PropertyChanged -= SelectedPage_PropertyChanged;
+                break;
+        }
+    }
+
+    private void ProjectService_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+    {
+        switch (e.PropertyName)
+        {
+            case nameof(IProjectService.CurrentProject):
+                CurrentProject = ProjectService.CurrentProject;
+                break;
+            case nameof(IProjectService.SelectedPage):
+                OnPropertyChanged(nameof(AreEditingOptionsAvailable));
+                OnPropertyChanged(nameof(IsPdfPageSelected));
+                OnPropertyChanged(nameof(AreSimilarPagesForCropAvailable));
+                OnPropertyChanged(nameof(SimilarPagesForCrop));
+                OnPropertyChanged(nameof(DisplayedPageBrightness));
+                OnPropertyChanged(nameof(DisplayedPageContrast));
+                OnPropertyChanged(nameof(DisplayedPageBrightnessDouble));
+                OnPropertyChanged(nameof(DisplayedPageContrastDouble));
+                OnPropertyChanged(nameof(CanResetBrightness));
+                OnPropertyChanged(nameof(CanResetContrast));
+
+                if (ProjectService.SelectedPage != null)
+                    ProjectService.SelectedPage.PropertyChanged += SelectedPage_PropertyChanged;
+                break;
+            case nameof(IProjectService.IsProcessRunningOrEditing):
+                OnPropertyChanged(nameof(AreEditingOptionsAvailable));
+                break;
+        }
+    }
+
+    private void SelectedPage_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+    {
+        switch (e.PropertyName)
+        {
+            case nameof(ImagePage.DisplayedBrightness):
+                OnPropertyChanged(nameof(DisplayedPageBrightness));
+                OnPropertyChanged(nameof(DisplayedPageBrightnessDouble));
+                OnPropertyChanged(nameof(CanResetBrightness));
+                break;
+            case nameof(ImagePage.DisplayedContrast):
+                OnPropertyChanged(nameof(DisplayedPageContrast));
+                OnPropertyChanged(nameof(DisplayedPageContrastDouble));
+                OnPropertyChanged(nameof(CanResetContrast));
+                break;
+        }
+    }
+
+    private void ShowSettings()
+    {
+        Messenger.Send(new ShowSettingsMessage());
+    }
+
+    private async Task RotateCurrentPageAsync(RotationIntent rotationIntent)
+    {
+        if (CurrentProject == null) return;
+        if (ProjectService.SelectedPage == null) return;
+
+        await ProjectService.ApplyActionAsync(new RotatePagesAction(new()
+        {
+            { (ImagePage)ProjectService.SelectedPage, rotationIntent }
+        }));
+    }
+
+    private async Task RemoveCurrentPageAsync()
+    {
+        if (CurrentProject == null) return;
+        if (ProjectService.SelectedPage == null) return;
+        
+        await ProjectService.ApplyActionAsync(new RemovePagesAction(new()
+        {
+            (ImagePage)ProjectService.SelectedPage
+        }));
+    }
+
+    private async Task ApplyFilterToCurrentPageAsync(ImageFilter filter)
+    {
+        if (CurrentProject == null) return;
+        if (ProjectService.SelectedPage == null) return;
+
+        if (ProjectService.SelectedPage is ImagePage imagePage)
+        {
+            await ProjectService.ApplyActionAsync(new ApplyFilterAction([imagePage], filter));
+        }
+    }
+
+    private async Task CropPagesAsync(List<ImagePage> pages, Rect cropRegion, bool asCopy)
+    {
+        if (CurrentProject == null) return;
+        Task process;
+
+        if (asCopy)
+            process = ProjectService.ApplyActionAsync(new CropPagesAsCopyAction(pages, cropRegion));
+        else
+            process = ProjectService.ApplyActionAsync(new CropPagesAction(pages, cropRegion));
+
+        if (pages.Count > 1)
+            Messenger.Send(new ShowIndeterminateProgressDialogMessage(Resources.Strings.Resources.ApplyingChanges, process));
+
+        await process;
+    }
+
+    private bool GetAreSimilarPagesForCropAvailable()
+    {
+        if (CurrentProject == null) return false;
+        if (ProjectService.SelectedPage == null) return false;
+
+        if (ProjectService.SelectedPage is ImagePage selectedImagePage)
+        {
+            // look for other page with same dimensions
+            foreach (ImagePage imagePage in CurrentProject.Pages.OfType<ImagePage>())
+            {
+                if (imagePage == ProjectService.SelectedPage) continue;
+
+                if (imagePage.Width == selectedImagePage.Width && imagePage.Height == selectedImagePage.Height)
+                    return true;
             }
         }
 
-        [ObservableProperty]
-        private double? selectedAspectRatioValue;
+        return false;
+    }
 
-        public bool AreSimilarPagesForCropAvailable => GetAreSimilarPagesForCropAvailable();
-        public List<IProjectPage> SimilarPagesForCrop => GetSimilarPagesForCrop();
+    private List<IProjectPage> GetSimilarPagesForCrop()
+    {
+        if (CurrentProject == null) return [];
+        if (ProjectService.SelectedPage == null) return [];
 
-        public int DisplayedPageBrightness
+        List<IProjectPage> result = [];
+        if (ProjectService.SelectedPage is ImagePage selectedImagePage)
         {
-            get
+            // look for other page with same dimensions
+            foreach (ImagePage imagePage in CurrentProject.Pages.OfType<ImagePage>())
             {
-                if (ProjectService.SelectedPage is not ImagePage imagePage)
-                    return AppConfig.DefaultBrightness;
+                if (imagePage == ProjectService.SelectedPage) continue;
 
-                return imagePage.DisplayedBrightness;
+                if (imagePage.Width == selectedImagePage.Width && imagePage.Height == selectedImagePage.Height)
+                    result.Add(imagePage);
             }
         }
 
-        public int DisplayedPageContrast
-        {
-            get
-            {
-                if (ProjectService.SelectedPage is not ImagePage imagePage)
-                    return AppConfig.DefaultContrast;
+        return result;
+    }
 
-                return imagePage.DisplayedContrast;
-            }
+    private async Task SetBrightnessForCurrentPageAsync(int brightness)
+    {
+        if (CurrentProject == null) return;
+        if (ProjectService.SelectedPage == null) return;
+
+        if (ProjectService.SelectedPage is ImagePage imagePage && imagePage.DisplayedBrightness != brightness)
+        {
+            await ProjectService.ApplyActionAsync(new SetBrightnessAction(imagePage, brightness));
         }
+    }
 
-        public double DisplayedPageBrightnessDouble
+    private async Task SetContrastForCurrentPageAsync(int contrast)
+    {
+        if (CurrentProject == null) return;
+        if (ProjectService.SelectedPage == null) return;
+
+        if (ProjectService.SelectedPage is ImagePage imagePage && imagePage.DisplayedContrast != contrast)
         {
-            get => DisplayedPageBrightness;
-        }
-
-        public double DisplayedPageContrastDouble
-        {
-            get => DisplayedPageContrast;
-        }
-
-        public bool CanResetBrightness => DisplayedPageBrightness != AppConfig.DefaultBrightness;
-        public bool CanResetContrast => DisplayedPageContrast != AppConfig.DefaultContrast;
-
-
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public EditorViewModel()
-        {
-            ProjectService.PropertyChanging += ProjectService_PropertyChanging;
-            ProjectService.PropertyChanged += ProjectService_PropertyChanged;
-            CurrentProject = ProjectService.CurrentProject;
-
-            SelectedAspectRatio = SettingsService.LastUsedCropAspectRatio;
-        }
-
-
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public void Dispose()
-        {
-            Messenger.UnregisterAll(this);
-        }
-
-        private void ProjectService_PropertyChanging(object? sender, System.ComponentModel.PropertyChangingEventArgs e)
-        {
-            switch (e.PropertyName)
-            {
-                case nameof(IProjectService.SelectedPage):
-                    if (ProjectService.SelectedPage != null)
-                        ProjectService.SelectedPage.PropertyChanged -= SelectedPage_PropertyChanged;
-                    break;
-            }
-        }
-
-        private void ProjectService_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
-        {
-            switch (e.PropertyName)
-            {
-                case nameof(IProjectService.CurrentProject):
-                    CurrentProject = ProjectService.CurrentProject;
-                    break;
-                case nameof(IProjectService.SelectedPage):
-                    OnPropertyChanged(nameof(AreEditingOptionsAvailable));
-                    OnPropertyChanged(nameof(IsPdfPageSelected));
-                    OnPropertyChanged(nameof(AreSimilarPagesForCropAvailable));
-                    OnPropertyChanged(nameof(SimilarPagesForCrop));
-                    OnPropertyChanged(nameof(DisplayedPageBrightness));
-                    OnPropertyChanged(nameof(DisplayedPageContrast));
-                    OnPropertyChanged(nameof(DisplayedPageBrightnessDouble));
-                    OnPropertyChanged(nameof(DisplayedPageContrastDouble));
-                    OnPropertyChanged(nameof(CanResetBrightness));
-                    OnPropertyChanged(nameof(CanResetContrast));
-
-                    if (ProjectService.SelectedPage != null)
-                        ProjectService.SelectedPage.PropertyChanged += SelectedPage_PropertyChanged;
-                    break;
-                case nameof(IProjectService.IsProcessRunningOrEditing):
-                    OnPropertyChanged(nameof(AreEditingOptionsAvailable));
-                    break;
-            }
-        }
-
-        private void SelectedPage_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
-        {
-            switch (e.PropertyName)
-            {
-                case nameof(ImagePage.DisplayedBrightness):
-                    OnPropertyChanged(nameof(DisplayedPageBrightness));
-                    OnPropertyChanged(nameof(DisplayedPageBrightnessDouble));
-                    OnPropertyChanged(nameof(CanResetBrightness));
-                    break;
-                case nameof(ImagePage.DisplayedContrast):
-                    OnPropertyChanged(nameof(DisplayedPageContrast));
-                    OnPropertyChanged(nameof(DisplayedPageContrastDouble));
-                    OnPropertyChanged(nameof(CanResetContrast));
-                    break;
-            }
-        }
-
-        private void ShowSettings()
-        {
-            Messenger.Send(new ShowSettingsMessage());
-        }
-
-        private async Task RotateCurrentPageAsync(RotationIntent rotationIntent)
-        {
-            if (CurrentProject == null) return;
-            if (ProjectService.SelectedPage == null) return;
-
-            await ProjectService.ApplyActionAsync(new RotatePagesAction(new()
-            {
-                { (ImagePage)ProjectService.SelectedPage, rotationIntent }
-            }));
-        }
-
-        private async Task RemoveCurrentPageAsync()
-        {
-            if (CurrentProject == null) return;
-            if (ProjectService.SelectedPage == null) return;
-            
-            await ProjectService.ApplyActionAsync(new RemovePagesAction(new()
-            {
-                (ImagePage)ProjectService.SelectedPage
-            }));
-        }
-
-        private async Task ApplyFilterToCurrentPageAsync(ImageFilter filter)
-        {
-            if (CurrentProject == null) return;
-            if (ProjectService.SelectedPage == null) return;
-
-            if (ProjectService.SelectedPage is ImagePage imagePage)
-            {
-                await ProjectService.ApplyActionAsync(new ApplyFilterAction([imagePage], filter));
-            }
-        }
-
-        private async Task CropPagesAsync(List<ImagePage> pages, Rect cropRegion, bool asCopy)
-        {
-            if (CurrentProject == null) return;
-            Task process;
-
-            if (asCopy)
-                process = ProjectService.ApplyActionAsync(new CropPagesAsCopyAction(pages, cropRegion));
-            else
-                process = ProjectService.ApplyActionAsync(new CropPagesAction(pages, cropRegion));
-
-            if (pages.Count > 1)
-                Messenger.Send(new ShowIndeterminateProgressDialogMessage(Resources.Strings.Resources.ApplyingChanges, process));
-
-            await process;
-        }
-
-        private bool GetAreSimilarPagesForCropAvailable()
-        {
-            if (CurrentProject == null) return false;
-            if (ProjectService.SelectedPage == null) return false;
-
-            if (ProjectService.SelectedPage is ImagePage selectedImagePage)
-            {
-                // look for other page with same dimensions
-                foreach (ImagePage imagePage in CurrentProject.Pages.OfType<ImagePage>())
-                {
-                    if (imagePage == ProjectService.SelectedPage) continue;
-
-                    if (imagePage.Width == selectedImagePage.Width && imagePage.Height == selectedImagePage.Height)
-                        return true;
-                }
-            }
-
-            return false;
-        }
-
-        private List<IProjectPage> GetSimilarPagesForCrop()
-        {
-            if (CurrentProject == null) return [];
-            if (ProjectService.SelectedPage == null) return [];
-
-            List<IProjectPage> result = [];
-            if (ProjectService.SelectedPage is ImagePage selectedImagePage)
-            {
-                // look for other page with same dimensions
-                foreach (ImagePage imagePage in CurrentProject.Pages.OfType<ImagePage>())
-                {
-                    if (imagePage == ProjectService.SelectedPage) continue;
-
-                    if (imagePage.Width == selectedImagePage.Width && imagePage.Height == selectedImagePage.Height)
-                        result.Add(imagePage);
-                }
-            }
-
-            return result;
-        }
-
-        private async Task SetBrightnessForCurrentPageAsync(int brightness)
-        {
-            if (CurrentProject == null) return;
-            if (ProjectService.SelectedPage == null) return;
-
-            if (ProjectService.SelectedPage is ImagePage imagePage && imagePage.DisplayedBrightness != brightness)
-            {
-                await ProjectService.ApplyActionAsync(new SetBrightnessAction(imagePage, brightness));
-            }
-        }
-
-        private async Task SetContrastForCurrentPageAsync(int contrast)
-        {
-            if (CurrentProject == null) return;
-            if (ProjectService.SelectedPage == null) return;
-
-            if (ProjectService.SelectedPage is ImagePage imagePage && imagePage.DisplayedContrast != contrast)
-            {
-                await ProjectService.ApplyActionAsync(new SetContrastAction(imagePage, contrast));
-            }
+            await ProjectService.ApplyActionAsync(new SetContrastAction(imagePage, contrast));
         }
     }
 }
