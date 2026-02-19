@@ -81,12 +81,11 @@ public static class KeyboardHookHelper
     {
         HWND hWnd = new(WindowNative.GetWindowHandle(window));
 
-        return new WNDPROC((hWnd, message, wparam, lparam) =>
-        {
-            return IntPtr.Size == 8
-            ? new LRESULT(PInvoke.SetWindowLongPtr(hWnd, WINDOW_LONG_PTR_INDEX.GWLP_WNDPROC, newProc))
-            : new LRESULT(PInvoke.SetWindowLong(hWnd, WINDOW_LONG_PTR_INDEX.GWLP_WNDPROC, (int)newProc));
-        });
+        nint oldProc = IntPtr.Size == 8
+            ? PInvoke.SetWindowLongPtr(hWnd, WINDOW_LONG_PTR_INDEX.GWLP_WNDPROC, newProc)
+            : PInvoke.SetWindowLong(hWnd, WINDOW_LONG_PTR_INDEX.GWLP_WNDPROC, (int)newProc);
+
+        return Marshal.GetDelegateForFunctionPointer<WNDPROC>(oldProc);
     }
 
     private static void RestoreWndProc(Window window, nint previousProc)
@@ -99,9 +98,9 @@ public static class KeyboardHookHelper
             PInvoke.SetWindowLong(hWnd, WINDOW_LONG_PTR_INDEX.GWLP_WNDPROC, (int)previousProc);
     }
 
-    private static WndProcDelegate WndProc(HWND hWnd, uint message, WPARAM wParam, LPARAM lParam)
+    private static LRESULT WndProc(HWND hWnd, uint message, WPARAM wParam, LPARAM lParam)
     {
-        return Marshal.GetDelegateForFunctionPointer<WndProcDelegate>(PInvoke.CallWindowProc(oldWndProc, hWnd, message, wParam, lParam).Value);
+        return PInvoke.CallWindowProc(oldWndProc, hWnd, message, wParam, lParam);
     }
 
     private static LRESULT HookProcedure(int code, WPARAM wParam, LPARAM lParam)
@@ -130,7 +129,7 @@ public static class KeyboardHookHelper
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // MISCELLANEOUS ////////////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    private delegate WndProcDelegate WndProcDelegate(HWND hWnd, uint message, WPARAM wParam, LPARAM lParam);
+    private delegate LRESULT WndProcDelegate(HWND hWnd, uint message, WPARAM wParam, LPARAM lParam);
 
     private delegate int HookProc(int nCode, WPARAM wParam, nint lParam);
 }
