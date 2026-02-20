@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using CommunityToolkit.Mvvm.DependencyInjection;
+﻿using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Messaging;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.UI.Dispatching;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -13,19 +10,23 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using Microsoft.UI.Xaml.Shapes;
-using Scanner.AppWindows;
-using Scanner.Services.Interfaces;
-using Scanner.Services;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using Microsoft.Extensions.DependencyInjection;
-using System.Threading.Tasks;
-using System.Diagnostics;
 using Microsoft.Windows.AppLifecycle;
-using Sentry;
-using Microsoft.UI.Dispatching;
+using Scanner.AppWindows;
 using Scanner.Extensions;
 using Scanner.Helpers;
+using Scanner.Messages;
+using Scanner.Services;
+using Scanner.Services.Interfaces;
+using Sentry;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
+using Windows.Foundation;
+using Windows.Foundation.Collections;
 
 namespace Scanner;
 
@@ -71,6 +72,12 @@ public partial class App : Application
             .AddSingleton<ICopilotRuntimeService, CopilotRuntimeService>()
             .AddSingleton<IAccessibilityService, AccessibilityService>()
             .BuildServiceProvider());
+
+        WeakReferenceMessenger.Default.Register<MainWindowClosingMessage>(this, (r, m) =>
+        {
+            SettingsWindow?.Close();
+            KeyboardHookHelper.Unhook();
+        });
     }
 
 
@@ -117,7 +124,6 @@ public partial class App : Application
                 MainDispatcherQueue.RunOnThread(DispatcherQueuePriority.High, () =>
                 {
                     MainWindow = new MainWindow();
-                    MainWindow.Closed += MainWindow_Closed;
                     MainWindow.Activate();
                     KeyboardHookHelper.Initialize(MainWindow);
                 });
@@ -157,16 +163,6 @@ public partial class App : Application
             //    Ioc.Default.GetService<ISentryService>()?.TrackError(exc);
             //}
         });
-    }
-
-    private void MainWindow_Closed(object sender, WindowEventArgs args)
-    {
-        if (SettingsWindow != null)
-        {
-            SettingsWindow.Close();
-        }
-
-        KeyboardHookHelper.Unhook();
     }
 
     public void ShowSettings()

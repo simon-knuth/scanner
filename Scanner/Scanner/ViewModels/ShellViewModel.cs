@@ -228,8 +228,13 @@ partial class ShellViewModel : ObservableRecipient, IDisposable
                 if (CurrentProject.IsSaved)
                 {
                     // changes saved successfully ~> close window for good
+                    Messenger.Send(new MainWindowClosingMessage((MainWindow)sender));
                     ((MainWindow)sender).Closed -= MainWindow_Closed;
                     ((MainWindow)sender).Close();
+                }
+                else
+                {
+                    return;
                 }
             }
             else
@@ -241,11 +246,17 @@ partial class ShellViewModel : ObservableRecipient, IDisposable
                 if (result)
                 {
                     // changes saved or discarded ~> close window for good
+                    Messenger.Send(new MainWindowClosingMessage((MainWindow)sender));
                     ((MainWindow)sender).Closed -= MainWindow_Closed;
                     ((MainWindow)sender).Close();
                 }
+                else
+                { 
+                    return;
+                }
             }
         }
+        Messenger.Send(new MainWindowClosingMessage((MainWindow)sender));
     }
 
     private async Task SaveAsync()
