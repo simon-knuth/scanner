@@ -76,6 +76,7 @@ public partial class App : Application
         WeakReferenceMessenger.Default.Register<MainWindowClosingMessage>(this, (r, m) =>
         {
             SettingsWindow?.Close();
+            FeedbackWindow?.Close();
             KeyboardHookHelper.Unhook();
         });
     }
