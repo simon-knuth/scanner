@@ -377,6 +377,12 @@ public sealed partial class ProjectView : Page
 
         if (key == Windows.System.VirtualKey.Escape)
             ViewModel.IsMultiSelect = false;
+
+        if (key == Windows.System.VirtualKey.A
+            && Microsoft.UI.Input.InputKeyboardSource.GetKeyStateForCurrentThread(Windows.System.VirtualKey.Control).HasFlag(Windows.UI.Core.CoreVirtualKeyStates.Down)
+            && ViewModel.IsMultiSelect
+            && GridViewPageList.IsEnabled)
+            GridViewPageList.SelectAllSafe();
     }
 
     private void ControlAnimated_Loading(FrameworkElement sender, object args)

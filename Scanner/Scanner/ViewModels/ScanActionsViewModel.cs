@@ -107,7 +107,7 @@ partial class ScanActionsViewModel : ObservableRecipient, IDisposable
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public ScanActionsViewModel()
     {
-        ScanCommand = new(ScanAsync, canExecute: x => ScanOptions != null && (!x || ScanOptions.TargetFormat == CurrentProject?.Format));
+        ScanCommand = new(ScanAsync, canExecute: x => ScanOptions != null && (!x || ScanOptions.TargetFormat == CurrentProject?.Format) && !ScanCommand.IsRunning);
 
         PropertyChanged += ScanActionsViewModel_PropertyChanged;
         KeyboardHookHelper.KeyPressed += KeyboardHookHelper_KeyPressed;
@@ -152,7 +152,7 @@ partial class ScanActionsViewModel : ObservableRecipient, IDisposable
 
         ScanOptions.ScanTime = DateTime.Now;
         if (addToProject)
-            await ProjectService.TryScanToProjectAsync(ScanOptions, viewDispatcherQueue);
+            await ProjectService.TryScanToProjectAsync(ScanOptions, viewDispatcherQueue!);
         else
             await ProjectService.TryCreateProjectFromScanAsync(ScanOptions, viewDispatcherQueue!);
     }

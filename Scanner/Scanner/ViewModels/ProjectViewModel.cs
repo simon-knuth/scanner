@@ -271,7 +271,10 @@ partial class ProjectViewModel : ObservableRecipient, IDisposable
                 }
 
                 if (ProjectService.CurrentProject != null && ProjectService.CurrentProject is PdfProject pdfProject)
+                {
                     pdfProject.FileNameInfo.PropertyChanged += FileNameInfo_PropertyChanged;
+                    OnPropertyChanged(nameof(IsFileNameGenerationInProgress));
+                }
                 break;
             case nameof(IProjectService.SelectedPage):
                 if (CurrentProject != null && !CurrentProject.IsPdf)

@@ -53,7 +53,7 @@
     <!-- - - - - - - - - - - - - - - - - - - -  - - - - - - - - - - - - - - - - - - - - -->
     <!-- - - - - - - - - - - - - - - -   CONTROL CONTENT  - - - - - - - - - - - - - - - -->
     <!-- - - - - - - - - - - - - - - - - - - -  - - - - - - - - - - - - - - - - - - - - -->
-    <Border x:Name="BorderContent" BorderThickness="{x:Bind Root.BorderThickness, Mode=OneWay}" CornerRadius="{x:Bind Root.CornerRadius, Mode=OneWay}">
+    <Border x:Name="BorderContent" Background="{x:Bind Root.Background, Mode=OneWay}" BorderThickness="{x:Bind Root.BorderThickness, Mode=OneWay}" CornerRadius="{x:Bind Root.CornerRadius, Mode=OneWay}">
         <Border.BorderBrush>
             <RadialGradientBrush x:Name="GradientBrush" Center="0,0" GradientOrigin="0,0" RadiusX="1" RadiusY="1">
                 <GradientStop Color="#4950EE" Offset="0" />
