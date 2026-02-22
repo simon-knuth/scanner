@@ -39,10 +39,6 @@ public partial class App : Application
     private ILogService? LogService;
     #endregion
 
-    #region Events
-    public event EventHandler<Windows.System.VirtualKey> KeyPressed;
-    #endregion
-
     public MainWindow MainWindow;
     public SettingsWindow? SettingsWindow;
     public FeedbackWindow? FeedbackWindow;

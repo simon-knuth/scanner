@@ -120,7 +120,7 @@ public static class KeyboardHookHelper
             }
         }
 
-        return new(code < 0 ? PInvoke.CallNextHookEx(hookHandle, code, wParam, lParam).Value : 0);
+        return PInvoke.CallNextHookEx(hookHandle, code, wParam, lParam);
     }
 
     private static int HIWORD(IntPtr value) => (int)((value.ToInt64() >> 16) & 0xFFFF);

@@ -241,7 +241,7 @@
                             </MenuFlyoutItem.Icon>
 
                             <MenuFlyoutItem.KeyboardAccelerators>
-                                <KeyboardAccelerator Modifiers="Shift" Key="F5" />
+                                <KeyboardAccelerator Modifiers="Shift" Key="F5" IsEnabled="False" />
                             </MenuFlyoutItem.KeyboardAccelerators>
 
                             <MenuFlyoutItem.CommandParameter>
@@ -254,7 +254,7 @@
                             </MenuFlyoutItem.Icon>
 
                             <MenuFlyoutItem.KeyboardAccelerators>
-                                <KeyboardAccelerator Modifiers="Control" Key="F5" />
+                                <KeyboardAccelerator Modifiers="Control" Key="F5" IsEnabled="False" />
                             </MenuFlyoutItem.KeyboardAccelerators>
 
                             <MenuFlyoutItem.CommandParameter>

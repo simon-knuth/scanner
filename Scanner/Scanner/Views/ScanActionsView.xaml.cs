@@ -127,21 +127,8 @@ public sealed partial class ScanActionsView : Page
 
     private async void Page_Loaded(object sender, RoutedEventArgs e)
     {
-        ((App)Application.Current).KeyPressed += App_KeyPressed;
-
         await Task.Delay(500);
         showEntranceAnimations = true;
-    }
-
-    private async void App_KeyPressed(object? sender, Windows.System.VirtualKey key)
-    {
-        if (key == Windows.System.VirtualKey.F5)
-        {
-            if (Microsoft.UI.Input.InputKeyboardSource.GetKeyStateForCurrentThread(Windows.System.VirtualKey.Shift) == Windows.UI.Core.CoreVirtualKeyStates.Down)
-                await ViewModel.ScanCommand.ExecuteAsync(true);
-            else if (Microsoft.UI.Input.InputKeyboardSource.GetKeyStateForCurrentThread(Windows.System.VirtualKey.Control) == Windows.UI.Core.CoreVirtualKeyStates.Down)
-                await ViewModel.ScanCommand.ExecuteAsync(false);
-        }
     }
 
     private void ShowTemplates()
@@ -219,6 +206,6 @@ public sealed partial class ScanActionsView : Page
 
     private void Page_Unloaded(object sender, RoutedEventArgs e)
     {
-        ((App)Application.Current).KeyPressed -= App_KeyPressed;
+        
     }
 }

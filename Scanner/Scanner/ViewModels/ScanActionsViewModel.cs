@@ -3,6 +3,8 @@ using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Dispatching;
+using Microsoft.UI.Xaml;
+using Scanner.Helpers;
 using Scanner.Messages;
 using Scanner.Models;
 using Scanner.Services.Interfaces;
@@ -108,6 +110,7 @@ partial class ScanActionsViewModel : ObservableRecipient, IDisposable
         ScanCommand = new(ScanAsync, canExecute: x => ScanOptions != null && (!x || ScanOptions.TargetFormat == CurrentProject?.Format));
 
         PropertyChanged += ScanActionsViewModel_PropertyChanged;
+        KeyboardHookHelper.KeyPressed += KeyboardHookHelper_KeyPressed;
         ProjectService.PropertyChanged += ProjectService_PropertyChanged;
         CurrentProject = ProjectService.CurrentProject;
         UpdateCanAddToProject();
@@ -130,6 +133,7 @@ partial class ScanActionsViewModel : ObservableRecipient, IDisposable
     public void Dispose()
     {
         Messenger.UnregisterAll(this);
+        KeyboardHookHelper.KeyPressed -= KeyboardHookHelper_KeyPressed;
     }
 
     private void ViewLoading(DispatcherQueue? dispatcherQueue)
@@ -201,6 +205,21 @@ partial class ScanActionsViewModel : ObservableRecipient, IDisposable
     private void UpdateCanAddToProject()
     {
         CanAddToProject = CurrentProject != null && CurrentProject.Format == ScanOptions?.TargetFormat;
+    }
+
+    private async void KeyboardHookHelper_KeyPressed(object? sender, Windows.System.VirtualKey key)
+    {
+        if (key == Windows.System.VirtualKey.F5)
+        {
+            if (Microsoft.UI.Input.InputKeyboardSource.GetKeyStateForCurrentThread(Windows.System.VirtualKey.Shift).HasFlag(Windows.UI.Core.CoreVirtualKeyStates.Down))
+                await ScanCommand.ExecuteAsync(true);
+            else if (Microsoft.UI.Input.InputKeyboardSource.GetKeyStateForCurrentThread(Windows.System.VirtualKey.Control).HasFlag(Windows.UI.Core.CoreVirtualKeyStates.Down))
+                await ScanCommand.ExecuteAsync(false);
+            else if (AddToProject)
+                await ScanCommand.ExecuteAsync(true);
+            else if (!AddToProject)
+                await ScanCommand.ExecuteAsync(false);
+        }
     }
 
     private void ShowSettings()

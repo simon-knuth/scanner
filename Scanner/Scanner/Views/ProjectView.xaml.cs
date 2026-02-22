@@ -364,13 +364,13 @@ public sealed partial class ProjectView : Page
 
     private async void Page_Loaded(object sender, RoutedEventArgs e)
     {
-        ((App)Application.Current).KeyPressed += App_KeyPressed;
+        KeyboardHookHelper.KeyPressed += KeyboardHookHelper_KeyPressed;
 
         await Task.Delay(500);
         showEntranceExitAnimations = true;
     }
 
-    private void App_KeyPressed(object? sender, Windows.System.VirtualKey key)
+    private void KeyboardHookHelper_KeyPressed(object? sender, Windows.System.VirtualKey key)
     {
         if (key == Windows.System.VirtualKey.F2)
             FocusProjectNameTextBox();
@@ -860,7 +860,7 @@ public sealed partial class ProjectView : Page
 
     private void Page_Unloaded(object sender, RoutedEventArgs e)
     {
-        ((App)Application.Current).KeyPressed -= App_KeyPressed;
+        KeyboardHookHelper.KeyPressed -= KeyboardHookHelper_KeyPressed;
     }
 
     private void GridViewItem_DataContextChanged(FrameworkElement sender, DataContextChangedEventArgs args)

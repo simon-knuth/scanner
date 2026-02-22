@@ -221,7 +221,7 @@ partial class ShellViewModel : ObservableRecipient, IDisposable
             // unsaved changes present
             if (SettingsService.SettingAutoSave)
             {
-                // ask user
+                // inform user
                 await ShowSaveInProgressDialogAsync();
 
                 // process result
