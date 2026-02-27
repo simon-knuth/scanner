@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.DependencyInjection;
 using Microsoft.UI;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml.Media;
+using Scanner.Resources;
 using Scanner.Services.Interfaces;
 using Sentry;
 using Serilog;
@@ -36,7 +37,7 @@ internal class SentryService : ISentryService
     private readonly ISettingsService SettingsService = Ioc.Default.GetRequiredService<ISettingsService>();
     #endregion
 
-    private const string DataSourceName = "";
+    private readonly string DataSourceName = Secrets.SENTRY_DSN;
 
     public bool HasConsent
     {

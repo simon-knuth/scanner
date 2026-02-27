@@ -1,272 +1,310 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <OutputType>WinExe</OutputType>
-    <TargetFramework>net10.0-windows10.0.22621.0</TargetFramework>
-    <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
-	<WindowsSdkPackageVersion>10.0.22621.38</WindowsSdkPackageVersion>
-    <RootNamespace>Scanner</RootNamespace>
-    <ApplicationManifest>app.manifest</ApplicationManifest>
-    <Platforms>x86;x64;ARM64</Platforms>
-    <RuntimeIdentifiers>win-x86;win-x64;win-arm64</RuntimeIdentifiers>
-    <PublishProfile>win-$(Platform).pubxml</PublishProfile>
-    <UseWinUI>true</UseWinUI>
-    <EnableMsixTooling>true</EnableMsixTooling>
-    <Nullable>enable</Nullable>
-    <AppxOSMinVersionReplaceManifestVersion>false</AppxOSMinVersionReplaceManifestVersion>
-    <AppxOSMaxVersionTestedReplaceManifestVersion>false</AppxOSMaxVersionTestedReplaceManifestVersion>
-	<EnableXamlSourceGeneration>true</EnableXamlSourceGeneration>
-	<!--<PublishAot>true</PublishAot>-->
-  </PropertyGroup>
-  <ItemGroup>
-    <Content Remove="Assets\LargeTile.scale-100.png" />
-    <Content Remove="Assets\LargeTile.scale-125.png" />
-    <Content Remove="Assets\LargeTile.scale-150.png" />
-    <Content Remove="Assets\LargeTile.scale-200.png" />
-    <Content Remove="Assets\LargeTile.scale-400.png" />
-    <Content Remove="Assets\SmallTile.scale-100.png" />
-    <Content Remove="Assets\SmallTile.scale-125.png" />
-    <Content Remove="Assets\SmallTile.scale-150.png" />
-    <Content Remove="Assets\SmallTile.scale-200.png" />
-    <Content Remove="Assets\SmallTile.scale-400.png" />
-    <Content Remove="Assets\SplashScreen.scale-100.png" />
-    <Content Remove="Assets\SplashScreen.scale-125.png" />
-    <Content Remove="Assets\SplashScreen.scale-150.png" />
-    <Content Remove="Assets\SplashScreen.scale-200.png" />
-    <Content Remove="Assets\SplashScreen.scale-400.png" />
-    <Content Remove="Assets\Square150x150Logo.scale-100.png" />
-    <Content Remove="Assets\Square150x150Logo.scale-125.png" />
-    <Content Remove="Assets\Square150x150Logo.scale-150.png" />
-    <Content Remove="Assets\Square150x150Logo.scale-200.png" />
-    <Content Remove="Assets\Square150x150Logo.scale-400.png" />
-    <Content Remove="Assets\Square44x44Logo.altform-lightunplated_targetsize-16.png" />
-    <Content Remove="Assets\Square44x44Logo.altform-lightunplated_targetsize-24.png" />
-    <Content Remove="Assets\Square44x44Logo.altform-lightunplated_targetsize-256.png" />
-    <Content Remove="Assets\Square44x44Logo.altform-lightunplated_targetsize-32.png" />
-    <Content Remove="Assets\Square44x44Logo.altform-lightunplated_targetsize-48.png" />
-    <Content Remove="Assets\Square44x44Logo.altform-unplated_targetsize-16.png" />
-    <Content Remove="Assets\Square44x44Logo.altform-unplated_targetsize-24.png" />
-    <Content Remove="Assets\Square44x44Logo.altform-unplated_targetsize-256.png" />
-    <Content Remove="Assets\Square44x44Logo.altform-unplated_targetsize-32.png" />
-    <Content Remove="Assets\Square44x44Logo.altform-unplated_targetsize-48.png" />
-    <Content Remove="Assets\Square44x44Logo.scale-100.png" />
-    <Content Remove="Assets\Square44x44Logo.scale-125.png" />
-    <Content Remove="Assets\Square44x44Logo.scale-150.png" />
-    <Content Remove="Assets\Square44x44Logo.scale-200.png" />
-    <Content Remove="Assets\Square44x44Logo.scale-400.png" />
-    <Content Remove="Assets\Square44x44Logo.targetsize-16.png" />
-    <Content Remove="Assets\Square44x44Logo.targetsize-24.png" />
-    <Content Remove="Assets\Square44x44Logo.targetsize-256.png" />
-    <Content Remove="Assets\Square44x44Logo.targetsize-32.png" />
-    <Content Remove="Assets\Square44x44Logo.targetsize-48.png" />
-    <Content Remove="Assets\StoreLogo.scale-100.png" />
-    <Content Remove="Assets\StoreLogo.scale-125.png" />
-    <Content Remove="Assets\StoreLogo.scale-150.png" />
-    <Content Remove="Assets\StoreLogo.scale-200.png" />
-    <Content Remove="Assets\StoreLogo.scale-400.png" />
-    <Content Remove="Assets\Wide310x150Logo.scale-100.png" />
-    <Content Remove="Assets\Wide310x150Logo.scale-125.png" />
-    <Content Remove="Assets\Wide310x150Logo.scale-150.png" />
-    <Content Remove="Assets\Wide310x150Logo.scale-200.png" />
-    <Content Remove="Assets\Wide310x150Logo.scale-400.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Remove="Assets\contrast-standard\Logo small.svg" />
-    <None Remove="Assets\Simon.jpg" />
-    <None Remove="Controls\ScanOptionsPresenter.xaml" />
-    <None Remove="Resources\Licenses\.NET Community Toolkit.txt" />
-    <None Remove="Resources\Licenses\.NET Platform.txt" />
-    <None Remove="Resources\Licenses\Sentry.txt" />
-    <None Remove="Resources\Licenses\Serilog.txt" />
-    <None Remove="Resources\Licenses\Windows App SDK.txt" />
-    <None Remove="Resources\Licenses\WinUIEx.txt" />
-    <None Remove="Resources\Tesseract Training Data\eng.traineddata" />
-    <None Remove="Resources\Tesseract Training Data\tessdata\osd.traineddata" />
-    <None Remove="Views\ShellView.xaml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Resources\Licenses\.NET Community Toolkit.txt" />
-    <Content Include="Resources\Licenses\.NET Platform.txt" />
-    <Content Include="Resources\Licenses\Sentry.txt" />
-    <Content Include="Resources\Licenses\Serilog.txt" />
-    <Content Include="Resources\Licenses\Windows App SDK.txt" />
-    <Content Include="Resources\Licenses\WinUIEx.txt" />
-    <Content Include="Resources\Tesseract Training Data\tessdata\eng.traineddata" />
-    <Content Include="Resources\Tesseract Training Data\tessdata\osd.traineddata" />
-  </ItemGroup>
+	<PropertyGroup>
+		<OutputType>WinExe</OutputType>
+		<TargetFramework>net10.0-windows10.0.26100.0</TargetFramework>
+		<TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
+		<WindowsSdkPackageVersion>10.0.26100.84</WindowsSdkPackageVersion>
+		<RootNamespace>Scanner</RootNamespace>
+		<ApplicationManifest>app.manifest</ApplicationManifest>
+		<Platforms>x86;x64;ARM64</Platforms>
+		<RuntimeIdentifiers>win-x86;win-x64;win-arm64</RuntimeIdentifiers>
+		<PublishProfile>Properties\PublishProfiles\win-$(Platform).pubxml</PublishProfile>
+		<UseWinUI>true</UseWinUI>
+		<EnableMsixTooling>true</EnableMsixTooling>
+		<Nullable>enable</Nullable>
+		<DefaultLanguage>en</DefaultLanguage>
+		<Copyright>Copyright © 2026 Simon Knuth</Copyright>
+    	<PackageCertificateThumbprint>E0B5241AC9CBDA08A18376F9994B10A0DFD2D05C</PackageCertificateThumbprint>
+		<EnableXamlSourceGeneration>true</EnableXamlSourceGeneration>
+		<AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
+		<GenerateAppInstallerFile>False</GenerateAppInstallerFile>
+		<AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
+		<AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
+		<AppxSymbolPackageEnabled>True</AppxSymbolPackageEnabled>
+		<GenerateTestArtifacts>True</GenerateTestArtifacts>
+		<AppxBundle>Always</AppxBundle>
+		<AppxBundlePlatforms>x86|x64|arm64</AppxBundlePlatforms>
+		<HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
+		<!--<PublishAot>true</PublishAot>-->
+	</PropertyGroup>
 
-  <ItemGroup>
-    <Manifest Include="$(ApplicationManifest)" />
-  </ItemGroup>
+	<PropertyGroup Condition="'$(Platform)' == 'x64'">
+		<DefineConstants>$(DefineConstants);WIN64</DefineConstants>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Platform)' == 'ARM64'">
+		<DefineConstants>$(DefineConstants);WIN64</DefineConstants>
+	</PropertyGroup>
 
-  <!--
+	<ItemGroup>
+		<Content Remove="Assets\LargeTile.scale-100.png" />
+		<Content Remove="Assets\LargeTile.scale-125.png" />
+		<Content Remove="Assets\LargeTile.scale-150.png" />
+		<Content Remove="Assets\LargeTile.scale-200.png" />
+		<Content Remove="Assets\LargeTile.scale-400.png" />
+		<Content Remove="Assets\SmallTile.scale-100.png" />
+		<Content Remove="Assets\SmallTile.scale-125.png" />
+		<Content Remove="Assets\SmallTile.scale-150.png" />
+		<Content Remove="Assets\SmallTile.scale-200.png" />
+		<Content Remove="Assets\SmallTile.scale-400.png" />
+		<Content Remove="Assets\SplashScreen.scale-100.png" />
+		<Content Remove="Assets\SplashScreen.scale-125.png" />
+		<Content Remove="Assets\SplashScreen.scale-150.png" />
+		<Content Remove="Assets\SplashScreen.scale-200.png" />
+		<Content Remove="Assets\SplashScreen.scale-400.png" />
+		<Content Remove="Assets\Square150x150Logo.scale-100.png" />
+		<Content Remove="Assets\Square150x150Logo.scale-125.png" />
+		<Content Remove="Assets\Square150x150Logo.scale-150.png" />
+		<Content Remove="Assets\Square150x150Logo.scale-200.png" />
+		<Content Remove="Assets\Square150x150Logo.scale-400.png" />
+		<Content Remove="Assets\Square44x44Logo.altform-lightunplated_targetsize-16.png" />
+		<Content Remove="Assets\Square44x44Logo.altform-lightunplated_targetsize-24.png" />
+		<Content Remove="Assets\Square44x44Logo.altform-lightunplated_targetsize-256.png" />
+		<Content Remove="Assets\Square44x44Logo.altform-lightunplated_targetsize-32.png" />
+		<Content Remove="Assets\Square44x44Logo.altform-lightunplated_targetsize-48.png" />
+		<Content Remove="Assets\Square44x44Logo.altform-unplated_targetsize-16.png" />
+		<Content Remove="Assets\Square44x44Logo.altform-unplated_targetsize-24.png" />
+		<Content Remove="Assets\Square44x44Logo.altform-unplated_targetsize-256.png" />
+		<Content Remove="Assets\Square44x44Logo.altform-unplated_targetsize-32.png" />
+		<Content Remove="Assets\Square44x44Logo.altform-unplated_targetsize-48.png" />
+		<Content Remove="Assets\Square44x44Logo.scale-100.png" />
+		<Content Remove="Assets\Square44x44Logo.scale-125.png" />
+		<Content Remove="Assets\Square44x44Logo.scale-150.png" />
+		<Content Remove="Assets\Square44x44Logo.scale-200.png" />
+		<Content Remove="Assets\Square44x44Logo.scale-400.png" />
+		<Content Remove="Assets\Square44x44Logo.targetsize-16.png" />
+		<Content Remove="Assets\Square44x44Logo.targetsize-24.png" />
+		<Content Remove="Assets\Square44x44Logo.targetsize-256.png" />
+		<Content Remove="Assets\Square44x44Logo.targetsize-32.png" />
+		<Content Remove="Assets\Square44x44Logo.targetsize-48.png" />
+		<Content Remove="Assets\StoreLogo.scale-100.png" />
+		<Content Remove="Assets\StoreLogo.scale-125.png" />
+		<Content Remove="Assets\StoreLogo.scale-150.png" />
+		<Content Remove="Assets\StoreLogo.scale-200.png" />
+		<Content Remove="Assets\StoreLogo.scale-400.png" />
+		<Content Remove="Assets\Wide310x150Logo.scale-100.png" />
+		<Content Remove="Assets\Wide310x150Logo.scale-125.png" />
+		<Content Remove="Assets\Wide310x150Logo.scale-150.png" />
+		<Content Remove="Assets\Wide310x150Logo.scale-200.png" />
+		<Content Remove="Assets\Wide310x150Logo.scale-400.png" />
+	</ItemGroup>
+	<ItemGroup>
+		<None Remove="Assets\contrast-standard\Logo small.svg" />
+		<None Remove="Assets\Simon.jpg" />
+		<None Remove="Controls\ScanOptionsPresenter.xaml" />
+		<None Remove="Resources\Licenses\.NET Community Toolkit.txt" />
+		<None Remove="Resources\Licenses\.NET Platform.txt" />
+		<None Remove="Resources\Licenses\Sentry.txt" />
+		<None Remove="Resources\Licenses\Serilog.txt" />
+		<None Remove="Resources\Licenses\Windows App SDK.txt" />
+		<None Remove="Resources\Licenses\WinUIEx.txt" />
+		<None Remove="Resources\Tesseract Training Data\eng.traineddata" />
+		<None Remove="Resources\Tesseract Training Data\tessdata\osd.traineddata" />
+		<None Remove="Views\ShellView.xaml" />
+	</ItemGroup>
+	<ItemGroup>
+		<Content Include="Resources\Licenses\.NET Community Toolkit.txt" />
+		<Content Include="Resources\Licenses\.NET Platform.txt" />
+		<Content Include="Resources\Licenses\Sentry.txt" />
+		<Content Include="Resources\Licenses\Serilog.txt" />
+		<Content Include="Resources\Licenses\Windows App SDK.txt" />
+		<Content Include="Resources\Licenses\WinUIEx.txt" />
+		<Content Include="Resources\Tesseract Training Data\tessdata\eng.traineddata" />
+		<Content Include="Resources\Tesseract Training Data\tessdata\osd.traineddata" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Manifest Include="$(ApplicationManifest)" />
+	</ItemGroup>
+
+	<!--
     Defining the "Msix" ProjectCapability here allows the Single-project MSIX Packaging
     Tools extension to be activated for this project even if the Windows App SDK Nuget
     package has not yet been restored.
   -->
-  <ItemGroup Condition="'$(DisableMsixProjectCapabilityAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
-    <ProjectCapability Include="Msix" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="CommunityToolkit.Labs.WinUI.SegmentedControl" Version="0.1.230830" />
-    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
-    <PackageReference Include="CommunityToolkit.WinUI.Animations" Version="8.2.251219" />
-    <PackageReference Include="CommunityToolkit.WinUI.Behaviors" Version="8.2.251219" />
-    <PackageReference Include="CommunityToolkit.WinUI.Controls.ImageCropper" Version="8.2.251219" />
-    <PackageReference Include="CommunityToolkit.WinUI.Controls.Primitives" Version="8.2.251219" />
-    <PackageReference Include="CommunityToolkit.WinUI.Controls.SettingsControls" Version="8.2.251219" />
-    <PackageReference Include="CommunityToolkit.WinUI.Controls.Sizers" Version="8.2.251219" />
-    <PackageReference Include="CommunityToolkit.WinUI.Extensions" Version="8.2.251219" />
-    <PackageReference Include="CommunityToolkit.WinUI.Helpers" Version="8.2.251219" />
-    <PackageReference Include="CommunityToolkit.WinUI.Media" Version="8.2.251219" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.3" />
-    <PackageReference Include="Microsoft.Graphics.Win2D" Version="1.3.2" />
-    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3719.77" />
-    <PackageReference Include="Microsoft.Windows.CsWin32" Version="0.3.269">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.2.0" />
-    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.7705" />
-    <PackageReference Include="Microsoft.WindowsAppSDK" Version="2.0.0-preview1" />
-    <PackageReference Include="PDFsharp" Version="6.2.4" />
-    <PackageReference Include="ReswPlus" Version="0.3.1.5" />
-    <PackageReference Include="Sentry" Version="6.1.0" />
-    <PackageReference Include="Serilog" Version="4.3.1" />
-    <PackageReference Include="Serilog.Exceptions" Version="8.4.0" />
-    <PackageReference Include="Serilog.Sinks.Async" Version="2.1.0" />
-    <PackageReference Include="Serilog.Sinks.File" Version="7.0.0" />
-    <PackageReference Include="WinUIEx" Version="2.9.0" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Assets\contrast-black\" />
-    <Folder Include="Assets\contrast-high\" />
-    <Folder Include="Assets\contrast-white\" />
-    <Folder Include="Assets\ClipShelf\" />
-    <Folder Include="Resources\Test Images\" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\Tesseract\src\Tesseract\Tesseract.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Update="Assets\Icon.ico">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="Controls\AIProcessingBorder.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="Views\Dialogs\OtherAppsDialogView.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="Views\Dialogs\DonationDialogView.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="Views\Dialogs\ScanMergeDialogView.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="Views\TeachingTips\AIDisclaimerTeachingTip.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="Views\TeachingTips\CopilotRuntimeDownloadTeachingTip.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="Controls\ScanOptionsPresenter.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Update="Views\Dialogs\IndeterminateProgressDialogView.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="Views\Dialogs\SaveOptionsDialogView.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="Views\Dialogs\SaveInProgressDialogView.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="Views\Dialogs\ProjectDeletionDialogView.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="Views\Dialogs\UnsavedChangesDialogView.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="Views\Flyouts\UndoRedoStackFlyout.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="Views\FeedbackView.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="Views\HistoryView.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="Views\Settings\SettingsViewCustomItemNaming.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="Views\Settings\SettingsViewLicenses.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="Views\Settings\SettingsViewAbout.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="Views\Settings\SettingsViewFeedback.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="Views\Settings\SettingsViewPrivacy.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="Views\Settings\SettingsViewPersonalization.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="Views\TemplatesView.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="Views\Flyouts\TemplatesFlyout.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="Views\ScanActionsView.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="Views\ScanOptionsView.xaml">
-      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Update="Views\ProjectView.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="Views\EditorView.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="Views\ShellView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
-  </ItemGroup>
+	<ItemGroup Condition="'$(DisableMsixProjectCapabilityAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
+		<ProjectCapability Include="Msix" />
+	</ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="CommunityToolkit.Labs.WinUI.SegmentedControl" Version="0.1.230830" />
+		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+		<PackageReference Include="CommunityToolkit.WinUI.Animations" Version="8.2.251219" />
+		<PackageReference Include="CommunityToolkit.WinUI.Behaviors" Version="8.2.251219" />
+		<PackageReference Include="CommunityToolkit.WinUI.Controls.ImageCropper" Version="8.2.251219" />
+		<PackageReference Include="CommunityToolkit.WinUI.Controls.Primitives" Version="8.2.251219" />
+		<PackageReference Include="CommunityToolkit.WinUI.Controls.SettingsControls" Version="8.2.251219" />
+		<PackageReference Include="CommunityToolkit.WinUI.Controls.Sizers" Version="8.2.251219" />
+		<PackageReference Include="CommunityToolkit.WinUI.Extensions" Version="8.2.251219" />
+		<PackageReference Include="CommunityToolkit.WinUI.Helpers" Version="8.2.251219" />
+		<PackageReference Include="CommunityToolkit.WinUI.Media" Version="8.2.251219" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.3" />
+		<PackageReference Include="Microsoft.Graphics.Win2D" Version="1.3.2" />
+		<PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3719.77" />
+		<PackageReference Include="Microsoft.Windows.CsWin32" Version="0.3.269">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.2.0" />
+		<PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.7705" />
+		<PackageReference Include="Microsoft.WindowsAppSDK" Version="2.0.0-preview1" />
+		<PackageReference Include="PDFsharp" Version="6.2.4" />
+		<PackageReference Include="ReswPlus" Version="0.3.1.5" />
+		<PackageReference Include="Sentry" Version="6.1.0" />
+		<PackageReference Include="Serilog" Version="4.3.1" />
+		<PackageReference Include="Serilog.Exceptions" Version="8.4.0" />
+		<PackageReference Include="Serilog.Sinks.Async" Version="2.1.0" />
+		<PackageReference Include="Serilog.Sinks.File" Version="7.0.0" />
+		<PackageReference Include="WinUIEx" Version="2.9.0" />
+	</ItemGroup>
+	<ItemGroup>
+		<Folder Include="Assets\contrast-black\" />
+		<Folder Include="Assets\contrast-high\" />
+		<Folder Include="Assets\contrast-white\" />
+		<Folder Include="Assets\ClipShelf\" />
+		<Folder Include="Resources\Test Images\" />
+	</ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\..\Tesseract\src\Tesseract\Tesseract.csproj" />
+	</ItemGroup>
+	<ItemGroup>
+		<Content Update="Assets\Icon.ico">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+	</ItemGroup>
+	<ItemGroup>
+		<Page Update="Controls\AIProcessingBorder.xaml">
+			<SubType>Designer</SubType>
+		</Page>
+		<Page Update="Views\Dialogs\OtherAppsDialogView.xaml">
+			<SubType>Designer</SubType>
+		</Page>
+		<Page Update="Views\Dialogs\DonationDialogView.xaml">
+			<SubType>Designer</SubType>
+		</Page>
+		<Page Update="Views\Dialogs\ScanMergeDialogView.xaml">
+			<SubType>Designer</SubType>
+		</Page>
+		<Page Update="Views\TeachingTips\AIDisclaimerTeachingTip.xaml">
+			<SubType>Designer</SubType>
+		</Page>
+		<Page Update="Views\TeachingTips\CopilotRuntimeDownloadTeachingTip.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
+	<ItemGroup>
+		<Page Update="Controls\ScanOptionsPresenter.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Update="Views\Dialogs\IndeterminateProgressDialogView.xaml">
+			<SubType>Designer</SubType>
+		</Page>
+		<Page Update="Views\Dialogs\SaveOptionsDialogView.xaml">
+			<SubType>Designer</SubType>
+		</Page>
+		<Page Update="Views\Dialogs\SaveInProgressDialogView.xaml">
+			<SubType>Designer</SubType>
+		</Page>
+		<Page Update="Views\Dialogs\ProjectDeletionDialogView.xaml">
+			<SubType>Designer</SubType>
+		</Page>
+		<Page Update="Views\Dialogs\UnsavedChangesDialogView.xaml">
+			<SubType>Designer</SubType>
+		</Page>
+		<Page Update="Views\Flyouts\UndoRedoStackFlyout.xaml">
+			<SubType>Designer</SubType>
+		</Page>
+		<Page Update="Views\FeedbackView.xaml">
+			<SubType>Designer</SubType>
+		</Page>
+	</ItemGroup>
+	<ItemGroup>
+		<Page Update="Views\HistoryView.xaml">
+			<SubType>Designer</SubType>
+		</Page>
+		<Page Update="Views\Settings\SettingsViewCustomItemNaming.xaml">
+			<SubType>Designer</SubType>
+		</Page>
+		<Page Update="Views\Settings\SettingsViewLicenses.xaml">
+			<SubType>Designer</SubType>
+		</Page>
+		<Page Update="Views\Settings\SettingsViewAbout.xaml">
+			<SubType>Designer</SubType>
+		</Page>
+		<Page Update="Views\Settings\SettingsViewFeedback.xaml">
+			<SubType>Designer</SubType>
+		</Page>
+		<Page Update="Views\Settings\SettingsViewPrivacy.xaml">
+			<SubType>Designer</SubType>
+		</Page>
+		<Page Update="Views\Settings\SettingsViewPersonalization.xaml">
+			<SubType>Designer</SubType>
+		</Page>
+		<Page Update="Views\TemplatesView.xaml">
+			<SubType>Designer</SubType>
+		</Page>
+		<Page Update="Views\Flyouts\TemplatesFlyout.xaml">
+			<SubType>Designer</SubType>
+		</Page>
+		<Page Update="Views\ScanActionsView.xaml">
+			<SubType>Designer</SubType>
+		</Page>
+		<Page Update="Views\ScanOptionsView.xaml">
+			<XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+			<SubType>Designer</SubType>
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+		<Page Update="Views\ProjectView.xaml">
+			<SubType>Designer</SubType>
+		</Page>
+		<Page Update="Views\EditorView.xaml">
+			<SubType>Designer</SubType>
+		</Page>
+		<Page Update="Views\ShellView.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</Page>
+	</ItemGroup>
+	<ItemGroup>
+		<Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+	</ItemGroup>
 
-  <!--
+	<!--
     Defining the "HasPackageAndPublishMenuAddedByProject" property here allows the Solution
     Explorer "Package and Publish" context menu entry to be enabled for this project even if
     the Windows App SDK Nuget package has not yet been restored.
-  -->
-  <PropertyGroup Condition="'$(DisableHasPackageAndPublishMenuAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
-    <HasPackageAndPublishMenu>true</HasPackageAndPublishMenu>
-  </PropertyGroup>
+  	-->
+	<PropertyGroup Condition="'$(DisableHasPackageAndPublishMenuAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
+		<HasPackageAndPublishMenu>true</HasPackageAndPublishMenu>
+	</PropertyGroup>
 
-  <!-- Publish Properties -->
-  <PropertyGroup>
-    <PublishReadyToRun Condition="'$(Configuration)' == 'Debug'">False</PublishReadyToRun>
-    <PublishReadyToRun Condition="'$(Configuration)' != 'Debug'">True</PublishReadyToRun>
-    <PublishTrimmed Condition="'$(Configuration)' == 'Debug'">False</PublishTrimmed>
-    <PublishTrimmed Condition="'$(Configuration)' != 'Debug'">True</PublishTrimmed>
-  </PropertyGroup>
-	
-  <!-- Setup single-instancing -->
-  <PropertyGroup>
-  	<DefineConstants>$(DefineConstants);DISABLE_XAML_GENERATED_MAIN</DefineConstants>
-  </PropertyGroup>
+	<!-- Publish Properties -->
+	<PropertyGroup>
+		<PublishReadyToRun Condition="'$(Configuration)' == 'Debug'">False</PublishReadyToRun>
+		<PublishReadyToRun Condition="'$(Configuration)' != 'Debug'">True</PublishReadyToRun>
+		<PublishTrimmed Condition="'$(Configuration)' == 'Debug'">False</PublishTrimmed>
+		<PublishTrimmed Condition="'$(Configuration)' != 'Debug'">True</PublishTrimmed>
+	</PropertyGroup>
+
+	<!-- Setup single-instancing -->
+	<PropertyGroup>
+		<DefineConstants>$(DefineConstants);DISABLE_XAML_GENERATED_MAIN</DefineConstants>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)' == 'Release'">
+		<!-- Configure Sentry org and project -->
+		<SentryOrg>simon-knuth</SentryOrg>
+		<SentryProject>scanner</SentryProject>
+
+		<!--
+		Each of the below features are opt-in.
+		Enable the features you wish to use.
+		-->
+
+		<!-- Sends symbols to Sentry, enabling symbolication of stack traces. -->
+		<SentryUploadSymbols>true</SentryUploadSymbols>
+
+		<!-- Sends sources to Sentry, enabling display of source context. -->
+		<SentryUploadSources>true</SentryUploadSources>
+
+		<!-- If you are targeting Android, sends proguard mapping file to Sentry. -->
+		<SentryUploadAndroidProguardMapping>False</SentryUploadAndroidProguardMapping>
+	</PropertyGroup>
 </Project>

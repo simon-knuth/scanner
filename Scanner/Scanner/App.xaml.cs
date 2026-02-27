@@ -9,7 +9,6 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
-using Microsoft.UI.Xaml.Shapes;
 using Microsoft.Windows.AppLifecycle;
 using Scanner.AppWindows;
 using Scanner.Extensions;
@@ -54,6 +53,18 @@ public partial class App : Application
     {
         this.InitializeComponent();
 
+        // register error event handlers
+        UnhandledException += App_UnhandledException;
+        TaskScheduler.UnobservedTaskException += (s, e) =>
+        {
+            LogService?.Log.Fatal(e.Exception, "Unobserved task exception");
+
+            if (LogService == null)
+                FallbackFatalLogging(e.Exception);
+
+            e.SetObserved();
+        };
+
         // configure service landscape
         Ioc.Default.ConfigureServices(new ServiceCollection()
             .AddSingleton<IMessenger>(WeakReferenceMessenger.Default)
@@ -92,73 +103,79 @@ public partial class App : Application
 
         _ = Task.Run(async () =>
         {
-            // if the main instance isn't this current instance
-            if (mainInstance.ProcessId != Environment.ProcessId)
+            try
             {
-                // redirect activation to that instance
-                await mainInstance.RedirectActivationToAsync(appArgs);
-
-                // exit this instance and stop
-                Process.GetCurrentProcess().Kill();
-                return;
-            }
-
-            if (!_launched)
-            {
-                // register event handler
-                UnhandledException += App_UnhandledException;
-
-                // initialize essential singleton services
-                LogService = Ioc.Default.GetService<ILogService>();
-                if (LogService != null)
+                // if the main instance isn't this current instance
+                if (mainInstance.ProcessId != Environment.ProcessId)
                 {
-                    await LogService.InitializeAsync();
+                    // redirect activation to that instance
+                    await mainInstance.RedirectActivationToAsync(appArgs);
+
+                    // exit this instance and stop
+                    Process.GetCurrentProcess().Kill();
+                    return;
                 }
-                Ioc.Default.GetService<ISentryService>()?.Initialize();
-                await Ioc.Default.GetRequiredService<IAppDataService>().InitializeAsync();
-                Ioc.Default.GetRequiredService<ISaveLocationService>();
 
-                MainDispatcherQueue.RunOnThread(DispatcherQueuePriority.High, () =>
+                if (!_launched)
                 {
-                    MainWindow = new MainWindow();
-                    MainWindow.Activate();
-                    KeyboardHookHelper.Initialize(MainWindow);
-                });
+                    // initialize essential singleton services
+                    LogService = Ioc.Default.GetService<ILogService>();
+                    if (LogService != null)
+                    {
+                        await LogService.InitializeAsync();
+                    }
+                    Ioc.Default.GetService<ISentryService>()?.Initialize();
+                    await Ioc.Default.GetRequiredService<IAppDataService>().InitializeAsync();
+                    Ioc.Default.GetRequiredService<ISaveLocationService>();
+
+                    MainDispatcherQueue.RunOnThread(DispatcherQueuePriority.High, () =>
+                    {
+                        MainWindow = new MainWindow();
+                        MainWindow.Activate();
+                        KeyboardHookHelper.Initialize(MainWindow);
+                    });
+                }
+                else
+                {
+                    MainDispatcherQueue.RunOnThread(DispatcherQueuePriority.High, () =>
+                    {
+                        MainWindow?.Activate();
+                    });
+                }
+
+                _launched = true;
+
+                //try
+                //{
+                //    // analytics
+                //    IActivatedEventArgs activatedEventArgs = Windows.ApplicationModel.AppInstance.GetActivatedEventArgs();
+                //    if (activatedEventArgs != null)
+                //    {
+                //        Dictionary<string, string> properties = new Dictionary<string, string>();
+                //        switch (activatedEventArgs.Kind)
+                //        {
+                //            case ActivationKind.Launch:
+                //            default:
+                //                properties.Add("Kind", "Launch");
+                //                break;
+                //            case ActivationKind.StartupTask:
+                //                properties.Add("Kind", "StartupTask");
+                //                break;
+                //        }
+                //        Ioc.Default.GetService<ISentryService>()?.TrackEvent(AnalyticsEvent.Launch, properties);
+                //    }
+                //}
+                //catch (Exception exc)
+                //{
+                //    Ioc.Default.GetService<ISentryService>()?.TrackError(exc);
+                //}
             }
-            else
+            catch (Exception exc)
             {
-                MainDispatcherQueue.RunOnThread(DispatcherQueuePriority.High, () =>
-                {
-                    MainWindow?.Activate();
-                });
+                LogService?.Log.Fatal(exc, "Unhandled background exception");
+                LogService?.CloseAndFlush();
             }
-
-            _launched = true;
-
-            //try
-            //{
-            //    // analytics
-            //    IActivatedEventArgs activatedEventArgs = Windows.ApplicationModel.AppInstance.GetActivatedEventArgs();
-            //    if (activatedEventArgs != null)
-            //    {
-            //        Dictionary<string, string> properties = new Dictionary<string, string>();
-            //        switch (activatedEventArgs.Kind)
-            //        {
-            //            case ActivationKind.Launch:
-            //            default:
-            //                properties.Add("Kind", "Launch");
-            //                break;
-            //            case ActivationKind.StartupTask:
-            //                properties.Add("Kind", "StartupTask");
-            //                break;
-            //        }
-            //        Ioc.Default.GetService<ISentryService>()?.TrackEvent(AnalyticsEvent.Launch, properties);
-            //    }
-            //}
-            //catch (Exception exc)
-            //{
-            //    Ioc.Default.GetService<ISentryService>()?.TrackError(exc);
-            //}
+            
         });
     }
 
@@ -198,7 +215,32 @@ public partial class App : Application
         LogService?.Log.Fatal(e.Exception, "CRASH");
         LogService?.CloseAndFlush();
 
-        //Ioc.Default.GetService<ISentryService>().TrackError(e.Exception, true);
-        //SentrySdk.Flush();
+        if (LogService == null)
+            FallbackFatalLogging(e.Exception);
+
+        Ioc.Default.GetService<ISentryService>()?.TrackError(e.Exception, true);
+        SentrySdk.Flush();
+    }
+
+    private void FallbackFatalLogging(Exception exc)
+    {
+        try
+        {
+            string tempPath = Windows.Storage.ApplicationData.Current.TemporaryFolder.Path;
+            string fileName = $"crash.txt";
+            string filePath = Path.Combine(tempPath, fileName);
+
+            string content = $"""
+                CRASH at {DateTime.Now:O}
+
+                {exc}
+                """;
+
+            File.WriteAllText(filePath, content);
+        }
+        catch
+        {
+            // Nothing we can do if writing the fallback log also fails.
+        }
     }
 }

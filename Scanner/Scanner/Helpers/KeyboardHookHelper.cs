@@ -81,9 +81,11 @@ public static class KeyboardHookHelper
     {
         HWND hWnd = new(WindowNative.GetWindowHandle(window));
 
-        nint oldProc = IntPtr.Size == 8
-            ? PInvoke.SetWindowLongPtr(hWnd, WINDOW_LONG_PTR_INDEX.GWLP_WNDPROC, newProc)
-            : PInvoke.SetWindowLong(hWnd, WINDOW_LONG_PTR_INDEX.GWLP_WNDPROC, (int)newProc);
+#if WIN64
+        nint oldProc = PInvoke.SetWindowLongPtr(hWnd, WINDOW_LONG_PTR_INDEX.GWLP_WNDPROC, newProc);
+#else
+        nint oldProc = PInvoke.SetWindowLong(hWnd, WINDOW_LONG_PTR_INDEX.GWLP_WNDPROC, (int)newProc);
+#endif
 
         return Marshal.GetDelegateForFunctionPointer<WNDPROC>(oldProc);
     }
@@ -92,10 +94,11 @@ public static class KeyboardHookHelper
     {
         HWND hWnd = new(WindowNative.GetWindowHandle(window));
 
-        if (IntPtr.Size == 8)
-            PInvoke.SetWindowLongPtr(hWnd, WINDOW_LONG_PTR_INDEX.GWLP_WNDPROC, previousProc);
-        else
-            PInvoke.SetWindowLong(hWnd, WINDOW_LONG_PTR_INDEX.GWLP_WNDPROC, (int)previousProc);
+#if WIN64
+        PInvoke.SetWindowLongPtr(hWnd, WINDOW_LONG_PTR_INDEX.GWLP_WNDPROC, previousProc);
+#else
+        PInvoke.SetWindowLong(hWnd, WINDOW_LONG_PTR_INDEX.GWLP_WNDPROC, (int)previousProc);
+#endif
     }
 
     private static LRESULT WndProc(HWND hWnd, uint message, WPARAM wParam, LPARAM lParam)

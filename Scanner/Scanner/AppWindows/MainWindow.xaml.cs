@@ -10,6 +10,7 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
+using Scanner.Extensions;
 using Scanner.Helpers;
 using Scanner.Messages;
 using Scanner.Services.Interfaces;
@@ -87,7 +88,7 @@ public sealed partial class MainWindow : WindowEx
             }
         }
 
-        SetUpSharing();
+        DispatcherQueue.RunOnThread(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, SetUpSharing);
     }
 
 
