@@ -83,22 +83,22 @@
                                                     <RowDefinition Height="Auto" />
                                                 </Grid.RowDefinitions>
 
-                                                <TextBlock Grid.Row="0" Text="Ask before starting a new project" MaxLines="1" Style="{StaticResource BodyTextBlockStyle}" />
-                                                <TextBlock Grid.Row="1" Text="Select where to save files when starting a new project." MaxWidth="300" HorizontalAlignment="Left" Visibility="{x:Bind ComboBoxSettingSaveLocation.IsDropDownOpen, Mode=OneWay}" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="WrapWholeWords" />
+                                                <TextBlock Grid.Row="0" Text="Ask after starting a new project" MaxLines="1" Style="{StaticResource BodyTextBlockStyle}" />
+                                                <TextBlock Grid.Row="1" Text="Select where to save files when saving the project for the first time." MaxWidth="300" HorizontalAlignment="Left" Visibility="{x:Bind ComboBoxSettingSaveLocation.IsDropDownOpen, Mode=OneWay}" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="WrapWholeWords" />
                                             </Grid>
                                         </ComboBoxItem>
-                                        <ComboBoxItem>
+                                        <ComboBoxItem Visibility="Collapsed">
                                             <Grid>
                                                 <Grid.RowDefinitions>
                                                     <RowDefinition Height="20" />
                                                     <RowDefinition Height="Auto" />
                                                 </Grid.RowDefinitions>
 
-                                                <TextBlock Grid.Row="0" Text="Ask after starting a new project" MaxLines="1" Style="{StaticResource BodyTextBlockStyle}" />
-                                                <TextBlock Grid.Row="1" Text="Select where to save files when attempting to save the project for the first time." MaxWidth="300" HorizontalAlignment="Left" Visibility="{x:Bind ComboBoxSettingSaveLocation.IsDropDownOpen, Mode=OneWay}" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="WrapWholeWords" />
+                                                <TextBlock Grid.Row="0" Text="Ask before starting a new project" MaxLines="1" Style="{StaticResource BodyTextBlockStyle}" />
+                                                <TextBlock Grid.Row="1" Text="Select where to save files when starting a new project." MaxWidth="300" HorizontalAlignment="Left" Visibility="{x:Bind ComboBoxSettingSaveLocation.IsDropDownOpen, Mode=OneWay}" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="WrapWholeWords" />
                                             </Grid>
                                         </ComboBoxItem>
-                                        <ComboBoxItem>
+                                        <ComboBoxItem Visibility="Collapsed">
                                             <Grid>
                                                 <Grid.RowDefinitions>
                                                     <RowDefinition Height="20" />

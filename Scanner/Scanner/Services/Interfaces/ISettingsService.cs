@@ -79,15 +79,17 @@ public enum SettingSaveLocationType
     FixedLocation = 0,
 
     /// <summary>
-    /// Ask for a location before starting a new project.
-    /// </summary>
-    AskBeforeNewProject = 1,
-
-    /// <summary>
     /// Ask for a location once the user saves a project.
     /// </summary>
-    AskAfterNewProject = 2,
+    AskAfterNewProject = 1,
 
+    [Obsolete("Not exposed to user")]
+    /// <summary>
+    /// Ask for a location before starting a new project.
+    /// </summary>
+    AskBeforeNewProject = 2,
+
+    [Obsolete("Not exposed to user")]
     /// <summary>
     /// Ask for a location every time a new project is started or a new file is being added.
     /// </summary>

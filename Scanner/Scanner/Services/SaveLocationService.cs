@@ -97,7 +97,7 @@ internal class SaveLocationService : ObservableRecipient, ISaveLocationService
                 catch (Exception exc2)
                 {
                     isFixedSaveLocationSupported = false;
-                    SettingsService.SettingSaveLocationType = SettingSaveLocationType.AskBeforeNewProject;
+                    SettingsService.SettingSaveLocationType = SettingSaveLocationType.AskAfterNewProject;
                     LogService?.Log.Error(exc2, "Fixed save location is not supported");
                     SentryService?.TrackError(exc2);
                 }
@@ -278,7 +278,7 @@ internal class SaveLocationService : ObservableRecipient, ISaveLocationService
         catch (UnauthorizedAccessException exc)
         {
             isFixedSaveLocationSupported = false;
-            SettingsService.SettingSaveLocationType = SettingSaveLocationType.AskBeforeNewProject;
+            SettingsService.SettingSaveLocationType = SettingSaveLocationType.AskAfterNewProject;
             LogService?.Log.Error(exc, "Resetting fixed save location failed (Unauthorized)");
             SentryService?.TrackError(exc);
             Messenger.Send(new ShowInAppNotificationMessage(new CommunityToolkit.WinUI.Behaviors.Notification
@@ -291,7 +291,7 @@ internal class SaveLocationService : ObservableRecipient, ISaveLocationService
         catch (Exception exc)
         {
             isFixedSaveLocationSupported = false;
-            SettingsService.SettingSaveLocationType = SettingSaveLocationType.AskBeforeNewProject;
+            SettingsService.SettingSaveLocationType = SettingSaveLocationType.AskAfterNewProject;
             LogService?.Log.Error(exc, "Resetting fixed save location failed");
             SentryService?.TrackError(exc);
             Messenger.Send(new ShowInAppNotificationMessage(new CommunityToolkit.WinUI.Behaviors.Notification
