@@ -919,8 +919,7 @@ public sealed partial class ProjectView : Page
             //rectangle = transform.TransformBounds(new Rect(0, 0, GridHeader.ActualWidth, GridHeader.ActualHeight));
             //shareUIOptions.SelectionRect = rectangle;
 
-            IntPtr hwnd = WindowNative.GetWindowHandle(((App)Application.Current).MainWindow);
-            ((App)Application.Current).MainWindow.DataTransferManagerInterop.ShowShareUIForWindow(hwnd);
+            DataTransferManagerInterop.ShowShareUIForWindow(WindowNative.GetWindowHandle(((App)Application.Current).MainWindow));
         });
     }
 

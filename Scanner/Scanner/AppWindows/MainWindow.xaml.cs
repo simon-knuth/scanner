@@ -20,6 +20,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Storage;
@@ -38,9 +39,6 @@ public sealed partial class MainWindow : WindowEx
     // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public bool IsInForeground { get; private set; }
-    
-    public IDataTransferManagerInterop DataTransferManagerInterop { get; private set; }
-
 
     private AppWindowTitleBar titlebar;
 
@@ -98,14 +96,7 @@ public sealed partial class MainWindow : WindowEx
     private void SetUpSharing()
     {
         WeakReferenceMessenger.Default.Register<SetShareFilesMessage>(this, (r, m) => shareFiles = m.Files);
-        DataTransferManagerInterop = Windows.ApplicationModel.DataTransfer.DataTransferManager.As
-            <IDataTransferManagerInterop>();
-
-        IntPtr result = DataTransferManagerInterop.GetForWindow(WindowNative.GetWindowHandle(this), DataTransferManagerInteropGuids.Dtm_iid);
-        Windows.ApplicationModel.DataTransfer.DataTransferManager dataTransferManager = WinRT.MarshalInterface
-            <Windows.ApplicationModel.DataTransfer.DataTransferManager>.FromAbi(result);
-
-        dataTransferManager.DataRequested += DataTransferManager_DataRequested;
+        DataTransferManagerInterop.GetForWindow(WindowNative.GetWindowHandle(this)).DataRequested += DataTransferManager_DataRequested;
     }
 
     private void DataTransferManager_DataRequested(Windows.ApplicationModel.DataTransfer.DataTransferManager sender, Windows.ApplicationModel.DataTransfer.DataRequestedEventArgs args)
