@@ -1,5 +1,6 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.DependencyInjection;
+using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -7,6 +8,7 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
+using Scanner.Messages;
 using Scanner.Models;
 using Scanner.Models.Interfaces;
 using Scanner.Services.Interfaces;
@@ -29,7 +31,8 @@ using static Scanner.Helpers.Helpers;
 
 namespace Scanner.Views.Dialogs;
 
-[ObservableObjectAttribute]
+[ObservableRecipient]
+[ObservableObject]
 public partial class SaveOptionsDialogView : ContentDialog
 {
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -151,5 +154,10 @@ public partial class SaveOptionsDialogView : ContentDialog
     private void TextBoxFileName_Loaded(object sender, RoutedEventArgs e)
     {
         TextBoxFileName.Focus(FocusState.Programmatic);
+    }
+
+    private void ButtonSettings_Click(object sender, RoutedEventArgs e)
+    {
+        WeakReferenceMessenger.Default.Send(new ShowSettingsMessage());
     }
 }

@@ -84,11 +84,23 @@
                         <TextBlock Text="{x:Bind strings:Resources.FileNamingDatePattern}" TextAlignment="Center" Style="{StaticResource BodyTextBlockStyle}" />
                     </StackPanel>
                 </labs:SegmentedItem>
-                <labs:SegmentedItem CornerRadius="4,4,0,0">
-                    <StackPanel Orientation="Vertical" Spacing="4" Margin="0,4,0,4">
-                        <FontIcon Glyph="&#xEF60;" FontSize="16" HorizontalAlignment="Center" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontFamily="{StaticResource SymbolThemeFontFamily}"/>
-                        <TextBlock Text="{x:Bind strings:Resources.FileNamingCustomPattern}" TextAlignment="Center" Style="{StaticResource BodyTextBlockStyle}" />
-                    </StackPanel>
+                <labs:SegmentedItem x:Name="SegmentedItemCustomFileNamingPattern" CornerRadius="4,4,0,0">
+                    <Grid>
+                        <StackPanel Orientation="Vertical" Spacing="4" Margin="0,4,0,4">
+                            <FontIcon Glyph="&#xEF60;" FontSize="16" HorizontalAlignment="Center" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontFamily="{StaticResource SymbolThemeFontFamily}"/>
+                            <TextBlock Text="{x:Bind strings:Resources.FileNamingCustomPattern}" TextAlignment="Center" Style="{StaticResource BodyTextBlockStyle}" />
+                        </StackPanel>
+                        <Button x:Name="ButtonCustomFileNamingPatternSettings" Margin="0,-4,-32,0" Padding="4" Width="24" Height="24" HorizontalAlignment="Right" VerticalAlignment="Top" Foreground="{ThemeResource TextFillColorTertiaryBrush}" Style="{StaticResource MutedButtonStyle}" CornerRadius="3" Visibility="{x:Bind SegmentedItemCustomFileNamingPattern.IsSelected, Mode=OneWay}" ToolTipService.ToolTip="{x:Bind strings:Resources.Settings}" Click="ButtonSettings_Click">
+                            <AnimatedIcon>
+                                <AnimatedIcon.Source>
+                                    <animatedvisuals:AnimatedSettingsVisualSource/>
+                                </AnimatedIcon.Source>
+                                <AnimatedIcon.FallbackIconSource>
+                                    <SymbolIconSource Symbol='Setting'/>
+                                </AnimatedIcon.FallbackIconSource>
+                            </AnimatedIcon>
+                        </Button>
+                    </Grid>
                 </labs:SegmentedItem>
             </labs:Segmented>
 
@@ -197,11 +209,23 @@
                             <TextBlock Text="File type" TextAlignment="Center" Style="{StaticResource BodyTextBlockStyle}" />
                         </StackPanel>
                     </labs:SegmentedItem>
-                    <labs:SegmentedItem CornerRadius="4,4,0,0">
-                        <StackPanel Orientation="Vertical" Spacing="4" Margin="0,4,0,4">
-                            <FontIcon Glyph="&#xEF60;" FontSize="16" HorizontalAlignment="Center" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontFamily="{StaticResource SymbolThemeFontFamily}"/>
-                            <TextBlock Text="{x:Bind strings:Resources.FileNamingCustomPattern}" TextAlignment="Center" Style="{StaticResource BodyTextBlockStyle}" />
-                        </StackPanel>
+                    <labs:SegmentedItem x:Name="SegmentedItemCustomSubFolderNamingPattern" CornerRadius="4,4,0,0">
+                        <Grid>
+                            <StackPanel Orientation="Vertical" Spacing="4" Margin="0,4,0,4">
+                                <FontIcon Glyph="&#xEF60;" FontSize="16" HorizontalAlignment="Center" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontFamily="{StaticResource SymbolThemeFontFamily}"/>
+                                <TextBlock Text="{x:Bind strings:Resources.FileNamingCustomPattern}" TextAlignment="Center" Style="{StaticResource BodyTextBlockStyle}" />
+                            </StackPanel>
+                            <Button x:Name="ButtonCustomSubFolderNamingPatternSettings" Margin="0,-4,-32,0" Padding="4" Width="24" Height="24" HorizontalAlignment="Right" VerticalAlignment="Top" Foreground="{ThemeResource TextFillColorTertiaryBrush}" Style="{StaticResource MutedButtonStyle}" CornerRadius="3" Visibility="{x:Bind SegmentedItemCustomSubFolderNamingPattern.IsSelected, Mode=OneWay}" ToolTipService.ToolTip="{x:Bind strings:Resources.Settings}" Click="ButtonSettings_Click">
+                                <AnimatedIcon>
+                                    <AnimatedIcon.Source>
+                                        <animatedvisuals:AnimatedSettingsVisualSource/>
+                                    </AnimatedIcon.Source>
+                                    <AnimatedIcon.FallbackIconSource>
+                                        <SymbolIconSource Symbol='Setting'/>
+                                    </AnimatedIcon.FallbackIconSource>
+                                </AnimatedIcon>
+                            </Button>
+                        </Grid>
                     </labs:SegmentedItem>
                 </labs:Segmented>
 
