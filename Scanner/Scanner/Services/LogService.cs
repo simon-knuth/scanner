@@ -93,6 +93,7 @@ internal partial class LogService : ILogService
                     rollingInterval: RollingInterval.Day,
                     retainedFileCountLimit: 8,
                     fileSizeLimitBytes: 500000,
+                    rollOnFileSizeLimit: true,
                     hooks: hook))
                 .Enrich.WithExceptionDetails()
                 .CreateLogger();
