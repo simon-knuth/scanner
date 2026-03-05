@@ -381,11 +381,11 @@ partial class ShellViewModel : ObservableRecipient, IDisposable
             if (targetFormat == TargetFormat.PDF)
             {
                 Windows.Data.Pdf.PdfDocument document = await Windows.Data.Pdf.PdfDocument.LoadFromFileAsync(files[0].SourceFile);
-                projectCreationData = new PdfProjectCreationData(files[0].SourceFile, document.PageCount, targetFolder, scanOptions, true);
+                projectCreationData = new PdfProjectCreationData(null, files[0].SourceFile, document.PageCount, targetFolder, scanOptions, true);
             }
             else
             {
-                projectCreationData = new MultiFileProjectCreationData(files, targetFormat, targetFolder, scanOptions, true);
+                projectCreationData = new MultiFileProjectCreationData(null, files, targetFormat, targetFolder, scanOptions, true);
             }
 
             await ProjectService.TryCreateProjectAsync(projectCreationData, true, true, viewDispatcherQueue!);

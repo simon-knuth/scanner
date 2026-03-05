@@ -2503,6 +2503,15 @@
         </Setter>
     </Style>
 
+    <Style x:Key="NoScrollFlyoutPresenterStyle" BasedOn="{StaticResource DefaultFlyoutPresenterStyle}" TargetType="FlyoutPresenter">
+        <Style.Setters>
+            <Setter Property="ScrollViewer.HorizontalScrollMode" Value="Disabled" />
+            <Setter Property="ScrollViewer.VerticalScrollMode" Value="Disabled" />
+            <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Hidden" />
+            <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Hidden" />
+        </Style.Setters>
+    </Style>
+
     <LinearGradientBrush x:Key="AIGradientBrush" MappingMode="RelativeToBoundingBox">
         <LinearGradientBrush.GradientStops>
             <GradientStop Offset="0.0" Color="#008FFF" />

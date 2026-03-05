@@ -466,7 +466,7 @@ partial class ProjectViewModel : ObservableRecipient, IDisposable
     private async Task ConvertProjectAsync(TargetFormat targetFormat)
     {
         if (CurrentProject == null) return;
-        await ProjectService.ConvertProjectAsync(targetFormat, viewDispatcherQueue!);
+        await ProjectService.TryConvertProjectAsync(targetFormat, viewDispatcherQueue!);
     }
 
     private async Task SaveAsync()

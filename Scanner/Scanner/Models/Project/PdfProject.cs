@@ -47,7 +47,7 @@ public partial class PdfProject : ProjectBase
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    private PdfProject(IList<IProjectPage> pages, string targetFileName, StorageFolder? targetFolder, ScanOptions initialScanOptions) : base(pages, TargetFormat.PDF, initialScanOptions)
+    private PdfProject(Guid? id, IList<IProjectPage> pages, string targetFileName, StorageFolder? targetFolder, ScanOptions initialScanOptions) : base(id, pages, TargetFormat.PDF, initialScanOptions)
     {
         // folder saved at project level for PDF and page level for all other formats
         TargetFolder = targetFolder;
@@ -74,7 +74,7 @@ public partial class PdfProject : ProjectBase
         }
 
         // create project and update previews
-        PdfProject project = new(pages, creationData.TargetFileName, creationData.TargetFolder, creationData.InitialScanOptions);
+        PdfProject project = new(creationData.Id, pages, creationData.TargetFileName, creationData.TargetFolder, creationData.InitialScanOptions);
 
         if (isAlreadySaved)
             project.areFilesSaved = true;

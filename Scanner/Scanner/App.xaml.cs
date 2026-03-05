@@ -78,6 +78,7 @@ public partial class App : Application
             .AddSingleton<ISaveLocationService, SaveLocationService>()
             .AddSingleton<ICopilotRuntimeService, CopilotRuntimeService>()
             .AddSingleton<IAccessibilityService, AccessibilityService>()
+            .AddSingleton<IProjectHistoryService, ProjectHistoryService>()
             .BuildServiceProvider());
 
         WeakReferenceMessenger.Default.Register<MainWindowClosingMessage>(this, (r, m) =>
@@ -133,6 +134,7 @@ public partial class App : Application
                         MainWindow = new MainWindow();
                         MainWindow.Activate();
                         KeyboardHookHelper.Initialize(MainWindow);
+                        _ = Task.Run(async () => await Ioc.Default.GetRequiredService<IProjectHistoryService>().InitializeAsync(MainDispatcherQueue));
                     });
                 }
                 else

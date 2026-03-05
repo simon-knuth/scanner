@@ -48,6 +48,7 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
     private readonly IAppDataService AppDataService = Ioc.Default.GetRequiredService<IAppDataService>();
     private readonly ICopilotRuntimeService CopilotRuntimeService = Ioc.Default.GetRequiredService<ICopilotRuntimeService>();
     private readonly ILogService? LogService = Ioc.Default.GetService<ILogService>();
+    private readonly IProjectHistoryService ProjectHistoryService = Ioc.Default.GetRequiredService<IProjectHistoryService>();
     private readonly ISaveLocationService SaveLocationService = Ioc.Default.GetRequiredService<ISaveLocationService>();
     private readonly ISentryService? SentryService = Ioc.Default.GetService<ISentryService>();
     private readonly ISettingsService SettingsService = Ioc.Default.GetRequiredService<ISettingsService>();
@@ -82,6 +83,11 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
                     value.PagesAdded += CurrentProject_PagesAdded;
                     value.PagesRemoved += CurrentProject_PagesRemoved;
                     value.PropertyChanged += CurrentProject_PropertyChanged;
+
+                    UiDispatcherQueue?.RunOnThread(DispatcherQueuePriority.Low, () =>
+                    {
+                        ProjectHistoryService.AddOrUpdateEntryAsync(value);
+                    });
                 }
                 else
                 {
@@ -304,7 +310,7 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
                 switch (scanOptions.TargetFormat)
                 {
                     case TargetFormat.PDF:
-                        PdfProjectCreationData pdfCreationData = new(files, saveOptions.FileName, saveOptions.TargetFolder, scanOptions, false);
+                        PdfProjectCreationData pdfCreationData = new(null, files, saveOptions.FileName, saveOptions.TargetFolder, scanOptions, false);
                         project = await pdfCreationData.CreateProjectAsync(false, uiDispatcherQueue);
                         break;
                     case TargetFormat.JPG:
@@ -319,7 +325,7 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
                             fileData.Add((file, saveOptions.FileName, null));
                         }
 
-                        MultiFileProjectCreationData projectCreationData = new(fileData, scanOptions.TargetFormat, saveOptions.TargetFolder, scanOptions, false);
+                        MultiFileProjectCreationData projectCreationData = new(null,fileData, scanOptions.TargetFormat, saveOptions.TargetFolder, scanOptions, false);
                         project = await projectCreationData.CreateProjectAsync(false, uiDispatcherQueue);
                         break;
                     default:
@@ -519,7 +525,9 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
                 return false;
 
             // close project
-            await TryCloseProjectAsync(ignoreUnsavedChanges: true);
+            Guid id = CurrentProject.Id;
+            if (await TryCloseProjectAsync(ignoreUnsavedChanges: true))
+                await ProjectHistoryService.RemoveEntryAsync(id);
         }
         catch (ActionFailedAndRolledBackException)
         {
@@ -1012,7 +1020,7 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
         process.TrySetResult();
     }
 
-    public async Task<bool> ConvertProjectAsync(TargetFormat targetFormat, DispatcherQueue uiDispatcherQueue)
+    public async Task<bool> TryConvertProjectAsync(TargetFormat targetFormat, DispatcherQueue uiDispatcherQueue)
     {
         if (CurrentProject == null) return false;
         IsActionRunning = true;
@@ -1027,7 +1035,7 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
                     // get file name and target folder from first page
                     ImagePage imagePage = (ImagePage)CurrentProject.Pages.First(x => x is ImagePage);
 
-                    creationData = new PdfProjectCreationData(CurrentProject.Pages, imagePage.FileNameInfo!.DesiredName, imagePage.TargetFolder, CurrentProject.InitialScanOptions, false);
+                    creationData = new PdfProjectCreationData(null, CurrentProject.Pages, imagePage.FileNameInfo!.DesiredName, imagePage.TargetFolder, CurrentProject.InitialScanOptions, false);
                     break;
                 case TargetFormat.JPG:
                 case TargetFormat.PNG:
@@ -1036,9 +1044,9 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
                 case TargetFormat.TIFF:
                 case TargetFormat.RAW:
                     if (CurrentProject is MultiFileProject imageProject)
-                        creationData = new MultiFileProjectCreationData(CurrentProject.Pages, targetFormat, null, CurrentProject.InitialScanOptions, false);
+                        creationData = new MultiFileProjectCreationData(null, CurrentProject.Pages, targetFormat, null, CurrentProject.InitialScanOptions, false);
                     else if (CurrentProject is PdfProject pdfProject)
-                        creationData = new MultiFileProjectCreationData(CurrentProject.Pages, targetFormat, pdfProject.FileNameInfo.DesiredDisplayName + TargetFormatToFileExtension(targetFormat), CurrentProject.InitialScanOptions, false);
+                        creationData = new MultiFileProjectCreationData(null, CurrentProject.Pages, targetFormat, pdfProject.FileNameInfo.DesiredDisplayName + TargetFormatToFileExtension(targetFormat), CurrentProject.InitialScanOptions, false);
                     break;
                 default:
                     throw new ArgumentException("Can't convert project to " + targetFormat.ToString());
@@ -1115,6 +1123,9 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
 
     private void CurrentProject_PagesRemoved(object? sender, EventArgs e)
     {
+        if (CurrentProject == null)
+            return;
+
         // update selection accordingly
         if (SelectedPages != null)
         {
@@ -1148,6 +1159,14 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
                 OnPropertyChanged(nameof(CanSaveProject));
                 OnPropertyChanged(nameof(CanSaveAsProject));
                 UpdateTaskbarProgress();
+
+                if (CurrentProject != null && CurrentProject.IsSaved)
+                {
+                    UiDispatcherQueue?.RunOnThread(DispatcherQueuePriority.Low, () =>
+                    {
+                        ProjectHistoryService.AddOrUpdateEntryAsync(CurrentProject);
+                    });
+                }
                 break;
         }
     }

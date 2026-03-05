@@ -35,6 +35,8 @@ public partial class PdfProjectCreationData : IProjectCreationData
     private static readonly ILogService? LogService = Ioc.Default.GetService<ILogService>();
     #endregion
 
+    public Guid? Id { get; }
+
     public List<PageCreationData> Pages { get; } = [];
 
     public TargetFormat Format { get; private set; } = TargetFormat.PDF;
@@ -51,8 +53,9 @@ public partial class PdfProjectCreationData : IProjectCreationData
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    public PdfProjectCreationData(IReadOnlyList<StorageFile> files, string targetFileName, StorageFolder? targetFolder, ScanOptions initialScanOptions, bool isAlreadySaved)
+    public PdfProjectCreationData(Guid? id, IReadOnlyList<StorageFile> files, string targetFileName, StorageFolder? targetFolder, ScanOptions initialScanOptions, bool isAlreadySaved)
     {
+        Id = id;
         TargetFileName = targetFileName;
         TargetFolder = targetFolder;
         InitialScanOptions = initialScanOptions;
@@ -64,8 +67,9 @@ public partial class PdfProjectCreationData : IProjectCreationData
         }
     }
 
-    public PdfProjectCreationData(StorageFile pdfFile, uint pagesInPdf, StorageFolder? targetFolder, ScanOptions initialScanOptions, bool isAlreadySaved)
+    public PdfProjectCreationData(Guid? id, StorageFile pdfFile, uint pagesInPdf, StorageFolder? targetFolder, ScanOptions initialScanOptions, bool isAlreadySaved)
     {
+        Id = id;
         TargetFileName = pdfFile.Name;
         TargetFolder = targetFolder;
         InitialScanOptions = initialScanOptions;
@@ -77,8 +81,9 @@ public partial class PdfProjectCreationData : IProjectCreationData
         }
     }
 
-    public PdfProjectCreationData(Collection<IProjectPage> pages, string targetFileName, StorageFolder? targetFolder, ScanOptions initialScanOptions, bool isAlreadySaved)
+    public PdfProjectCreationData(Guid? id, Collection<IProjectPage> pages, string targetFileName, StorageFolder? targetFolder, ScanOptions initialScanOptions, bool isAlreadySaved)
     {
+        Id = id;
         TargetFileName = targetFileName;
         TargetFolder = targetFolder;
         InitialScanOptions = initialScanOptions;

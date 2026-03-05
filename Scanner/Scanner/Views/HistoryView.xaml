@@ -9,7 +9,7 @@
     xmlns:viewModels="using:Scanner.ViewModels"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:core="using:Microsoft.Xaml.Interactivity"
-    xmlns:strings="using:Scanner.Resources.Strings"
+    xmlns:strings="using:Scanner.Resources.Strings" xmlns:models="using:Scanner.Models"
     mc:Ignorable="d">
 
     <Page.DataContext>
@@ -55,7 +55,7 @@
                 <Button Grid.Column="1" Width="32" Height="32" HorizontalAlignment="Center" VerticalAlignment="Center" Style="{StaticResource MutedButtonStyle}" ToolTipService.ToolTip="{x:Bind strings:Resources.More}">
                     <Button.Flyout>
                         <MenuFlyout Placement="Bottom">
-                            <MenuFlyoutItem Text="Clear list">
+                            <MenuFlyoutItem Text="Clear list" Command="{x:Bind ViewModel.ClearListAsyncCommand}">
                                 <MenuFlyoutItem.Icon>
                                     <FontIcon Glyph="&#xE738;" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                                 </MenuFlyoutItem.Icon>
@@ -66,6 +66,86 @@
                     <FontIcon Glyph="&#xE712;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                 </Button>
             </Grid>
+
+            <ListView Grid.Row="1" Padding="10,4,10,12" SelectionMode="None" IsItemClickEnabled="True" ItemsSource="{x:Bind ViewModel.ProjectHistoryService.Entries, Mode=OneWay}" ScrollViewer.VerticalScrollMode="Auto" ItemClick="ListView_ItemClick">
+                <ListView.ItemTemplate>
+                    <DataTemplate x:DataType="models:ProjectHistoryEntry">
+                        <ListViewItem Padding="4,2,4,2">
+                            <Border CornerRadius="4">
+                                <SwipeControl>
+                                    <Grid RowSpacing="4" ColumnSpacing="8" Padding="8">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="1*" />
+                                            <RowDefinition Height="1*" />
+                                        </Grid.RowDefinitions>
+
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="48" />
+                                            <ColumnDefinition Width="1*" />
+                                        </Grid.ColumnDefinitions>
+
+                                        <FontIcon Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" Glyph="&#xE8A5;" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                        <Grid Grid.Row="0" Grid.Column="1" ColumnSpacing="4">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="1*" />
+                                                <ColumnDefinition Width="Auto" />
+                                            </Grid.ColumnDefinitions>
+
+                                            <TextBlock Grid.Column="0" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" Text="{x:Bind FriendlyName, Mode=OneWay}" />
+                                            <TextBlock Grid.Column="1" MaxLines="1" VerticalAlignment="Center" TextTrimming="None" Text="{x:Bind FriendlyNameAnnotation, Mode=OneWay}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                                        </Grid>
+                                        <Grid Grid.Row="1" Grid.Column="1" ColumnSpacing="4">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto" />
+                                                <ColumnDefinition Width="1*" />
+                                            </Grid.ColumnDefinitions>
+
+                                            <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="4">
+                                                <TextBlock MaxLines="1" VerticalAlignment="Center" Text="{x:Bind Format}" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                                                <TextBlock Text="•" VerticalAlignment="Center" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                                            </StackPanel>
+                                            <TextBlock Grid.Column="1" MaxLines="1" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" Text="{x:Bind LastUsed}" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                                        </Grid>
+                                    </Grid>
+
+                                    <SwipeControl.RightItems>
+                                        <SwipeItems Mode="Execute">
+                                            <SwipeItem Text="Remove" Command="{x:Bind ViewModel.RemoveEntryAsyncCommand}" CommandParameter="{x:Bind}">
+                                                <SwipeItem.IconSource>
+                                                    <FontIconSource Glyph="&#xE738;" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                                </SwipeItem.IconSource>
+                                            </SwipeItem>
+                                        </SwipeItems>
+                                    </SwipeControl.RightItems>
+                                </SwipeControl>
+                            </Border>
+
+                            <ListViewItem.ContextFlyout>
+                                <MenuFlyout>
+                                    <MenuFlyoutItem Text="Open" />
+                                    <MenuFlyoutItem Text="Show in File Explorer" Command="{x:Bind ViewModel.ShowInFileExplorerAsyncCommand}" CommandParameter="{x:Bind}">
+                                        <MenuFlyoutItem.Icon>
+                                            <FontIcon Glyph="&#xE8DA;" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                        </MenuFlyoutItem.Icon>
+                                    </MenuFlyoutItem>
+                                    <MenuFlyoutSeparator />
+                                    <MenuFlyoutItem Text="Remove" Command="{x:Bind ViewModel.RemoveEntryAsyncCommand}" CommandParameter="{x:Bind}">
+                                        <MenuFlyoutItem.Icon>
+                                            <FontIcon Glyph="&#xE738;" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                        </MenuFlyoutItem.Icon>
+                                    </MenuFlyoutItem>
+                                </MenuFlyout>
+                            </ListViewItem.ContextFlyout>
+                        </ListViewItem>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+
+                <ListView.ItemContainerTransitions>
+                    <TransitionCollection>
+                        <AddDeleteThemeTransition />
+                    </TransitionCollection>
+                </ListView.ItemContainerTransitions>
+            </ListView>
         </Grid>
     </Grid>
 </Page>

@@ -49,7 +49,7 @@ public partial class MultiFileProject : ProjectBase
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    private MultiFileProject(IList<IProjectPage> pages, TargetFormat format, ScanOptions initialScanOptions) : base(pages, format, initialScanOptions)
+    private MultiFileProject(Guid? id, IList<IProjectPage> pages, TargetFormat format, ScanOptions initialScanOptions) : base(id, pages, format, initialScanOptions)
     {
         foreach (IProjectPage page in pages)
         {
@@ -77,7 +77,7 @@ public partial class MultiFileProject : ProjectBase
         }
 
         // create project and update previews
-        MultiFileProject project = new MultiFileProject(pages, creationData.Format, creationData.InitialScanOptions);
+        MultiFileProject project = new MultiFileProject(creationData.Id, pages, creationData.Format, creationData.InitialScanOptions);
         await project.GeneratePagePreviewsAsync(pages.OfType<ImagePage>().ToList(), uiDispatcherQueue);
 
         if (isAlreadySaved)

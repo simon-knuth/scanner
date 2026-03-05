@@ -329,13 +329,24 @@ public sealed partial class ShellView : Page
     private void ShowHistory(FrameworkElement target)
     {
         Flyout flyout = new Flyout();
-        flyout.Content = new HistoryView
+        HistoryView historyView = new HistoryView
         {
             Margin = new Thickness(-16),
-            MinWidth = 348,
-            MinHeight = 400
+            Width = 348,
+            Height = 400,
         };
+        EventHandler closeRequestedHandler = new((sender, args) => flyout.Hide());
+        historyView.CloseRequested += closeRequestedHandler;
+        flyout.Content = historyView;
+        flyout.FlyoutPresenterStyle = (Style)Resources["NoScrollFlyoutPresenterStyle"];
         flyout.ShowAt(target);
+        EventHandler<object>? closedHandler = null;
+        closedHandler = new((sender, args) =>
+        {
+            flyout.Closed -= closedHandler;
+            historyView.CloseRequested -= closeRequestedHandler;
+        });
+        flyout.Closed += closedHandler;
     }
 
     private void VisualStateGroup_CurrentStateChanged(object sender, VisualStateChangedEventArgs e)

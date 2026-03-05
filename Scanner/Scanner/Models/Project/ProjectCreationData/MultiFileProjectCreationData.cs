@@ -35,6 +35,8 @@ public partial class MultiFileProjectCreationData : IProjectCreationData
     private static readonly ILogService? LogService = Ioc.Default.GetService<ILogService>();
     #endregion
 
+    public Guid? Id { get; }
+
     public List<PageCreationData> Pages { get; } = [];
 
     public TargetFormat Format { get; private set; }
@@ -47,8 +49,9 @@ public partial class MultiFileProjectCreationData : IProjectCreationData
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    public MultiFileProjectCreationData(List<(StorageFile SourceFile, string? TargetFileName, StorageFile? TargetFile)> pages, TargetFormat format, StorageFolder? targetFolder, ScanOptions initialScanOptions, bool isAlreadySaved)
+    public MultiFileProjectCreationData(Guid? id, List<(StorageFile SourceFile, string? TargetFileName, StorageFile? TargetFile)> pages, TargetFormat format, StorageFolder? targetFolder, ScanOptions initialScanOptions, bool isAlreadySaved)
     {
+        Id = id;
         Format = format;
         InitialScanOptions = initialScanOptions;
         IsAlreadySaved = isAlreadySaved;
@@ -59,8 +62,9 @@ public partial class MultiFileProjectCreationData : IProjectCreationData
         }
     }
 
-    public MultiFileProjectCreationData(Collection<IProjectPage> pages, TargetFormat format, string? targetFileName, ScanOptions initialScanOptions, bool isAlreadySaved)
+    public MultiFileProjectCreationData(Guid? id, Collection<IProjectPage> pages, TargetFormat format, string? targetFileName, ScanOptions initialScanOptions, bool isAlreadySaved)
     {
+        Id = id;
         Format = format;
         InitialScanOptions = initialScanOptions;
         IsAlreadySaved = isAlreadySaved;

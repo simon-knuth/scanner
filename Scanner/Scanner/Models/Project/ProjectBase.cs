@@ -58,6 +58,8 @@ public abstract partial class ProjectBase : ObservableRecipient
     public event EventHandler PagesRemoved;
     #endregion
 
+    public Guid Id { get; }
+
     [ObservableProperty]
     private bool isSaving;
 
@@ -123,8 +125,9 @@ public abstract partial class ProjectBase : ObservableRecipient
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    protected ProjectBase(IList<IProjectPage> pages, TargetFormat targetFormat, ScanOptions initialScanOptions)
+    protected ProjectBase(Guid? id, IList<IProjectPage> pages, TargetFormat targetFormat, ScanOptions initialScanOptions)
     {
+        Id = id ?? Guid.NewGuid();
         Pages = new ObservableCollection<IProjectPage>(pages);
         Format = targetFormat;
         InitialScanOptions = initialScanOptions;
