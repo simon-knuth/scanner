@@ -18,6 +18,7 @@
     xmlns:labs="using:CommunityToolkit.Labs.WinUI"
     xmlns:models="using:Scanner.Models"
     xmlns:customcontrols="using:Scanner.Controls"
+    xmlns:tests="using:Scanner.Tests"
     mc:Ignorable="d">
 
     <Page.DataContext>
@@ -626,7 +627,7 @@
                 
                 <Grid Grid.Row="0" Padding="16,4,16,0">
                     <Frame x:Name="FrameComboBoxScanners" Margin="-8,0,-8,0" IsEnabled="{x:Bind ViewModel.ProjectService.IsScanProcessRunning, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}" ui:Effects.Shadow="{ThemeResource ShadowScannersComboBox}" SizeChanged="FrameComboBoxScanners_SizeChanged">
-                        <ComboBox x:Name="ComboBoxScanners" Padding="14,11,28,11" MaxDropDownHeight="800" CornerRadius="8" HorizontalAlignment="Stretch" SelectedIndex="0" SelectionChanged="ComboBoxScanners_SelectionChanged" RightTapped="ComboBoxScanners_RightTapped">
+                        <ComboBox x:Name="ComboBoxScanners" AutomationProperties.AutomationId="{x:Bind tests:ScanOptions.ScannersComboBoxId}" Padding="14,11,28,11" MaxDropDownHeight="800" CornerRadius="8" HorizontalAlignment="Stretch" SelectedIndex="0" SelectionChanged="ComboBoxScanners_SelectionChanged" RightTapped="ComboBoxScanners_RightTapped">
                             <ComboBox.Items>
                                 <ComboBoxItem IsEnabled="False">
                                     <StackPanel Orientation="Horizontal" Spacing="12">
@@ -716,7 +717,7 @@
 
                                         <StackPanel Orientation="Vertical" Spacing="8">
                                             <StackPanel Orientation="Horizontal" Spacing="4">
-                                                <Button Content="Add scanner" Command="{x:Bind ViewModel.DebugAddScannerCommand}" Style="{StaticResource AccentButtonStyle}" />
+                                                <Button AutomationProperties.AutomationId="{x:Bind tests:ScanOptions.AddDebugScannerButtonId}" Content="Add scanner" Command="{x:Bind ViewModel.DebugAddScannerCommand}" Style="{StaticResource AccentButtonStyle}" />
                                                 <Button Content="Remove scanner" IsEnabled="{x:Bind ViewModel.SelectedScanner, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}}" Command="{x:Bind ViewModel.DebugRemoveScannerCommand}" />
                                             </StackPanel>
                                         </StackPanel>

@@ -14,6 +14,7 @@
     xmlns:ui="using:CommunityToolkit.WinUI"
     xmlns:customcontrols="using:Scanner.Controls"
     xmlns:strings="using:Scanner.Resources.Strings"
+    xmlns:tests="using:Scanner.Tests"
     mc:Ignorable="d"
     Loaded="Page_Loaded"
     Unloaded="Page_Unloaded">
@@ -178,7 +179,7 @@
                     <TextBlock Text="{x:Bind strings:Resources.Cancel}" MaxLines="1" HorizontalAlignment="Center" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Style="{StaticResource CaptionTextBlockStyle}" />
                </StackPanel>
             </Button>
-            <SplitButton x:Name="SplitButtonScan" Grid.Column="3" Margin="8,0,0,0" HorizontalContentAlignment="Left" VerticalAlignment="Stretch" Padding="8,0,16,0" MinWidth="120" Style="{ThemeResource AccentSplitButtonStyle}" IsEnabled="{x:Bind ViewModel.CanScan, Mode=OneWay}" x:Load="{x:Bind ViewModel.IsScanning, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}" Command="{x:Bind ViewModel.ScanCommand}" CommandParameter="{x:Bind ViewModel.AddToProject, Mode=OneWay}">
+            <SplitButton x:Name="SplitButtonScan" Grid.Column="3" AutomationProperties.AutomationId="{x:Bind tests:ScanActions.ScanButtonId}" Margin="8,0,0,0" HorizontalContentAlignment="Left" VerticalAlignment="Stretch" Padding="8,0,16,0" MinWidth="120" Style="{ThemeResource AccentSplitButtonStyle}" IsEnabled="{x:Bind ViewModel.CanScan, Mode=OneWay}" x:Load="{x:Bind ViewModel.IsScanning, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}" Command="{x:Bind ViewModel.ScanCommand}" CommandParameter="{x:Bind ViewModel.AddToProject, Mode=OneWay}">
                 <animations:Implicit.HideAnimations>
                     <animations:OpacityAnimation Duration="0:0:0.2" To="0.0" />
                 </animations:Implicit.HideAnimations>
