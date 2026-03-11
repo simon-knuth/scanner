@@ -37,4 +37,9 @@ internal interface IProjectHistoryService
     ///     Clears the entire project history.
     /// </summary>
     Task ClearHistoryAsync();
+
+    /// <summary>
+    /// Updates <see cref="ProjectHistoryEntry.AreFilesMissing"/> for all entries.
+    /// </summary>
+    Task UpdateMissingFilesAsync();
 }

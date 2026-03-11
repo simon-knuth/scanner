@@ -7,10 +7,15 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewModels="using:Scanner.ViewModels"
+    xmlns:ui="using:CommunityToolkit.WinUI"
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:core="using:Microsoft.Xaml.Interactivity"
-    xmlns:strings="using:Scanner.Resources.Strings" xmlns:models="using:Scanner.Models"
-    mc:Ignorable="d">
+    xmlns:strings="using:Scanner.Resources.Strings"
+    xmlns:models="using:Scanner.Models"
+    xmlns:media="using:CommunityToolkit.WinUI.Media"
+    xmlns:converters="using:Scanner.Views.Converters"
+    mc:Ignorable="d"
+    Loading="Page_Loading">
 
     <Page.DataContext>
         <viewModels:HistoryViewModel x:Name="ViewModel"/>
@@ -31,6 +36,22 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="ms-appx:///StylesDictionary.xaml"/>
             </ResourceDictionary.MergedDictionaries>
+
+            <ResourceDictionary.ThemeDictionaries>
+                <ResourceDictionary x:Key="Light">
+                    <media:AttachedCardShadow x:Key="ShadowPageListPage" Offset="0,2" BlurRadius="12" Color="Black" Opacity="0.04" CornerRadius="2" />
+                </ResourceDictionary>
+                <ResourceDictionary x:Key="Dark">
+                    <media:AttachedCardShadow x:Key="ShadowPageListPage" Offset="0,2" BlurRadius="12" Color="Black" Opacity="0.3" CornerRadius="2" />
+                </ResourceDictionary>
+                <ResourceDictionary x:Key="HighContrast">
+                    <media:AttachedCardShadow x:Key="ShadowPageListPage" Offset="0,0" BlurRadius="0" Color="Transparent" Opacity="0.0" CornerRadius="2" />
+                </ResourceDictionary>
+            </ResourceDictionary.ThemeDictionaries>
+
+            <!-- XAML Converters -->
+            <converters:NegativeBoolConverter x:Key="NegativeBoolConverter" />
+            <converters:NegativeBoolVisibilityConverter x:Key="NegativeBoolVisibilityConverter" />
         </ResourceDictionary>
     </Page.Resources>
 
@@ -70,22 +91,26 @@
             <ListView Grid.Row="1" Padding="10,4,10,12" SelectionMode="None" IsItemClickEnabled="True" ItemsSource="{x:Bind ViewModel.ProjectHistoryService.Entries, Mode=OneWay}" ScrollViewer.VerticalScrollMode="Auto" ItemClick="ListView_ItemClick">
                 <ListView.ItemTemplate>
                     <DataTemplate x:DataType="models:ProjectHistoryEntry">
-                        <ListViewItem Padding="4,2,4,2">
+                        <ListViewItem Padding="4,2,4,2" Height="80" IsEnabled="{x:Bind AreFilesMissing, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}" ToolTipService.ToolTip="{x:Bind Id}">
                             <Border CornerRadius="4">
                                 <SwipeControl>
-                                    <Grid RowSpacing="4" ColumnSpacing="8" Padding="8">
+                                    <Grid RowSpacing="4" ColumnSpacing="12" Padding="8">
                                         <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto" />
                                             <RowDefinition Height="1*" />
                                             <RowDefinition Height="1*" />
                                         </Grid.RowDefinitions>
 
                                         <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="48" />
+                                            <ColumnDefinition Width="72" />
                                             <ColumnDefinition Width="1*" />
                                         </Grid.ColumnDefinitions>
 
-                                        <FontIcon Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" Glyph="&#xE8A5;" FontFamily="{StaticResource SymbolThemeFontFamily}" />
-                                        <Grid Grid.Row="0" Grid.Column="1" ColumnSpacing="4">
+                                        <Frame Grid.Row="0" Grid.RowSpan="3" Grid.Column="0" CornerRadius="2" HorizontalAlignment="Center" VerticalAlignment="Center" ui:Effects.Shadow="{ThemeResource ShadowPageListPage}" Visibility="{x:Bind AreFilesMissing, Mode=OneWay, Converter={StaticResource NegativeBoolVisibilityConverter}}">
+                                            <Image x:Name="ImageHistoryEntry" DataContextChanged="ImageHistoryEntry_DataContextChanged" />
+                                        </Frame>
+                                        <FontIcon Grid.Row="0" Grid.RowSpan="3" Grid.Column="0" Glyph="&#xE9CE;" FontSize="24" FontFamily="{StaticResource SymbolThemeFontFamily}" Visibility="{x:Bind AreFilesMissing,Mode=OneWay}" />
+                                        <Grid Grid.Row="0" Grid.Column="1" ColumnSpacing="4" VerticalAlignment="Top">
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="1*" />
                                                 <ColumnDefinition Width="Auto" />
@@ -94,18 +119,8 @@
                                             <TextBlock Grid.Column="0" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" Text="{x:Bind FriendlyName, Mode=OneWay}" />
                                             <TextBlock Grid.Column="1" MaxLines="1" VerticalAlignment="Center" TextTrimming="None" Text="{x:Bind FriendlyNameAnnotation, Mode=OneWay}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
                                         </Grid>
-                                        <Grid Grid.Row="1" Grid.Column="1" ColumnSpacing="4">
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="Auto" />
-                                                <ColumnDefinition Width="1*" />
-                                            </Grid.ColumnDefinitions>
-
-                                            <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="4">
-                                                <TextBlock MaxLines="1" VerticalAlignment="Center" Text="{x:Bind Format}" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
-                                                <TextBlock Text="•" VerticalAlignment="Center" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
-                                            </StackPanel>
-                                            <TextBlock Grid.Column="1" MaxLines="1" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" Text="{x:Bind LastUsed}" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
-                                        </Grid>
+                                        <TextBlock Grid.Row="1" Grid.Column="1" MaxLines="1" VerticalAlignment="Center" Text="{x:Bind Format}" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                                        <TextBlock Grid.Row="2" Grid.Column="2" MaxLines="1" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" Text="{x:Bind LastUsedString}" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
                                     </Grid>
 
                                     <SwipeControl.RightItems>
@@ -122,7 +137,7 @@
 
                             <ListViewItem.ContextFlyout>
                                 <MenuFlyout>
-                                    <MenuFlyoutItem Text="Open" />
+                                    <MenuFlyoutItem Text="Open" Command="{x:Bind ViewModel.OpenEntryAsyncCommand}" CommandParameter="{x:Bind}" />
                                     <MenuFlyoutItem Text="Show in File Explorer" Command="{x:Bind ViewModel.ShowInFileExplorerAsyncCommand}" CommandParameter="{x:Bind}">
                                         <MenuFlyoutItem.Icon>
                                             <FontIcon Glyph="&#xE8DA;" FontFamily="{StaticResource SymbolThemeFontFamily}" />

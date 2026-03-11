@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Messaging;
+using CommunityToolkit.WinUI.Behaviors;
 using Microsoft.Graphics.Imaging;
 using Microsoft.UI;
 using Microsoft.UI.Dispatching;
@@ -9,6 +10,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.Windows.AppNotifications;
 using Microsoft.Windows.AppNotifications.Builder;
+using Microsoft.Windows.Storage.Pickers;
 using Scanner.Extensions;
 using Scanner.Messages;
 using Scanner.Models;
@@ -18,6 +20,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -475,6 +478,89 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
         finally
         {
             IsActionRunning = IsScanProcessRunning = false;
+        }
+    }
+
+    public async Task<bool> TryOpenProjectFromFilesAsync(string[] filePaths, Guid? id, DispatcherQueue uiDispatcherQueue)
+    {
+        TaskCompletionSource openTcs = new();
+
+        try
+        {
+            // ensure single file type
+            string extension = Path.GetExtension(filePaths[0]).ToLowerInvariant();
+            if (filePaths.Any(f => Path.GetExtension(f).ToLowerInvariant() != extension))
+            {
+                Messenger.Send(new ShowInAppNotificationMessage(new Notification
+                {
+                    Title = "Can not open multiple file types",
+                    Message = "Please select files of the same type to open a project.",
+                    Severity = Microsoft.UI.Xaml.Controls.InfoBarSeverity.Error
+                }));
+                return false;
+            }
+            else if (filePaths.Length > 1 && filePaths.Any(f => Path.GetExtension(f).ToLowerInvariant() == ".pdf"))
+            {
+                Messenger.Send(new ShowInAppNotificationMessage(new Notification
+                {
+                    Title = "Can not open multiple PDF files",
+                    Message = "Please select just one PDF file to open a project.",
+                    Severity = Microsoft.UI.Xaml.Controls.InfoBarSeverity.Error
+                }));
+                return false;
+            }
+
+            // close project
+            if (await TryCloseProjectAsync() == false)
+                return false;
+
+            Messenger.Send(new ShowIndeterminateProgressDialogMessage("Opening project", openTcs.Task));
+
+            // get files
+            List<(StorageFile SourceFile, string? TargetFileName, StorageFile? TargetFile)> files = [];
+            foreach (string filePath in filePaths)
+            {
+                StorageFile file = await StorageFile.GetFileFromPathAsync(filePath);
+                files.Add((file, Path.GetFileName(filePath), file));
+            }
+
+            // get target folder
+            StorageFolder? targetFolder = await files[0].SourceFile.GetParentAsync();
+
+            // create project data
+            TargetFormat targetFormat = Helpers.Helpers.FileExtensionToTargetFormat(extension);
+            IProjectCreationData projectCreationData;
+            ScanOptions scanOptions = new(null, false)
+            {
+                TargetFormat = targetFormat
+            };
+
+            if (targetFormat == TargetFormat.PDF)
+            {
+                Windows.Data.Pdf.PdfDocument document = await Windows.Data.Pdf.PdfDocument.LoadFromFileAsync(files[0].SourceFile);
+                projectCreationData = new PdfProjectCreationData(id, files[0].SourceFile, document.PageCount, targetFolder, scanOptions, true);
+            }
+            else
+            {
+                projectCreationData = new MultiFileProjectCreationData(id, files, targetFormat, targetFolder, scanOptions, true);
+            }
+
+            return await TryCreateProjectAsync(projectCreationData, true, true, uiDispatcherQueue!);
+        }
+        catch (Exception exc)
+        {
+            LogService?.Log.Error(exc, "Failed to open files");
+            Messenger.Send(new ShowInAppNotificationMessage(new Notification
+            {
+                Title = "Something went wrong",
+                Message = "Failed to open files.",
+                Severity = Microsoft.UI.Xaml.Controls.InfoBarSeverity.Error
+            }));
+            return false;
+        }
+        finally
+        {
+            openTcs.TrySetResult();
         }
     }
 

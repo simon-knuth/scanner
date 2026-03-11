@@ -16,6 +16,10 @@ public partial class ProjectHistoryEntry : ObservableObject
     [NotifyPropertyChangedFor(nameof(FriendlyNameAnnotation))]
     private List<ProjectHistoryFile> files;
 
+    [ObservableProperty]
+    private bool areFilesMissing;
+
     public string FriendlyName => Path.GetFileNameWithoutExtension(Files[0].FilePath);
     public string FriendlyNameAnnotation => Files.Count > 1 ? $"+{Files.Count - 1} more" : string.Empty;
+    public string LastUsedString => LastUsed.ToLocalTime().ToString("g");
 }

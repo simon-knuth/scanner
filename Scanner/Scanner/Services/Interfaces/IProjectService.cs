@@ -77,6 +77,7 @@ public interface IProjectService : INotifyPropertyChanged, INotifyPropertyChangi
     Task<bool> TryCreateProjectAsync(IProjectCreationData creationData, bool keepSourceFiles, bool isAlreadySaved, DispatcherQueue uiDispatcherQueue);
     Task<bool> TryCreateProjectFromScanAsync(ScanOptions scanOptions, DispatcherQueue uiDispatcherQueue);
     Task<bool> TryScanToProjectAsync(ScanOptions scanOptions, DispatcherQueue uiDispatcherQueue);
+    Task<bool> TryOpenProjectFromFilesAsync(string[] filePaths, Guid? id, DispatcherQueue uiDispatcherQueue);
 
     Task<bool> TryConvertProjectAsync(TargetFormat targetFormat, DispatcherQueue uiDispatcherQueue);
 

@@ -315,11 +315,10 @@ internal class ProjectHistoryService : IProjectHistoryService
             else if (currentIndex != desiredIndex)
             {
                 // existing entry ~> move it
-                Entries.Move(currentIndex, desiredIndex);
-
                 Entries[desiredIndex].LastUsed = source[currentIndex].LastUsed;
                 Entries[desiredIndex].Format = source[currentIndex].Format;
                 Entries[desiredIndex].Files = source[currentIndex].Files;
+                Entries.Move(currentIndex, desiredIndex);
             }
             else
             {
@@ -361,4 +360,34 @@ internal class ProjectHistoryService : IProjectHistoryService
     }
 
     private ProjectHistoryDbContext CreateContext() => new(databasePath!);
+
+    public async Task UpdateMissingFilesAsync()
+    {
+        await initializationTcs.Task;
+
+        try
+        {
+            foreach (ProjectHistoryEntry entry in Entries)
+            {
+                try
+                {
+                    foreach (ProjectHistoryFile file in entry.Files)
+                    {
+                        await StorageFile.GetFileFromPathAsync(file.FilePath);
+                    }
+
+                    uiDispatcherQueue!.RunOnThread(DispatcherQueuePriority.Low, () => entry.AreFilesMissing = false);
+                }
+                catch (Exception)
+                {
+                    uiDispatcherQueue!.RunOnThread(DispatcherQueuePriority.Low, () => entry.AreFilesMissing = true);
+                }
+            }
+        }
+        catch (Exception exc)
+        {
+            LogService?.Log.Error(exc, "Failed to clear project history");
+            await RecreateAsync();
+        }
+    }
 }

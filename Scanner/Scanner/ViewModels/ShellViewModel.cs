@@ -322,87 +322,10 @@ partial class ShellViewModel : ObservableRecipient, IDisposable
 
     private async Task OpenFilesAsync()
     {
-        TaskCompletionSource openTcs = new();
+        IReadOnlyList<PickFileResult> pickerResults = await Helpers.Helpers.PickInputFilesAsync(true, viewDispatcherQueue!);
+        if (pickerResults.Count == 0)
+            return;
 
-        try
-        {
-            IReadOnlyList<PickFileResult> pickerResults = await Helpers.Helpers.PickInputFilesAsync(true, viewDispatcherQueue!);
-            if (pickerResults.Count == 0)
-                return;
-
-            // ensure single file type
-            string extension = Path.GetExtension(pickerResults[0].Path).ToLowerInvariant();
-            if (pickerResults.Any(f => Path.GetExtension(f.Path).ToLowerInvariant() != extension))
-            {
-                Messenger.Send(new ShowInAppNotificationMessage(new Notification
-                {
-                    Title = "Can not open multiple file types",
-                    Message = "Please select files of the same type to open a project.",
-                    Severity = Microsoft.UI.Xaml.Controls.InfoBarSeverity.Error
-                }));
-                return;
-            }
-            else if (pickerResults.Count > 1 && pickerResults.Any(f => Path.GetExtension(f.Path).ToLowerInvariant() == ".pdf"))
-            {
-                Messenger.Send(new ShowInAppNotificationMessage(new Notification
-                {
-                    Title = "Can not open multiple PDF files",
-                    Message = "Please select just one PDF file to open a project.",
-                    Severity = Microsoft.UI.Xaml.Controls.InfoBarSeverity.Error
-                }));
-                return;
-            }
-
-            // close project
-            if (await ProjectService.TryCloseProjectAsync() == false)
-                return;
-
-            Messenger.Send(new ShowIndeterminateProgressDialogMessage("Opening project", openTcs.Task));                
-
-            // get files
-            List<(StorageFile SourceFile, string? TargetFileName, StorageFile? TargetFile)> files = [];
-            foreach (PickFileResult pickerResult in pickerResults)
-            {
-                StorageFile file = await StorageFile.GetFileFromPathAsync(pickerResult.Path);
-                files.Add((file, Path.GetFileName(pickerResult.Path), file));
-            }
-
-            // get target folder
-            StorageFolder? targetFolder = await files[0].SourceFile.GetParentAsync();
-
-            // create project data
-            TargetFormat targetFormat = Helpers.Helpers.FileExtensionToTargetFormat(extension);
-            IProjectCreationData projectCreationData;
-            ScanOptions scanOptions = new(null, false)
-            {
-                TargetFormat = targetFormat
-            };
-
-            if (targetFormat == TargetFormat.PDF)
-            {
-                Windows.Data.Pdf.PdfDocument document = await Windows.Data.Pdf.PdfDocument.LoadFromFileAsync(files[0].SourceFile);
-                projectCreationData = new PdfProjectCreationData(null, files[0].SourceFile, document.PageCount, targetFolder, scanOptions, true);
-            }
-            else
-            {
-                projectCreationData = new MultiFileProjectCreationData(null, files, targetFormat, targetFolder, scanOptions, true);
-            }
-
-            await ProjectService.TryCreateProjectAsync(projectCreationData, true, true, viewDispatcherQueue!);
-        }
-        catch (Exception exc)
-        {
-            LogService?.Log.Error(exc, "Failed to open files");
-            Messenger.Send(new ShowInAppNotificationMessage(new Notification
-            {
-                Title = "Something went wrong",
-                Message = "Failed to open files.",
-                Severity = Microsoft.UI.Xaml.Controls.InfoBarSeverity.Error
-            }));
-        }
-        finally
-        {
-            openTcs.TrySetResult();
-        }
+        await ProjectService.TryOpenProjectFromFilesAsync(pickerResults.Select(x => x.Path).ToArray(), null, viewDispatcherQueue!);
     }
 }

@@ -27,14 +27,18 @@ class HistoryViewModel : ObservableRecipient, IDisposable
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     #region Services
     public readonly IProjectHistoryService ProjectHistoryService = Ioc.Default.GetRequiredService<IProjectHistoryService>();
+    public readonly IProjectService ProjectService = Ioc.Default.GetRequiredService<IProjectService>();
     #endregion
 
     #region Commands
+    public AsyncRelayCommand<ProjectHistoryEntry> OpenEntryAsyncCommand;
     public AsyncRelayCommand<ProjectHistoryEntry> RemoveEntryAsyncCommand;
     public AsyncRelayCommand ClearListAsyncCommand;
     public AsyncRelayCommand<ProjectHistoryEntry> ShowInFileExplorerAsyncCommand;
     public RelayCommand DisposeCommand => new RelayCommand(Dispose);
     #endregion
+
+    private DispatcherQueue viewDispatcherQueue;
 
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -42,9 +46,12 @@ class HistoryViewModel : ObservableRecipient, IDisposable
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public HistoryViewModel()
     {
+        OpenEntryAsyncCommand = new(OpenEntryAsync);
         RemoveEntryAsyncCommand = new(RemoveEntryAsync);
         ClearListAsyncCommand = new(ClearListAsync);
         ShowInFileExplorerAsyncCommand = new(ShowInFileExplorerAsync);
+
+        Task.Run(ProjectHistoryService.UpdateMissingFilesAsync);
     }
 
 
@@ -54,6 +61,16 @@ class HistoryViewModel : ObservableRecipient, IDisposable
     public void Dispose()
     {
         Messenger.UnregisterAll(this);
+    }
+
+    public void ViewLoaded(DispatcherQueue dispatcherQueue)
+    {
+        viewDispatcherQueue = dispatcherQueue;
+    }
+
+    public async Task OpenEntryAsync(ProjectHistoryEntry entry)
+    {
+        await ProjectService.TryOpenProjectFromFilesAsync(entry.Files.Select(x => x.FilePath).ToArray(), entry.Id, viewDispatcherQueue);
     }
 
     public async Task RemoveEntryAsync(ProjectHistoryEntry entry)
