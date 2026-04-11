@@ -49,6 +49,7 @@ partial class ShellViewModel : ObservableRecipient, IDisposable
     public event EventHandler DonationDialogRequested;
     public event EventHandler OtherAppsDialogRequested;
     public event EventHandler ScanMergeDialogRequested;
+    public event EventHandler<ScanOptions> ShowPreviewDialogRequested;
     public event EventHandler<Notification> ShowInAppNotificationRequested;
     #endregion
 
@@ -134,6 +135,10 @@ partial class ShellViewModel : ObservableRecipient, IDisposable
         Messenger.Register<ShowScanMergeDialogMessage>(this, (r, m) =>
         {
             ShowScanMergeDialog();
+        });
+        Messenger.Register<ShowPreviewDialogMessage>(this, (r, m) =>
+        {
+            ShowPreviewDialog(m.ScanOptions);
         });
     }
 
@@ -318,6 +323,11 @@ partial class ShellViewModel : ObservableRecipient, IDisposable
     private void ShowScanMergeDialog()
     {
         ScanMergeDialogRequested?.Invoke(this, EventArgs.Empty);
+    }
+
+    private void ShowPreviewDialog(ScanOptions scanOptions)
+    {
+        ShowPreviewDialogRequested?.Invoke(this, scanOptions);
     }
 
     private async Task OpenFilesAsync()

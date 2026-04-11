@@ -87,6 +87,7 @@ public sealed partial class ShellView : Page
         ViewModel.OtherAppsDialogRequested += ViewModel_OtherAppsDialogRequested;
         ViewModel.ScanMergeDialogRequested += ViewModel_ScanMergeDialogRequested;
         ViewModel.ShowInAppNotificationRequested += ViewModel_ShowInAppNotificationRequested;
+        ViewModel.ShowPreviewDialogRequested += ViewModel_ShowPreviewDialogRequested;
         ViewModel.ProjectService.PropertyChanged += ProjectService_PropertyChanged;
     }
 
@@ -401,6 +402,11 @@ public sealed partial class ShellView : Page
         ShowScanMergeDialog();
     }
 
+    private void ViewModel_ShowPreviewDialogRequested(object? sender, ScanOptions scanOptions)
+    {
+        ShowPreviewDialog(scanOptions);
+    }
+
     private void SettingsCardDebugDialogSaveChanges_Click(object sender, RoutedEventArgs e)
     {
         ShowSaveChangesDialog(new TaskCompletionSource<bool>());
@@ -569,6 +575,26 @@ public sealed partial class ShellView : Page
             isDialogVisible = true;
 
             ScanMergeDialogView dialog = new ScanMergeDialogView();
+            dialog.XamlRoot = this.XamlRoot;
+            ContentDialogResult result = await dialog.ShowAsync();
+
+            isDialogVisible = false;
+        });
+    }
+
+    private void ShowPreviewDialog(ScanOptions scanOptions)
+    {
+        this.RunOnUIThread(Microsoft.UI.Dispatching.DispatcherQueuePriority.Normal, async () =>
+        {
+            // return if dialog is already visible
+            if (isDialogVisible)
+            {
+                return;
+            }
+
+            isDialogVisible = true;
+
+            PreviewDialogView dialog = new PreviewDialogView(scanOptions);
             dialog.XamlRoot = this.XamlRoot;
             ContentDialogResult result = await dialog.ShowAsync();
 

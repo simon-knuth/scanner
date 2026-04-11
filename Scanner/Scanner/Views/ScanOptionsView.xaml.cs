@@ -973,6 +973,11 @@ public sealed partial class ScanOptionsView : Page
                 };
             }
         }
+        else if (item == ComboBoxItemPreviewSelection && ScanOptions.ScanArea is not PreviewSelectionArea)
+        {
+            ComboBoxScanArea.SelectedItem = ComboBoxItemScanEverything;
+            ViewModel.ShowPreviewDialogCommand.Execute(null);
+        }
 
         OnPropertyChanged(nameof(SelectedPaperSize));
     }
@@ -1020,6 +1025,10 @@ public sealed partial class ScanOptionsView : Page
                     break;
                 }
             }
+        }
+        else if (scanArea is PreviewSelectionArea)
+        {
+            ComboBoxScanArea.SelectedItem = ComboBoxItemPreviewSelection;
         }
     }
 

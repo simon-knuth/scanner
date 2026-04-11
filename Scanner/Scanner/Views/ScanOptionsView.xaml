@@ -290,7 +290,8 @@
                                                     <ColumnDefinition Width="1*" />
                                                 </Grid.ColumnDefinitions>
 
-                                                <FontIcon Grid.Column="0" Glyph="&#xE9A6;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                                <FontIcon Grid.Column="0" Glyph="&#xF16B;" FontSize="16" UseLayoutRounding="False" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                                <FontIcon Grid.Column="0" Glyph="&#xE9E3;" FontSize="10" HorizontalAlignment="Center" UseLayoutRounding="False" VerticalAlignment="Center" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                                                 <TextBlock Grid.Column="1" Text="Everything" />
                                             </Grid>
                                         </ComboBoxItem>

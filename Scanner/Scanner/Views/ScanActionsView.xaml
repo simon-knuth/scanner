@@ -152,7 +152,7 @@
             </Button>
 
             <!-- Right buttons -->
-            <Button x:Name="ButtonPreview" Grid.Column="2" Margin="8,0,0,0" Width="48" HorizontalAlignment="Right" VerticalAlignment="Stretch" IsEnabled="{x:Bind ViewModel.CanPreviewScan, Mode=OneWay}" ToolTipService.ToolTip="{x:Bind strings:Resources.Preview}" x:Load="{x:Bind IsPreviewButtonVisible, Mode=OneWay}" Loading="ButtonAnimated_Loading">
+            <Button x:Name="ButtonPreview" Grid.Column="2" Margin="8,0,0,0" Width="48" HorizontalAlignment="Right" VerticalAlignment="Stretch" IsEnabled="{x:Bind ViewModel.CanPreviewScan, Mode=OneWay}" ToolTipService.ToolTip="{x:Bind strings:Resources.Preview}" x:Load="{x:Bind IsPreviewButtonVisible, Mode=OneWay}" Command="{x:Bind ViewModel.ShowPreviewDialogCommand}" Loading="ButtonAnimated_Loading">
                 <animations:Implicit.ShowAnimations>
                     <animations:ImplicitAnimationSet>
                         <animations:OpacityAnimation Duration="0:0:0.25" From="0.0" To="1.0" EasingMode="EaseInOut"/>
@@ -195,7 +195,7 @@
                         <ColumnDefinition Width="1*" />
                     </Grid.ColumnDefinitions>
 
-                    <Button x:Name="ButtonScanMode" Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" CornerRadius="4" Margin="0,0,4,0" Padding="8" Style="{StaticResource ButtonOnAccentStyle}" VerticalAlignment="Center" IsEnabled="{x:Bind ViewModel.CanScanModeBeSwitched, Mode=OneWay}" Click="ButtonScanMode_Click">
+                    <Button x:Name="ButtonScanMode" Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" CornerRadius="3" Margin="-2,0,4,0" Padding="8" Style="{StaticResource ButtonOnAccentStyle}" VerticalAlignment="Center" IsEnabled="{x:Bind ViewModel.CanScanModeBeSwitched, Mode=OneWay}" Click="ButtonScanMode_Click">
                         <Grid>
                             <FontIcon x:Name="FontIconScanModeAdd" Glyph="&#xE710;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" ToolTipService.ToolTip="{x:Bind strings:Resources.ScanActionAddToProject}" x:Load="{x:Bind ViewModel.AddToProject, Mode=OneWay}">
                                 <FontIcon.Transitions>

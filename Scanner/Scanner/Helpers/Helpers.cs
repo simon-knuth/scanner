@@ -4,6 +4,7 @@ using Microsoft.Windows.ApplicationModel.Resources;
 using Microsoft.Windows.Storage.Pickers;
 using Scanner.Extensions;
 using Scanner.Models;
+using Scanner.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -211,5 +212,31 @@ public static class Helpers
         });
 
         return result;
+    }
+
+    /// <summary>
+    ///     Converts the <paramref name="value"/> from its <paramref name="sourceUnit"/> to the given
+    ///     <paramref name="targetUnit"/>.
+    /// </summary>
+    public static double ConvertMeasurement(double value, SettingMeasurementUnits sourceUnit, SettingMeasurementUnits targetUnit)
+    {
+        if (sourceUnit != targetUnit)
+        {
+            // convert value
+            if (targetUnit == SettingMeasurementUnits.Metric)
+            {
+                // inches to cm
+                return value * 2.54;
+            }
+            else
+            {
+                // cm to inches
+                return value / 2.54;
+            }
+        }
+        else
+        {
+            return value;
+        }
     }
 }

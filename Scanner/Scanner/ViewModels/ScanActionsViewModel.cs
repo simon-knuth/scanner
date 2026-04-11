@@ -29,6 +29,7 @@ partial class ScanActionsViewModel : ObservableRecipient, IDisposable
 
     #region Commands
     public AsyncRelayCommand<bool> ScanCommand;
+    public RelayCommand ShowPreviewDialogCommand => new RelayCommand(() => Messenger.Send(new ShowPreviewDialogMessage(ScanOptions)));
     public RelayCommand ShowScanMergeDialogCommand => new RelayCommand(() => Messenger.Send(new ShowScanMergeDialogMessage()));
     public RelayCommand ShowSettingsCommand => new RelayCommand(ShowSettings);
 
@@ -59,7 +60,7 @@ partial class ScanActionsViewModel : ObservableRecipient, IDisposable
     private bool isScanning;
 
     public bool CanScan => ScanOptions?.Scanner != null && !ProjectService.IsProcessRunningOrEditing;
-    public bool CanPreviewScan => ScanOptions?.Scanner != null && !ProjectService.IsProcessRunningOrEditing;
+    public bool CanPreviewScan => ScanOptions?.Scanner != null && ScanOptions?.SourceMode != ScannerSource.Auto && !ProjectService.IsProcessRunningOrEditing;
     public bool CanScanModeBeSwitched => CurrentProject != null && !ProjectService.IsProcessRunningOrEditing && CanAddToProject;
     public bool CanScanAndMerge => CurrentProject != null && CurrentProject.Format == ScanOptions?.TargetFormat && CurrentProject.Format == TargetFormat.PDF 
         && ScanOptions?.SourceMode == ScannerSource.Feeder;

@@ -91,7 +91,7 @@
             <ListView Grid.Row="1" Padding="10,4,10,12" SelectionMode="None" IsItemClickEnabled="True" ItemsSource="{x:Bind ViewModel.ProjectHistoryService.Entries, Mode=OneWay}" ScrollViewer.VerticalScrollMode="Auto" ItemClick="ListView_ItemClick">
                 <ListView.ItemTemplate>
                     <DataTemplate x:DataType="models:ProjectHistoryEntry">
-                        <ListViewItem Padding="4,2,4,2" Height="80" IsEnabled="{x:Bind AreFilesMissing, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}" ToolTipService.ToolTip="{x:Bind Id}">
+                        <ListViewItem Padding="4,2,4,2" Height="80" IsEnabled="{x:Bind AreFilesMissing, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}">
                             <Border CornerRadius="4">
                                 <SwipeControl>
                                     <Grid RowSpacing="4" ColumnSpacing="12" Padding="8">

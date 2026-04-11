@@ -125,6 +125,11 @@ public class PreviewSelectionArea : RectScanArea
 {
     public Rect SelectedRegion { get; set; }
 
+    public PreviewSelectionArea(Rect selectedRegion)
+    {
+        SelectedRegion = selectedRegion;
+    }
+
     internal override Rect GetRect(double minX, double maxX, double minY, double MaxY, double minWidth, double maxWidth, double minHeight, double maxHeight)
     {
         double width = SelectedRegion.Width;

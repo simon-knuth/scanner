@@ -153,12 +153,12 @@ public partial class DebugScanner : IScanningDevice
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public void CancelPreview()
     {
-        throw new NotImplementedException();
+        
     }
 
     public void CancelScan()
     {
-        throw new NotImplementedException();
+        
     }
 
     public async Task<StorageFile?> GetPreviewScanAsync(ScannerSource sourceMode, StorageFolder targetFolder, bool clearTargetFolder, DispatcherQueue uiDispatcherQueue)
@@ -168,6 +168,8 @@ public partial class DebugScanner : IScanningDevice
             await AppDataService.EmptyFolderAsync(targetFolder);
 
         IReadOnlyList<PickFileResult> pickerResults = await Helpers.Helpers.PickInputFilesAsync(false, uiDispatcherQueue);
+        if (pickerResults.Count == 0 || pickerResults[0] == null)
+            return null;
 
         // get files
         StorageFile[] files = new StorageFile[pickerResults.Count];
@@ -207,33 +209,6 @@ public partial class DebugScanner : IScanningDevice
         StorageFile[] results = await Task.WhenAll(copyTasks);
 
         return results;
-    }
-
-    private List<ImageScannerFormat> GenerateFormats(IImageScannerFormatConfiguration config)
-    {
-        List<ImageScannerFormat> result = new();
-
-        if (config.IsFormatSupported(ImageScannerFormat.Jpeg))
-        {
-            result.Add(ImageScannerFormat.Jpeg);
-        }
-
-        if (config.IsFormatSupported(ImageScannerFormat.Png))
-        {
-            result.Add(ImageScannerFormat.Png);
-        }
-
-        if (config.IsFormatSupported(ImageScannerFormat.Tiff))
-        {
-            result.Add(ImageScannerFormat.Tiff);
-        }
-
-        if (config.IsFormatSupported(ImageScannerFormat.DeviceIndependentBitmap))
-        {
-            result.Add(ImageScannerFormat.DeviceIndependentBitmap);
-        }
-
-        return result;
     }
 
     public bool IsPreviewSupported(ScannerSource source)

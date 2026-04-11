@@ -42,6 +42,7 @@ partial class ScanOptionsViewModel : ObservableRecipient, IDisposable
     public RelayCommand ResetBrightnessCommand => new RelayCommand(ResetBrightness);
     public RelayCommand ResetContrastCommand => new RelayCommand(ResetContrast);
     public AsyncRelayCommand UpdateScanAreaAlignmentBitmapAsyncCommand => new AsyncRelayCommand(UpdateScanAreaAlignmentBitmapAsync);
+    public RelayCommand ShowPreviewDialogCommand => new RelayCommand(() => Messenger.Send(new ShowPreviewDialogMessage(ScanOptions)));
     public AsyncRelayCommand<DispatcherQueue> ViewLoadingAsyncCommand => new AsyncRelayCommand<DispatcherQueue>(ViewLoading);
     public RelayCommand DisposeCommand => new RelayCommand(Dispose);
     #endregion
