@@ -136,6 +136,11 @@ internal class SentryService : ISentryService
             // attachment
             scope.ClearAttachments();
         };
+
+        TrackEvent(AnalyticsEvent.TestEvent, new()
+        {
+            { "category", "value" }
+        });
     }
 
 
@@ -267,39 +272,47 @@ internal class SentryService : ISentryService
         }
     }
 
-    public void TrackEvent(AnalyticsEvent sentryEvent, IDictionary<string, string> properties = null)
+    public void TrackEvent(AnalyticsEvent sentryEvent, Dictionary<string, string>? attributes = null)
     {
         // add breadcrumb
-        Breadcrumb breadcrumb = null;
-        if (properties != null)
+        Breadcrumb breadcrumb;
+        if (attributes != null)
         {
             breadcrumb = new Breadcrumb(
-            message: sentryEvent.ToString(),
-            type: "event",
-            category: "event",
-            data: new ReadOnlyDictionary<string, string>(properties),
-            level: BreadcrumbLevel.Info);
+                message: sentryEvent.ToString(),
+                type: "event",
+                category: "event",
+                data: new ReadOnlyDictionary<string, string>(attributes),
+                level: BreadcrumbLevel.Info);
         }
         else
         {
             breadcrumb = new Breadcrumb(
-            message: sentryEvent.ToString(),
-            type: "event",
-            category: "event",
-            level: BreadcrumbLevel.Info);
+                message: sentryEvent.ToString(),
+                type: "event",
+                category: "event",
+                level: BreadcrumbLevel.Info);
         }
         SentrySdk.AddBreadcrumb(breadcrumb);
 
         string dictToText = "";
-        if (properties != null)
+        if (attributes != null)
         {
-            dictToText = string.Join(",", properties.Select(pair =>
+            dictToText = string.Join(",", attributes.Select(pair =>
             {
                 string key = pair.Key.ToString();
                 string value = pair.Value == null ? "null" : pair.Value.ToString();
                 return string.Format("{0}={1}", key, value);
             }).ToArray());
         }
+
+        // send to metrics
+        IEnumerable<KeyValuePair<string, object>>? convertedAttributes = attributes?.Select(kvp => new KeyValuePair<string, object>(kvp.Key, kvp.Value));
+        if (attributes != null)
+            SentrySdk.Metrics.EmitGauge(sentryEvent.ToString(), 1, MeasurementUnit.None, convertedAttributes);
+        else
+            SentrySdk.Metrics.EmitGauge(sentryEvent.ToString(), 1);
+
         LogService?.Log.Information("Tracking {Event} with {Properties}", sentryEvent, dictToText);
     }
 
