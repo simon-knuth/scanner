@@ -37,7 +37,7 @@ internal class SentryService : ISentryService
     private readonly ISettingsService SettingsService = Ioc.Default.GetRequiredService<ISettingsService>();
     #endregion
 
-    private readonly string DataSourceName = Secrets.SENTRY_DSN;
+    private readonly string DataSourceName = Secrets.SENTRY_DSN != "SENTRY_DSN_GOES_HERE" ? Secrets.SENTRY_DSN : "";
 
     public bool HasConsent
     {
