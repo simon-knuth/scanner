@@ -104,3 +104,32 @@ jobs:
       with:
         name: ${{ matrix.platform }}
         path: Scanner\Scanner\Packages\*\*.msix
+
+  create_sentry_release:
+    needs: build
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Get app version
+      id: version
+      shell: pwsh
+      run: |
+        [xml]$manifest = Get-Content "Scanner\Scanner\Package.appxmanifest"
+        $version = $manifest.Package.Identity.Version
+        echo "version=$version" >> $env:GITHUB_OUTPUT
+
+    - name: Create Sentry release
+      uses: getsentry/action-release@v1
+      env:
+        SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+        SENTRY_ORG: simon-knuth
+        SENTRY_PROJECT: scanner
+      with:
+        environment: release
+        set_commits: auto
+        version: ${{ steps.version.outputs.version }}
