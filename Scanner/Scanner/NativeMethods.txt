@@ -8,3 +8,7 @@ CallWindowProc
 GetCurrentThreadId
 SetWindowLong
 SetWindowLongPtr
+CreateEvent
+SetEvent
+CoWaitForMultipleObjects
+SetForegroundWindow
