@@ -35,6 +35,7 @@
             </ResourceDictionary.MergedDictionaries>
 
             <!-- XAML Converters -->
+            <converters:AspectRatioStringConverter x:Key="AspectRatioStringConverter"/>
             <converters:EnumIntComparisonConverter x:Key="EnumIntComparisonConverter"/>
             <converters:NegativeBoolConverter x:Key="NegativeBoolConverter"/>
             <converters:NegativeBoolVisibilityConverter x:Key="NegativeBoolVisibilityConverter"/>
@@ -110,7 +111,7 @@
 
                             <FontIcon Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" Glyph="&#xE799;" FontSize="16" VerticalAlignment="Center" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                             <TextBlock Grid.Row="0" Grid.Column="1" Text="{x:Bind strings:Resources.AspectRatio}" VerticalAlignment="Center" Style="{StaticResource BodyTextBlockStyle}" />
-                            <TextBlock Grid.Row="1" Grid.Column="1" Text="{x:Bind ViewModel.SelectedAspectRatio, Mode=OneWay}" VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorTertiaryBrush}" Style="{StaticResource CaptionTextBlockStyle}" />
+                            <TextBlock Grid.Row="1" Grid.Column="1" Text="{x:Bind ViewModel.SelectedAspectRatio, Mode=OneWay, Converter={StaticResource AspectRatioStringConverter}}" VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorTertiaryBrush}" Style="{StaticResource CaptionTextBlockStyle}" />
                         </Grid>
 
                         <Button.Flyout>
