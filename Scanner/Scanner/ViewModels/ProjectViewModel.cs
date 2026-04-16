@@ -397,16 +397,18 @@ partial class ProjectViewModel : ObservableRecipient, IDisposable
         StorageFolder? folder = null;
         if (CurrentProject is PdfProject pdfProject)
         {
-            folder = pdfProject.TargetFolder;
+            folder = pdfProject.TargetFile != null ? pdfProject.TargetFolder : null;
         }
         else
         {
             // use currently selected page if no page is provided
-            if (page == null && ProjectService.SelectedPage != null) page = ProjectService.SelectedPage;
+            if (page == null && ProjectService.SelectedPage != null)
+                page = ProjectService.SelectedPage;
 
-            if (page is not ImagePage imagePage) return;
+            if (page is not ImagePage imagePage)
+                return;
 
-            folder = imagePage.TargetFolder;
+            folder = imagePage.TargetFile != null ? imagePage.TargetFolder : null;
         }
 
         // ensure folder
