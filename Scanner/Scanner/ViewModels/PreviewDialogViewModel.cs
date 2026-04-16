@@ -329,6 +329,9 @@ public partial class PreviewDialogViewModel : ObservableRecipient, IDisposable
     private StorageFile previewFileBuffer;
     private ScanOptions scanOptions;
 
+    private double previewImagePixelWidth;
+    private double previewImagePixelHeight;
+
     private DispatcherQueue viewDispatcherQueue;
 
 
@@ -359,40 +362,53 @@ public partial class PreviewDialogViewModel : ObservableRecipient, IDisposable
 
     private void InitializeRegionSelectionParameters()
     {
-        double minWidth, minHeight, maxWidth, maxHeight;
-        switch (scanOptions.SourceMode)
+        double minWidthInches, minHeightInches, maxWidthInches, maxHeightInches;
+        if (scanOptions.Scanner is DebugScanner debugScanner)
         {
-            case ScannerSource.None:
-            case ScannerSource.Auto:
-            default:
-                throw new ArgumentException("Can't get min/max scan area for source auto or none.");
-            case ScannerSource.Flatbed:
-                minWidth = scanOptions.Scanner.FlatbedMinScanArea.Width;
-                minHeight = scanOptions.Scanner.FlatbedMinScanArea.Height;
-                maxWidth = scanOptions.Scanner.FlatbedMaxScanArea.Width;
-                maxHeight = scanOptions.Scanner.FlatbedMaxScanArea.Height;
-                break;
-            case ScannerSource.Feeder:
-                minWidth = scanOptions.Scanner.FeederMinScanArea.Width;
-                minHeight = scanOptions.Scanner.FeederMinScanArea.Height;
-                maxWidth = scanOptions.Scanner.FeederMaxScanArea.Width;
-                maxHeight = scanOptions.Scanner.FeederMaxScanArea.Height;
-                break;
-        }
-
-        // determine baseline for min
-        if (minWidth > minHeight)
-        {
-            MinLength = new MeasurementValue(MeasurementType.Inches, minWidth, InchesPerPixel);
+            // adapt values to preview file for debug scanners
+            InchesPerPixel = 1.0 / 100;
+            minWidthInches = 100 * InchesPerPixel;
+            minHeightInches = 100 * InchesPerPixel;
+            maxWidthInches = previewImagePixelWidth * InchesPerPixel;
+            maxHeightInches = previewImagePixelHeight * InchesPerPixel;
         }
         else
         {
-            MinLength = new MeasurementValue(MeasurementType.Inches, minHeight, InchesPerPixel);
+            // use actual values
+            switch (scanOptions.SourceMode)
+            {
+                case ScannerSource.None:
+                case ScannerSource.Auto:
+                default:
+                    throw new ArgumentException("Can't get min/max scan area for source auto or none.");
+                case ScannerSource.Flatbed:
+                    minWidthInches = scanOptions.Scanner.FlatbedMinScanArea.Width;
+                    minHeightInches = scanOptions.Scanner.FlatbedMinScanArea.Height;
+                    maxWidthInches = scanOptions.Scanner.FlatbedMaxScanArea.Width;
+                    maxHeightInches = scanOptions.Scanner.FlatbedMaxScanArea.Height;
+                    break;
+                case ScannerSource.Feeder:
+                    minWidthInches = scanOptions.Scanner.FeederMinScanArea.Width;
+                    minHeightInches = scanOptions.Scanner.FeederMinScanArea.Height;
+                    maxWidthInches = scanOptions.Scanner.FeederMaxScanArea.Width;
+                    maxHeightInches = scanOptions.Scanner.FeederMaxScanArea.Height;
+                    break;
+            }
+        }
+
+        // determine baseline for min
+        if (minWidthInches > minHeightInches)
+        {
+            MinLength = new MeasurementValue(MeasurementType.Inches, minWidthInches, InchesPerPixel);
+        }
+        else
+        {
+            MinLength = new MeasurementValue(MeasurementType.Inches, minHeightInches, InchesPerPixel);
         }
 
         // determine max
-        MaxWidth = new MeasurementValue(MeasurementType.Inches, maxWidth, InchesPerPixel);
-        MaxHeight = new MeasurementValue(MeasurementType.Inches, maxHeight, InchesPerPixel);
+        MaxWidth = new MeasurementValue(MeasurementType.Inches, maxWidthInches, InchesPerPixel);
+        MaxHeight = new MeasurementValue(MeasurementType.Inches, maxHeightInches, InchesPerPixel);
 
         SelectedAspectRatio = SettingsService.LastUsedCropAspectRatio;
 
@@ -446,6 +462,8 @@ public partial class PreviewDialogViewModel : ObservableRecipient, IDisposable
                 {
                     BitmapDecoder bitmapDecoder = await BitmapDecoder.CreateAsync(stream);
                     InchesPerPixel = scanAreaWidthInches / bitmapDecoder.PixelWidth;
+                    previewImagePixelWidth = bitmapDecoder.PixelWidth;
+                    previewImagePixelHeight = bitmapDecoder.PixelHeight;
                 }
             });
 
@@ -533,7 +551,7 @@ public class MeasurementValue
             case MeasurementType.Display:
                 Display = value;
 
-                Inches = ConvertMeasurement(value, settingsService.SettingMeasurementUnits, settingsService.SettingMeasurementUnits);
+                Inches = ConvertMeasurement(value, settingsService.SettingMeasurementUnits, SettingMeasurementUnits.ImperialUS);
 
                 Pixels = Inches / InchesPerPixel;
                 break;

@@ -94,8 +94,7 @@ public partial class PreviewDialogView : ContentDialog
                         || ViewModel.SelectedX == null || ViewModel.SelectedY == null)
                         return;
 
-                    if (ViewModel.SelectedWidth.Pixels <= 0 || ViewModel.SelectedHeight.Pixels <= 0
-                        || ViewModel.SelectedX.Pixels <= 0 || ViewModel.SelectedY.Pixels <= 0)
+                    if (ViewModel.SelectedWidth.Pixels <= 0 || ViewModel.SelectedHeight.Pixels <= 0)
                         return;
 
                     Rect newRect = ImageCropperPreview.CroppedRegion;
@@ -130,14 +129,27 @@ public partial class PreviewDialogView : ContentDialog
     {
         await this.RunOnUIThreadAndWaitAsync(DispatcherQueuePriority.Normal, () =>
         {
+            if (ImageCropperPreview.CroppedRegion.IsEmpty)
+                return;
+
             ViewModel.SelectedX = new MeasurementValue(MeasurementType.Pixels, ImageCropperPreview.CroppedRegion.X, ViewModel.InchesPerPixel);
             ViewModel.SelectedY = new MeasurementValue(MeasurementType.Pixels, ImageCropperPreview.CroppedRegion.Y, ViewModel.InchesPerPixel);
 
             if (ViewModel.SelectedWidth == null || Math.Abs(ViewModel.SelectedWidth.Pixels - ImageCropperPreview.CroppedRegion.Width) > 0.1)
+            {
                 ViewModel.SelectedWidth = new MeasurementValue(MeasurementType.Pixels, ImageCropperPreview.CroppedRegion.Width, ViewModel.InchesPerPixel);
 
+                if (ViewModel.SelectedAspectRatio != AspectRatio.Custom)
+                    return;
+            }
+
             if (ViewModel.SelectedHeight == null || Math.Abs(ViewModel.SelectedHeight.Pixels - ImageCropperPreview.CroppedRegion.Height) > 0.1)
+            {
                 ViewModel.SelectedHeight = new MeasurementValue(MeasurementType.Pixels, ImageCropperPreview.CroppedRegion.Height, ViewModel.InchesPerPixel);
+
+                if (ViewModel.SelectedAspectRatio != AspectRatio.Custom)
+                    return;
+            }
         });
     }
 

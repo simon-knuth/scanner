@@ -434,6 +434,10 @@ partial class ScanOptionsViewModel : ObservableRecipient, IDisposable
                             break;
                     }
                 }
+                else if (ScanOptions.ScanArea is PreviewSelectionArea previewSelectionRegion)
+                {
+                    ScanOptions.ScanArea = null;
+                }
                 break;
         }
     }
