@@ -98,7 +98,7 @@ public partial class DebugScanner : IScanningDevice
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public DebugScanner(DebugScannerSetupProperties setupProperties)
     {
-        Id = Guid.NewGuid().ToString();
+        Id = setupProperties.Id;
         Name = setupProperties.Name;
 
         IsAutoAllowed = setupProperties.IsAutoAllowed;
@@ -240,6 +240,7 @@ public struct DebugScannerSetupProperties
     }
 
     public string Name = "Debug scanner";
+    public string Id = "DEBUG";
 
     public bool IsAutoAllowed = true;
     public bool IsAutoPreviewAllowed;

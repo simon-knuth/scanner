@@ -667,7 +667,8 @@
                                             <FontIcon Glyph="&#xEBE8;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" HorizontalAlignment="Left" Margin="0,0,12,0"/>
                                             <TextBlock Text="Debug scanner list" Style="{StaticResource BaseTextBlockStyle}"/>
                                         </StackPanel>
-                                        <TextBox Text="{x:Bind ViewModel.DebugScannerSetupProperties.Name, Mode=TwoWay}"/>
+                                        <TextBox Text="{x:Bind ViewModel.DebugScannerSetupProperties.Name, Mode=TwoWay}" PlaceholderText="Name" Margin="0,0,0,4" />
+                                        <TextBox Text="{x:Bind ViewModel.DebugScannerSetupProperties.Id, Mode=TwoWay}" PlaceholderText="ID" />
                                         <Grid Margin="0,12,0,0" HorizontalAlignment="Stretch">
                                             <Grid.RowDefinitions>
                                                 <RowDefinition Height="Auto"/>
