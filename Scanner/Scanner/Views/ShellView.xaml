@@ -200,9 +200,31 @@
                     <ColumnDefinition x:Name="ColumnDefinitionTitlebarInsetFooter" Width="164" />
                 </Grid.ColumnDefinitions>
 
-                <Image Grid.Column="1" Source="/Assets/Logo small.svg" Width="16" Height="16" HorizontalAlignment="Center" VerticalAlignment="Center" />
-                <Border Grid.Column="2" VerticalAlignment="Center" CornerRadius="4" Margin="-16,0,0,0" Padding="4">
-                    <TextBlock Text="PREVIEW" Foreground="{ThemeResource TextFillColorDisabledBrush}" Style="{StaticResource CaptionTextBlockStyle}" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                <Grid.ChildrenTransitions>
+                    <TransitionCollection>
+                        <RepositionThemeTransition IsStaggeringEnabled="False" />
+                    </TransitionCollection>
+                </Grid.ChildrenTransitions>
+
+                <Border x:Name="BorderTitlebarIcon" Grid.Column="1" Background="Transparent" HorizontalAlignment="Center" VerticalAlignment="Center" PointerEntered="BorderTitlebarIcon_PointerEntered" PointerExited="BorderTitlebarIcon_PointerExited" >
+                    <Image Source="/Assets/Logo small.svg" Width="16" Height="16" />
+                </Border>
+                <Border x:Name="BorderTitlebarPreview" Grid.Column="2" VerticalAlignment="Center" CornerRadius="4" Margin="-16,0,0,0" Padding="4" IsHitTestVisible="False" x:Load="{x:Bind IsTitlebarPreviewTextVisible, Mode=OneWay}">
+                    <animations:Implicit.HideAnimations>
+                        <animations:ImplicitAnimationSet>
+                            <animations:OpacityAnimation To="0.0" Duration="0:0:0.3" EasingMode="EaseOut" />
+                            <animations:TranslationAnimation To="-12,0" Duration="0:0:0.3" />
+                        </animations:ImplicitAnimationSet>
+                    </animations:Implicit.HideAnimations>
+
+                    <animations:Implicit.ShowAnimations>
+                        <animations:ImplicitAnimationSet>
+                            <animations:OpacityAnimation From="0.0" To="1.0" Duration="0:0:0.3" />
+                            <animations:TranslationAnimation From="-12,0" To="0,0" Duration="0:0:0.3" />
+                        </animations:ImplicitAnimationSet>
+                    </animations:Implicit.ShowAnimations>
+
+                    <TextBlock Text="PREVIEW" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" FontWeight="SemiBold" Style="{StaticResource CaptionTextBlockStyle}" VerticalAlignment="Center" HorizontalAlignment="Center" />
                 </Border>
                 <StackPanel x:Name="StackPanelTitlebarButtonsLeft" Grid.Column="3" Orientation="Horizontal" Spacing="8" HorizontalAlignment="Left" VerticalAlignment="Center">
                     <Button ToolTipService.ToolTip="{x:Bind strings:Resources.NewProjectToolTip}" Style="{StaticResource TitlebarButtonStyle}" IsEnabled="{x:Bind ViewModel.CanStartNewProject, Mode=OneWay}" Command="{x:Bind ViewModel.TryCloseProjectAsyncCommand}">

@@ -39,6 +39,9 @@ public sealed partial class ShellView : Page
     private const double ProjectViewPaneMaxWidth = 452;
     #endregion
 
+    [ObservableProperty]
+    private bool isTitlebarPreviewTextVisible = true;
+
     private double LeftPaneMaxWidth = ScanOptionsPaneMaxWidth;
     private double RightPaneMaxWidth = ProjectViewPaneMaxWidth;
     
@@ -244,15 +247,15 @@ public sealed partial class ShellView : Page
         Rect bounds = transform.TransformBounds(new Rect(0, 0,
                                                          StackPanelTitlebarButtonsLeft.ActualWidth,
                                                          StackPanelTitlebarButtonsLeft.ActualHeight));
-        Windows.Graphics.RectInt32 SearchBoxRect = GetRect(bounds, scaleAdjustment);
+        Windows.Graphics.RectInt32 leftButtonsRect = GetRect(bounds, scaleAdjustment);
 
         transform = StackPanelTitlebarButtonsRight.TransformToVisual(null);
         bounds = transform.TransformBounds(new Rect(0, 0,
                                                     StackPanelTitlebarButtonsRight.ActualWidth,
                                                     StackPanelTitlebarButtonsRight.ActualHeight));
-        Windows.Graphics.RectInt32 PersonPicRect = GetRect(bounds, scaleAdjustment);
+        Windows.Graphics.RectInt32 rightButtonsRect = GetRect(bounds, scaleAdjustment);
 
-        var rectArray = new Windows.Graphics.RectInt32[] { SearchBoxRect, PersonPicRect };
+        var rectArray = new Windows.Graphics.RectInt32[] { leftButtonsRect, rightButtonsRect };
 
         InputNonClientPointerSource nonClientInputSrc =
             InputNonClientPointerSource.GetForWindowId(((App)Application.Current).MainWindow.AppWindow.Id);
@@ -686,6 +689,10 @@ public sealed partial class ShellView : Page
     private async void Page_Loading(FrameworkElement sender, object args)
     {
         await ViewModel.AccessibilityService.InitializeForLanguageTagAsync(this.DispatcherQueue, sender.Language);
+        await Task.Delay(5000);
+        IsTitlebarPreviewTextVisible = false;
+        await Task.Delay(1000);
+        SetRegionsForCustomTitleBar();
     }
 
     private void ButtonTitlebarMore_RightTapped(object sender, RightTappedRoutedEventArgs e)
@@ -693,5 +700,15 @@ public sealed partial class ShellView : Page
 #if DEBUG
         FlyoutBase.ShowAttachedFlyout(ButtonTitlebarMore);
 #endif
+    }
+
+    private void BorderTitlebarIcon_PointerEntered(object sender, PointerRoutedEventArgs e)
+    {
+        IsTitlebarPreviewTextVisible = true;
+    }
+
+    private void BorderTitlebarIcon_PointerExited(object sender, PointerRoutedEventArgs e)
+    {
+        IsTitlebarPreviewTextVisible = false;
     }
 }

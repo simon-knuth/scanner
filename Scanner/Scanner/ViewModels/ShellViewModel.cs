@@ -307,7 +307,7 @@ partial class ShellViewModel : ObservableRecipient, IDisposable
 
     private void ShowFeedback()
     {
-        Messenger.Send(new ShowSettingsMessage(new SettingsViewModelIntent(SettingsPageType.Feedback)));
+       ((App)Application.Current).ShowFeedback();
     }
 
     private void ShowDonationDialog()
