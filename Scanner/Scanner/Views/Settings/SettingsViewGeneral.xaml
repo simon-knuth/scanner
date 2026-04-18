@@ -56,6 +56,12 @@
                 <TextBlock Text="Files" Margin="0,0,0,4" Style="{StaticResource BaseTextBlockStyle}" />
                 <Frame IsEnabled="{x:Bind ViewModel.ProjectService.CurrentProject, Mode=OneWay, Converter={StaticResource NullBoolConverter}}">
                     <StackPanel Orientation="Vertical" Spacing="4">
+                        <StackPanel.ChildrenTransitions>
+                            <TransitionCollection>
+                                <RepositionThemeTransition IsStaggeringEnabled="False" />
+                            </TransitionCollection>
+                        </StackPanel.ChildrenTransitions>
+
                         <InfoBar x:Name="InfoBarProjectOpen" Title="Project open" Message="The current project has to be closed to access all settings on this page." IsOpen="True" IsClosable="False" x:Load="{x:Bind ViewModel.ProjectService.CurrentProject, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}}" />
                         <controls:SettingsExpander Header="Save location" IsExpanded="{x:Bind ViewModel.SettingsService.SettingSaveLocationType, Mode=OneWay, Converter={StaticResource EnumIntComparisonConverter}, ConverterParameter=0}">
                             <controls:SettingsExpander.HeaderIcon>

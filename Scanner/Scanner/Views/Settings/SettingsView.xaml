@@ -17,10 +17,6 @@
     FlowDirection="{x:Bind ViewModel.AccessibilityService.DefaultFlowDirection, Mode=OneWay}"
     Loading="Page_Loading">
 
-    <Page.DataContext>
-        <viewModels:SettingsViewModel x:Name="ViewModel"/>
-    </Page.DataContext>
-
     <interactivity:Interaction.Behaviors>
         <core:EventTriggerBehavior EventName="Unloaded">
             <core:InvokeCommandAction Command="{x:Bind ViewModel.DisposeCommand}"/>

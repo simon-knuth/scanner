@@ -12,6 +12,8 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using Scanner.Messages;
 using Scanner.Services.Interfaces;
+using Scanner.ViewModels;
+using Scanner.Views.Settings;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -37,19 +39,17 @@ public sealed partial class SettingsWindow : WindowEx
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    public SettingsWindow()
+    public SettingsWindow(SettingsViewModelIntent? intent = null)
     {
         this.InitializeComponent();
 
+        Content = new SettingsView(intent);
+
         // backdrop
         if (IsWindows11())
-        {
             SystemBackdrop = new MicaBackdrop();
-        }
         else
-        {
             SystemBackdrop = new DesktopAcrylicBackdrop();
-        }
 
         // titlebar
         IntPtr hWnd = WindowNative.GetWindowHandle(this);

@@ -20,5 +20,4 @@
     IsMinimizable="True"
     IsMaximizable="False">
 
-    <settings:SettingsView />
 </winuiex:WindowEx>

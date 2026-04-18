@@ -41,6 +41,7 @@ public partial class SettingsViewModel : ObservableRecipient, IDisposable
     public AsyncRelayCommand ResetFixedSaveLocationAsyncCommand => new AsyncRelayCommand(ResetFixedSaveLocationAsync);
     public AsyncRelayCommand GenerateLogsListAsyncCommand => new AsyncRelayCommand(GenerateLogsListAsync);
     public AsyncRelayCommand<LogFile> ExportLogAsyncCommand => new AsyncRelayCommand<LogFile>(ExportLogAsync);
+    public RelayCommand ShowFeedbackDialogCommand => new RelayCommand(() => ((App)Application.Current).ShowFeedback());
     public RelayCommand<DispatcherQueue> ViewLoadingCommand => new RelayCommand<DispatcherQueue>(ViewLoading);
     public RelayCommand DisposeCommand => new RelayCommand(Dispose);
     #endregion
@@ -127,15 +128,25 @@ public partial class SettingsViewModel : ObservableRecipient, IDisposable
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    public SettingsViewModel()
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
+    public SettingsViewModel(SettingsViewModelIntent? intent)
     {
-        SelectedPage = HeaderSettingsPages[0];
+        ApplyIntent(intent);
 
         SettingsService.PropertyChanged += SettingsService_PropertyChanged;
 
         UpdateFileNamingPatternPreview();
         UpdateSubFolderNamingPatternPreview();
+
+        Messenger.Register<ShowSettingsMessage>(this, (r, m) =>
+        {
+            ApplyIntent(m.Intent);
+        });
+    }
+
+    public SettingsViewModel() : this(null)
+    {
+
     }
 
 
@@ -152,6 +163,14 @@ public partial class SettingsViewModel : ObservableRecipient, IDisposable
         viewDispatcherQueue = dispatcherQueue;
         IsFixedSaveLocationSupported = await SaveLocationService.GetIsFixedSaveLocationSupportedAsync();
         await UpdateFixedSaveLocationPath();
+    }
+
+    public void ApplyIntent(SettingsViewModelIntent? intent)
+    {
+        if (intent != null)
+            SelectedPage = HeaderSettingsPages.Concat(FooterSettingsPages).First(x => x.PageType == intent.DisplayedPage);
+        else
+            SelectedPage = HeaderSettingsPages[0];
     }
 
     private async Task GenerateLogsListAsync()
@@ -304,3 +323,5 @@ public enum SettingsPageType
     Feedback,
     About
 }
+
+public record SettingsViewModelIntent(SettingsPageType DisplayedPage);

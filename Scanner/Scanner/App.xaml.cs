@@ -16,6 +16,7 @@ using Scanner.Helpers;
 using Scanner.Messages;
 using Scanner.Services;
 using Scanner.Services.Interfaces;
+using Scanner.ViewModels;
 using Sentry;
 using System;
 using System.Collections.Generic;
@@ -181,11 +182,11 @@ public partial class App : Application
         });
     }
 
-    public void ShowSettings()
+    public void ShowSettings(SettingsViewModelIntent? intent)
     {
         if (SettingsWindow == null)
         {
-            SettingsWindow = new SettingsWindow();
+            SettingsWindow = new SettingsWindow(intent);
             SettingsWindow.Closed += SettingsWindow_Closed;
         }
         SettingsWindow.Activate();

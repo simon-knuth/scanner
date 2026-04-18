@@ -13,6 +13,7 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.System;
 
 
 namespace Scanner.Views.Settings;
@@ -42,5 +43,10 @@ public sealed partial class SettingsViewFeedback : SettingsPage
         base.OnNavigatedTo(e);
 
         ViewModel = e.Parameter as SettingsViewModel;
+    }
+
+    private async void SettingsCardGitHub_Click(object sender, RoutedEventArgs e)
+    {
+        await Launcher.LaunchUriAsync(AppConfig.GitHubUri);
     }
 }

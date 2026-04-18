@@ -10,7 +10,7 @@ using WinRT.Interop;
 
 namespace Scanner;
 
-internal static partial class AppConfig
+public static partial class AppConfig
 {
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -36,6 +36,8 @@ internal static partial class AppConfig
 
     public static Uri PrivacyPolicyUri = new Uri("https://simon-knuth.github.io/scanner/privacy-policy");
     public static Uri SimonUri = new Uri("https://simon-knuth.github.io/");
+    public static Uri WebsiteUri = new Uri("https://simon-knuth.github.io/scanner");
+    public static Uri GitHubUri = new Uri("https://github.com/simon-knuth/scanner");
     public static Uri DonationUri = new Uri("https://www.paypal.com/donate?hosted_button_id=TLR5GM8NKE3L2&amp;source=url");
     public static Uri ClipShelfStoreUri = new Uri("ms-windows-store://pdp/?productid=9NV7F7JGLRPL&cid=scanner");
 

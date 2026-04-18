@@ -54,7 +54,7 @@ partial class ShellViewModel : ObservableRecipient, IDisposable
     #endregion
 
     #region Commands
-    public RelayCommand ShowSettingsCommand => new RelayCommand(ShowSettings);
+    public RelayCommand ShowSettingsCommand => new RelayCommand(() => ShowSettings());
     public RelayCommand ShowFeedbackCommand => new RelayCommand(ShowFeedback);
     public RelayCommand ShowDonationDialogCommand => new RelayCommand(ShowDonationDialog);
     public RelayCommand ShowOtherAppsDialogCommand => new RelayCommand(ShowOtherAppsDialog);
@@ -126,7 +126,7 @@ partial class ShellViewModel : ObservableRecipient, IDisposable
         });
         Messenger.Register<ShowSettingsMessage>(this, (r, m) =>
         {
-            ShowSettings();
+            ShowSettings(m.Intent);
         });
         Messenger.Register<ShowFeedbackMessage>(this, (r, m) =>
         {
@@ -300,14 +300,14 @@ partial class ShellViewModel : ObservableRecipient, IDisposable
         await ProjectService.TryRedoAsync(upUntil);
     }
 
-    private void ShowSettings()
+    private void ShowSettings(SettingsViewModelIntent? intent = null)
     {
-        ((App)Application.Current).ShowSettings();
+        ((App)Application.Current).ShowSettings(intent);
     }
 
     private void ShowFeedback()
     {
-        ((App)Application.Current).ShowFeedback();
+        Messenger.Send(new ShowSettingsMessage(new SettingsViewModelIntent(SettingsPageType.Feedback)));
     }
 
     private void ShowDonationDialog()

@@ -14,6 +14,7 @@
     xmlns:converters="using:Scanner.Views.Converters"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:settings="using:Scanner.Views.Settings"
+    xmlns:scanner="using:Scanner"
     mc:Ignorable="d">
 
 
@@ -52,17 +53,17 @@
                             <Run FontWeight="SemiBold">Scanner</Run>
                             <LineBreak /><Run>Version</Run>
                             <Run Text="{x:Bind ViewModel.CurrentVersion}"/>
-                            <LineBreak />Copyright © 2026 <Hyperlink x:Name="HyperlinkSimonKnuth" UnderlineStyle="None">Simon Knuth</Hyperlink>
+                            <LineBreak />Copyright © 2026 <Hyperlink x:Name="HyperlinkSimonKnuth" UnderlineStyle="None" NavigateUri="{x:Bind scanner:AppConfig.SimonUri}">Simon Knuth</Hyperlink>
                         </Span>
                     </TextBlock>
                     <StackPanel Grid.Column="2" Orientation="Vertical">
-                        <HyperlinkButton HorizontalAlignment="Right" VerticalAlignment="Center">
+                        <HyperlinkButton HorizontalAlignment="Right" VerticalAlignment="Center" NavigateUri="{x:Bind scanner:AppConfig.WebsiteUri}">
                             <StackPanel Orientation="Horizontal" Spacing="12">
                                 <TextBlock Text="Website" />
                                 <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE71B;" />
                             </StackPanel>
                         </HyperlinkButton>
-                        <HyperlinkButton HorizontalAlignment="Right" VerticalAlignment="Center">
+                        <HyperlinkButton HorizontalAlignment="Right" VerticalAlignment="Center" NavigateUri="{x:Bind scanner:AppConfig.PrivacyPolicyUri}">
                             <StackPanel Orientation="Horizontal" Spacing="12">
                                 <TextBlock Text="Privacy policy" />
                                 <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE71B;" />
