@@ -46,36 +46,38 @@ public sealed partial class SettingsView : Page
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     private void ApplySettingsPageEntry(SettingsPageEntry page)
     {
+        NavigationTransitionInfo transitionInfo = ViewModel.SettingsService.SettingAnimations ? 
+            new EntranceNavigationTransitionInfo() : new SuppressNavigationTransitionInfo();
         switch (page.PageType)
         {
             case SettingsPageType.General:
                 if (FrameContent.Content is not SettingsViewGeneral)
                 {
-                    Navigate(typeof(SettingsViewGeneral), new EntranceNavigationTransitionInfo());
+                    Navigate(typeof(SettingsViewGeneral), transitionInfo);
                 }
                 break;
             case SettingsPageType.Personalization:
                 if (FrameContent.Content is not SettingsViewPersonalization)
                 {
-                    Navigate(typeof(SettingsViewPersonalization), new EntranceNavigationTransitionInfo());
+                    Navigate(typeof(SettingsViewPersonalization), transitionInfo);
                 }
                 break;
             case SettingsPageType.Privacy:
                 if (FrameContent.Content is not SettingsViewPrivacy)
                 {
-                    Navigate(typeof(SettingsViewPrivacy), new EntranceNavigationTransitionInfo());
+                    Navigate(typeof(SettingsViewPrivacy), transitionInfo);
                 }
                 break;
             case SettingsPageType.Feedback:
                 if (FrameContent.Content is not SettingsViewFeedback)
                 {
-                    Navigate(typeof(SettingsViewFeedback), new EntranceNavigationTransitionInfo());
+                    Navigate(typeof(SettingsViewFeedback), transitionInfo);
                 }
                 break;
             case SettingsPageType.About:
                 if (FrameContent.Content is not SettingsViewAbout)
                 {
-                    Navigate(typeof(SettingsViewAbout), new EntranceNavigationTransitionInfo());
+                    Navigate(typeof(SettingsViewAbout), transitionInfo);
                 }
                 break;
         }
@@ -93,10 +95,10 @@ public sealed partial class SettingsView : Page
 
     private void SettingsView_PageNavigationRequested(object? sender, (Type, object?) e)
     {
-        Navigate(e.Item1, new SlideNavigationTransitionInfo
+        Navigate(e.Item1, ViewModel.SettingsService.SettingAnimations ? new SlideNavigationTransitionInfo
         {
             Effect = SlideNavigationTransitionEffect.FromRight
-        }, e.Item2);
+        } : new SuppressNavigationTransitionInfo(), e.Item2);
     }
 
     private void ViewModel_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)

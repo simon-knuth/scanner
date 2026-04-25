@@ -441,13 +441,13 @@
                 </Border>
                 <Border x:Name="BorderScanOptions" Grid.Row="0" Grid.Column="0" Padding="0,152,0,0" BorderThickness="0,1,0,0" ui:UIElementExtensions.ClipToBounds="True">
                     <animations:Implicit.ShowAnimations>
-                        <animations:OpacityAnimation Duration="0:0:0.2" To="1.0" />
-                        <animations:TranslationAnimation Duration="0:0:0.25" To="0,0" EasingMode="EaseInOut" />
+                        <animations:OpacityAnimation Duration="{x:Bind ScanOptionsOpacityAnimationDuration, Mode=OneWay}" To="1.0" />
+                        <animations:TranslationAnimation Duration="{x:Bind ScanOptionsTranslationAnimationDuration, Mode=OneWay}" To="0,0" EasingMode="EaseInOut" />
                     </animations:Implicit.ShowAnimations>
 
                     <animations:Implicit.HideAnimations>
-                        <animations:OpacityAnimation Duration="0:0:0.2" To="0.0" />
-                        <animations:TranslationAnimation Duration="0:0:0.25" To="0,64" EasingMode="EaseInOut" />
+                        <animations:OpacityAnimation Duration="{x:Bind ScanOptionsOpacityAnimationDuration, Mode=OneWay}" To="0.0" />
+                        <animations:TranslationAnimation Duration="{x:Bind ScanOptionsTranslationAnimationDuration, Mode=OneWay}" To="0,64" EasingMode="EaseInOut" />
                     </animations:Implicit.HideAnimations>
 
                     <views:ScanOptionsView x:Name="ScanOptionsView" CanExpandPageList="True" FlowDirection="{x:Bind ViewModel.AccessibilityService.DefaultFlowDirection, Mode=OneWay}" ExpandPageListRequested="ExpandPageListRequested" PropertyChanged="ScanOptionsView_PropertyChanged" />

@@ -15,6 +15,7 @@ using Scanner.Helpers;
 using Scanner.Messages;
 using Scanner.Models;
 using Scanner.Models.Interfaces;
+using Scanner.Services;
 using Scanner.Services.Interfaces;
 using Scanner.ViewModels;
 using Sentry.Protocol;
@@ -197,6 +198,7 @@ public sealed partial class ProjectView : Page
         ViewModel.PropertyChanged += ViewModel_PropertyChanged;
         ViewModel.ProjectService.PropertyChanged += ProjectService_PropertyChanged;
         ViewModel.PropertyChanging += ViewModel_PropertyChanging;
+        ViewModel.SettingsService.PropertyChanged += SettingsService_PropertyChanged;
 
         WeakReferenceMessenger.Default.Register<InvokeShareUIMessage>(this, (r, m) => InvokeShareUI());
     }
@@ -339,6 +341,16 @@ public sealed partial class ProjectView : Page
         }
     }
 
+    private void SettingsService_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+    {
+        switch (e.PropertyName)
+        {
+            case nameof(SettingsService.SettingAnimations):
+                showEntranceExitAnimations = ViewModel.SettingsService.SettingAnimations;
+                break;
+        }
+    }
+
     private static void OnIsExpandedChanged(DependencyObject source, DependencyPropertyChangedEventArgs args)
     {
         if (source is ProjectView view)
@@ -367,7 +379,7 @@ public sealed partial class ProjectView : Page
         KeyboardHookHelper.KeyPressed += KeyboardHookHelper_KeyPressed;
 
         await Task.Delay(500);
-        showEntranceExitAnimations = true;
+        showEntranceExitAnimations = ViewModel.SettingsService.SettingAnimations;
     }
 
     private void KeyboardHookHelper_KeyPressed(object? sender, Windows.System.VirtualKey key)
@@ -493,7 +505,7 @@ public sealed partial class ProjectView : Page
             {
                 item.StartBringIntoView(new BringIntoViewOptions
                 {
-                    AnimationDesired = true,
+                    AnimationDesired = ViewModel.SettingsService.SettingAnimations,
                     HorizontalAlignmentRatio = 0.5
                 });
             }

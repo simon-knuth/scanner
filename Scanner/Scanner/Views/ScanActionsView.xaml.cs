@@ -10,6 +10,7 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using Scanner.Extensions;
 using Scanner.Models;
+using Scanner.Services;
 using Scanner.Services.Interfaces;
 using Scanner.Views.Flyouts;
 using System;
@@ -69,7 +70,12 @@ public sealed partial class ScanActionsView : Page
     public bool IsTemplatesButtonVisible => !AreScanOptionsVisible || GridRoot.ActualWidth > 400;
     public bool IsPreviewButtonVisible => (!ViewModel.IsScanning && !AreScanOptionsVisible) || GridRoot.ActualWidth > 500;
 
+    public TimeSpan AnimationDuration => ViewModel.SettingsService.SettingAnimations ?
+        defaultAnimationDuration : TimeSpan.FromMilliseconds(1);
+
     private bool showEntranceAnimations;
+
+    private readonly TimeSpan defaultAnimationDuration = TimeSpan.FromMilliseconds(250);
 
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -80,6 +86,7 @@ public sealed partial class ScanActionsView : Page
         this.InitializeComponent();
 
         ViewModel.PropertyChanged += ViewModel_PropertyChanged;
+        ViewModel.SettingsService.PropertyChanged += SettingsService_PropertyChanged;
     }
 
 
@@ -92,6 +99,17 @@ public sealed partial class ScanActionsView : Page
             return;
 
         OnPropertyChanged(nameof(IsPreviewButtonVisible));
+    }
+
+    private void SettingsService_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+    {
+        switch (e.PropertyName)
+        {
+            case nameof(SettingsService.SettingAnimations):
+                OnPropertyChanged(nameof(AnimationDuration));
+                showEntranceAnimations = ViewModel.SettingsService.SettingAnimations;
+                break;
+        }
     }
 
     private void ButtonScanMode_Click(object sender, RoutedEventArgs e)
@@ -128,7 +146,7 @@ public sealed partial class ScanActionsView : Page
     private async void Page_Loaded(object sender, RoutedEventArgs e)
     {
         await Task.Delay(500);
-        showEntranceAnimations = true;
+        showEntranceAnimations = ViewModel.SettingsService.SettingAnimations;
     }
 
     private void ShowTemplates()
@@ -162,7 +180,8 @@ public sealed partial class ScanActionsView : Page
     {
         try
         {
-            StoryboardScanAnimation.Begin();
+            if (ViewModel.SettingsService.SettingAnimations)
+                StoryboardScanAnimation.Begin();
         }
         catch (Exception)
         {

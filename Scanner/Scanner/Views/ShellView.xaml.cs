@@ -11,6 +11,7 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using Scanner.Extensions;
 using Scanner.Models;
+using Scanner.Services;
 using Scanner.Services.Interfaces;
 using Scanner.Views.Dialogs;
 using Scanner.Views.Flyouts;
@@ -42,6 +43,12 @@ public sealed partial class ShellView : Page
     [ObservableProperty]
     private bool isTitlebarPreviewTextVisible = true;
 
+    public TimeSpan ScanOptionsOpacityAnimationDuration => ViewModel.SettingsService.SettingAnimations ?
+        defaultScanOptionsOpacityAnimationDuration : TimeSpan.FromMilliseconds(1);
+
+    private TimeSpan ScanOptionsTranslationAnimationDuration => ViewModel.SettingsService.SettingAnimations ?
+        defaultScanOptionsTranslationAnimationDuration : TimeSpan.FromMilliseconds(1);
+
     private double LeftPaneMaxWidth = ScanOptionsPaneMaxWidth;
     private double RightPaneMaxWidth = ProjectViewPaneMaxWidth;
     
@@ -65,6 +72,9 @@ public sealed partial class ShellView : Page
     };
 
     private int lastPageCount = 0;
+
+    private readonly TimeSpan defaultScanOptionsOpacityAnimationDuration = TimeSpan.FromMilliseconds(200);
+    private readonly TimeSpan defaultScanOptionsTranslationAnimationDuration = TimeSpan.FromMilliseconds(250);
 
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -92,6 +102,7 @@ public sealed partial class ShellView : Page
         ViewModel.ShowInAppNotificationRequested += ViewModel_ShowInAppNotificationRequested;
         ViewModel.ShowPreviewDialogRequested += ViewModel_ShowPreviewDialogRequested;
         ViewModel.ProjectService.PropertyChanged += ProjectService_PropertyChanged;
+        ViewModel.SettingsService.PropertyChanged += SettingsService_PropertyChanged;
     }
 
 
@@ -663,6 +674,17 @@ public sealed partial class ShellView : Page
                     BorderScanOptions.Visibility = Visibility.Collapsed;
                     BorderEditor.Visibility = Visibility.Visible;
                 }
+                break;
+        }
+    }
+
+    private void SettingsService_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+    {
+        switch (e.PropertyName)
+        {
+            case nameof(SettingsService.SettingAnimations):
+                OnPropertyChanged(nameof(ScanOptionsOpacityAnimationDuration));
+                OnPropertyChanged(nameof(ScanOptionsTranslationAnimationDuration));
                 break;
         }
     }

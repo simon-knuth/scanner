@@ -25,6 +25,7 @@ public sealed partial class AIProcessingBorder : UserControl
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     #region Services
     private readonly ILogService? LogService = Ioc.Default.GetService<ILogService>();
+    private readonly ISettingsService SettingsService = Ioc.Default.GetRequiredService<ISettingsService>();
     #endregion
 
 
@@ -42,7 +43,8 @@ public sealed partial class AIProcessingBorder : UserControl
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     private void Root_Loaded(object sender, RoutedEventArgs e)
     {
-        StoryboardGradient.Begin();
+        if (SettingsService.SettingAnimations)
+            StoryboardGradient.Begin();
     }
 
     private void Root_Unloaded(object sender, RoutedEventArgs e)

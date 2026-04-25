@@ -101,7 +101,7 @@
 
                     <ComboBox />
                 </controls:SettingsCard>
-                <controls:SettingsCard Header="Animations">
+                <controls:SettingsCard Header="Animations" Description="Disable prominent animations throughout the app">
                     <controls:SettingsCard.HeaderIcon>
                         <FontIcon Glyph="&#xE805;" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                     </controls:SettingsCard.HeaderIcon>

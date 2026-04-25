@@ -108,15 +108,15 @@
             <Button x:Name="ButtonTemplates" Grid.Column="0" Width="48" Height="48" Margin="0,0,8,0" VerticalAlignment="Center" Style="{StaticResource MutedButtonStyle}" IsEnabled="{x:Bind ViewModel.IsScanning, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}" ToolTipService.ToolTip="{x:Bind strings:Resources.Templates}" x:Load="{x:Bind IsTemplatesButtonVisible, Mode=OneWay}" Loading="ButtonAnimated_Loading" Click="ButtonTemplates_Click">
                 <animations:Implicit.ShowAnimations>
                     <animations:ImplicitAnimationSet>
-                        <animations:OpacityAnimation Duration="0:0:0.25" From="0.0" To="1.0" EasingMode="EaseInOut"/>
-                        <animations:TranslationAnimation Duration="0:0:0.25" From="0,64" To="0,0" EasingMode="EaseInOut"/>
+                        <animations:OpacityAnimation Duration="{x:Bind AnimationDuration, Mode=OneWay}" From="0.0" To="1.0" EasingMode="EaseInOut"/>
+                        <animations:TranslationAnimation Duration="{x:Bind AnimationDuration, Mode=OneWay}" From="0,64" To="0,0" EasingMode="EaseInOut"/>
                     </animations:ImplicitAnimationSet>
                 </animations:Implicit.ShowAnimations>
 
                 <animations:Implicit.HideAnimations>
                     <animations:ImplicitAnimationSet>
-                        <animations:OpacityAnimation Duration="0:0:0.25" To="0.0" EasingMode="EaseInOut" />
-                        <animations:TranslationAnimation Duration="0:0:0.25" To="0,64" EasingMode="EaseInOut" />
+                        <animations:OpacityAnimation Duration="{x:Bind AnimationDuration, Mode=OneWay}" To="0.0" EasingMode="EaseInOut" />
+                        <animations:TranslationAnimation Duration="{x:Bind AnimationDuration, Mode=OneWay}" To="0,64" EasingMode="EaseInOut" />
                     </animations:ImplicitAnimationSet>
                 </animations:Implicit.HideAnimations>
 
@@ -126,13 +126,13 @@
             <!-- Scan options -->
             <Button x:Name="ButtonScanOptions" Grid.Column="1" Padding="8,0,0,0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" Style="{StaticResource MutedButtonStyle}" x:Load="{x:Bind AreScanOptionsVisible, Mode=OneWay}" Click="ButtonScanOptions_Click">
                 <animations:Implicit.ShowAnimations>
-                    <animations:OpacityAnimation Duration="0:0:0.25" From="0.0" To="1.0" EasingMode="EaseInOut"/>
-                    <animations:TranslationAnimation Duration="0:0:0.25" From="0,-64" To="0,0" EasingMode="EaseInOut"/>
+                    <animations:OpacityAnimation Duration="{x:Bind AnimationDuration, Mode=OneWay}" From="0.0" To="1.0" EasingMode="EaseInOut"/>
+                    <animations:TranslationAnimation Duration="{x:Bind AnimationDuration, Mode=OneWay}" From="0,-64" To="0,0" EasingMode="EaseInOut"/>
                 </animations:Implicit.ShowAnimations>
 
                 <animations:Implicit.HideAnimations>
-                    <animations:OpacityAnimation Duration="0:0:0.25" To="0.0" EasingMode="EaseInOut" />
-                    <animations:TranslationAnimation Duration="0:0:0.25" To="0,-64" EasingMode="EaseInOut" />
+                    <animations:OpacityAnimation Duration="{x:Bind AnimationDuration, Mode=OneWay}" To="0.0" EasingMode="EaseInOut" />
+                    <animations:TranslationAnimation Duration="{x:Bind AnimationDuration, Mode=OneWay}" To="0,-64" EasingMode="EaseInOut" />
                 </animations:Implicit.HideAnimations>
 
                 <Grid>
@@ -155,15 +155,15 @@
             <Button x:Name="ButtonPreview" Grid.Column="2" Margin="8,0,0,0" Width="48" HorizontalAlignment="Right" VerticalAlignment="Stretch" IsEnabled="{x:Bind ViewModel.CanPreviewScan, Mode=OneWay}" ToolTipService.ToolTip="{x:Bind strings:Resources.Preview}" x:Load="{x:Bind IsPreviewButtonVisible, Mode=OneWay}" Command="{x:Bind ViewModel.ShowPreviewDialogCommand}" Loading="ButtonAnimated_Loading">
                 <animations:Implicit.ShowAnimations>
                     <animations:ImplicitAnimationSet>
-                        <animations:OpacityAnimation Duration="0:0:0.25" From="0.0" To="1.0" EasingMode="EaseInOut"/>
-                        <animations:TranslationAnimation Duration="0:0:0.25" From="0,64" To="0,0" EasingMode="EaseInOut"/>
+                        <animations:OpacityAnimation Duration="{x:Bind AnimationDuration, Mode=OneWay}" From="0.0" To="1.0" EasingMode="EaseInOut"/>
+                        <animations:TranslationAnimation Duration="{x:Bind AnimationDuration, Mode=OneWay}" From="0,64" To="0,0" EasingMode="EaseInOut"/>
                     </animations:ImplicitAnimationSet>
                 </animations:Implicit.ShowAnimations>
 
                 <animations:Implicit.HideAnimations>
                     <animations:ImplicitAnimationSet>
-                        <animations:OpacityAnimation Duration="0:0:0.25" To="0.0" EasingMode="EaseInOut" />
-                        <animations:TranslationAnimation Duration="0:0:0.25" To="0,64" EasingMode="EaseInOut" />
+                        <animations:OpacityAnimation Duration="{x:Bind AnimationDuration, Mode=OneWay}" To="0.0" EasingMode="EaseInOut" />
+                        <animations:TranslationAnimation Duration="{x:Bind AnimationDuration, Mode=OneWay}" To="0,64" EasingMode="EaseInOut" />
                     </animations:ImplicitAnimationSet>
                 </animations:Implicit.HideAnimations>
 

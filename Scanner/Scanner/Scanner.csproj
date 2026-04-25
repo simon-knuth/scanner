@@ -136,8 +136,8 @@
 		<PackageReference Include="CommunityToolkit.WinUI.Extensions" Version="8.2.251219" />
 		<PackageReference Include="CommunityToolkit.WinUI.Helpers" Version="8.2.251219" />
 		<PackageReference Include="CommunityToolkit.WinUI.Media" Version="8.2.251219" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.6" />
-		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.6" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.7" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.7" />
 		<PackageReference Include="Microsoft.Graphics.Win2D" Version="1.4.0" />
 		<PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3912.50" />
 		<PackageReference Include="Microsoft.Windows.CsWin32" Version="0.3.275">
@@ -149,7 +149,7 @@
 		<PackageReference Include="Microsoft.WindowsAppSDK" Version="2.0.0-preview1" />
 		<PackageReference Include="PDFsharp" Version="6.2.4" />
 		<PackageReference Include="ReswPlus" Version="0.3.1.5" />
-		<PackageReference Include="Sentry" Version="6.3.2" />
+		<PackageReference Include="Sentry" Version="6.4.1" />
 		<PackageReference Include="Serilog" Version="4.3.1" />
 		<PackageReference Include="Serilog.Exceptions" Version="8.4.0" />
 		<PackageReference Include="Serilog.Sinks.Async" Version="2.1.0" />
