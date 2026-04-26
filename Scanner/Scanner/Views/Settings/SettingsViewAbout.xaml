@@ -71,6 +71,20 @@
                         </HyperlinkButton>
                     </StackPanel>
                 </Grid>
+                <Grid>
+                    <controls:SettingsCard x:Name="SettingsCardGitHub" Header="GitHub" Description="Access the source code, see existing issues and open new ones" IsClickEnabled="True" Click="SettingsCardGitHub_Click">
+                        <controls:SettingsCard.HeaderIcon>
+                            <FontIcon Glyph="    " FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                        </controls:SettingsCard.HeaderIcon>
+
+                        <controls:SettingsCard.ActionIcon>
+                            <FontIcon Glyph="&#xE8A7;" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                        </controls:SettingsCard.ActionIcon>
+                    </controls:SettingsCard>
+
+                    <!-- IconSourceElement doesn't support SVGs atm, can't directly use an SVG as HeaderIcon -->
+                    <Image Source="/Assets/GitHub/GitHub_Invertocat.svg" Width="20" Height="20" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="20,0,0,0" IsHitTestVisible="False" />
+                </Grid>
                 <controls:SettingsCard x:Name="SettingsCardLicenses" Header="Licenses" IsClickEnabled="True" Click="SettingsCardLicenses_Click">
                     <controls:SettingsCard.HeaderIcon>
                         <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xEB95;" />

@@ -13,6 +13,7 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.System;
 
 
 namespace Scanner.Views.Settings;
@@ -47,5 +48,10 @@ public sealed partial class SettingsViewAbout : SettingsPage
     private void SettingsCardLicenses_Click(object sender, RoutedEventArgs e)
     {
         OnPageNavigationRequested(typeof(SettingsViewLicenses));
+    }
+
+    private async void SettingsCardGitHub_Click(object sender, RoutedEventArgs e)
+    {
+        await Launcher.LaunchUriAsync(AppConfig.GitHubUri);
     }
 }

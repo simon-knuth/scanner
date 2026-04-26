@@ -21,6 +21,7 @@ using Scanner.Resources.Strings;
 using Scanner.Services.Interfaces;
 using Scanner.ViewModels;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
@@ -217,8 +218,8 @@ public sealed partial class EditorView : Page
         CoreInputDeviceTypes.Pen;
 
     private VirtualizingStackPanel? flipViewPanel;
-
-    private Dictionary<IProjectPage, CanvasControl> pageCanvases = [];
+    
+    private ConcurrentDictionary<IProjectPage, CanvasControl> pageCanvases = [];
 
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -532,7 +533,7 @@ public sealed partial class EditorView : Page
             if (pageCanvases.TryGetValue(canvasPageData.Page, out var trackedCanvas) && trackedCanvas == canvas)
             {
                 canvasPageData.Page.PropertyChanged -= Page_PropertyChanged;
-                pageCanvases.Remove(canvasPageData.Page);
+                pageCanvases.Remove(canvasPageData.Page, out _);
             }
         }
 
@@ -833,21 +834,57 @@ public sealed partial class EditorView : Page
 
     private void FlipViewItemPage_Unloaded(object sender, RoutedEventArgs e)
     {
-        if (((FlipViewItem)sender).DataContext is not IProjectPage page)
-            return;
+        //try
+        //{
+        //    if (((FlipViewItem)sender).DataContext is not IProjectPage page)
+        //        return;
 
-        CanvasControl canvas = pageCanvases[page];
-        pageCanvases.Remove(page);
+        //    pageCanvases.TryGetValue(page, out CanvasControl? canvas);
+        //    pageCanvases.Remove(page, out _);
 
-        CanvasPageData? pageData = canvas.Tag as CanvasPageData;
-        if (pageData != null)
+        //    if (canvas is null)
+        //        return;
+
+        //    CanvasPageData? pageData = canvas.Tag as CanvasPageData;
+        //    if (pageData != null)
+        //    {
+        //        canvas.Draw -= CanvasPreview_Draw;
+        //        canvas.DataContextChanged -= CanvasPreview_DataContextChanged;
+        //        pageData.Bitmap.Dispose();
+        //        pageData.Page.PropertyChanged -= Page_PropertyChanged;
+        //    }
+        //    canvas.RemoveFromVisualTree();
+        //}
+        //catch (Exception exc)
+        //{
+        //    ViewModel.LogService?.Log.Warning(exc, "Failed to clean up after unloading page FlipViewItem");
+        //    ViewModel.SentryService?.TrackWarning(exc);
+        //}
+    }
+
+    private void CanvasControl_Unloaded(object sender, RoutedEventArgs e)
+    {
+        try
         {
-            canvas.Draw -= CanvasPreview_Draw;
-            canvas.DataContextChanged -= CanvasPreview_DataContextChanged;
-            pageData.Bitmap.Dispose();
-            pageData.Page.PropertyChanged -= Page_PropertyChanged;
+            if (sender is not CanvasControl canvas)
+                return;
+
+            CanvasPageData? pageData = canvas.Tag as CanvasPageData;
+            if (pageData != null)
+            {
+                pageCanvases.Remove(pageData.Page, out _);
+                canvas.Draw -= CanvasPreview_Draw;
+                canvas.DataContextChanged -= CanvasPreview_DataContextChanged;
+                pageData.Bitmap.Dispose();
+                pageData.Page.PropertyChanged -= Page_PropertyChanged;
+            }
+            canvas.RemoveFromVisualTree();
         }
-        canvas.RemoveFromVisualTree();
+        catch (Exception exc)
+        {
+            ViewModel.LogService?.Log.Warning(exc, "Failed to clean up after unloading page CanvasControl");
+            ViewModel.SentryService?.TrackWarning(exc);
+        }
     }
 
 

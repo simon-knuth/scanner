@@ -124,12 +124,12 @@
             
             <FlipView.ItemTemplate>
                 <DataTemplate x:DataType="interfaces:IProjectPage">
-                    <FlipViewItem x:Name="FlipViewItemPage" DataContextChanged="FlipViewItem_DataContextChanged" Loaded="FlipViewItemPage_Loaded" Unloaded="FlipViewItemPage_Unloaded">
+                    <FlipViewItem x:Name="FlipViewItemPage" DataContextChanged="FlipViewItem_DataContextChanged" Loaded="FlipViewItemPage_Loaded">
                         <ScrollViewer x:Name="ScrollViewerPage" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" MinZoomFactor="1.0" MaxZoomFactor="2.5" ZoomMode="Enabled" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" SizeChanged="ScrollViewerPage_SizeChanged">
                             <Border x:Name="BorderPage" Padding="16,16,16,80" HorizontalAlignment="Center" VerticalAlignment="Center" MaxWidth="{Binding ElementName=ScrollViewerPage, Path=ViewportWidth, Mode=OneWay}" MaxHeight="{Binding ElementName=ScrollViewerPage, Path=ViewportHeight, Mode=OneWay}">
                                 <Frame Margin="0" HorizontalAlignment="Center" VerticalAlignment="Center" ui:Effects.Shadow="{ThemeResource ShadowPage}">
                                     <Viewbox Stretch="Uniform">
-                                        <graphics:CanvasControl CreateResources="CanvasPreview_CreateResources" Draw="CanvasPreview_Draw" DataContextChanged="CanvasPreview_DataContextChanged" />
+                                        <graphics:CanvasControl UseSharedDevice="True" CreateResources="CanvasPreview_CreateResources" Draw="CanvasPreview_Draw" DataContextChanged="CanvasPreview_DataContextChanged" Unloaded="CanvasControl_Unloaded" />
                                     </Viewbox>
                                 </Frame>
                             </Border>
