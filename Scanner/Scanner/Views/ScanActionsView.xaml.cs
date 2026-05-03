@@ -119,7 +119,9 @@ public sealed partial class ScanActionsView : Page
 
     private void ButtonScanOptions_Click(object sender, RoutedEventArgs e)
     {
+        TeachingTipScanOptions.IsOpen = false;
         ExpandScanOptionsRequested?.Invoke(this, EventArgs.Empty);
+        ViewModel.SettingsService.TutorialScanOptionsButtonShown = true;
     }
 
     private void GridRoot_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -226,5 +228,25 @@ public sealed partial class ScanActionsView : Page
     private void Page_Unloaded(object sender, RoutedEventArgs e)
     {
         
+    }
+
+    private void ButtonScanOptions_Loaded(object sender, RoutedEventArgs e)
+    {
+        if (!ViewModel.SettingsService.TutorialScanOptionsButtonShown)
+        {
+            TeachingTipScanOptions.Target = BorderTeachingTipTarget;
+            TeachingTipScanOptions.IsOpen = true;
+        }
+    }
+
+    private void TeachingTipScanOptions_Closing(TeachingTip sender, TeachingTipClosingEventArgs args)
+    {
+        if (args.Reason is TeachingTipCloseReason.CloseButton)
+            ViewModel.SettingsService.TutorialScanOptionsButtonShown = true;
+    }
+
+    private void ButtonScanOptions_Unloaded(object sender, RoutedEventArgs e)
+    {
+        TeachingTipScanOptions.IsOpen = false;
     }
 }

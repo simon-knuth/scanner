@@ -50,6 +50,7 @@ public interface ISettingsService : INotifyPropertyChanged
     string SettingAppLanguage { get; set; }
     bool LastScanMergeReversed { get; set; }
     bool SettingExpandPageList { get; set; }
+    bool TutorialScanOptionsButtonShown { get; set; }
     bool SettingMirrorAppLayout { get; set; }
     string UserId { get; set; }
     int DiagnosticEventsSentThisSession { get; set; }

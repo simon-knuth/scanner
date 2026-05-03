@@ -70,6 +70,8 @@
     <!-- - - - - - - - - - - - - - - - -  PAGE CONTENT  - - - - - - - - - - - - - - - - -->
     <!-- - - - - - - - - - - - - - - - - - - -  - - - - - - - - - - - - - - - - - - - - -->
     <Grid x:Name="GridRoot" ui:UIElementExtensions.ClipToBounds="True" SizeChanged="GridRoot_SizeChanged">
+        <Border x:Name="BorderTeachingTipTarget" HorizontalAlignment="Left" Width="56" />
+
         <Border x:Name="BorderScanAnimationBackground" Background="{ThemeResource SystemAccentColor}" ui:VisualExtensions.Opacity="0.0" x:Load="{x:Bind ViewModel.IsScanning, Mode=OneWay}">
             <animations:Implicit.ShowAnimations>
                 <animations:OpacityAnimation To="0.05" Duration="0:0:0.75" />
@@ -124,7 +126,7 @@
             </Button>
 
             <!-- Scan options -->
-            <Button x:Name="ButtonScanOptions" Grid.Column="1" Padding="8,0,0,0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" Style="{StaticResource MutedButtonStyle}" x:Load="{x:Bind AreScanOptionsVisible, Mode=OneWay}" Click="ButtonScanOptions_Click">
+            <Button x:Name="ButtonScanOptions" Grid.Column="1" Padding="8,0,0,0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" Style="{StaticResource MutedButtonStyle}" x:Load="{x:Bind AreScanOptionsVisible, Mode=OneWay}" Click="ButtonScanOptions_Click" Loaded="ButtonScanOptions_Loaded" Unloaded="ButtonScanOptions_Unloaded">
                 <animations:Implicit.ShowAnimations>
                     <animations:OpacityAnimation Duration="{x:Bind AnimationDuration, Mode=OneWay}" From="0.0" To="1.0" EasingMode="EaseInOut"/>
                     <animations:TranslationAnimation Duration="{x:Bind AnimationDuration, Mode=OneWay}" From="0,-64" To="0,0" EasingMode="EaseInOut"/>
@@ -282,5 +284,11 @@
                 </SplitButton.Flyout>
             </SplitButton>
         </Grid>
+
+        <TeachingTip x:Name="TeachingTipScanOptions" Title="{x:Bind strings:Resources.ScanOptionsButtonTutorialHeading}" Subtitle="{x:Bind strings:Resources.ScanOptionsButtonTutorialBody}" IsOpen="False" PreferredPlacement="TopRight" PlacementMargin="0,-4,0,0" Closing="TeachingTipScanOptions_Closing">
+            <TeachingTip.IconSource>
+                <FontIconSource Glyph="&#xE8FE;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+            </TeachingTip.IconSource>
+        </TeachingTip>
     </Grid>
 </Page>

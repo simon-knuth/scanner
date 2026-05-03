@@ -1602,16 +1602,22 @@ Fuzzy</comment>
   <data name="OpenWithApp" xml:space="preserve">
     <value />
   </data>
-  <data name="SettingsFileNamingCustomPatternExplanation" xml:space="preserve">
-    <value>Arrastre y suelte bloques para crear su propio patrón dinámico de nombres de archivos. Seleccione un bloque para modificar su salida o arrástrelo al contenedor para eliminarlo.</value>
-    <comment>The description for the custom file naming dialog.</comment>
-  </data>
   <data name="CustomFolderNamingDialogHeading" xml:space="preserve">
     <value>Patrón de nombre de archivo personalizado</value>
     <comment>The heading for the custom file naming dialog.</comment>
   </data>
+  <data name="SettingsFileNamingCustomPatternExplanation" xml:space="preserve">
+    <value>Arrastre y suelte bloques para crear su propio patrón dinámico de nombres de archivos. Seleccione un bloque para modificar su salida o arrástrelo al contenedor para eliminarlo.</value>
+    <comment>The description for the custom file naming dialog.</comment>
+  </data>
   <data name="SettingsFolderNamingCustomPatternExplanation" xml:space="preserve">
     <value>Arrastre y suelte bloques para crear su propio patrón dinámico de nombres de archivos. Seleccione un bloque para modificar su salida o arrástrelo al contenedor para eliminarlo.</value>
     <comment>The description for the custom file naming dialog.</comment>
+  </data>
+  <data name="ScanOptionsButtonTutorialHeading" xml:space="preserve">
+    <value />
+  </data>
+  <data name="ScanOptionsButtonTutorialBody" xml:space="preserve">
+    <value />
   </data>
 </root>

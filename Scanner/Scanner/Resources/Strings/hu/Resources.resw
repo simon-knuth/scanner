@@ -1620,16 +1620,22 @@ Fuzzy</comment>
   <data name="OpenWithApp" xml:space="preserve">
     <value />
   </data>
-  <data name="SettingsFileNamingCustomPatternExplanation" xml:space="preserve">
-    <value>Húzzon ide blokkokat saját dinamikus fájlelnevezési minta létrehozásához. Válasszon egy blokkot a kimenet módosításához, vagy húzza a tálcába az eltávolításhoz.</value>
-    <comment>The description for the custom file naming dialog.</comment>
-  </data>
   <data name="CustomFolderNamingDialogHeading" xml:space="preserve">
     <value>Egyedi fájl elnevezési minta</value>
     <comment>The heading for the custom file naming dialog.</comment>
   </data>
+  <data name="SettingsFileNamingCustomPatternExplanation" xml:space="preserve">
+    <value>Húzzon ide blokkokat saját dinamikus fájlelnevezési minta létrehozásához. Válasszon egy blokkot a kimenet módosításához, vagy húzza a tálcába az eltávolításhoz.</value>
+    <comment>The description for the custom file naming dialog.</comment>
+  </data>
   <data name="SettingsFolderNamingCustomPatternExplanation" xml:space="preserve">
     <value>Húzzon ide blokkokat saját dinamikus fájlelnevezési minta létrehozásához. Válasszon egy blokkot a kimenet módosításához, vagy húzza a tálcába az eltávolításhoz.</value>
     <comment>The description for the custom file naming dialog.</comment>
+  </data>
+  <data name="ScanOptionsButtonTutorialHeading" xml:space="preserve">
+    <value />
+  </data>
+  <data name="ScanOptionsButtonTutorialBody" xml:space="preserve">
+    <value />
   </data>
 </root>

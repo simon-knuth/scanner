@@ -82,7 +82,7 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="1*" />
             </Grid.RowDefinitions>
-            
+
             <!-- Header -->
             <Grid x:Name="GridHeader" Grid.Row="0" Height="56">
                 <Grid.ColumnDefinitions>
@@ -108,7 +108,7 @@
                 </Button>
                 <Line Grid.Column="4" Margin="8,0,0,0" Stroke="{ThemeResource DividerStrokeColorDefaultBrush}" X1="0" Y1="0" X2="1" Y2="0" StrokeThickness="1" Stretch="UniformToFill" VerticalAlignment="Center" Visibility="{x:Bind CanExpandPageList, Mode=OneWay}" />
             </Grid>
-            
+
             <!-- Content -->
             <Grid x:Name="GridContent" Grid.Row="1" SizeChanged="GridContent_SizeChanged">
                 <Grid.RowDefinitions>
@@ -627,7 +627,7 @@
                         </StackPanel>
                     </Frame>
                 </ScrollViewer>
-                
+
                 <Grid Grid.Row="0" Padding="16,4,16,0">
                     <Frame x:Name="FrameComboBoxScanners" Margin="-8,0,-8,0" IsEnabled="{x:Bind ViewModel.ProjectService.IsScanProcessRunning, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}" ui:Effects.Shadow="{ThemeResource ShadowScannersComboBox}" SizeChanged="FrameComboBoxScanners_SizeChanged">
                         <ComboBox x:Name="ComboBoxScanners" AutomationProperties.AutomationId="{x:Bind tests:ScanOptions.ScannersComboBoxId}" Padding="14,11,28,11" MaxDropDownHeight="800" CornerRadius="8" HorizontalAlignment="Stretch" SelectedIndex="0" SelectionChanged="ComboBoxScanners_SelectionChanged" RightTapped="ComboBoxScanners_RightTapped">

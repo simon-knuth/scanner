@@ -1583,16 +1583,22 @@ Fuzzy</comment>
   <data name="OpenWithApp" xml:space="preserve">
     <value />
   </data>
-  <data name="SettingsFileNamingCustomPatternExplanation" xml:space="preserve">
-    <value>अपनी खुद की क्रियाशील फ़ाइल नामकरण प्रतिमान बनाने के लिए ब्लॉक उठाऍं और जोड़ें। ब्लॉक के निर्गम को संशोधित करने के लिए इसका चयन करें या इसे हटाने के लिए इसे बिन में खींचें।</value>
-    <comment>The description for the custom file naming dialog.</comment>
-  </data>
   <data name="CustomFolderNamingDialogHeading" xml:space="preserve">
     <value>फ़ाइल नामकरण का अनुकूलित प्रतिमान</value>
     <comment>The heading for the custom file naming dialog.</comment>
   </data>
+  <data name="SettingsFileNamingCustomPatternExplanation" xml:space="preserve">
+    <value>अपनी खुद की क्रियाशील फ़ाइल नामकरण प्रतिमान बनाने के लिए ब्लॉक उठाऍं और जोड़ें। ब्लॉक के निर्गम को संशोधित करने के लिए इसका चयन करें या इसे हटाने के लिए इसे बिन में खींचें।</value>
+    <comment>The description for the custom file naming dialog.</comment>
+  </data>
   <data name="SettingsFolderNamingCustomPatternExplanation" xml:space="preserve">
     <value>अपनी खुद की क्रियाशील फ़ाइल नामकरण प्रतिमान बनाने के लिए ब्लॉक उठाऍं और जोड़ें। ब्लॉक के निर्गम को संशोधित करने के लिए इसका चयन करें या इसे हटाने के लिए इसे बिन में खींचें।</value>
     <comment>The description for the custom file naming dialog.</comment>
+  </data>
+  <data name="ScanOptionsButtonTutorialHeading" xml:space="preserve">
+    <value />
+  </data>
+  <data name="ScanOptionsButtonTutorialBody" xml:space="preserve">
+    <value />
   </data>
 </root>

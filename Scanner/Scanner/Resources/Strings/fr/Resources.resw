@@ -1616,7 +1616,15 @@ Fuzzy</comment>
   <data name="OpenWithApp" xml:space="preserve">
     <value />
   </data>
+  <data name="CustomFolderNamingDialogHeading" xml:space="preserve">
+    <value>Modèle personnalisé de nom de fichier</value>
+    <comment>The heading for the custom file naming dialog.</comment>
+  </data>
   <data name="SettingsFileNamingCustomPatternExplanation" xml:space="preserve">
+    <value>Faites glisser et déposez les blocs pour créer votre propre modèle dynamique de nom de fichier. Sélectionnez un bloc pour modifier son résultat ou faites-le glisser dans la corbeille pour le supprimer.</value>
+    <comment>The description for the custom file naming dialog.</comment>
+  </data>
+  <data name="SettingsFolderNamingCustomPatternExplanation" xml:space="preserve">
     <value>Faites glisser et déposez les blocs pour créer votre propre modèle dynamique de nom de fichier. Sélectionnez un bloc pour modifier son résultat ou faites-le glisser dans la corbeille pour le supprimer.</value>
     <comment>The description for the custom file naming dialog.</comment>
   </data>
@@ -1624,12 +1632,10 @@ Fuzzy</comment>
     <value>Tout sélectionner</value>
     <comment>The option to select all similar pages for cropping.</comment>
   </data>
-  <data name="CustomFolderNamingDialogHeading" xml:space="preserve">
-    <value>Modèle personnalisé de nom de fichier</value>
-    <comment>The heading for the custom file naming dialog.</comment>
+  <data name="ScanOptionsButtonTutorialHeading" xml:space="preserve">
+    <value />
   </data>
-  <data name="SettingsFolderNamingCustomPatternExplanation" xml:space="preserve">
-    <value>Faites glisser et déposez les blocs pour créer votre propre modèle dynamique de nom de fichier. Sélectionnez un bloc pour modifier son résultat ou faites-le glisser dans la corbeille pour le supprimer.</value>
-    <comment>The description for the custom file naming dialog.</comment>
+  <data name="ScanOptionsButtonTutorialBody" xml:space="preserve">
+    <value />
   </data>
 </root>

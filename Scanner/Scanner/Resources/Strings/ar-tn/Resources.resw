@@ -1883,4 +1883,10 @@ Fuzzy</comment>
     <value>نط تسمية الملفات المخصصة</value>
     <comment>The heading for the custom file naming dialog.</comment>
   </data>
+  <data name="ScanOptionsButtonTutorialHeading" xml:space="preserve">
+    <value />
+  </data>
+  <data name="ScanOptionsButtonTutorialBody" xml:space="preserve">
+    <value />
+  </data>
 </root>

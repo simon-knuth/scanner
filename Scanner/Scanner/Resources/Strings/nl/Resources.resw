@@ -1585,16 +1585,22 @@ Fuzzy</comment>
   <data name="OpenWithApp" xml:space="preserve">
     <value />
   </data>
-  <data name="SettingsFileNamingCustomPatternExplanation" xml:space="preserve">
-    <value>Sleep blokken om je eigen dynamische bestandsnaamgevingspatroon te bouwen. Selecteer een blok om de uitvoer te wijzigen of sleep het naar de prullenbak om het te verwijderen.</value>
-    <comment>The description for the custom file naming dialog.</comment>
-  </data>
   <data name="CustomFolderNamingDialogHeading" xml:space="preserve">
     <value>Aangepaste bestandsnaam patroon</value>
     <comment>The heading for the custom file naming dialog.</comment>
   </data>
+  <data name="SettingsFileNamingCustomPatternExplanation" xml:space="preserve">
+    <value>Sleep blokken om je eigen dynamische bestandsnaamgevingspatroon te bouwen. Selecteer een blok om de uitvoer te wijzigen of sleep het naar de prullenbak om het te verwijderen.</value>
+    <comment>The description for the custom file naming dialog.</comment>
+  </data>
   <data name="SettingsFolderNamingCustomPatternExplanation" xml:space="preserve">
     <value>Sleep blokken om je eigen dynamische bestandsnaamgevingspatroon te bouwen. Selecteer een blok om de uitvoer te wijzigen of sleep het naar de prullenbak om het te verwijderen.</value>
     <comment>The description for the custom file naming dialog.</comment>
+  </data>
+  <data name="ScanOptionsButtonTutorialHeading" xml:space="preserve">
+    <value />
+  </data>
+  <data name="ScanOptionsButtonTutorialBody" xml:space="preserve">
+    <value />
   </data>
 </root>

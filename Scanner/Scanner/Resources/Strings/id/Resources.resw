@@ -1620,7 +1620,15 @@ Fuzzy</comment>
   <data name="OpenWithApp" xml:space="preserve">
     <value />
   </data>
+  <data name="CustomFolderNamingDialogHeading" xml:space="preserve">
+    <value>Pola penamaan file kustom</value>
+    <comment>The heading for the custom file naming dialog.</comment>
+  </data>
   <data name="SettingsFileNamingCustomPatternExplanation" xml:space="preserve">
+    <value>Seret dan lepas blok untuk membuat pola penamaan file dinamis anda sendiri. Pilih blok untuk mengubah outputnya atau seret ke tempat sampah untuk menghapusnya.</value>
+    <comment>The description for the custom file naming dialog.</comment>
+  </data>
+  <data name="SettingsFolderNamingCustomPatternExplanation" xml:space="preserve">
     <value>Seret dan lepas blok untuk membuat pola penamaan file dinamis anda sendiri. Pilih blok untuk mengubah outputnya atau seret ke tempat sampah untuk menghapusnya.</value>
     <comment>The description for the custom file naming dialog.</comment>
   </data>
@@ -1628,12 +1636,10 @@ Fuzzy</comment>
     <value>Pilih semua</value>
     <comment>The option to select all similar pages for cropping.</comment>
   </data>
-  <data name="CustomFolderNamingDialogHeading" xml:space="preserve">
-    <value>Pola penamaan file kustom</value>
-    <comment>The heading for the custom file naming dialog.</comment>
+  <data name="ScanOptionsButtonTutorialHeading" xml:space="preserve">
+    <value />
   </data>
-  <data name="SettingsFolderNamingCustomPatternExplanation" xml:space="preserve">
-    <value>Seret dan lepas blok untuk membuat pola penamaan file dinamis anda sendiri. Pilih blok untuk mengubah outputnya atau seret ke tempat sampah untuk menghapusnya.</value>
-    <comment>The description for the custom file naming dialog.</comment>
+  <data name="ScanOptionsButtonTutorialBody" xml:space="preserve">
+    <value />
   </data>
 </root>

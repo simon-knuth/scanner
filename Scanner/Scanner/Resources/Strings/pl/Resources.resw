@@ -1639,7 +1639,15 @@ Fuzzy</comment>
   <data name="OpenWithApp" xml:space="preserve">
     <value />
   </data>
+  <data name="CustomFolderNamingDialogHeading" xml:space="preserve">
+    <value>Niestandardowy wzór nazywania plików</value>
+    <comment>The heading for the custom file naming dialog.</comment>
+  </data>
   <data name="SettingsFileNamingCustomPatternExplanation" xml:space="preserve">
+    <value>Przeciągnij i upuść bloki, aby zbudować własny dynamiczny wzorzec nazywania plików. Zaznacz blok, aby zmodyfikować jego dane wyjściowe, lub przeciągnij go do kosza, aby go usunąć.</value>
+    <comment>The description for the custom file naming dialog.</comment>
+  </data>
+  <data name="SettingsFolderNamingCustomPatternExplanation" xml:space="preserve">
     <value>Przeciągnij i upuść bloki, aby zbudować własny dynamiczny wzorzec nazywania plików. Zaznacz blok, aby zmodyfikować jego dane wyjściowe, lub przeciągnij go do kosza, aby go usunąć.</value>
     <comment>The description for the custom file naming dialog.</comment>
   </data>
@@ -1647,12 +1655,10 @@ Fuzzy</comment>
     <value>Zaznacz wszystkie</value>
     <comment>The option to select all similar pages for cropping.</comment>
   </data>
-  <data name="CustomFolderNamingDialogHeading" xml:space="preserve">
-    <value>Niestandardowy wzór nazywania plików</value>
-    <comment>The heading for the custom file naming dialog.</comment>
+  <data name="ScanOptionsButtonTutorialHeading" xml:space="preserve">
+    <value />
   </data>
-  <data name="SettingsFolderNamingCustomPatternExplanation" xml:space="preserve">
-    <value>Przeciągnij i upuść bloki, aby zbudować własny dynamiczny wzorzec nazywania plików. Zaznacz blok, aby zmodyfikować jego dane wyjściowe, lub przeciągnij go do kosza, aby go usunąć.</value>
-    <comment>The description for the custom file naming dialog.</comment>
+  <data name="ScanOptionsButtonTutorialBody" xml:space="preserve">
+    <value />
   </data>
 </root>

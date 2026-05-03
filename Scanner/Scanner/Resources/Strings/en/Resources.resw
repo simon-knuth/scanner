@@ -1890,8 +1890,16 @@ Fuzzy</comment>
   <data name="OpenWithApp" xml:space="preserve">
     <value>Open with {0}</value>
   </data>
+  <data name="CustomFolderNamingDialogHeading" xml:space="preserve">
+    <value>Custom folder naming pattern</value>
+    <comment>The heading for the custom folder naming dialog.</comment>
+  </data>
   <data name="SettingsFileNamingCustomPatternExplanation" xml:space="preserve">
     <value>Drag and drop blocks to build your own dynamic file naming pattern. Select a block to modify its output or drag it into the bin to remove it.</value>
+    <comment>The description for the custom file naming dialog.</comment>
+  </data>
+  <data name="SettingsFolderNamingCustomPatternExplanation" xml:space="preserve">
+    <value>Drag and drop blocks to build your own dynamic folder naming pattern. Select a block to modify its output or drag it into the bin to remove it.</value>
     <comment>The description for the custom file naming dialog.</comment>
   </data>
   <data name="SelectAll" xml:space="preserve">
@@ -1925,12 +1933,10 @@ Fuzzy</comment>
   <data name="ScanAreaAlignmentHeading" xml:space="preserve">
     <value>Scan area alignment</value>
   </data>
-  <data name="CustomFolderNamingDialogHeading" xml:space="preserve">
-    <value>Custom folder naming pattern</value>
-    <comment>The heading for the custom folder naming dialog.</comment>
+  <data name="ScanOptionsButtonTutorialHeading" xml:space="preserve">
+    <value>The scan options are here</value>
   </data>
-  <data name="SettingsFolderNamingCustomPatternExplanation" xml:space="preserve">
-    <value>Drag and drop blocks to build your own dynamic folder naming pattern. Select a block to modify its output or drag it into the bin to remove it.</value>
-    <comment>The description for the custom file naming dialog.</comment>
+  <data name="ScanOptionsButtonTutorialBody" xml:space="preserve">
+    <value>Keep scanning with your selected options or click here to change them.</value>
   </data>
 </root>

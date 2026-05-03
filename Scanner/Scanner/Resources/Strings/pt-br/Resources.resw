@@ -1623,7 +1623,15 @@ Fuzzy</comment>
   <data name="OpenWithApp" xml:space="preserve">
     <value />
   </data>
+  <data name="CustomFolderNamingDialogHeading" xml:space="preserve">
+    <value>Padrão de nomeação de arquivos personalizado</value>
+    <comment>The heading for the custom file naming dialog.</comment>
+  </data>
   <data name="SettingsFileNamingCustomPatternExplanation" xml:space="preserve">
+    <value>Arraste e solte blocos para gerar seu próprio padrão dinâmico de nomeação de arquivos. Selecione um bloco para modificar seu resultado ou arraste-o para a lixeira para removê-lo.</value>
+    <comment>The description for the custom file naming dialog.</comment>
+  </data>
+  <data name="SettingsFolderNamingCustomPatternExplanation" xml:space="preserve">
     <value>Arraste e solte blocos para gerar seu próprio padrão dinâmico de nomeação de arquivos. Selecione um bloco para modificar seu resultado ou arraste-o para a lixeira para removê-lo.</value>
     <comment>The description for the custom file naming dialog.</comment>
   </data>
@@ -1631,12 +1639,10 @@ Fuzzy</comment>
     <value>Selecionar tudo</value>
     <comment>The option to select all similar pages for cropping.</comment>
   </data>
-  <data name="CustomFolderNamingDialogHeading" xml:space="preserve">
-    <value>Padrão de nomeação de arquivos personalizado</value>
-    <comment>The heading for the custom file naming dialog.</comment>
+  <data name="ScanOptionsButtonTutorialHeading" xml:space="preserve">
+    <value />
   </data>
-  <data name="SettingsFolderNamingCustomPatternExplanation" xml:space="preserve">
-    <value>Arraste e solte blocos para gerar seu próprio padrão dinâmico de nomeação de arquivos. Selecione um bloco para modificar seu resultado ou arraste-o para a lixeira para removê-lo.</value>
-    <comment>The description for the custom file naming dialog.</comment>
+  <data name="ScanOptionsButtonTutorialBody" xml:space="preserve">
+    <value />
   </data>
 </root>

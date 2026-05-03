@@ -196,6 +196,12 @@ internal class SettingsService : ObservableObject, ISettingsService
         set => SetSetting(nameof(SettingExpandPageList), value);
     }
 
+    public bool TutorialScanOptionsButtonShown
+    {
+        get => GetSetting<bool>(nameof(TutorialScanOptionsButtonShown), false);
+        set => SetSetting(nameof(TutorialScanOptionsButtonShown), value);
+    }
+
     public bool SettingMirrorAppLayout
     {
         get => GetSetting<bool>(nameof(SettingMirrorAppLayout), false);

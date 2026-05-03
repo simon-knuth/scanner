@@ -1619,7 +1619,15 @@ Fuzzy</comment>
   <data name="OpenWithApp" xml:space="preserve">
     <value />
   </data>
+  <data name="CustomFolderNamingDialogHeading" xml:space="preserve">
+    <value>Пользовательский шаблон именования файлов</value>
+    <comment>The heading for the custom file naming dialog.</comment>
+  </data>
   <data name="SettingsFileNamingCustomPatternExplanation" xml:space="preserve">
+    <value>Перетаскивайте блоки, чтобы создать собственный шаблон динамического именования файлов. Выберите блок, чтобы изменить его вывод, или перетащите его в корзину, чтобы удалить.</value>
+    <comment>The description for the custom file naming dialog.</comment>
+  </data>
+  <data name="SettingsFolderNamingCustomPatternExplanation" xml:space="preserve">
     <value>Перетаскивайте блоки, чтобы создать собственный шаблон динамического именования файлов. Выберите блок, чтобы изменить его вывод, или перетащите его в корзину, чтобы удалить.</value>
     <comment>The description for the custom file naming dialog.</comment>
   </data>
@@ -1627,12 +1635,10 @@ Fuzzy</comment>
     <value>Выбрать всё</value>
     <comment>The option to select all similar pages for cropping.</comment>
   </data>
-  <data name="CustomFolderNamingDialogHeading" xml:space="preserve">
-    <value>Пользовательский шаблон именования файлов</value>
-    <comment>The heading for the custom file naming dialog.</comment>
+  <data name="ScanOptionsButtonTutorialHeading" xml:space="preserve">
+    <value />
   </data>
-  <data name="SettingsFolderNamingCustomPatternExplanation" xml:space="preserve">
-    <value>Перетаскивайте блоки, чтобы создать собственный шаблон динамического именования файлов. Выберите блок, чтобы изменить его вывод, или перетащите его в корзину, чтобы удалить.</value>
-    <comment>The description for the custom file naming dialog.</comment>
+  <data name="ScanOptionsButtonTutorialBody" xml:space="preserve">
+    <value />
   </data>
 </root>

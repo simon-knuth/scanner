@@ -1638,7 +1638,15 @@ Fuzzy</comment>
   <data name="OpenWithApp" xml:space="preserve">
     <value />
   </data>
+  <data name="CustomFolderNamingDialogHeading" xml:space="preserve">
+    <value>Vlastní maska pojmenování souborů</value>
+    <comment>The heading for the custom file naming dialog.</comment>
+  </data>
   <data name="SettingsFileNamingCustomPatternExplanation" xml:space="preserve">
+    <value>Přetažením bloků si můžete vytvořit vlastní dynamický vzor pojmenování souborů. Výběrem bloku upravte jeho výstup nebo jej přetažením do koše odstraňte.</value>
+    <comment>The description for the custom file naming dialog.</comment>
+  </data>
+  <data name="SettingsFolderNamingCustomPatternExplanation" xml:space="preserve">
     <value>Přetažením bloků si můžete vytvořit vlastní dynamický vzor pojmenování souborů. Výběrem bloku upravte jeho výstup nebo jej přetažením do koše odstraňte.</value>
     <comment>The description for the custom file naming dialog.</comment>
   </data>
@@ -1646,12 +1654,10 @@ Fuzzy</comment>
     <value>Vybrat vše</value>
     <comment>The option to select all similar pages for cropping.</comment>
   </data>
-  <data name="CustomFolderNamingDialogHeading" xml:space="preserve">
-    <value>Vlastní maska pojmenování souborů</value>
-    <comment>The heading for the custom file naming dialog.</comment>
+  <data name="ScanOptionsButtonTutorialHeading" xml:space="preserve">
+    <value />
   </data>
-  <data name="SettingsFolderNamingCustomPatternExplanation" xml:space="preserve">
-    <value>Přetažením bloků si můžete vytvořit vlastní dynamický vzor pojmenování souborů. Výběrem bloku upravte jeho výstup nebo jej přetažením do koše odstraňte.</value>
-    <comment>The description for the custom file naming dialog.</comment>
+  <data name="ScanOptionsButtonTutorialBody" xml:space="preserve">
+    <value />
   </data>
 </root>
