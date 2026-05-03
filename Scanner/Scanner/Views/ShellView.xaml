@@ -380,6 +380,19 @@
                                         </TransitionCollection>
                                     </StackPanel.ChildrenTransitions>
 
+                                    <controls:SettingsExpander Header="General">
+                                        <controls:SettingsExpander.HeaderIcon>
+                                            <FontIcon Glyph="&#xE768;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                        </controls:SettingsExpander.HeaderIcon>
+
+                                        <controls:SettingsExpander.Items>
+                                            <controls:SettingsCard x:Name="SettingsCardDebugResetSettings" Header="Reset settings" IsClickEnabled="True" Click="SettingsCardDebugResetSettings_Click">
+                                                <controls:SettingsCard.HeaderIcon>
+                                                    <FontIcon Glyph="&#xEBC4;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                                </controls:SettingsCard.HeaderIcon>
+                                            </controls:SettingsCard>
+                                        </controls:SettingsExpander.Items>
+                                    </controls:SettingsExpander>
                                     <controls:SettingsExpander Header="Dialogs">
                                         <controls:SettingsExpander.HeaderIcon>
                                             <FontIcon Glyph="&#xE768;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />

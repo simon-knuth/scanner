@@ -69,6 +69,7 @@ public interface ISettingsService : INotifyPropertyChanged
     string? LastOpenWithAppBmp { get; set; }
     string? LastOpenWithAppTiff { get; set; }
 
+    void ResetAllSettingsAndRestart();
     void TryLogAllSettings();
 }
 

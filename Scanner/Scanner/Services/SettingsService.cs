@@ -27,6 +27,7 @@ using System.Security.Cryptography;
 using Scanner.Models.ItemNaming;
 using Scanner.Views;
 using Scanner.Helpers;
+using Microsoft.Windows.AppLifecycle;
 
 namespace Scanner.Services;
 
@@ -346,6 +347,13 @@ internal class SettingsService : ObservableObject, ISettingsService
 
         settingsContainer.Values[name.ToUpper()] = value;
         OnPropertyChanged(name);
+    }
+
+    public void ResetAllSettingsAndRestart()
+    {
+        LogService?.Log.Information("Resetting all settings values");
+        settingsContainer.Values.Clear();
+        AppInstance.Restart("");
     }
 
     public void TryLogAllSettings()

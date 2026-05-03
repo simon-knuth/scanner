@@ -733,4 +733,9 @@ public sealed partial class ShellView : Page
     {
         IsTitlebarPreviewTextVisible = false;
     }
+
+    private void SettingsCardDebugResetSettings_Click(object sender, RoutedEventArgs e)
+    {
+        ViewModel.SettingsService.ResetAllSettingsAndRestart();
+    }
 }
