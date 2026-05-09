@@ -170,7 +170,7 @@ public static class ItemNamingStatics
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////        
     public static ScanOptions GetPreviewScanOptions(IScanningDevice? scanner)
     {
-        return new ScanOptions(scanner ?? PreviewScanner, false)
+        return new ScanOptions(scanner ?? PreviewScanner)
         {
             Brightness = -20,
             Contrast = 5,

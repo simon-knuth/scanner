@@ -655,6 +655,9 @@ public sealed partial class ScanOptionsView : Page
             case nameof(ScanOptions.SourceMode):
                 this.RunOnUIThread(Microsoft.UI.Dispatching.DispatcherQueuePriority.Normal, () =>
                 {
+                    OnPropertyChanged(nameof(IsSourceModeAutomatic));
+                    OnPropertyChanged(nameof(IsSourceModeFlatbed));
+                    OnPropertyChanged(nameof(IsSourceModeFeeder));
                     OnPropertyChanged(nameof(IsColorModeResolutionBrightnessContrastVisible));
                     OnPropertyChanged(nameof(IsColorModeColorSupported));
                     OnPropertyChanged(nameof(IsColorModeGrayscaleSupported));

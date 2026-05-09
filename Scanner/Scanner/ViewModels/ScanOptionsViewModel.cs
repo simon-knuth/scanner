@@ -3,11 +3,13 @@ using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Dispatching;
+using Scanner.Data;
 using Scanner.Extensions;
 using Scanner.Messages;
 using Scanner.Models;
 using Scanner.Models.Interfaces;
 using Scanner.Models.ScanningDevices;
+using Scanner.Services;
 using Scanner.Services.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -30,6 +32,7 @@ partial class ScanOptionsViewModel : ObservableRecipient, IDisposable
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     #region Services
     public readonly IAppDataService AppDataService = Ioc.Default.GetRequiredService<IAppDataService>();
+    public readonly IKnownScannersService KnownScannersService = Ioc.Default.GetRequiredService<IKnownScannersService>();
     public readonly ILogService? LogService = Ioc.Default.GetService<ILogService>();
     public readonly IProjectService ProjectService = Ioc.Default.GetRequiredService<IProjectService>();
     private readonly IScannerDiscoveryService ScannerDiscoveryService = Ioc.Default.GetRequiredService<IScannerDiscoveryService>();
@@ -47,7 +50,7 @@ partial class ScanOptionsViewModel : ObservableRecipient, IDisposable
     public RelayCommand DisposeCommand => new RelayCommand(Dispose);
     #endregion
 
-    private ScanOptions scanOptions = new(null, false);
+    private ScanOptions scanOptions = new(null);
     public ScanOptions ScanOptions
     {
         get => scanOptions;
@@ -75,7 +78,19 @@ partial class ScanOptionsViewModel : ObservableRecipient, IDisposable
         {
             if (SetProperty(ref selectedScanner, value))
             {
-                ScanOptions = new ScanOptions(value, true);
+                KnownScannerEntry? knownScanner = null;
+                if (value != null && knownScanners.Task.IsCompleted)
+                    knownScanner = knownScanners.Task.Result.FirstOrDefault(x => x.Id == value.Id);
+
+                if (knownScanner != null)
+                {
+                    ScanOptions scanOptions = new(value);
+                    knownScanner.TryRestoreOptions(value!, scanOptions);
+                    ScanOptions = scanOptions;
+                }
+                else
+                    ScanOptions = new ScanOptions(value);
+
                 OnPropertyChanged(nameof(AreScanOptionsAvailable));
                 _ = CleanUpScanAreaAlignmentBitmapAsync();
                 Messenger.Send(new SelectedScannerChangedMessage(value));
@@ -87,6 +102,8 @@ partial class ScanOptionsViewModel : ObservableRecipient, IDisposable
 
     public ObservableCollection<IScanningDevice> Scanners = new();
     public SemaphoreSlim SemaphoreScanners = new SemaphoreSlim(1, 1);
+
+    private TaskCompletionSource<IReadOnlyList<KnownScannerEntry>> knownScanners = new();
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(ScanAreaAlignmentBitmapUri))]
@@ -106,13 +123,15 @@ partial class ScanOptionsViewModel : ObservableRecipient, IDisposable
     public ScanOptionsViewModel()
     {
         ScannerDiscoveryService.ScanningDeviceLost += ScannerDiscoveryService_ScanningDeviceLost;
-
         ProjectService.PropertyChanged += ProjectService_PropertyChanged;
+        KnownScannersService.UpdatedEntry += KnownScannersService_UpdatedEntry;
 
         Messenger.Register<SelectedScannerRequestMessage>(this, (r, m) =>
         {
             m.Reply(SelectedScanner);
         });
+
+        _ = Task.Run(async () => knownScanners.TrySetResult(await KnownScannersService.GetKnownScannersAsync()));
     }
 
 
@@ -167,6 +186,12 @@ partial class ScanOptionsViewModel : ObservableRecipient, IDisposable
     {
         if (e.PropertyName == nameof(IProjectService.IsScanProcessRunning))
             OnPropertyChanged(nameof(AreScanOptionsAvailable));
+    }
+
+    private void KnownScannersService_UpdatedEntry(object? sender, EventArgs e)
+    {
+        knownScanners = new();
+        _ = Task.Run(async () => knownScanners.TrySetResult(await KnownScannersService.GetKnownScannersAsync()));
     }
 
     private async Task SelectBestAvailableScannerAsync()

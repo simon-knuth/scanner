@@ -358,7 +358,7 @@ internal partial class HardwareScanner : IScanningDevice
         else
         {
             // scan low-res image and use it as preview
-            ScanOptions scanOptions = new(this, false, sourceMode);
+            ScanOptions scanOptions = new(this, sourceMode);
 
             List<ImageScannerFormat> formats;
             switch (scanOptions.SourceMode)

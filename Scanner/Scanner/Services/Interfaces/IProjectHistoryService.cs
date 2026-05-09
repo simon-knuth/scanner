@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace Scanner.Services.Interfaces;
 
+/// <summary>
+/// Keeps track of past target files.
+/// </summary>
 internal interface IProjectHistoryService
 {
     event EventHandler HistoryChanged;

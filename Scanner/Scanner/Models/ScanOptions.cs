@@ -15,6 +15,8 @@ using Scanner.Models.Interfaces;
 using static Scanner.Helpers.Helpers;
 using Scanner.Services.Interfaces;
 using CommunityToolkit.Mvvm.DependencyInjection;
+using Scanner.Tests;
+using Scanner.Data;
 
 namespace Scanner.Models;
 
@@ -23,10 +25,6 @@ public partial class ScanOptions : ObservableObject
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////                
-    #region Services
-    private readonly ISettingsService SettingsService = Ioc.Default.GetRequiredService<ISettingsService>();
-    #endregion
-
     [ObservableProperty]
     private IScanningDevice? scanner;
 
@@ -68,9 +66,26 @@ public partial class ScanOptions : ObservableObject
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    public ScanOptions(IScanningDevice? scanner, bool restoreFromDatabase, ScannerSource? forceSourceMode = null)
+    public ScanOptions(IScanningDevice? scanner, ScannerSource? forceSourceMode = null)
     {
-        SetScanOptionsForScanner(scanner, restoreFromDatabase, forceSourceMode);
+        SetScanOptionsForScanner(scanner, forceSourceMode);
+    }
+
+    public static async Task<ScanOptions> CreateAndRestoreFromDatabaseAsync(IScanningDevice? scanner, ScannerSource? forceSourceMode = null)
+    {
+        ScanOptions scanOptions = new(scanner, forceSourceMode);
+
+        KnownScannerEntry? entry = null;
+        if (scanner != null)
+        {
+            IKnownScannersService knownScannersService = Ioc.Default.GetRequiredService<IKnownScannersService>();
+            entry = await knownScannersService.GetEntryAsync(scanner.Id);
+
+            if (entry != null)
+                entry.TryRestoreOptions(scanner, scanOptions);
+        }
+
+        return scanOptions;
     }
 
 
@@ -210,17 +225,17 @@ public partial class ScanOptions : ObservableObject
         }
     }
 
-    private void SetScanOptionsForScanner(IScanningDevice? scanner, bool restoreFromDatabase, ScannerSource? forceSourceMode)
+    private void SetScanOptionsForScanner(IScanningDevice? scanner, ScannerSource? forcedSourceMode)
     {
         Scanner = scanner;
         if (Scanner == null) return;
 
         // source mode
-        if (Scanner.IsAutoAllowed && forceSourceMode is null or ScannerSource.Auto)
+        if (Scanner.IsAutoAllowed && forcedSourceMode is null or ScannerSource.Auto)
         {
             SourceMode = ScannerSource.Auto;
         }
-        else if (Scanner.IsFlatbedAllowed && forceSourceMode is null or ScannerSource.Flatbed)
+        else if (Scanner.IsFlatbedAllowed && forcedSourceMode is null or ScannerSource.Flatbed)
         {
             SourceMode = ScannerSource.Flatbed;
 
@@ -248,7 +263,7 @@ public partial class ScanOptions : ObservableObject
             // scan area
             ScanArea = null;
         }
-        else if (Scanner.IsFeederAllowed && forceSourceMode is null or ScannerSource.Feeder)
+        else if (Scanner.IsFeederAllowed && forcedSourceMode is null or ScannerSource.Feeder)
         {
             SourceMode = ScannerSource.Feeder;
 

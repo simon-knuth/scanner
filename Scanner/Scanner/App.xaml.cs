@@ -80,6 +80,7 @@ public partial class App : Application
             .AddSingleton<ICopilotRuntimeService, CopilotRuntimeService>()
             .AddSingleton<IAccessibilityService, AccessibilityService>()
             .AddSingleton<IProjectHistoryService, ProjectHistoryService>()
+            .AddSingleton<IKnownScannersService, KnownScannersService>()
             .BuildServiceProvider());
 
         WeakReferenceMessenger.Default.Register<MainWindowClosingMessage>(this, (r, m) =>
@@ -94,7 +95,7 @@ public partial class App : Application
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
+    protected override void OnLaunched(LaunchActivatedEventArgs args)
     {
         // get the activation args
         var appArgs = AppInstance.GetCurrent().GetActivatedEventArgs();
@@ -135,6 +136,7 @@ public partial class App : Application
                         MainWindow = new MainWindow();
                         MainWindow.Activate();
                         KeyboardHookHelper.Initialize(MainWindow);
+                        _ = Task.Run(async () => await Ioc.Default.GetRequiredService<IKnownScannersService>().InitializeAsync());
                         _ = Task.Run(async () => await Ioc.Default.GetRequiredService<IProjectHistoryService>().InitializeAsync(MainDispatcherQueue));
                     });
                 }

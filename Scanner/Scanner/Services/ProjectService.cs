@@ -50,6 +50,7 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
     #region Services
     private readonly IAppDataService AppDataService = Ioc.Default.GetRequiredService<IAppDataService>();
     private readonly ICopilotRuntimeService CopilotRuntimeService = Ioc.Default.GetRequiredService<ICopilotRuntimeService>();
+    private readonly IKnownScannersService KnownScannersService = Ioc.Default.GetRequiredService<IKnownScannersService>();
     private readonly ILogService? LogService = Ioc.Default.GetService<ILogService>();
     private readonly IProjectHistoryService ProjectHistoryService = Ioc.Default.GetRequiredService<IProjectHistoryService>();
     private readonly ISaveLocationService SaveLocationService = Ioc.Default.GetRequiredService<ISaveLocationService>();
@@ -250,7 +251,7 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
         {
             LogService?.Log.Error(exc, "Failed to create project from data");
             SentryService?.TrackError(exc);
-            Messenger.Send(new ShowInAppNotificationMessage(new CommunityToolkit.WinUI.Behaviors.Notification()
+            Messenger.Send(new ShowInAppNotificationMessage(new Notification()
             {
                 Title = "Something went wrong",
                 Message = string.IsNullOrEmpty(exc.Message) ? exc.Message : "Please try again later."
@@ -384,7 +385,7 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
         {
             LogService?.Log.Error(exc, "Failed to create project from scan");
             SentryService?.TrackError(exc);
-            Messenger.Send(new ShowInAppNotificationMessage(new CommunityToolkit.WinUI.Behaviors.Notification()
+            Messenger.Send(new ShowInAppNotificationMessage(new Notification()
             {
                 Title = "Something went wrong",
                 Message = string.IsNullOrEmpty(exc.Message) ? exc.Message : "Please try again later."
@@ -468,7 +469,7 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
         {
             LogService?.Log.Error(exc, "Failed to scan to project");
             SentryService?.TrackError(exc);
-            Messenger.Send(new ShowInAppNotificationMessage(new CommunityToolkit.WinUI.Behaviors.Notification()
+            Messenger.Send(new ShowInAppNotificationMessage(new Notification()
             {
                 Title = "Something went wrong",
                 Message = string.IsNullOrEmpty(exc.Message) ? exc.Message : "Please try again later."
@@ -530,7 +531,7 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
             // create project data
             TargetFormat targetFormat = Helpers.Helpers.FileExtensionToTargetFormat(extension);
             IProjectCreationData projectCreationData;
-            ScanOptions scanOptions = new(null, false)
+            ScanOptions scanOptions = new(null)
             {
                 TargetFormat = targetFormat
             };
@@ -570,6 +571,10 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
             return null;
 
         IsScanProcessRunning = true;
+
+        if (SettingsService.SettingRememberScanOptions)
+            await KnownScannersService.RecordScannerUsageAsync(scanOptions.Scanner, scanOptions);
+
         await AppDataService.EmptyFolderAsync(AppDataService.IncomingFolder);
         IReadOnlyList<StorageFile> files = [];
         await Task.Run(async () => files = await scanOptions.Scanner.GetScanAsync(scanOptions, AppDataService.IncomingFolder, uiDispatcherQueue));
@@ -579,7 +584,7 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
             // this should only happen if the feeder is empty
             if (scanOptions.SourceMode == ScannerSource.Feeder)
             {
-                Messenger.Send(new ShowInAppNotificationMessage(new CommunityToolkit.WinUI.Behaviors.Notification()
+                Messenger.Send(new ShowInAppNotificationMessage(new Notification()
                 {
                     Title = "Feeder empty",
                     Message = "There are no pages in the feeder. Please make sure you have inserted them correctly for the scanner to detect them."
@@ -587,7 +592,7 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
             }
             else
             {
-                Messenger.Send(new ShowInAppNotificationMessage(new CommunityToolkit.WinUI.Behaviors.Notification()
+                Messenger.Send(new ShowInAppNotificationMessage(new Notification()
                 {
                     Title = "Something went wrong",
                     Message = "Please try again later."
@@ -617,14 +622,14 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
         }
         catch (ActionFailedAndRolledBackException)
         {
-            Messenger.Send(new ShowInAppNotificationMessage(new CommunityToolkit.WinUI.Behaviors.Notification
+            Messenger.Send(new ShowInAppNotificationMessage(new Notification
             {
                 Title = "Something went wrong and the actions couldn't be completed"
             }));
         }
         catch (Exception)
         {
-            Messenger.Send(new ShowInAppNotificationMessage(new CommunityToolkit.WinUI.Behaviors.Notification
+            Messenger.Send(new ShowInAppNotificationMessage(new Notification
             {
                 Title = "Something went wrong and the project needs to be closed"
             }));
@@ -670,7 +675,7 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
         }
         catch (ActionFailedAndRolledBackException)
         {
-            Messenger.Send(new ShowInAppNotificationMessage(new CommunityToolkit.WinUI.Behaviors.Notification
+            Messenger.Send(new ShowInAppNotificationMessage(new Notification
             {
                 Title = "Something went wrong and the action couldn't be completed"
             }));
@@ -698,7 +703,7 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
         }
         catch (ActionFailedAndRolledBackException)
         {
-            Messenger.Send(new ShowInAppNotificationMessage(new CommunityToolkit.WinUI.Behaviors.Notification
+            Messenger.Send(new ShowInAppNotificationMessage(new Notification
             {
                 Title = "Something went wrong and the action couldn't be completed"
             }));
@@ -726,7 +731,7 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
         }
         catch (ActionFailedAndRolledBackException)
         {
-            Messenger.Send(new ShowInAppNotificationMessage(new CommunityToolkit.WinUI.Behaviors.Notification
+            Messenger.Send(new ShowInAppNotificationMessage(new Notification
             {
                 Title = "Something went wrong and the action couldn't be completed"
             }));
@@ -755,7 +760,7 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
         }
         catch (ActionFailedAndRolledBackException)
         {
-            Messenger.Send(new ShowInAppNotificationMessage(new CommunityToolkit.WinUI.Behaviors.Notification
+            Messenger.Send(new ShowInAppNotificationMessage(new Notification
             {
                 Title = "Something went wrong and the action couldn't be completed"
             }));
@@ -784,7 +789,7 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
         }
         catch (ActionFailedAndRolledBackException)
         {
-            Messenger.Send(new ShowInAppNotificationMessage(new CommunityToolkit.WinUI.Behaviors.Notification
+            Messenger.Send(new ShowInAppNotificationMessage(new Notification
             {
                 Title = "Something went wrong and the action couldn't be completed"
             }));
@@ -812,7 +817,7 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
         }
         catch (ActionFailedAndRolledBackException)
         {
-            Messenger.Send(new ShowInAppNotificationMessage(new CommunityToolkit.WinUI.Behaviors.Notification
+            Messenger.Send(new ShowInAppNotificationMessage(new Notification
             {
                 Title = "Something went wrong and the action couldn't be completed"
             }));
@@ -983,7 +988,7 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
         }
         catch (ActionFailedAndRolledBackException)
         {
-            Messenger.Send(new ShowInAppNotificationMessage(new CommunityToolkit.WinUI.Behaviors.Notification
+            Messenger.Send(new ShowInAppNotificationMessage(new Notification
             {
                 Title = "Something went wrong and the actions couldn't be completed"
             }));
@@ -999,7 +1004,7 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
         }
         catch (Exception)
         {
-            Messenger.Send(new ShowInAppNotificationMessage(new CommunityToolkit.WinUI.Behaviors.Notification
+            Messenger.Send(new ShowInAppNotificationMessage(new Notification
             {
                 Title = "Something went wrong and the project needs to be closed"
             }));
@@ -1032,7 +1037,7 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
         }
         catch (ActionFailedAndRolledBackException)
         {
-            Messenger.Send(new ShowInAppNotificationMessage(new CommunityToolkit.WinUI.Behaviors.Notification
+            Messenger.Send(new ShowInAppNotificationMessage(new Notification
             {
                 Title = "Something went wrong and the actions couldn't be completed"
             }));
@@ -1045,7 +1050,7 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
         }
         catch (Exception)
         {
-            Messenger.Send(new ShowInAppNotificationMessage(new CommunityToolkit.WinUI.Behaviors.Notification
+            Messenger.Send(new ShowInAppNotificationMessage(new Notification
             {
                 Title = "Something went wrong and the project needs to be closed"
             }));
