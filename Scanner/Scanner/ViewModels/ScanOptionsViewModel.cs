@@ -42,6 +42,7 @@ partial class ScanOptionsViewModel : ObservableRecipient, IDisposable
     #region Commands
     public AsyncRelayCommand DebugAddScannerCommand => new AsyncRelayCommand(AddDebugScannerAsync);
     public AsyncRelayCommand DebugRemoveScannerCommand => new AsyncRelayCommand(RemoveDebugScannerAsync);
+    public AsyncRelayCommand DebugAutoSelectScannerCommand => new AsyncRelayCommand(SelectBestAvailableScannerAsync);
     public RelayCommand ResetBrightnessCommand => new RelayCommand(ResetBrightness);
     public RelayCommand ResetContrastCommand => new RelayCommand(ResetContrast);
     public AsyncRelayCommand UpdateScanAreaAlignmentBitmapAsyncCommand => new AsyncRelayCommand(UpdateScanAreaAlignmentBitmapAsync);
@@ -200,9 +201,11 @@ partial class ScanOptionsViewModel : ObservableRecipient, IDisposable
         if (Scanners.Count > 0)
         {
             await viewLoading.Task;
+            IReadOnlyList<KnownScannerEntry> knownScanners = await this.knownScanners.Task.WaitAsync(TimeSpan.FromSeconds(3));
+
             viewDispatcherQueue!.RunOnThread(DispatcherQueuePriority.High, () =>
             {
-                SelectedScanner = Scanners[0];
+                SelectedScanner = knownScanners.Select(k => Scanners.FirstOrDefault(s => s.Id == k.Id)).FirstOrDefault(s => s != null) ?? Scanners[0];
             });
         }
         SemaphoreScanners.Release();

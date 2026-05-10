@@ -301,13 +301,6 @@
                         </ComboBox.Items>
                     </ComboBox>
                 </controls:SettingsCard>
-                <controls:SettingsCard Header="Favorite scanners">
-                    <controls:SettingsCard.HeaderIcon>
-                        <FontIcon Glyph="&#xE728;" FontFamily="{StaticResource SymbolThemeFontFamily}" />
-                    </controls:SettingsCard.HeaderIcon>
-
-                    <Button Content="Reset list" />
-                </controls:SettingsCard>
             </StackPanel>
         </ScrollViewer>
 

@@ -723,6 +723,7 @@
                                             <StackPanel Orientation="Horizontal" Spacing="4">
                                                 <Button AutomationProperties.AutomationId="{x:Bind tests:ScanOptions.AddDebugScannerButtonId}" Content="Add scanner" Command="{x:Bind ViewModel.DebugAddScannerCommand}" Style="{StaticResource AccentButtonStyle}" />
                                                 <Button Content="Remove scanner" IsEnabled="{x:Bind ViewModel.SelectedScanner, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}}" Command="{x:Bind ViewModel.DebugRemoveScannerCommand}" />
+                                                <Button Content="Auto-select scanner" Command="{x:Bind ViewModel.DebugAutoSelectScannerCommand}" />
                                             </StackPanel>
                                         </StackPanel>
                                     </StackPanel>
