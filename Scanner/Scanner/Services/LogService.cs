@@ -1,24 +1,26 @@
-﻿using Microsoft.UI.Windowing;
-using Microsoft.UI.Xaml.Media;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.UI;
+using Microsoft.UI.Windowing;
+using Microsoft.UI.Xaml.Media;
+using Scanner.Models.Interfaces;
+using Scanner.Services.Interfaces;
+using Serilog;
+using Serilog.Exceptions;
+using Serilog.Sinks.File;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using WinRT.Interop;
-using CommunityToolkit.Mvvm.ComponentModel;
-using Scanner.Services.Interfaces;
-using Scanner.Models.Interfaces;
-using System.Threading;
-using Windows.Devices.Enumeration;
-using Serilog.Sinks.File;
-using Serilog;
 using System.IO;
+using System.Linq;
+using System.Runtime.InteropServices;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
+using Windows.Devices.Enumeration;
 using Windows.Storage;
 using Windows.System;
-using Serilog.Exceptions;
+using Windows.System.Profile;
+using WinRT.Interop;
 
 namespace Scanner.Services;
 
@@ -99,7 +101,20 @@ internal partial class LogService : ILogService
                 .CreateLogger();
 
         log.Information("--- Log initialized ---");
+        log.Information("App version: {AppVersion}", Helpers.Helpers.GetCurrentVersion());
+        log.Information("Windows version: {WindowsVersion}", GetWindowsVersion());
+        log.Information("System architecture: {SystemArchitecture}", RuntimeInformation.OSArchitecture);
         Log = new(log);
+    }
+
+    private static string GetWindowsVersion()
+    {
+        ulong versionNumber = ulong.Parse(AnalyticsInfo.VersionInfo.DeviceFamilyVersion);
+        ulong major = (versionNumber & 0xFFFF000000000000L) >> 48;
+        ulong minor = (versionNumber & 0x0000FFFF00000000L) >> 32;
+        ulong build = (versionNumber & 0x00000000FFFF0000L) >> 16;
+        ulong revision = versionNumber & 0x000000000000FFFFL;
+        return $"{major}.{minor}.{build}.{revision}";
     }
 
     private void Hook_FilePathChanged(object? sender, string e)
