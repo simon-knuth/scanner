@@ -1625,6 +1625,18 @@ Fuzzy</comment>
     <value>Padrão de nome de ficheiros personalizados</value>
     <comment>The heading for the custom file naming dialog.</comment>
   </data>
+  <data name="ScanOptionsButtonTutorialHeading" xml:space="preserve">
+    <value />
+  </data>
+  <data name="ScanOptionsButtonTutorialBody" xml:space="preserve">
+    <value />
+  </data>
+  <data name="ScanAreaEverything" xml:space="preserve">
+    <value />
+  </data>
+  <data name="ScanAreaPreviewSelection" xml:space="preserve">
+    <value />
+  </data>
   <data name="SettingsFileNamingCustomPatternExplanation" xml:space="preserve">
     <value>Arraste e largue blocos para construir o seu próprio padrão dinâmico de nomes de ficheiros. Selecione um bloco para modificar o seu resultado ou arraste-o para o lixo para removê-lo.</value>
     <comment>The description for the custom file naming dialog.</comment>
@@ -1633,10 +1645,7 @@ Fuzzy</comment>
     <value>Arraste e largue blocos para construir o seu próprio padrão dinâmico de nomes de ficheiros. Selecione um bloco para modificar o seu resultado ou arraste-o para o lixo para removê-lo.</value>
     <comment>The description for the custom file naming dialog.</comment>
   </data>
-  <data name="ScanOptionsButtonTutorialHeading" xml:space="preserve">
-    <value />
-  </data>
-  <data name="ScanOptionsButtonTutorialBody" xml:space="preserve">
+  <data name="Template" xml:space="preserve">
     <value />
   </data>
 </root>

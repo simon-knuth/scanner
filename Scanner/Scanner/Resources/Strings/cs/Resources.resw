@@ -1642,6 +1642,18 @@ Fuzzy</comment>
     <value>Vlastní maska pojmenování souborů</value>
     <comment>The heading for the custom file naming dialog.</comment>
   </data>
+  <data name="ScanOptionsButtonTutorialHeading" xml:space="preserve">
+    <value />
+  </data>
+  <data name="ScanOptionsButtonTutorialBody" xml:space="preserve">
+    <value />
+  </data>
+  <data name="ScanAreaEverything" xml:space="preserve">
+    <value />
+  </data>
+  <data name="ScanAreaPreviewSelection" xml:space="preserve">
+    <value />
+  </data>
   <data name="SettingsFileNamingCustomPatternExplanation" xml:space="preserve">
     <value>Přetažením bloků si můžete vytvořit vlastní dynamický vzor pojmenování souborů. Výběrem bloku upravte jeho výstup nebo jej přetažením do koše odstraňte.</value>
     <comment>The description for the custom file naming dialog.</comment>
@@ -1654,10 +1666,7 @@ Fuzzy</comment>
     <value>Vybrat vše</value>
     <comment>The option to select all similar pages for cropping.</comment>
   </data>
-  <data name="ScanOptionsButtonTutorialHeading" xml:space="preserve">
-    <value />
-  </data>
-  <data name="ScanOptionsButtonTutorialBody" xml:space="preserve">
+  <data name="Template" xml:space="preserve">
     <value />
   </data>
 </root>

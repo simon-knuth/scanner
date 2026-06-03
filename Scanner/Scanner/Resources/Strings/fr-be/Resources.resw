@@ -1370,4 +1370,13 @@ Fuzzy</comment>
   <data name="ScanOptionsButtonTutorialBody" xml:space="preserve">
     <value />
   </data>
+  <data name="ScanAreaEverything" xml:space="preserve">
+    <value />
+  </data>
+  <data name="ScanAreaPreviewSelection" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Template" xml:space="preserve">
+    <value />
+  </data>
 </root>

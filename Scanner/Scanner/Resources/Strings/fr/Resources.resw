@@ -1620,6 +1620,18 @@ Fuzzy</comment>
     <value>Modèle personnalisé de nom de fichier</value>
     <comment>The heading for the custom file naming dialog.</comment>
   </data>
+  <data name="ScanOptionsButtonTutorialHeading" xml:space="preserve">
+    <value />
+  </data>
+  <data name="ScanOptionsButtonTutorialBody" xml:space="preserve">
+    <value />
+  </data>
+  <data name="ScanAreaEverything" xml:space="preserve">
+    <value />
+  </data>
+  <data name="ScanAreaPreviewSelection" xml:space="preserve">
+    <value />
+  </data>
   <data name="SettingsFileNamingCustomPatternExplanation" xml:space="preserve">
     <value>Faites glisser et déposez les blocs pour créer votre propre modèle dynamique de nom de fichier. Sélectionnez un bloc pour modifier son résultat ou faites-le glisser dans la corbeille pour le supprimer.</value>
     <comment>The description for the custom file naming dialog.</comment>
@@ -1632,10 +1644,7 @@ Fuzzy</comment>
     <value>Tout sélectionner</value>
     <comment>The option to select all similar pages for cropping.</comment>
   </data>
-  <data name="ScanOptionsButtonTutorialHeading" xml:space="preserve">
-    <value />
-  </data>
-  <data name="ScanOptionsButtonTutorialBody" xml:space="preserve">
+  <data name="Template" xml:space="preserve">
     <value />
   </data>
 </root>

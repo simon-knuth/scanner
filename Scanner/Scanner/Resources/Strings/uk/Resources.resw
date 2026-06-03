@@ -1628,6 +1628,18 @@ Fuzzy</comment>
     <value>Спеціальний шаблон іменування файлів</value>
     <comment>The heading for the custom file naming dialog.</comment>
   </data>
+  <data name="ScanOptionsButtonTutorialHeading" xml:space="preserve">
+    <value />
+  </data>
+  <data name="ScanOptionsButtonTutorialBody" xml:space="preserve">
+    <value />
+  </data>
+  <data name="ScanAreaEverything" xml:space="preserve">
+    <value />
+  </data>
+  <data name="ScanAreaPreviewSelection" xml:space="preserve">
+    <value />
+  </data>
   <data name="SettingsFileNamingCustomPatternExplanation" xml:space="preserve">
     <value>Перетягуйте блоки, щоб створити свій власний динамічний шаблон іменування файлів. Виберіть блок, щоб змінити його вихід, або перетягніть його в кошик, щоб видалити.</value>
     <comment>The description for the custom file naming dialog.</comment>
@@ -1636,10 +1648,7 @@ Fuzzy</comment>
     <value>Перетягуйте блоки, щоб створити свій власний динамічний шаблон іменування файлів. Виберіть блок, щоб змінити його вихід, або перетягніть його в кошик, щоб видалити.</value>
     <comment>The description for the custom file naming dialog.</comment>
   </data>
-  <data name="ScanOptionsButtonTutorialHeading" xml:space="preserve">
-    <value />
-  </data>
-  <data name="ScanOptionsButtonTutorialBody" xml:space="preserve">
+  <data name="Template" xml:space="preserve">
     <value />
   </data>
 </root>

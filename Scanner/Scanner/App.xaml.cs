@@ -81,6 +81,7 @@ public partial class App : Application
             .AddSingleton<IAccessibilityService, AccessibilityService>()
             .AddSingleton<IProjectHistoryService, ProjectHistoryService>()
             .AddSingleton<IKnownScannersService, KnownScannersService>()
+            .AddSingleton<ITemplatesService, TemplatesService>()
             .BuildServiceProvider());
 
         WeakReferenceMessenger.Default.Register<MainWindowClosingMessage>(this, (r, m) =>
@@ -138,6 +139,7 @@ public partial class App : Application
                         KeyboardHookHelper.Initialize(MainWindow);
                         _ = Task.Run(async () => await Ioc.Default.GetRequiredService<IKnownScannersService>().InitializeAsync());
                         _ = Task.Run(async () => await Ioc.Default.GetRequiredService<IProjectHistoryService>().InitializeAsync(MainDispatcherQueue));
+                        _ = Task.Run(async () => await Ioc.Default.GetRequiredService<ITemplatesService>().InitializeAsync(MainDispatcherQueue));
                     });
                 }
                 else

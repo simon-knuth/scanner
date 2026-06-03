@@ -1606,9 +1606,6 @@ Fuzzy</comment>
   <data name="ScanActionStartNewProjectShort" xml:space="preserve">
     <value />
   </data>
-  <data name="Templates" xml:space="preserve">
-    <value />
-  </data>
   <data name="History" xml:space="preserve">
     <value />
   </data>
@@ -1887,6 +1884,12 @@ Fuzzy</comment>
     <value />
   </data>
   <data name="ScanOptionsButtonTutorialBody" xml:space="preserve">
+    <value />
+  </data>
+  <data name="ScanAreaEverything" xml:space="preserve">
+    <value />
+  </data>
+  <data name="ScanAreaPreviewSelection" xml:space="preserve">
     <value />
   </data>
 </root>

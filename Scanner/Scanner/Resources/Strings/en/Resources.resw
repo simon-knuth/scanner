@@ -1894,6 +1894,18 @@ Fuzzy</comment>
     <value>Custom folder naming pattern</value>
     <comment>The heading for the custom folder naming dialog.</comment>
   </data>
+  <data name="ScanOptionsButtonTutorialHeading" xml:space="preserve">
+    <value>The scan options are here</value>
+  </data>
+  <data name="ScanOptionsButtonTutorialBody" xml:space="preserve">
+    <value>Keep scanning with your selected options or click here to change them.</value>
+  </data>
+  <data name="ScanAreaEverything" xml:space="preserve">
+    <value>Everything</value>
+  </data>
+  <data name="ScanAreaPreviewSelection" xml:space="preserve">
+    <value>Preview selection</value>
+  </data>
   <data name="SettingsFileNamingCustomPatternExplanation" xml:space="preserve">
     <value>Drag and drop blocks to build your own dynamic file naming pattern. Select a block to modify its output or drag it into the bin to remove it.</value>
     <comment>The description for the custom file naming dialog.</comment>
@@ -1933,10 +1945,7 @@ Fuzzy</comment>
   <data name="ScanAreaAlignmentHeading" xml:space="preserve">
     <value>Scan area alignment</value>
   </data>
-  <data name="ScanOptionsButtonTutorialHeading" xml:space="preserve">
-    <value>The scan options are here</value>
-  </data>
-  <data name="ScanOptionsButtonTutorialBody" xml:space="preserve">
-    <value>Keep scanning with your selected options or click here to change them.</value>
+  <data name="Template" xml:space="preserve">
+    <value>Template</value>
   </data>
 </root>

@@ -1624,6 +1624,18 @@ Fuzzy</comment>
     <value>Vlastný vzor pomenovania súboru</value>
     <comment>The heading for the custom file naming dialog.</comment>
   </data>
+  <data name="ScanOptionsButtonTutorialHeading" xml:space="preserve">
+    <value />
+  </data>
+  <data name="ScanOptionsButtonTutorialBody" xml:space="preserve">
+    <value />
+  </data>
+  <data name="ScanAreaEverything" xml:space="preserve">
+    <value />
+  </data>
+  <data name="ScanAreaPreviewSelection" xml:space="preserve">
+    <value />
+  </data>
   <data name="SettingsFileNamingCustomPatternExplanation" xml:space="preserve">
     <value>Presuňte bloky a vytvorte si vlastný dynamický vzor pomenovania súborov. Vyberte blok, ak chcete upraviť jeho výstup, alebo ho potiahnutím do koša odstráňte.</value>
     <comment>The description for the custom file naming dialog.</comment>
@@ -1632,10 +1644,7 @@ Fuzzy</comment>
     <value>Presuňte bloky a vytvorte si vlastný dynamický vzor pomenovania súborov. Vyberte blok, ak chcete upraviť jeho výstup, alebo ho potiahnutím do koša odstráňte.</value>
     <comment>The description for the custom file naming dialog.</comment>
   </data>
-  <data name="ScanOptionsButtonTutorialHeading" xml:space="preserve">
-    <value />
-  </data>
-  <data name="ScanOptionsButtonTutorialBody" xml:space="preserve">
+  <data name="Template" xml:space="preserve">
     <value />
   </data>
 </root>

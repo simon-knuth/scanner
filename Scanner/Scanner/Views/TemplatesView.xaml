@@ -10,6 +10,10 @@
     xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:core="using:Microsoft.Xaml.Interactivity"
     xmlns:strings="using:Scanner.Resources.Strings"
+    xmlns:models="using:Scanner.Models"
+    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
+    xmlns:converters="using:Scanner.Views.Converters"
+    xmlns:data="using:Scanner.Data"
     mc:Ignorable="d">
 
     <Page.DataContext>
@@ -31,6 +35,14 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="ms-appx:///StylesDictionary.xaml"/>
             </ResourceDictionary.MergedDictionaries>
+
+            <!-- XAML Converters -->
+            <converters:EnumIntComparisonConverter x:Key="EnumIntComparisonConverter" />
+            <converters:EnumStringConverter x:Key="EnumStringConverter" />
+            <converters:EnumStringVisibilityConverter x:Key="EnumStringVisibilityConverter" />
+            <converters:NegativeEnumIntComparisonConverter x:Key="NegativeEnumIntComparisonConverter" />
+            <converters:IntNotZeroVisibilityConverter x:Key="IntNotZeroVisibilityConverter" />
+            <converters:ScanOptionsSnapshotScanAreaStringConverter x:Key="ScanOptionsSnapshotScanAreaStringConverter" />
         </ResourceDictionary>
     </Page.Resources>
 
@@ -51,9 +63,9 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Grid.Column="0" Text="{x:Bind strings:Resources.Templates}" Margin="12,0,0,0" VerticalAlignment="Center" Style="{StaticResource BaseTextBlockStyle}" />
-                <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="4" Padding="8,0,8,0">
-                    <Button Width="32" Height="32" HorizontalAlignment="Center" VerticalAlignment="Center" Style="{StaticResource MutedButtonStyle}">
+                <TextBlock Grid.Column="0" Text="{x:Bind strings:Resources.Templates}" Margin="20,0,0,0" VerticalAlignment="Center" Style="{StaticResource BaseTextBlockStyle}" />
+                <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="4" Padding="8,0,12,0">
+                    <Button Width="32" Height="32" HorizontalAlignment="Center" VerticalAlignment="Center" Style="{StaticResource MutedButtonStyle}" IsEnabled="{x:Bind ViewModel.IsScannerSelected, Mode=OneWay}" Command="{x:Bind ViewModel.CreateTemplateAsyncCommand}">
                         <FontIcon Glyph="&#xE710;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                     </Button>
                     <Button Width="32" Height="32" HorizontalAlignment="Center" VerticalAlignment="Center" Style="{StaticResource MutedButtonStyle}" ToolTipService.ToolTip="{x:Bind strings:Resources.More}">
@@ -69,7 +81,7 @@
                                         <FontIcon Glyph="&#xE8CB;" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                                     </MenuFlyoutSubItem.Icon>
                                 </MenuFlyoutSubItem>
-                                <MenuFlyoutItem Text="Delete all">
+                                <MenuFlyoutItem Text="Delete all" Command="{x:Bind ViewModel.ClearListAsyncCommand}">
                                     <MenuFlyoutItem.Icon>
                                         <FontIcon Glyph="&#xE74D;" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                                     </MenuFlyoutItem.Icon>
@@ -81,6 +93,172 @@
                     </Button>
                 </StackPanel>
             </Grid>
+
+            <ListView x:Name="ListViewTemplates" Grid.Row="1" Padding="8,4,8,12" VerticalAlignment="Stretch" SelectionMode="None" IsItemClickEnabled="True" ItemsSource="{x:Bind ViewModel.TemplateService.Entries, Mode=OneWay}" ScrollViewer.VerticalScrollMode="Auto" ItemClick="ListViewTemplates_ItemClick">
+                <ListView.ItemContainerTransitions>
+                    <TransitionCollection>
+                        <AddDeleteThemeTransition />
+                    </TransitionCollection>
+                </ListView.ItemContainerTransitions>
+                
+                <ListView.ItemTemplate>
+                    <DataTemplate x:DataType="models:TemplateEntry">
+                        <ListViewItem Padding="4,2,4,2">
+                            <Border CornerRadius="4">
+                                <SwipeControl>
+                                    <Grid RowSpacing="4" Padding="4,4,4,8">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="28" />
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                        </Grid.RowDefinitions>
+
+                                        <TextBox x:Name="TextBoxTemplateName" Grid.Row="0" AcceptsReturn="False" Margin="-2" Padding="4" IsEnabled="{x:Bind IsRenaming, Mode=OneWay}" Text="{x:Bind Name, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" Tag="{x:Bind}" LostFocus="TextBoxTemplateName_LostFocus" IsEnabledChanged="TextBoxTemplateName_IsEnabledChanged" GotFocus="TextBoxTemplateName_GotFocus" KeyDown="TextBoxTemplateName_KeyDown">
+                                            <TextBox.Resources>
+                                                <SolidColorBrush x:Key="TextControlBackgroundDisabled" Color="{StaticResource ControlFillColorTransparent}" />
+                                                <SolidColorBrush x:Key="TextControlBorderBrushDisabled" Color="{StaticResource ControlFillColorTransparent}" />
+                                                <SolidColorBrush x:Key="TextControlForegroundDisabled" Color="{ThemeResource TextFillColorPrimary}" />
+                                            </TextBox.Resources>
+                                        </TextBox>
+                                        <TextBlock Grid.Row="1" MaxLines="1" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" Margin="4,0,4,0" Text="{x:Bind CreatedString}" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                                        <ItemsControl Grid.Row="2" Margin="0,4,0,0">
+                                            <ItemsControl.ItemsPanel>
+                                                <ItemsPanelTemplate>
+                                                    <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="4" VerticalSpacing="4" />
+                                                </ItemsPanelTemplate>
+                                            </ItemsControl.ItemsPanel>
+
+                                            <ItemsControl.Items>
+                                                <!-- Source mode -->
+                                                <Border Padding="8,4,8,4" CornerRadius="12" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1">
+                                                    <TextBlock Text="{x:Bind FriendlySourceMode}" Style="{StaticResource CaptionTextBlockStyle}" />
+                                                </Border>
+
+                                                <!-- File format -->
+                                                <Border Padding="8,4,8,4" CornerRadius="12" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1">
+                                                    <TextBlock Text="{x:Bind TargetFormat}" Style="{StaticResource CaptionTextBlockStyle}" />
+                                                </Border>
+
+                                                <!-- Color mode -->
+                                                <Border x:Name="BorderColorMode" Padding="8,4,8,4" CornerRadius="12" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" x:Load="{x:Bind SourceMode, Mode=OneWay, Converter={StaticResource NegativeEnumIntComparisonConverter}, ConverterParameter=1}">
+                                                    <StackPanel Orientation="Horizontal" Spacing="4">
+                                                        <controls:SwitchPresenter Value="{x:Bind ColorMode}">
+                                                            <controls:Case Value="{x:Bind models:ScannerColorMode.Color}">
+                                                                <FontIcon Glyph="&#xE790;" FontSize="12" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                                            </controls:Case>
+
+                                                            <controls:Case Value="{x:Bind models:ScannerColorMode.Grayscale}">
+                                                                <Grid>
+                                                                    <FontIcon Glyph="&#xEA3B;" FontSize="12" FontFamily="{StaticResource SymbolThemeFontFamily}">
+                                                                        <FontIcon.Foreground>
+                                                                            <LinearGradientBrush StartPoint="0,0.5" EndPoint="1,0.5">
+                                                                                <LinearGradientBrush.GradientStops>
+                                                                                    <GradientStop Offset="0.0" Color="{ThemeResource TextFillColorSecondary}" />
+                                                                                    <GradientStop Offset="0.8" Color="Transparent" />
+                                                                                </LinearGradientBrush.GradientStops>
+                                                                            </LinearGradientBrush>
+                                                                        </FontIcon.Foreground>
+                                                                    </FontIcon>
+                                                                    <FontIcon Glyph="&#xEA3A;" FontSize="12" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                                                </Grid>
+                                                            </controls:Case>
+
+                                                            <controls:Case Value="{x:Bind models:ScannerColorMode.Monochrome}">
+                                                                <FontIcon Glyph="&#xE7A1;" FontSize="12" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                                            </controls:Case>
+                                                        </controls:SwitchPresenter>
+                                                        <TextBlock Text="{x:Bind FriendlyColorMode}" Style="{StaticResource CaptionTextBlockStyle}" />
+                                                    </StackPanel>
+                                                </Border>
+
+                                                <!-- Resolution -->
+                                                <Border x:Name="BorderResolution" Padding="8,4,8,4" CornerRadius="12" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" x:Load="{x:Bind SourceMode, Mode=OneWay, Converter={StaticResource NegativeEnumIntComparisonConverter}, ConverterParameter=1}">
+                                                    <TextBlock Text="{x:Bind FriendlyResolution}" Style="{StaticResource CaptionTextBlockStyle}" />
+                                                </Border>
+
+                                                <!-- Scan area -->
+                                                <Border x:Name="BorderScanArea" Padding="8,4,8,4" CornerRadius="12" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" x:Load="{x:Bind SourceMode, Mode=OneWay, Converter={StaticResource NegativeEnumIntComparisonConverter}, ConverterParameter=1}">
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <controls:SwitchPresenter Value="{x:Bind ScanAreaKind}">
+                                                            <controls:Case Value="{x:Null}">
+                                                                <Grid Margin="0,0,4,0">
+                                                                    <FontIcon Glyph="&#xF16B;" FontSize="12" UseLayoutRounding="False" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                                                    <FontIcon Glyph="&#xE9E3;" FontSize="8" HorizontalAlignment="Center" UseLayoutRounding="False" VerticalAlignment="Center" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                                                </Grid>
+                                                            </controls:Case>
+
+                                                            <controls:Case Value="{x:Bind data:ScanAreaKind.AutoCrop}">
+                                                                <Grid Margin="0,0,4,0">
+                                                                    <FontIcon Glyph="&#xF58A;" FontSize="12" FontFamily="{StaticResource SymbolThemeFontFamily}" Visibility="{x:Bind AutoCropMode, Converter={StaticResource EnumStringVisibilityConverter}, ConverterParameter=SingleRegion}" />
+                                                                    <FontIcon Glyph="&#xF58D;" FontSize="12" FontFamily="{StaticResource SymbolThemeFontFamily}" Visibility="{x:Bind AutoCropMode, Converter={StaticResource EnumStringVisibilityConverter}, ConverterParameter=MultipleRegions}" />
+                                                                </Grid>
+                                                            </controls:Case>
+
+                                                            <controls:Case Value="{x:Bind data:ScanAreaKind.PreviewSelection}">
+                                                                <FontIcon Glyph="&#xEF20;" FontSize="12" Margin="0,0,4,0" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                                            </controls:Case>
+                                                        </controls:SwitchPresenter>
+                                                        
+                                                        <TextBlock Text="{x:Bind Converter={StaticResource ScanOptionsSnapshotScanAreaStringConverter}}" Style="{StaticResource CaptionTextBlockStyle}" />
+                                                    </StackPanel>
+                                                </Border>
+
+                                                <!-- Duplex -->
+                                                <Border x:Name="BorderDuplex" Padding="8,4,8,4" CornerRadius="12" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" Visibility="{x:Bind Duplex}" x:Load="{x:Bind SourceMode, Mode=OneWay, Converter={StaticResource EnumIntComparisonConverter}, ConverterParameter=3}">
+                                                    <TextBlock Text="{x:Bind strings:Resources.Duplex}" Style="{StaticResource CaptionTextBlockStyle}" />
+                                                </Border>
+
+                                                <!-- Brightness -->
+                                                <Border x:Name="BorderBrightness" Padding="8,4,8,4" CornerRadius="12" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" Visibility="{x:Bind Brightness, Converter={StaticResource IntNotZeroVisibilityConverter}}" x:Load="{x:Bind SourceMode, Mode=OneWay, Converter={StaticResource NegativeEnumIntComparisonConverter}, ConverterParameter=1}">
+                                                    <StackPanel Orientation="Horizontal" Spacing="4">
+                                                        <FontIcon Glyph="&#xE706;" FontSize="12" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                                        <TextBlock Text="{x:Bind Brightness}" Style="{StaticResource CaptionTextBlockStyle}" />
+                                                    </StackPanel>
+                                                </Border>
+
+                                                <!-- Contrast -->
+                                                <Border x:Name="BorderContrast" Padding="8,4,8,4" CornerRadius="12" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" Visibility="{x:Bind Contrast, Converter={StaticResource IntNotZeroVisibilityConverter}}" x:Load="{x:Bind SourceMode, Mode=OneWay, Converter={StaticResource NegativeEnumIntComparisonConverter}, ConverterParameter=1}">
+                                                    <StackPanel Orientation="Horizontal" Spacing="4">
+                                                        <FontIcon Glyph="&#xE7A1;" FontSize="12" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                                        <TextBlock Text="{x:Bind Contrast}" Style="{StaticResource CaptionTextBlockStyle}" />
+                                                    </StackPanel>
+                                                </Border>
+                                            </ItemsControl.Items>
+                                        </ItemsControl>
+                                    </Grid>
+
+                                    <SwipeControl.RightItems>
+                                        <SwipeItems Mode="Execute">
+                                            <SwipeItem Text="Remove" Command="{x:Bind ViewModel.RemoveTemplateAsyncCommand}" CommandParameter="{x:Bind}">
+                                                <SwipeItem.IconSource>
+                                                    <FontIconSource Glyph="&#xE738;" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                                </SwipeItem.IconSource>
+                                            </SwipeItem>
+                                        </SwipeItems>
+                                    </SwipeControl.RightItems>
+                                </SwipeControl>
+                            </Border>
+
+                            <ListViewItem.ContextFlyout>
+                                <MenuFlyout>
+                                    <MenuFlyoutItem Text="Apply" Command="{x:Bind ViewModel.TryApplyTemplateCommand}" CommandParameter="{x:Bind}" />
+                                    <MenuFlyoutItem Text="Rename" Command="{x:Bind ViewModel.StartRenamingCommand}" CommandParameter="{x:Bind}">
+                                        <MenuFlyoutItem.Icon>
+                                            <FontIcon Glyph="&#xE8AC;" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                        </MenuFlyoutItem.Icon>
+                                    </MenuFlyoutItem>
+                                    <MenuFlyoutSeparator />
+                                    <MenuFlyoutItem Text="Remove" Command="{x:Bind ViewModel.RemoveTemplateAsyncCommand}" CommandParameter="{x:Bind}">
+                                        <MenuFlyoutItem.Icon>
+                                            <FontIcon Glyph="&#xE738;" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                        </MenuFlyoutItem.Icon>
+                                    </MenuFlyoutItem>
+                                </MenuFlyout>
+                            </ListViewItem.ContextFlyout>
+                        </ListViewItem>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
         </Grid>
     </Grid>
 </Page>

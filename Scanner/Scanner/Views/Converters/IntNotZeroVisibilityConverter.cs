@@ -4,17 +4,14 @@ using System;
 
 namespace Scanner.Views.Converters;
 
-public partial class EnumStringVisibilityConverter : IValueConverter
+public partial class IntNotZeroVisibilityConverter : IValueConverter
 {
     /// <summary>
-    ///     Compares the given enum to the string parameter and returns a Visibility.
+    ///     Converts the given int to a <see cref="Visibility"/> based on it not being zero.
     /// </summary>
     public object Convert(object value, Type targetType, object parameter, string language)
     {
-        if (value == null)
-            return Visibility.Collapsed;
-
-        return ((Enum)value).ToString() == (string)parameter ? Visibility.Visible : Visibility.Collapsed;
+        return value is int intValue && intValue != 0 ? Visibility.Visible : Visibility.Collapsed;
     }
 
     public object ConvertBack(object value, Type targetType, object parameter, string language)

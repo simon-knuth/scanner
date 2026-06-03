@@ -293,7 +293,7 @@
 
                                                     <FontIcon Grid.Column="0" Glyph="&#xF16B;" FontSize="16" UseLayoutRounding="False" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                                                     <FontIcon Grid.Column="0" Glyph="&#xE9E3;" FontSize="10" HorizontalAlignment="Center" UseLayoutRounding="False" VerticalAlignment="Center" FontFamily="{StaticResource SymbolThemeFontFamily}" />
-                                                    <TextBlock Grid.Column="1" Text="Everything" />
+                                                    <TextBlock Grid.Column="1" Text="{x:Bind strings:Resources.ScanAreaEverything}" />
                                                 </Grid>
                                             </ComboBoxItem>
                                             <ComboBoxItem IsEnabled="False" Margin="-16,0,-16,0" Height="36" VerticalContentAlignment="Stretch">
@@ -408,7 +408,7 @@
                                                         <ColumnDefinition Width="1*" />
                                                     </Grid.ColumnDefinitions>
 
-                                                    <TextBlock Grid.Column="0" Text="1" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="12" />
+                                                    <FontIcon Grid.Column="0" Glyph="&#xF58A;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                                                     <TextBlock Grid.Column="1" Text="{x:Bind strings:Resources.AutoCropSingle}" MaxLines="1" />
                                                 </Grid>
                                             </ComboBoxItem>
@@ -419,7 +419,7 @@
                                                         <ColumnDefinition Width="1*" />
                                                     </Grid.ColumnDefinitions>
 
-                                                    <TextBlock Grid.Column="0" Text="1+" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="12" />
+                                                    <FontIcon Grid.Column="0" Glyph="&#xF58D;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                                                     <TextBlock Grid.Column="1" Text="{x:Bind strings:Resources.AutoCropMultiple}" MaxLines="1" />
                                                 </Grid>
                                             </ComboBoxItem>
@@ -441,7 +441,7 @@
                                                     </Grid.ColumnDefinitions>
 
                                                     <FontIcon Grid.Column="0" Glyph="&#xEF20;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
-                                                    <TextBlock Grid.Column="1" Text="Preview selection" MaxLines="1" />
+                                                    <TextBlock Grid.Column="1" Text="{x:Bind strings:Resources.ScanAreaPreviewSelection}" MaxLines="1" />
                                                 </Grid>
                                             </ComboBoxItem>
                                         </ComboBox.Items>

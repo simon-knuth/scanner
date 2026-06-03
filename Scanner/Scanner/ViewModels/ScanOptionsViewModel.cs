@@ -36,6 +36,7 @@ partial class ScanOptionsViewModel : ObservableRecipient, IDisposable
     public readonly ILogService? LogService = Ioc.Default.GetService<ILogService>();
     public readonly IProjectService ProjectService = Ioc.Default.GetRequiredService<IProjectService>();
     private readonly IScannerDiscoveryService ScannerDiscoveryService = Ioc.Default.GetRequiredService<IScannerDiscoveryService>();
+    public readonly ISentryService? SentryService = Ioc.Default.GetService<ISentryService>();
     public readonly ISettingsService SettingsService = Ioc.Default.GetRequiredService<ISettingsService>();
     #endregion
 
@@ -131,6 +132,15 @@ partial class ScanOptionsViewModel : ObservableRecipient, IDisposable
         {
             m.Reply(SelectedScanner);
         });
+        Messenger.Register<ScanOptionsRequestMessage>(this, (r, m) =>
+        {
+            m.Reply(ScanOptions);
+        });
+        Messenger.Register<ApplyTemplateMessage>(this, (r, m) =>
+        {
+            if (AreScanOptionsAvailable && SelectedScanner != null)
+                m.Template.TryRestoreOptions(SelectedScanner, ScanOptions);
+        });
 
         _ = Task.Run(async () => knownScanners.TrySetResult(await KnownScannersService.GetKnownScannersAsync()));
     }
@@ -200,13 +210,27 @@ partial class ScanOptionsViewModel : ObservableRecipient, IDisposable
         await SemaphoreScanners.WaitAsync();
         if (Scanners.Count > 0)
         {
-            await viewLoading.Task;
-            IReadOnlyList<KnownScannerEntry> knownScanners = await this.knownScanners.Task.WaitAsync(TimeSpan.FromSeconds(3));
-
-            viewDispatcherQueue!.RunOnThread(DispatcherQueuePriority.High, () =>
+            try
             {
-                SelectedScanner = knownScanners.Select(k => Scanners.FirstOrDefault(s => s.Id == k.Id)).FirstOrDefault(s => s != null) ?? Scanners[0];
-            });
+                await viewLoading.Task;
+                IReadOnlyList<KnownScannerEntry> knownScanners = await this.knownScanners.Task.WaitAsync(TimeSpan.FromSeconds(3));
+
+                viewDispatcherQueue!.RunOnThread(DispatcherQueuePriority.High, () =>
+                {
+                    SelectedScanner = knownScanners.Select(k => Scanners.FirstOrDefault(s => s.Id == k.Id)).FirstOrDefault(s => s != null) ?? Scanners[0];
+                });
+            }
+            catch (Exception exc)
+            {
+                LogService?.Log.Warning(exc, "Failed to select best available scanner");
+                SentryService?.TrackWarning(exc);
+
+                // fall back to first in list
+                viewDispatcherQueue!.RunOnThread(DispatcherQueuePriority.High, () =>
+                {
+                    SelectedScanner = Scanners[0];
+                });
+            }
         }
         SemaphoreScanners.Release();
     }

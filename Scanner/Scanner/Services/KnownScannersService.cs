@@ -177,58 +177,7 @@ internal class KnownScannersService : IKnownScannersService
     {
         entry.Name = scanner.Name;
         entry.LastUsed = DateTime.UtcNow;
-        entry.LastSourceMode = options.SourceMode;
-        entry.LastTargetFormat = options.TargetFormat;
-        entry.LastColorMode = options.ColorMode;
-        entry.LastDuplex = options.Duplex;
-        entry.LastScanMultiplePages = options.ScanMultiplePages;
-        entry.LastBrightness = options.Brightness;
-        entry.LastContrast = options.Contrast;
-        entry.LastResolutionDpiX = (float?)options.Resolution?.Resolution.DpiX;
-        entry.LastResolutionDpiY = (float?)options.Resolution?.Resolution.DpiY;
-
-        // ScanArea
-        ClearScanAreaColumns(entry);
-
-        switch (options.ScanArea)
-        {
-            case AutoCropArea autoCrop:
-                entry.LastScanAreaKind = ScanAreaKind.AutoCrop;
-                entry.LastAutoCropMode = autoCrop.AutoCropMode;
-                break;
-
-            case PaperSizeArea paperSize:
-                entry.LastScanAreaKind = ScanAreaKind.PaperSize;
-                entry.LastPaperSize = paperSize.PaperSize;
-                entry.LastPaperSizeCorner = paperSize.Corner;
-                entry.LastPaperSizeOrientation = paperSize.Orientation;
-                break;
-
-            case PreviewSelectionArea preview:
-                entry.LastScanAreaKind = ScanAreaKind.PreviewSelection;
-                entry.LastPreviewSelectionX = preview.SelectedRegion.X;
-                entry.LastPreviewSelectionY = preview.SelectedRegion.Y;
-                entry.LastPreviewSelectionWidth = preview.SelectedRegion.Width;
-                entry.LastPreviewSelectionHeight = preview.SelectedRegion.Height;
-                break;
-
-            case null:
-                entry.LastScanAreaKind = null;
-                break;
-        }
-    }
-
-    private static void ClearScanAreaColumns(KnownScannerEntry entry)
-    {
-        entry.LastScanAreaKind = null;
-        entry.LastAutoCropMode = null;
-        entry.LastPaperSize = null;
-        entry.LastPaperSizeCorner = null;
-        entry.LastPaperSizeOrientation = null;
-        entry.LastPreviewSelectionX = null;
-        entry.LastPreviewSelectionY = null;
-        entry.LastPreviewSelectionWidth = null;
-        entry.LastPreviewSelectionHeight = null;
+        entry.CaptureOptions(options);
     }
 
     private async Task RecreateAsync()
@@ -265,25 +214,8 @@ internal class KnownScannersService : IKnownScannersService
         {
             await using KnownScannersDbContext context = CreateContext();
 
-            await context.KnownScannerEntries.ExecuteUpdateAsync(setters => setters
-                .SetProperty(e => e.LastSourceMode, (ScannerSource?)null)
-                .SetProperty(e => e.LastTargetFormat, (TargetFormat?)null)
-                .SetProperty(e => e.LastColorMode, (ScannerColorMode?)null)
-                .SetProperty(e => e.LastResolutionDpiX, (float?)null)
-                .SetProperty(e => e.LastResolutionDpiY, (float?)null)
-                .SetProperty(e => e.LastDuplex, (bool?)null)
-                .SetProperty(e => e.LastScanMultiplePages, (bool?)null)
-                .SetProperty(e => e.LastBrightness, (int?)null)
-                .SetProperty(e => e.LastContrast, (int?)null)
-                .SetProperty(e => e.LastScanAreaKind, (ScanAreaKind?)null)
-                .SetProperty(e => e.LastAutoCropMode, (ScannerAutoCropMode?)null)
-                .SetProperty(e => e.LastPaperSize, (PaperSize?)null)
-                .SetProperty(e => e.LastPaperSizeCorner, (ScanCorner?)null)
-                .SetProperty(e => e.LastPaperSizeOrientation, (ScanOrientation?)null)
-                .SetProperty(e => e.LastPreviewSelectionX, (double?)null)
-                .SetProperty(e => e.LastPreviewSelectionY, (double?)null)
-                .SetProperty(e => e.LastPreviewSelectionWidth, (double?)null)
-                .SetProperty(e => e.LastPreviewSelectionHeight, (double?)null));
+            await context.KnownScannerEntries.ExecuteUpdateAsync(setters =>
+                ScanOptionsSnapshot.AddClearSnapshotSetters(setters));
 
             LogService?.Log.Information("Cleared saved scan options for all scanners");
             UpdatedEntry?.Invoke(this, EventArgs.Empty);

@@ -16,7 +16,7 @@
     <!-- - - - - - - - - - - - - - - - - - - -  - - - - - - - - - - - - - - - - - - - - -->
     <!-- - - - - - - - - - - - - - - - - FLYOUT CONTENT - - - - - - - - - - - - - - - - -->
     <!-- - - - - - - - - - - - - - - - - - - -  - - - - - - - - - - - - - - - - - - - - -->
-    <Grid x:Name="GridRoot" Margin="-16" MinHeight="300" MaxHeight="400" Loading="GridRoot_Loading">
-        <local:TemplatesView />
+    <Grid x:Name="GridRoot" Margin="-16" MinHeight="500" MaxHeight="500" Loading="GridRoot_Loading">
+        <local:TemplatesView CloseRequested="TemplatesView_CloseRequested" />
     </Grid>
 </Flyout>
