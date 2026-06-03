@@ -563,10 +563,10 @@ public partial class PdfProject : ProjectBase
 
         for (int i = 0; i < snapshotPages.Count; i++)
         {
-            PdfProjectSnapshotPage snapshotPage = (PdfProjectSnapshotPage)snapshotPages[i];
+            IProjectSnapshotPage snapshotPage = snapshotPages[i];
             PdfSharp.Pdf.PdfPage newPdfPage = document.AddPage();
 
-            if (snapshotPage.IndexInSourceFile == null)
+            if (snapshotPage is not PdfProjectSnapshotPage pdfSnapshotPage || pdfSnapshotPage.IndexInSourceFile == null)
             {
                 // page from image (OCR or not)
                 XImage image;
@@ -619,7 +619,7 @@ public partial class PdfProject : ProjectBase
                 sourcePdf ??= XPdfForm.FromStream(sourceStream.AsStream());
 
                 // append PDF page
-                sourcePdf.PageIndex = (int)snapshotPage.IndexInSourceFile;
+                sourcePdf.PageIndex = (int)pdfSnapshotPage.IndexInSourceFile;
                 newPdfPage.Width = XUnit.FromPoint(sourcePdf.PointWidth);
                 newPdfPage.Height = XUnit.FromPoint(sourcePdf.PointHeight);
                 using XGraphics gfx = XGraphics.FromPdfPage(newPdfPage);
