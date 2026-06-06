@@ -101,6 +101,7 @@ public sealed partial class ShellView : Page
         ViewModel.ScanMergeDialogRequested += ViewModel_ScanMergeDialogRequested;
         ViewModel.ShowInAppNotificationRequested += ViewModel_ShowInAppNotificationRequested;
         ViewModel.ShowPreviewDialogRequested += ViewModel_ShowPreviewDialogRequested;
+        ViewModel.SetupDialogRequested += ViewModel_SetupDialogRequested;
         ViewModel.ProjectService.PropertyChanged += ProjectService_PropertyChanged;
         ViewModel.SettingsService.PropertyChanged += SettingsService_PropertyChanged;
     }
@@ -421,9 +422,19 @@ public sealed partial class ShellView : Page
         ShowPreviewDialog(scanOptions);
     }
 
+    private void ViewModel_SetupDialogRequested(object? sender, EventArgs e)
+    {
+        ShowSetupDialog();
+    }
+
     private void SettingsCardDebugDialogSaveChanges_Click(object sender, RoutedEventArgs e)
     {
         ShowSaveChangesDialog(new TaskCompletionSource<bool>());
+    }
+
+    private void SettingsCardDebugDialogSetup_Click(object sender, RoutedEventArgs e)
+    {
+        ShowSetupDialog();
     }
 
     private void ShowSaveChangesDialog(TaskCompletionSource<bool> task)
@@ -609,6 +620,26 @@ public sealed partial class ShellView : Page
             isDialogVisible = true;
 
             PreviewDialogView dialog = new PreviewDialogView(scanOptions);
+            dialog.XamlRoot = this.XamlRoot;
+            ContentDialogResult result = await dialog.ShowAsync();
+
+            isDialogVisible = false;
+        });
+    }
+
+    private void ShowSetupDialog()
+    {
+        this.RunOnUIThread(Microsoft.UI.Dispatching.DispatcherQueuePriority.Normal, async () =>
+        {
+            // return if dialog is already visible
+            if (isDialogVisible)
+            {
+                return;
+            }
+
+            isDialogVisible = true;
+
+            SetupDialogView dialog = new SetupDialogView();
             dialog.XamlRoot = this.XamlRoot;
             ContentDialogResult result = await dialog.ShowAsync();
 

@@ -404,6 +404,11 @@
                                                     <FontIcon Glyph="&#xE74E;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                                                 </controls:SettingsCard.HeaderIcon>
                                             </controls:SettingsCard>
+                                            <controls:SettingsCard x:Name="SettingsCardDebugDialogSetup" Header="Setup" IsClickEnabled="True" Click="SettingsCardDebugDialogSetup_Click">
+                                                <controls:SettingsCard.HeaderIcon>
+                                                    <FontIcon Glyph="&#xEADF;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                                </controls:SettingsCard.HeaderIcon>
+                                            </controls:SettingsCard>
                                         </controls:SettingsExpander.Items>
                                     </controls:SettingsExpander>
                                     <controls:SettingsExpander Header="In-app notifications">

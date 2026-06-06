@@ -14,7 +14,9 @@ using Scanner.Messages;
 using Scanner.Models;
 using Scanner.Models.Interfaces;
 using Scanner.Resources.Strings;
+using Scanner.Services;
 using Scanner.Services.Interfaces;
+using Sentry;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -37,6 +39,7 @@ partial class ShellViewModel : ObservableRecipient, IDisposable
     private ILogService? LogService = Ioc.Default.GetService<ILogService>();
     public IProjectService ProjectService = Ioc.Default.GetRequiredService<IProjectService>();
     private IScannerDiscoveryService ScannerDiscoveryService = Ioc.Default.GetRequiredService<IScannerDiscoveryService>();
+    public ISentryService? SentryService = Ioc.Default.GetService<ISentryService>();
     public ISettingsService SettingsService = Ioc.Default.GetRequiredService<ISettingsService>();
     #endregion
 
@@ -51,6 +54,7 @@ partial class ShellViewModel : ObservableRecipient, IDisposable
     public event EventHandler ScanMergeDialogRequested;
     public event EventHandler<ScanOptions> ShowPreviewDialogRequested;
     public event EventHandler<Notification> ShowInAppNotificationRequested;
+    public event EventHandler SetupDialogRequested;
     #endregion
 
     #region Commands
@@ -158,6 +162,9 @@ partial class ShellViewModel : ObservableRecipient, IDisposable
         viewLoading.TrySetResult();
 
         ((App)Application.Current).MainWindow.Closed += MainWindow_Closed;
+
+        if (!SettingsService.SetupCompleted && SentryService != null)
+            ShowSetupDialog();
     }
 
     private void ProjectService_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -328,6 +335,11 @@ partial class ShellViewModel : ObservableRecipient, IDisposable
     private void ShowPreviewDialog(ScanOptions scanOptions)
     {
         ShowPreviewDialogRequested?.Invoke(this, scanOptions);
+    }
+
+    private void ShowSetupDialog()
+    {
+        SetupDialogRequested?.Invoke(this, EventArgs.Empty);
     }
 
     private async Task OpenFilesAsync()
