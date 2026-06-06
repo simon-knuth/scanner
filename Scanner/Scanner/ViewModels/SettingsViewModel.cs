@@ -42,6 +42,7 @@ public partial class SettingsViewModel : ObservableRecipient, IDisposable
     public AsyncRelayCommand GenerateLogsListAsyncCommand => new AsyncRelayCommand(GenerateLogsListAsync);
     public AsyncRelayCommand<LogFile> ExportLogAsyncCommand => new AsyncRelayCommand<LogFile>(ExportLogAsync);
     public RelayCommand ShowFeedbackDialogCommand => new RelayCommand(() => ((App)Application.Current).ShowFeedback());
+    public AsyncRelayCommand RateInStoreCommand => new AsyncRelayCommand(RateInStoreAsync);
     public RelayCommand<DispatcherQueue> ViewLoadingCommand => new RelayCommand<DispatcherQueue>(ViewLoading);
     public RelayCommand DisposeCommand => new RelayCommand(Dispose);
     #endregion
@@ -305,6 +306,24 @@ public partial class SettingsViewModel : ObservableRecipient, IDisposable
             case nameof(ISettingsService.SettingSaveLocationType):
                 OnPropertyChanged(nameof(IsAutoSaveAvailable));
                 break;
+        }
+    }
+
+    private async Task RateInStoreAsync()
+    {
+        try
+        {
+            // show the in-app rating and review dialog for the current app
+            Windows.Services.Store.StoreContext context = Windows.Services.Store.StoreContext.GetDefault();
+
+            var hwnd = WindowNative.GetWindowHandle(((App)Application.Current).SettingsWindow);
+            InitializeWithWindow.Initialize(context, hwnd);
+            await context.RequestRateAndReviewAppAsync();
+        }
+        catch (Exception exc)
+        {
+            LogService?.Log.Warning(exc, "Rating in store failed");
+            SentryService?.TrackWarning(exc);
         }
     }
 }
