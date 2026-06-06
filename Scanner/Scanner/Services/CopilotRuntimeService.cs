@@ -27,6 +27,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Tesseract;
+using Windows.ApplicationModel;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Devices.Enumeration;
 using Windows.Graphics.Imaging;
@@ -129,6 +130,11 @@ internal partial class CopilotRuntimeService : ObservableObject, ICopilotRuntime
                 LogService?.Log.Warning("Image description {Length} is below threshold", descriptionResult.Description.Length);
                 return null;
             }
+
+            var access = LimitedAccessFeatures.TryUnlockFeature(
+                "com.microsoft.windows.ai.languagemodel",
+                "cx4kQY+vrjcpofbmrNBTQA==",
+                "69n05hp4v3s90 has registered their use of com.microsoft.windows.ai.languagemodel with Microsoft and agrees to the terms of use.");
 
             // generate short name
             using LanguageModel languageModel = await LanguageModel.CreateAsync().AsTask(cts.Token);
