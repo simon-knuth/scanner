@@ -55,6 +55,7 @@ partial class ShellViewModel : ObservableRecipient, IDisposable
     public event EventHandler<ScanOptions> ShowPreviewDialogRequested;
     public event EventHandler<Notification> ShowInAppNotificationRequested;
     public event EventHandler SetupDialogRequested;
+    public event EventHandler FeedbackDialogRequested;
     #endregion
 
     #region Commands
@@ -98,6 +99,7 @@ partial class ShellViewModel : ObservableRecipient, IDisposable
         _ = ScannerDiscoveryService.InitializeSearchAsync();
 
         ProjectService.PropertyChanged += ProjectService_PropertyChanged;
+        ProjectService.ScanCompletedSuccessfully += ProjectService_ScanCompletedSuccessfully;
         CurrentProject = ProjectService.CurrentProject;
 
         Messenger.Register<ShowUnsavedChangesDialogMessage>(this, (r, m) =>
@@ -314,7 +316,7 @@ partial class ShellViewModel : ObservableRecipient, IDisposable
 
     private void ShowFeedback()
     {
-       ((App)Application.Current).ShowFeedback();
+        ShowSettings(new SettingsViewModelIntent(SettingsPageType.Feedback));
     }
 
     private void ShowDonationDialog()
@@ -349,5 +351,16 @@ partial class ShellViewModel : ObservableRecipient, IDisposable
             return;
 
         await ProjectService.TryOpenProjectFromFilesAsync(pickerResults.Select(x => x.Path).ToArray(), null, viewDispatcherQueue!);
+    }
+
+    private void ShowFeedbackDialog()
+    {
+        FeedbackDialogRequested?.Invoke(this, EventArgs.Empty);
+    }
+
+    private void ProjectService_ScanCompletedSuccessfully(object? sender, EventArgs e)
+    {
+        if (SettingsService.ScanNumber == AppConfig.ScanNumberToTriggerFeedbackDialog)
+            ShowFeedbackDialog();
     }
 }

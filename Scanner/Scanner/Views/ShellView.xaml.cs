@@ -102,6 +102,7 @@ public sealed partial class ShellView : Page
         ViewModel.ShowInAppNotificationRequested += ViewModel_ShowInAppNotificationRequested;
         ViewModel.ShowPreviewDialogRequested += ViewModel_ShowPreviewDialogRequested;
         ViewModel.SetupDialogRequested += ViewModel_SetupDialogRequested;
+        ViewModel.FeedbackDialogRequested += ViewModel_FeedbackDialogRequested;
         ViewModel.ProjectService.PropertyChanged += ProjectService_PropertyChanged;
         ViewModel.SettingsService.PropertyChanged += SettingsService_PropertyChanged;
     }
@@ -195,7 +196,8 @@ public sealed partial class ShellView : Page
                 TryExpandPageList();
                 ScanActionsView.AreScanOptionsVisible = true;
             }
-            
+
+            TeachingTipFeedback.Target = ButtonTitlebarMore;
         }
         else if (width < 1500)
         {
@@ -224,6 +226,7 @@ public sealed partial class ShellView : Page
                 BorderScanOptions.Visibility = Visibility.Visible;
 
             BorderEditor.Visibility = Visibility.Visible;
+            TeachingTipFeedback.Target = ButtonSupportDevelopment;
         }
         else
         {
@@ -242,6 +245,7 @@ public sealed partial class ShellView : Page
                 BorderScanOptions.Visibility = Visibility.Visible;
 
             BorderEditor.Visibility = Visibility.Visible;
+            TeachingTipFeedback.Target = ButtonSupportDevelopment;
         }
     }
 
@@ -557,6 +561,7 @@ public sealed partial class ShellView : Page
                 return;
             }
 
+            TeachingTipFeedback.IsOpen = false;
             isDialogVisible = true;
 
             DonationDialogView dialog = new DonationDialogView();
@@ -768,5 +773,25 @@ public sealed partial class ShellView : Page
     private void SettingsCardDebugResetSettings_Click(object sender, RoutedEventArgs e)
     {
         ViewModel.SettingsService.ResetAllSettingsAndRestart();
+    }
+
+    private void SettingsCardDebugDialogFeedback_Click(object sender, RoutedEventArgs e)
+    {
+        TeachingTipFeedback.IsOpen = true;
+    }
+
+    private void MenuFlyoutTitlebarMore_Opening(object sender, object e)
+    {
+        TeachingTipFeedback.IsOpen = false;
+    }
+
+    private void ButtonTeachingTipFeedbackGiveFeedback_Click(object sender, RoutedEventArgs e)
+    {
+        TeachingTipFeedback.IsOpen = false;
+    }
+
+    private void ViewModel_FeedbackDialogRequested(object? sender, EventArgs e)
+    {
+        TeachingTipFeedback.IsOpen = true;
     }
 }

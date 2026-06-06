@@ -16,6 +16,7 @@
     xmlns:media="using:CommunityToolkit.WinUI.Media"
     xmlns:converters="using:Scanner.Views.Converters"
     xmlns:strings="using:Scanner.Resources.Strings"
+    xmlns:local="using:Scanner"
     mc:Ignorable="d"
     FlowDirection="{x:Bind ViewModel.AccessibilityService.DefaultFlowDirection, Mode=OneWay}"
     Loading="Page_Loading">
@@ -329,7 +330,7 @@
                         <Button ToolTipService.ToolTip="{x:Bind strings:Resources.Help}" Style="{StaticResource TitlebarButtonStyle}">
                             <FontIcon Glyph="&#xE897;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                         </Button>
-                        <Button ToolTipService.ToolTip="{x:Bind strings:Resources.SupportDevelopmentToolTip}" Style="{StaticResource TitlebarButtonStyle}" Command="{x:Bind ViewModel.ShowDonationDialogCommand}">
+                        <Button x:Name="ButtonSupportDevelopment" ToolTipService.ToolTip="{x:Bind strings:Resources.SupportDevelopmentToolTip}" Style="{StaticResource TitlebarButtonStyle}" Command="{x:Bind ViewModel.ShowDonationDialogCommand}">
                             <FontIcon Glyph="&#xED56;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                         </Button>
                     </StackPanel>
@@ -337,7 +338,7 @@
                         <FontIcon Glyph="&#xE712;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
 
                         <Button.Flyout>
-                            <MenuFlyout Placement="Bottom">
+                            <MenuFlyout x:Name="MenuFlyoutTitlebarMore" Placement="Bottom" Opening="MenuFlyoutTitlebarMore_Opening">
                                 <MenuFlyoutItem x:Name="MenuFlyoutItemMoreHistory" Text="{x:Bind strings:Resources.History}" Click="MenuFlyoutItemHistory_Click" x:Load="{x:Bind ShowAllMoreMenuItems, Mode=OneWay}">
                                     <MenuFlyoutItem.Icon>
                                         <FontIcon Glyph="&#xE81C;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
@@ -407,6 +408,11 @@
                                             <controls:SettingsCard x:Name="SettingsCardDebugDialogSetup" Header="Setup" IsClickEnabled="True" Click="SettingsCardDebugDialogSetup_Click">
                                                 <controls:SettingsCard.HeaderIcon>
                                                     <FontIcon Glyph="&#xEADF;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                                </controls:SettingsCard.HeaderIcon>
+                                            </controls:SettingsCard>
+                                            <controls:SettingsCard x:Name="SettingsCardDebugDialogFeedback" Header="Feedback" IsClickEnabled="True" Click="SettingsCardDebugDialogFeedback_Click">
+                                                <controls:SettingsCard.HeaderIcon>
+                                                    <FontIcon Glyph="&#xED15;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                                                 </controls:SettingsCard.HeaderIcon>
                                             </controls:SettingsCard>
                                         </controls:SettingsExpander.Items>
@@ -502,5 +508,16 @@
                 </InfoBar>
             </Frame>
         </Grid>
+
+        <TeachingTip x:Name="TeachingTipFeedback" PreferredPlacement="Bottom" PlacementMargin="4" Title="{x:Bind strings:Resources.FeedbackDialogHeading}" Subtitle="{x:Bind strings:Resources.FeedbackDialogSubheading}">
+            <TeachingTip.IconSource>
+                <FontIconSource Glyph="&#xED15;" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+            </TeachingTip.IconSource>
+            
+            <StackPanel Orientation="Vertical" Spacing="4" Margin="0,8,0,0">
+                <Button x:Name="ButtonTeachingTipFeedbackGiveFeedback" Content="{x:Bind strings:Resources.GiveFeedback}" HorizontalAlignment="Stretch" Command="{x:Bind ViewModel.ShowFeedbackCommand}" Click="ButtonTeachingTipFeedbackGiveFeedback_Click" />
+                <Button Content="{x:Bind strings:Resources.SupportDevelopment}" HorizontalAlignment="Stretch" Style="{StaticResource AccentButtonStyle}" Command="{x:Bind ViewModel.ShowDonationDialogCommand}" />
+            </StackPanel>
+        </TeachingTip>
     </Grid>
 </Page>

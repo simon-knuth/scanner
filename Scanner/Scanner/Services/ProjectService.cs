@@ -58,6 +58,10 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
     private readonly ISettingsService SettingsService = Ioc.Default.GetRequiredService<ISettingsService>();
     #endregion
 
+    #region Events
+    public event EventHandler? ScanCompletedSuccessfully;
+    #endregion
+
     private ProjectBase? currentProject;
     public ProjectBase? CurrentProject
     {
@@ -601,6 +605,8 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
             return null;
         }
 
+        SettingsService.ScanNumber++;
+        ScanCompletedSuccessfully?.Invoke(this, EventArgs.Empty);
         return files;
     }
 
