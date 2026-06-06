@@ -100,17 +100,24 @@ public abstract class ScanOptionsSnapshot
     /// </summary>
     public void TryRestoreOptions(IScanningDevice scanner, ScanOptions options)
     {
-        if (SourceMode.HasValue)
+        if (SourceMode.HasValue && IsSourceModeAllowed(scanner, SourceMode.Value))
             options.SourceMode = SourceMode.Value;
+
+        ScannerSource effectiveSource = options.SourceMode;
 
         if (TargetFormat.HasValue)
             options.TargetFormat = TargetFormat.Value;
 
-        if (ColorMode.HasValue)
+        if (ColorMode.HasValue && IsColorModeAllowed(scanner, effectiveSource, ColorMode.Value))
             options.ColorMode = ColorMode.Value;
 
         if (Duplex.HasValue)
-            options.Duplex = Duplex.Value;
+        {
+            if (!Duplex.Value)
+                options.Duplex = false;
+            else if (effectiveSource == ScannerSource.Feeder && scanner.IsFeederDuplexSupported)
+                options.Duplex = true;
+        }
 
         if (ScanMultiplePages.HasValue)
             options.ScanMultiplePages = ScanMultiplePages.Value;
@@ -124,7 +131,7 @@ public abstract class ScanOptionsSnapshot
         // resolution: match saved DPI against the device's current resolution list
         if (ResolutionDpiX.HasValue && ResolutionDpiY.HasValue)
         {
-            List<ScanResolution> available = options.SourceMode switch
+            List<ScanResolution> available = effectiveSource switch
             {
                 ScannerSource.Flatbed => scanner.FlatbedResolutions,
                 ScannerSource.Feeder => scanner.FeederResolutions,
@@ -139,10 +146,12 @@ public abstract class ScanOptionsSnapshot
                 options.Resolution = match;
         }
 
-        // ScanArea
-        options.ScanArea = ScanAreaKind switch
+        // ScanArea: the Auto source has no selectable area, and an auto-crop area is only valid
+        // when the device supports that crop mode for the effective source.
+        options.ScanArea = effectiveSource == ScannerSource.Auto ? null : ScanAreaKind switch
         {
             Scanner.Data.ScanAreaKind.AutoCrop when AutoCropMode.HasValue
+                                                && IsAutoCropModeAllowed(scanner, effectiveSource, AutoCropMode.Value)
                 => new AutoCropArea { AutoCropMode = AutoCropMode.Value },
 
             Scanner.Data.ScanAreaKind.PaperSize when PaperSize.HasValue
@@ -165,8 +174,72 @@ public abstract class ScanOptionsSnapshot
                     PreviewSelectionWidth.Value,
                     PreviewSelectionHeight.Value)),
 
-            // null or any incomplete/unknown kind ~> leave ScanArea as null
+            // null or any incomplete/unsupported kind ~> leave ScanArea as null
             _ => null
+        };
+    }
+
+    private static bool IsSourceModeAllowed(IScanningDevice scanner, ScannerSource source)
+    {
+        return source switch
+        {
+            ScannerSource.Auto => scanner.IsAutoAllowed,
+            ScannerSource.Flatbed => scanner.IsFlatbedAllowed,
+            ScannerSource.Feeder => scanner.IsFeederAllowed,
+            _ => false
+        };
+    }
+
+    private static bool IsColorModeAllowed(IScanningDevice scanner, ScannerSource source, ScannerColorMode mode)
+    {
+        return source switch
+        {
+            ScannerSource.Flatbed => mode switch
+            {
+                ScannerColorMode.Color => scanner.IsFlatbedColorAllowed,
+                ScannerColorMode.Grayscale => scanner.IsFlatbedGrayscaleAllowed,
+                ScannerColorMode.Monochrome => scanner.IsFlatbedMonochromeAllowed,
+                ScannerColorMode.Automatic => scanner.IsFlatbedAutoColorAllowed,
+                ScannerColorMode.None => true,
+                _ => false
+            },
+            ScannerSource.Feeder => mode switch
+            {
+                ScannerColorMode.Color => scanner.IsFeederColorAllowed,
+                ScannerColorMode.Grayscale => scanner.IsFeederGrayscaleAllowed,
+                ScannerColorMode.Monochrome => scanner.IsFeederMonochromeAllowed,
+                ScannerColorMode.Automatic => scanner.IsFeederAutoColorAllowed,
+                ScannerColorMode.None => true,
+                _ => false
+            },
+            // the Auto source carries no explicit color mode
+            _ => mode == ScannerColorMode.None
+        };
+    }
+
+    private static bool IsAutoCropModeAllowed(IScanningDevice scanner, ScannerSource source, ScannerAutoCropMode mode)
+    {
+        bool single, multi;
+        switch (source)
+        {
+            case ScannerSource.Flatbed:
+                single = scanner.IsFlatbedAutoCropSingleRegionAllowed;
+                multi = scanner.IsFlatbedAutoCropMultiRegionAllowed;
+                break;
+            case ScannerSource.Feeder:
+                single = scanner.IsFeederAutoCropSingleRegionAllowed;
+                multi = scanner.IsFeederAutoCropMultiRegionAllowed;
+                break;
+            default:
+                return false;
+        }
+
+        return mode switch
+        {
+            ScannerAutoCropMode.SingleRegion => single,
+            ScannerAutoCropMode.MultipleRegions => multi,
+            ScannerAutoCropMode.Disabled => single || multi,
+            _ => false
         };
     }
 
