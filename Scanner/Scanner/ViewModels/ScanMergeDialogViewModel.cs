@@ -88,6 +88,7 @@ partial class ScanMergeDialogViewModel : ObservableRecipient, IDisposable
     public ScanMergeDialogViewModel()
     {
         LogService?.Log.Information("Opening scan and merge dialog");
+        SentryService?.TrackEvent(AnalyticsEvent.ScanMergeDialogOpened);
         Messenger.Register<SelectedScannerChangedMessage>(this, (r, m) =>
         {
             if (m.SelectedScanner == null)
@@ -241,6 +242,10 @@ partial class ScanMergeDialogViewModel : ObservableRecipient, IDisposable
         if (config != null)
         {
             SettingsService.LastScanMergeReversed = config.InsertReversed;
+            SentryService?.TrackEvent(AnalyticsEvent.ScanMergeConfirmed, new Dictionary<string, string>
+            {
+                { "reversed", config.InsertReversed.ToString() }
+            });
             Messenger.Send(new InvokeScanMergeMessage(config));
         }
     }

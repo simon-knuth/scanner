@@ -86,6 +86,7 @@ public partial class App : Application
 
         WeakReferenceMessenger.Default.Register<MainWindowClosingMessage>(this, (r, m) =>
         {
+            Ioc.Default.GetService<ISentryService>()?.TrackEvent(AnalyticsEvent.Close);
             SettingsWindow?.Close();
             FeedbackWindow?.Close();
             KeyboardHookHelper.Unhook();
@@ -128,18 +129,42 @@ public partial class App : Application
                     {
                         await LogService.InitializeAsync();
                     }
-                    Ioc.Default.GetService<ISentryService>()?.Initialize();
+                    ISentryService? sentryService = Ioc.Default.GetService<ISentryService>();
+                    sentryService?.Initialize();
+                    sentryService?.TrackEvent(AnalyticsEvent.Launch);
+                    sentryService?.TrackEvent(AnalyticsEvent.ArchitectureDetected, new Dictionary<string, string>
+                    {
+                        { "architecture", System.Runtime.InteropServices.RuntimeInformation.OSArchitecture.ToString() }
+                    });
+                    TrackSettingsStats(sentryService);
                     await Ioc.Default.GetRequiredService<IAppDataService>().InitializeAsync();
                     Ioc.Default.GetRequiredService<ISaveLocationService>();
 
+                    DateTime processStartTime = Process.GetCurrentProcess().StartTime;
                     MainDispatcherQueue.RunOnThread(DispatcherQueuePriority.High, () =>
                     {
                         MainWindow = new MainWindow();
                         MainWindow.Activate();
                         KeyboardHookHelper.Initialize(MainWindow);
-                        _ = Task.Run(async () => await Ioc.Default.GetRequiredService<IKnownScannersService>().InitializeAsync());
+
+                        // cold-start time (process creation to first window shown)
+                        sentryService?.TrackDistributionMetric(AnalyticsMetric.AppColdStartDuration,
+                            (DateTime.Now - processStartTime).TotalMilliseconds, MeasurementUnit.Duration.Millisecond);
+
+                        _ = Task.Run(async () =>
+                        {
+                            IKnownScannersService knownScannersService = Ioc.Default.GetRequiredService<IKnownScannersService>();
+                            await knownScannersService.InitializeAsync();
+                            var knownScanners = await knownScannersService.GetKnownScannersAsync();
+                            sentryService?.TrackGaugeMetric(AnalyticsMetric.KnownScannerCount, knownScanners.Count, MeasurementUnit.None);
+                        });
                         _ = Task.Run(async () => await Ioc.Default.GetRequiredService<IProjectHistoryService>().InitializeAsync(MainDispatcherQueue));
-                        _ = Task.Run(async () => await Ioc.Default.GetRequiredService<ITemplatesService>().InitializeAsync(MainDispatcherQueue));
+                        _ = Task.Run(async () =>
+                        {
+                            ITemplatesService templatesService = Ioc.Default.GetRequiredService<ITemplatesService>();
+                            await templatesService.InitializeAsync(MainDispatcherQueue);
+                            sentryService?.TrackGaugeMetric(AnalyticsMetric.TemplateCount, templatesService.Entries.Count, MeasurementUnit.None);
+                        });
                     });
                 }
                 else
@@ -183,6 +208,35 @@ public partial class App : Application
                 LogService?.CloseAndFlush();
             }
             
+        });
+    }
+
+    /// <summary>
+    ///     Emits a snapshot of the user's notable settings, so their distribution across the user base can be analyzed.
+    /// </summary>
+    private static void TrackSettingsStats(ISentryService? sentryService)
+    {
+        if (sentryService == null) return;
+
+        ISettingsService settings = Ioc.Default.GetRequiredService<ISettingsService>();
+        sentryService.TrackEvent(AnalyticsEvent.SettingsStats, new Dictionary<string, string>
+        {
+            { "save_location_type", settings.SettingSaveLocationType.ToString() },
+            { "theme", settings.SettingAppTheme.ToString() },
+            { "auto_rotate", settings.SettingAutoRotate.ToString() },
+            { "auto_save", settings.SettingAutoSave.ToString() },
+            { "ai_file_name", settings.SettingGenerateFileNameWithAI.ToString() },
+            { "ocr_pdfs", settings.SettingOcrPdfs.ToString() },
+            { "use_sub_folder", settings.SettingUseSubFolder.ToString() },
+            { "file_naming_pattern", settings.SettingFileNamingPattern.ToString() },
+            { "sub_folder_naming_pattern", settings.SettingSubFolderNamingPattern.ToString() },
+            { "measurement_units", settings.SettingMeasurementUnits.ToString() },
+            { "scan_action", settings.SettingScanAction.ToString() },
+            { "editor_orientation", settings.SettingEditorOrientation.ToString() },
+            { "remember_scan_options", settings.SettingRememberScanOptions.ToString() },
+            { "animations", settings.SettingAnimations.ToString() },
+            { "mirror_layout", settings.SettingMirrorAppLayout.ToString() },
+            { "error_statistics", settings.SettingErrorStatistics.ToString() },
         });
     }
 

@@ -10,8 +10,10 @@ using Scanner.Messages;
 using Scanner.Models.Interfaces;
 using Scanner.Models.Project;
 using Scanner.Services.Interfaces;
+using Sentry;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -128,7 +130,7 @@ public partial class PdfProject : ProjectBase
         }
     }
 
-    public override async Task<bool> SaveAsync(bool saveAs, DispatcherQueue uiDispatcherQueue)
+    public override async Task<bool> SaveAsync(bool saveAs, DispatcherQueue uiDispatcherQueue, bool isUserInitiated = false)
     {
         // ensure maximum of one thread waiting to save
         if (saveProcessWaitingToStart)
@@ -146,7 +148,13 @@ public partial class PdfProject : ProjectBase
         LatestSaveProcess = saveProcess;
 
         // save
-        return await SaveInternalAsync(saveAs, saveProcess, uiDispatcherQueue);
+        bool success = await SaveInternalAsync(saveAs, saveProcess, uiDispatcherQueue);
+
+        // analytics (user-initiated saves only)
+        if (success && isUserInitiated)
+            TrackSaveAnalytics(saveAs);
+
+        return success;
     }
 
     private async Task<bool> SaveInternalAsync(bool saveAs, TaskCompletionSource<bool> saveProcess, DispatcherQueue uiDispatcherQueue)
@@ -461,7 +469,7 @@ public partial class PdfProject : ProjectBase
         try
         {
             SoftwareBitmap softwareBitmap = await GetSoftwareBitmapForAIFileNameGenerationAsync(uiDispatcherQueue);
-            await GenerateFileNameWithAIAsync(softwareBitmap, uiDispatcherQueue);
+            await GenerateFileNameWithAIAsync(softwareBitmap, uiDispatcherQueue, false);
         }
         finally
         {
@@ -469,10 +477,21 @@ public partial class PdfProject : ProjectBase
         }
     }
 
-    public async Task GenerateFileNameWithAIAsync(SoftwareBitmap bitmap, DispatcherQueue uiDispatcherQueue)
+    /// <param name="isAutomatic">
+    /// Whether the generation was triggered automatically (e.g. after a scan) rather than invoked manually by the user.
+    /// </param>
+    public async Task GenerateFileNameWithAIAsync(SoftwareBitmap bitmap, DispatcherQueue uiDispatcherQueue, bool isAutomatic)
     {
+        // analytics
+        SentryService?.TrackEvent(AnalyticsEvent.AIFileNameGenerationStarted, new Dictionary<string, string>
+        {
+            { "automatic", isAutomatic.ToString() }
+        });
+        Stopwatch stopwatch = Stopwatch.StartNew();
+
         await uiDispatcherQueue.RunOnThreadAndWaitAsync(DispatcherQueuePriority.High, () => FileNameInfo.IsNameGenerationInProgress = true);
 
+        bool successful = false;
         try
         {
             // generate name
@@ -482,12 +501,27 @@ public partial class PdfProject : ProjectBase
 
             // apply result
             if (fileName != null)
+            {
                 await FileNameInfo.UpdateNamesAsync(fileName + Helpers.Helpers.TargetFormatToFileExtension(Format), FileNameInfo.ActualName, true, uiDispatcherQueue);
+                successful = true;
+            }
         }
         finally
         {
             bitmap.Dispose();
             await uiDispatcherQueue.RunOnThreadAndWaitAsync(DispatcherQueuePriority.High, () => FileNameInfo.IsNameGenerationInProgress = false);
+
+            // analytics
+            stopwatch.Stop();
+            SentryService?.TrackEvent(AnalyticsEvent.AIFileNameGenerationStopped, new Dictionary<string, string>
+            {
+                { "successful", successful.ToString() }
+            });
+            SentryService?.TrackDistributionMetric(AnalyticsMetric.AIFileNameGenerationDuration, stopwatch.Elapsed.TotalMilliseconds,
+                MeasurementUnit.Duration.Millisecond, new Dictionary<string, string>
+                {
+                    { "successful", successful.ToString() }
+                });
         }
     }
 

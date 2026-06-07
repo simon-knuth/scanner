@@ -33,6 +33,7 @@ public partial class RenameAction : IProjectAction
     private string newName;
 
     private string? oldName;
+    private AnalyticsEvent? analyticsEvent;
 
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -58,15 +59,22 @@ public partial class RenameAction : IProjectAction
             pdfProject.FileNameInfo!.NameGenerationCts?.Cancel();
             oldName = pdfProject.FileNameInfo!.DesiredName;
             await pdfProject.FileNameInfo!.UpdateNamesAsync(newName, pdfProject.FileNameInfo.ActualName, false, uiDispatcherQueue);
+            analyticsEvent = AnalyticsEvent.RenamePDF;
         }
         else if (page is ImagePage imagePage)
         {
             imagePage.FileNameInfo.NameGenerationCts?.Cancel();
             oldName = imagePage.FileNameInfo.DesiredName;
             await imagePage.FileNameInfo.UpdateNamesAsync(newName, imagePage.FileNameInfo.ActualName, false, uiDispatcherQueue);
+            analyticsEvent = AnalyticsEvent.RenamePage;
         }
 
         return true;
+    }
+
+    public (AnalyticsEvent Event, Dictionary<string, string>? Properties)? GetAnalyticsEvent()
+    {
+        return analyticsEvent != null ? (analyticsEvent.Value, null) : null;
     }
 
     public async Task UndoAsync(ProjectBase project, DispatcherQueue uiDispatcherQueue)

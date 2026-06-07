@@ -36,6 +36,7 @@ internal partial class HardwareScanner : IScanningDevice
     #region Services
     private IAppDataService AppDataService = Ioc.Default.GetRequiredService<IAppDataService>();
     private ILogService? LogService = Ioc.Default.GetService<ILogService>();
+    private ISentryService? SentryService = Ioc.Default.GetService<ISentryService>();
     #endregion
 
     #region Constants
@@ -294,6 +295,12 @@ internal partial class HardwareScanner : IScanningDevice
 
     public async Task<StorageFile?> GetPreviewScanAsync(ScannerSource sourceMode, StorageFolder targetFolder, bool emptyTargetFolder, DispatcherQueue uiDispatcherQueue)
     {
+        // analytics
+        SentryService?.TrackEvent(AnalyticsEvent.Preview, new Dictionary<string, string>
+        {
+            { "source", sourceMode.ToString() }
+        });
+
         // empty target folder
         if (emptyTargetFolder)
             await AppDataService.EmptyFolderAsync(targetFolder);

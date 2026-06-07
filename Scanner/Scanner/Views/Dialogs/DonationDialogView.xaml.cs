@@ -28,6 +28,7 @@ public partial class DonationDialogView : ContentDialog
     #region Services
     public readonly IAccessibilityService AccessibilityService = Ioc.Default.GetRequiredService<IAccessibilityService>();
     private ILogService? LogService = Ioc.Default.GetService<ILogService>();
+    private ISentryService? SentryService = Ioc.Default.GetService<ISentryService>();
     #endregion
 
 
@@ -46,6 +47,7 @@ public partial class DonationDialogView : ContentDialog
     private async void ContentDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
     {
         ContentDialogButtonClickDeferral deferral = args.GetDeferral();
+        SentryService?.TrackEvent(AnalyticsEvent.DonationLinkClicked);
         await Launcher.LaunchUriAsync(AppConfig.DonationUri);
         deferral.Complete();
     }

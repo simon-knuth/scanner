@@ -28,6 +28,7 @@ class HistoryViewModel : ObservableRecipient, IDisposable
     #region Services
     public readonly IProjectHistoryService ProjectHistoryService = Ioc.Default.GetRequiredService<IProjectHistoryService>();
     public readonly IProjectService ProjectService = Ioc.Default.GetRequiredService<IProjectService>();
+    private readonly ISentryService? SentryService = Ioc.Default.GetService<ISentryService>();
     #endregion
 
     #region Commands
@@ -52,6 +53,8 @@ class HistoryViewModel : ObservableRecipient, IDisposable
         ShowInFileExplorerAsyncCommand = new(ShowInFileExplorerAsync);
 
         Task.Run(ProjectHistoryService.UpdateMissingFilesAsync);
+
+        SentryService?.TrackEvent(AnalyticsEvent.HistoryViewOpened);
     }
 
 
@@ -70,21 +73,25 @@ class HistoryViewModel : ObservableRecipient, IDisposable
 
     public async Task OpenEntryAsync(ProjectHistoryEntry entry)
     {
+        SentryService?.TrackEvent(AnalyticsEvent.HistoryEntryOpened);
         await ProjectService.TryOpenProjectFromFilesAsync(entry.Files.Select(x => x.FilePath).ToArray(), entry.Id, viewDispatcherQueue);
     }
 
     public async Task RemoveEntryAsync(ProjectHistoryEntry entry)
     {
         await ProjectHistoryService.RemoveEntryAsync(entry.Id);
+        SentryService?.TrackEvent(AnalyticsEvent.HistoryEntryRemoved);
     }
 
     public async Task ClearListAsync()
     {
         await ProjectHistoryService.ClearHistoryAsync();
+        SentryService?.TrackEvent(AnalyticsEvent.HistoryCleared);
     }
 
     private async Task ShowInFileExplorerAsync(ProjectHistoryEntry entry)
     {
+        SentryService?.TrackEvent(AnalyticsEvent.HistoryEntryShownInFileExplorer);
         StorageFolder folder = await StorageFolder.GetFolderFromPathAsync(Path.GetDirectoryName(entry.Files[0].FilePath));
         await Windows.System.Launcher.LaunchFolderAsync(folder);
     }

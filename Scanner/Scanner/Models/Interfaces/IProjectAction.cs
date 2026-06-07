@@ -15,6 +15,7 @@ using Windows.Devices.Scanners;
 using Windows.Storage;
 using System.ComponentModel;
 using Microsoft.UI.Dispatching;
+using Scanner.Services.Interfaces;
 
 namespace Scanner.Models.Interfaces;
 
@@ -59,4 +60,12 @@ public interface IProjectAction
     /// Gets the friendly name of the action.
     /// </summary>
     string GetFriendlyName();
+
+    /// <summary>
+    /// Gets the analytics event (and optional properties) to report after the action has been
+    /// successfully applied via <see cref="ExecuteAsync(ProjectBase, DispatcherQueue)"/>.
+    /// Returns <see langword="null"/> for actions that are not tracked.
+    /// Only reported for genuine user actions; the project service suppresses it when redoing.
+    /// </summary>
+    (AnalyticsEvent Event, Dictionary<string, string>? Properties)? GetAnalyticsEvent() => null;
 }

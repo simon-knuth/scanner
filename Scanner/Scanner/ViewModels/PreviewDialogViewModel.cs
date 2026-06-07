@@ -426,6 +426,11 @@ public partial class PreviewDialogViewModel : ObservableRecipient, IDisposable
 
             LogService?.Log.Information($"Closing preview dialog and returning region {rect}");
             scanOptions.ScanArea = new PreviewSelectionArea(rect);
+
+            SentryService?.TrackEvent(AnalyticsEvent.PreviewRegionSelected, new Dictionary<string, string>
+            {
+                { "source", scanOptions.SourceMode.ToString() }
+            });
         }
         else
         {

@@ -32,6 +32,7 @@ public partial class ApplyOrderOfPagesAction : IProjectAction
     private List<IProjectPage> targetOrder;
 
     private List<IProjectPage>? previousOrder;
+    private bool appliedReorder;
 
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -56,7 +57,17 @@ public partial class ApplyOrderOfPagesAction : IProjectAction
     {
         previousOrder = [.. project.Pages];
 
-        return await project.ApplyOrderOfPagesAsync(targetOrder, uiDispatcherQueue);
+        appliedReorder = await project.ApplyOrderOfPagesAsync(targetOrder, uiDispatcherQueue);
+        return appliedReorder;
+    }
+
+    public (AnalyticsEvent Event, Dictionary<string, string>? Properties)? GetAnalyticsEvent()
+    {
+        if (!appliedReorder) return null;
+        return (AnalyticsEvent.ReorderPages, new Dictionary<string, string>
+        {
+            { "pages", targetOrder.Count.ToString() }
+        });
     }
 
     public async Task UndoAsync(ProjectBase project, DispatcherQueue uiDispatcherQueue)

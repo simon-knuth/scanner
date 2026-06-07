@@ -127,7 +127,7 @@ public partial class MultiFileProject : ProjectBase
         }
     }
 
-    public async override Task<bool> SaveAsync(bool saveAs, DispatcherQueue uiDispatcherQueue)
+    public async override Task<bool> SaveAsync(bool saveAs, DispatcherQueue uiDispatcherQueue, bool isUserInitiated = false)
     {
         // ensure maximum of one thread waiting to save
         if (saveProcessWaitingToStart)
@@ -145,7 +145,13 @@ public partial class MultiFileProject : ProjectBase
         LatestSaveProcess = saveProcess;
 
         // save
-        return await SaveInternalAsync(saveAs, [.. Pages], saveProcess, uiDispatcherQueue);
+        bool success = await SaveInternalAsync(saveAs, [.. Pages], saveProcess, uiDispatcherQueue);
+
+        // analytics (user-initiated saves only)
+        if (success && isUserInitiated)
+            TrackSaveAnalytics(saveAs);
+
+        return success;
     }
 
     public async Task<bool> SaveAsSinglePageAsync(IProjectPage page, DispatcherQueue uiDispatcherQueue)
@@ -165,8 +171,14 @@ public partial class MultiFileProject : ProjectBase
         TaskCompletionSource<bool> saveProcess = new();
         LatestSaveProcess = saveProcess;
 
-        // save
-        return await SaveInternalAsync(true, [page], saveProcess, uiDispatcherQueue);
+        // save (always a user-initiated "save as current page")
+        bool success = await SaveInternalAsync(true, [page], saveProcess, uiDispatcherQueue);
+
+        // analytics
+        if (success)
+            TrackSaveAnalytics(true, currentPageOnly: true);
+
+        return success;
     }
 
     private async Task<bool> SaveInternalAsync(bool saveAs, List<IProjectPage> pages, TaskCompletionSource<bool> saveProcess, DispatcherQueue uiDispatcherQueue)

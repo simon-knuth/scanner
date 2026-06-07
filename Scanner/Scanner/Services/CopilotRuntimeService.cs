@@ -45,6 +45,9 @@ internal partial class CopilotRuntimeService : ObservableObject, ICopilotRuntime
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     #region Services
     private readonly ILogService? LogService = Ioc.Default.GetService<ILogService>();
+
+    // Resolved lazily due to cyclic dependency
+    private ISentryService? SentryService => Ioc.Default.GetService<ISentryService>();
     #endregion
 
     #region Constants
@@ -194,6 +197,7 @@ internal partial class CopilotRuntimeService : ObservableObject, ICopilotRuntime
 
     public async Task TryInstallModelsAsync()
     {
+        SentryService?.TrackEvent(AnalyticsEvent.CopilotModelDownloadStarted);
         try
         {
             Task[] tasks =
@@ -204,10 +208,16 @@ internal partial class CopilotRuntimeService : ObservableObject, ICopilotRuntime
             await Task.WhenAll(tasks);
 
             UpdateStatus();
+
+            SentryService?.TrackEvent(AnalyticsEvent.CopilotModelDownloadCompleted, new Dictionary<string, string>
+            {
+                { "models_installed", AreModelsInstalled.ToString() }
+            });
         }
         catch (Exception exc)
         {
             LogService?.Log.Warning(exc, "Failed to install models");
+            SentryService?.TrackEvent(AnalyticsEvent.CopilotModelDownloadFailed);
         }
     }
 

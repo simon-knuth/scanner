@@ -12,6 +12,7 @@ using System.Collections.ObjectModel;
 using System.Globalization;
 using Windows.Storage;
 using System.ComponentModel;
+using Sentry;
 
 namespace Scanner.Services.Interfaces;
 
@@ -33,6 +34,18 @@ public interface ISentryService
     void TrackWarning(Exception exception);
     void TrackError(Exception exception, bool isFatal = false);
     void TrackEvent(AnalyticsEvent sentryEvent, Dictionary<string, string>? attributes = null);
+
+    /// <summary>
+    ///     Tracks a value as a distribution metric, allowing the backend to aggregate statistics
+    ///     (percentiles, min/max, average) over many recorded values. Useful for timings.
+    /// </summary>
+    void TrackDistributionMetric(AnalyticsMetric metric, double value, MeasurementUnit unit, Dictionary<string, string>? attributes = null);
+
+    /// <summary>
+    ///     Tracks a value as a gauge metric, recording statistics (last value, min/max, sum, count)
+    ///     for a value that is sampled at points in time.
+    /// </summary>
+    void TrackGaugeMetric(AnalyticsMetric metric, double value, MeasurementUnit unit, Dictionary<string, string>? attributes = null);
     void SendErrorFeedback(string message, string? contactEmail, string? name);
     void SendSuggestionFeedback(string message, string? contactEmail, string? name);
     Task<string> GetCurrentLogPathAsync(bool flush);
@@ -49,6 +62,7 @@ public enum AnalyticsEvent
     AppUpdateAvailable,
     AppUpdateDownloaded,
     AppUpdateStarted,
+    SetupStarted,
     SetupFinished,
     RatingStoreOpened,
     RatingStoreNotNow,
@@ -59,6 +73,7 @@ public enum AnalyticsEvent
     SettingsStats,
     ScannerAdded,
     ScanCompleted,
+    ScanCanceled,   // TODO
     Share,
     Preview,
     RotatePages,
@@ -69,22 +84,64 @@ public enum AnalyticsEvent
     CropAsCopy,
     DeletePages,
     DeletePage,
-    DrawOnPage,
-    DrawOnPageAsCopy,
+    DrawOnPage, // TODO
+    DrawOnPageAsCopy,   // TODO
     CopyPages,
     CopyPage,
     CopyDocument,
     OpenWith,
-    DuplicatePage,
+    DuplicatePage,  // TODO
     DonationDialogOpened,
     DonationLinkClicked,
-    HelpRequested,
+    HelpRequested,  // TODO
     AutoRotatedPage,
-    CorrectedAutoRotation,
     SetSaveLocationUnavailable,
     SettingsRequested,
-    ChangelogOpened,
+    ChangelogOpened,    // TODO
     ArchitectureDetected,
     OtherAppsDialogOpened,
+    ApplyFilter,
+    ManageScannersOpened,
+    TemplateApplied,
+    TemplateCreated,
+    TemplateRemoved,
+    TemplateRenamed,
+    TemplatesCleared,
+    HistoryViewOpened,
+    HistoryEntryOpened,
+    HistoryEntryRemoved,
+    HistoryEntryShownInFileExplorer,
+    HistoryCleared,
+    TemplatesViewOpened,
+    AIFileNameGenerationStarted,
+    AIFileNameGenerationStopped,
+    AIFileNameGenerationCancelled,
+    ProjectOpenedFromDisk,
+    ConvertProject,
+    ExportPagesFromPdf,
+    AddImageFiles,
+    ReorderPages,
+    ProjectSaved,
+    UnsavedChangesDialogShown,
+    UnsavedChangesDialogResolved,
+    ProjectDeleted,
+    Undo,
+    Redo,
+    PreviewRegionSelected,
+    ScanMergeDialogOpened,
+    ScanMergeConfirmed,
+    CopilotModelDownloadStarted,
+    CopilotModelDownloadCompleted,
+    CopilotModelDownloadFailed,
     TestEvent
+}
+
+public enum AnalyticsMetric
+{
+    AIFileNameGenerationDuration,
+    ScanDuration,
+    ScanPageCount,
+    KnownScannerCount,
+    TemplateCount,
+    AppColdStartDuration
 }

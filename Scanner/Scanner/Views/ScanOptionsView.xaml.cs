@@ -775,6 +775,7 @@ public sealed partial class ScanOptionsView : Page
                 ComboBoxScanners.SelectedIndex = ComboBoxScanners.Items.Count - invalidScannerItems;
 
             // open scanner settings
+            ViewModel.SentryService?.TrackEvent(AnalyticsEvent.ManageScannersOpened);
             await Launcher.LaunchUriAsync(new Uri("ms-settings:printers"));
         }
     }

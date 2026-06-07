@@ -52,7 +52,7 @@ public partial class UnsavedChangesDialogView : ContentDialog
 
         // save changes
         ContentDialogButtonClickDeferral deferral = args.GetDeferral();
-        await project.SaveAsync(false, this.DispatcherQueue);
+        await project.SaveAsync(false, this.DispatcherQueue, isUserInitiated: true);
         deferral.Complete();
     }
 }

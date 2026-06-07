@@ -316,6 +316,28 @@ internal class SentryService : ISentryService
         LogService?.Log.Information("Tracking {Event} with {Properties}", sentryEvent, dictToText);
     }
 
+    public void TrackDistributionMetric(AnalyticsMetric metric, double value, MeasurementUnit unit, Dictionary<string, string>? attributes = null)
+    {
+        IEnumerable<KeyValuePair<string, object>>? convertedAttributes = attributes?.Select(kvp => new KeyValuePair<string, object>(kvp.Key, kvp.Value));
+        if (convertedAttributes != null)
+            SentrySdk.Metrics.EmitDistribution(metric.ToString(), value, unit, convertedAttributes);
+        else
+            SentrySdk.Metrics.EmitDistribution(metric.ToString(), value, unit);
+
+        LogService?.Log.Information("Tracking distribution metric {Metric}={Value} {Unit}", metric, value, unit);
+    }
+
+    public void TrackGaugeMetric(AnalyticsMetric metric, double value, MeasurementUnit unit, Dictionary<string, string>? attributes = null)
+    {
+        IEnumerable<KeyValuePair<string, object>>? convertedAttributes = attributes?.Select(kvp => new KeyValuePair<string, object>(kvp.Key, kvp.Value));
+        if (convertedAttributes != null)
+            SentrySdk.Metrics.EmitGauge(metric.ToString(), value, unit, convertedAttributes);
+        else
+            SentrySdk.Metrics.EmitGauge(metric.ToString(), value, unit);
+
+        LogService?.Log.Information("Tracking gauge metric {Metric}={Value} {Unit}", metric, value, unit);
+    }
+
     public void TrackError(Exception exception, bool isFatal = false)
     {
         LogService?.Log.Information("Tracking error");

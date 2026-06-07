@@ -26,6 +26,7 @@ internal partial class ScannerDiscoveryService : IScannerDiscoveryService
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     #region Services
     private readonly ILogService? LogService = Ioc.Default.GetService<ILogService>();
+    private readonly ISentryService? SentryService = Ioc.Default.GetService<ISentryService>();
     #endregion
 
     #region Events
@@ -220,71 +221,57 @@ internal partial class ScannerDiscoveryService : IScannerDiscoveryService
 
     public void SendScannerAnalytics(HardwareScanner scanner)
     {
-        //string formatCombination = "";
-        //bool jpgSupported, pngSupported, pdfSupported, xpsSupported, oxpsSupported, tifSupported, bmpSupported;
-        //jpgSupported = pngSupported = pdfSupported = xpsSupported = oxpsSupported = tifSupported = bmpSupported = false;
+        try
+        {
+            // gather all supported formats across the scanner's source modes
+            HashSet<ImageScannerFormat> formats = new();
+            if (scanner.AutoFormats != null) formats.UnionWith(scanner.AutoFormats);
+            if (scanner.FlatbedFormats != null) formats.UnionWith(scanner.FlatbedFormats);
+            if (scanner.FeederFormats != null) formats.UnionWith(scanner.FeederFormats);
 
-        //try
-        //{
-        //    if (scanner.AutoFormats.Contains(ImageScannerFormat.Jpeg))
-        //    {
-        //        formatCombination = formatCombination.Insert(formatCombination.Length, "|JPG");
-        //        jpgSupported = true;
-        //    }
-        //    if (scanner.AutoFormats.Contains(ImageScannerFormat.Png))
-        //    {
-        //        formatCombination = formatCombination.Insert(formatCombination.Length, "|PNG");
-        //        pngSupported = true;
-        //    }
-        //    if (scanner.AutoFormats.Contains(ImageScannerFormat.Pdf))
-        //    {
-        //        formatCombination = formatCombination.Insert(formatCombination.Length, "|PDF");
-        //        pdfSupported = true;
-        //    }
-        //    if (scanner.AutoFormats.Contains(ImageScannerFormat.Xps))
-        //    {
-        //        formatCombination = formatCombination.Insert(formatCombination.Length, "|XPS");
-        //        xpsSupported = true;
-        //    }
-        //    if (scanner.AutoFormats.Contains(ImageScannerFormat.OpenXps))
-        //    {
-        //        formatCombination = formatCombination.Insert(formatCombination.Length, "|OXPS");
-        //        oxpsSupported = true;
-        //    }
-        //    if (scanner.AutoFormats.Contains(ImageScannerFormat.Tiff))
-        //    {
-        //        formatCombination = formatCombination.Insert(formatCombination.Length, "|TIF");
-        //        tifSupported = true;
-        //    }
-        //    if (scanner.AutoFormats.Contains(ImageScannerFormat.DeviceIndependentBitmap))
-        //    {
-        //        formatCombination = formatCombination.Insert(formatCombination.Length, "|BMP");
-        //        bmpSupported = true;
-        //    }
+            bool jpgSupported = formats.Contains(ImageScannerFormat.Jpeg);
+            bool pngSupported = formats.Contains(ImageScannerFormat.Png);
+            bool pdfSupported = formats.Contains(ImageScannerFormat.Pdf);
+            bool xpsSupported = formats.Contains(ImageScannerFormat.Xps);
+            bool oxpsSupported = formats.Contains(ImageScannerFormat.OpenXps);
+            bool tifSupported = formats.Contains(ImageScannerFormat.Tiff);
+            bool bmpSupported = formats.Contains(ImageScannerFormat.DeviceIndependentBitmap);
 
-        //    formatCombination = formatCombination.Insert(formatCombination.Length, "|");
+            // encode the supported formats as a single combination string
+            StringBuilder formatCombination = new();
+            if (jpgSupported) formatCombination.Append("|JPG");
+            if (pngSupported) formatCombination.Append("|PNG");
+            if (pdfSupported) formatCombination.Append("|PDF");
+            if (xpsSupported) formatCombination.Append("|XPS");
+            if (oxpsSupported) formatCombination.Append("|OXPS");
+            if (tifSupported) formatCombination.Append("|TIF");
+            if (bmpSupported) formatCombination.Append("|BMP");
+            formatCombination.Append("|");
 
-
-        //    AppCenterService?.TrackEvent(AppCenterEvent.ScannerAdded, new Dictionary<string, string> {
-        //                { "formatCombination", formatCombination },
-        //                { "jpgSupported", jpgSupported.ToString() },
-        //                { "pngSupported", pngSupported.ToString() },
-        //                { "pdfSupported", pdfSupported.ToString() },
-        //                { "xpsSupported", xpsSupported.ToString() },
-        //                { "oxpsSupported", oxpsSupported.ToString() },
-        //                { "tifSupported", tifSupported.ToString() },
-        //                { "bmpSupported", bmpSupported.ToString() },
-        //                { "hasAuto", scanner.IsAutoAllowed.ToString() },
-        //                { "hasFlatbed", scanner.IsFlatbedAllowed.ToString() },
-        //                { "hasFeeder", scanner.IsFeederAllowed.ToString() },
-        //                { "autoPreviewSupported", scanner.IsAutoPreviewAllowed.ToString() },
-        //                { "flatbedPreviewSupported", scanner.IsFlatbedPreviewAllowed.ToString() },
-        //                { "feederPreviewSupported", scanner.IsFeederPreviewAllowed.ToString() },
-        //                { "feederAutoCropPossible", scanner.IsFeederAutoCropPossible.ToString() },
-        //                { "feederAutoCropSingleSupported", scanner.IsFeederAutoCropSingleRegionAllowed.ToString() },
-        //                { "feederAutoCropMultiSupported", scanner.IsFeederAutoCropMultiRegionAllowed.ToString() },
-        //            });
-        //}
-        //catch (Exception) { }
+            SentryService?.TrackEvent(AnalyticsEvent.ScannerAdded, new Dictionary<string, string>
+            {
+                { "format_combination", formatCombination.ToString() },
+                { "jpg_supported", jpgSupported.ToString() },
+                { "png_supported", pngSupported.ToString() },
+                { "pdf_supported", pdfSupported.ToString() },
+                { "xps_supported", xpsSupported.ToString() },
+                { "oxps_supported", oxpsSupported.ToString() },
+                { "tif_supported", tifSupported.ToString() },
+                { "bmp_supported", bmpSupported.ToString() },
+                { "has_auto", scanner.IsAutoAllowed.ToString() },
+                { "has_flatbed", scanner.IsFlatbedAllowed.ToString() },
+                { "has_feeder", scanner.IsFeederAllowed.ToString() },
+                { "auto_preview_supported", scanner.IsAutoPreviewAllowed.ToString() },
+                { "flatbed_preview_supported", scanner.IsFlatbedPreviewAllowed.ToString() },
+                { "feeder_preview_supported", scanner.IsFeederPreviewAllowed.ToString() },
+                { "feeder_auto_crop_possible", scanner.IsFeederAutoCropAllowed.ToString() },
+                { "feeder_auto_crop_single_supported", scanner.IsFeederAutoCropSingleRegionAllowed.ToString() },
+                { "feeder_auto_crop_multi_supported", scanner.IsFeederAutoCropMultiRegionAllowed.ToString() },
+            });
+        }
+        catch (Exception exc)
+        {
+            LogService?.Log.Warning(exc, "Failed to send scanner analytics");
+        }
     }
 }

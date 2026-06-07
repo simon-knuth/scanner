@@ -64,6 +64,13 @@ public partial class RemovePagesAction : ObservableRecipient, IProjectAction
         return removedPages != null && removedPages.Count > 0;
     }
 
+    public (AnalyticsEvent Event, Dictionary<string, string>? Properties)? GetAnalyticsEvent()
+    {
+        // only the partial-removal path sets removedPages; full-project deletion is tracked elsewhere
+        if (removedPages == null || removedPages.Count == 0) return null;
+        return (removals.Count >= 2 ? AnalyticsEvent.DeletePages : AnalyticsEvent.DeletePage, null);
+    }
+
     public async Task UndoAsync(ProjectBase project, DispatcherQueue uiDispatcherQueue)
     {
         if (removedPages == null)

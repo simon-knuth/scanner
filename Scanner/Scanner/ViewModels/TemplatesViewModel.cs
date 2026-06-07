@@ -17,6 +17,7 @@ partial class TemplatesViewModel : ObservableRecipient, IDisposable
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     #region Services
     public readonly ITemplatesService TemplateService = Ioc.Default.GetRequiredService<ITemplatesService>();
+    private readonly ISentryService? SentryService = Ioc.Default.GetService<ISentryService>();
     #endregion
 
     #region Commands
@@ -46,6 +47,8 @@ partial class TemplatesViewModel : ObservableRecipient, IDisposable
             IsScannerSelected = m.SelectedScanner != null;
         });
         IsScannerSelected = Messenger.Send(new SelectedScannerRequestMessage()).Response != null;
+
+        SentryService?.TrackEvent(AnalyticsEvent.TemplatesViewOpened);
     }
 
 
@@ -59,22 +62,26 @@ partial class TemplatesViewModel : ObservableRecipient, IDisposable
 
     public void TryApplyTemplate(TemplateEntry template)
     {
+        SentryService?.TrackEvent(AnalyticsEvent.TemplateApplied);
         Messenger.Send(new ApplyTemplateMessage(template));
     }
 
     public async Task CreateTemplateAsync()
     {
         await TemplateService.AddTemplateAsync(Resources.Strings.Resources.Template, Messenger.Send(new ScanOptionsRequestMessage()).Response);
+        SentryService?.TrackEvent(AnalyticsEvent.TemplateCreated);
     }
 
     public async Task RemoveTemplateAsync(TemplateEntry template)
     {
         await TemplateService.RemoveTemplateAsync(template);
+        SentryService?.TrackEvent(AnalyticsEvent.TemplateRemoved);
     }
 
     public async Task ClearListAsync()
     {
         await TemplateService.ClearTemplatesAsync();
+        SentryService?.TrackEvent(AnalyticsEvent.TemplatesCleared);
     }
 
     public void StartRenaming(TemplateEntry template)
@@ -87,5 +94,6 @@ partial class TemplatesViewModel : ObservableRecipient, IDisposable
         template.IsRenaming = false;
         template.Name = name;
         await TemplateService.RenameTemplateAsync(template, name);
+        SentryService?.TrackEvent(AnalyticsEvent.TemplateRenamed);
     }
 }

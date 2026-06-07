@@ -100,6 +100,7 @@ internal class SaveLocationService : ObservableRecipient, ISaveLocationService
                     SettingsService.SettingSaveLocationType = SettingSaveLocationType.AskAfterNewProject;
                     LogService?.Log.Error(exc2, "Fixed save location is not supported");
                     SentryService?.TrackError(exc2);
+                    SentryService?.TrackEvent(AnalyticsEvent.SetSaveLocationUnavailable);
                 }
             }
 

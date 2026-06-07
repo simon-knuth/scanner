@@ -381,9 +381,9 @@ public sealed partial class ShellView : Page
         OnPropertyChanged(nameof(ShowScanActionsDivider));
     }
 
-    private void ViewModel_SaveChangesDialogRequested(object? sender, TaskCompletionSource<bool> e)
+    private void ViewModel_SaveChangesDialogRequested(object? sender, (TaskCompletionSource<bool> Task, string Trigger) e)
     {
-        ShowSaveChangesDialog(e);
+        ShowSaveChangesDialog(e.Task, e.Trigger);
     }
 
     private void ViewModel_SaveFileDialogRequested(object? sender, (TaskCompletionSource<SaveOptions?> Process, ScanOptions ScanOptions, ProjectBase? Project, string? DesiredFileDisplayName) e)
@@ -433,7 +433,7 @@ public sealed partial class ShellView : Page
 
     private void SettingsCardDebugDialogSaveChanges_Click(object sender, RoutedEventArgs e)
     {
-        ShowSaveChangesDialog(new TaskCompletionSource<bool>());
+        ShowSaveChangesDialog(new TaskCompletionSource<bool>(), "Debug");
     }
 
     private void SettingsCardDebugDialogSetup_Click(object sender, RoutedEventArgs e)
@@ -441,7 +441,7 @@ public sealed partial class ShellView : Page
         ShowSetupDialog();
     }
 
-    private void ShowSaveChangesDialog(TaskCompletionSource<bool> task)
+    private void ShowSaveChangesDialog(TaskCompletionSource<bool> task, string trigger)
     {
         this.RunOnUIThread(Microsoft.UI.Dispatching.DispatcherQueuePriority.Normal, async () =>
         {
@@ -454,11 +454,31 @@ public sealed partial class ShellView : Page
 
             isDialogVisible = true;
 
+            // analytics
+            ViewModel.SentryService?.TrackEvent(AnalyticsEvent.UnsavedChangesDialogShown, new Dictionary<string, string>
+            {
+                { "trigger", trigger }
+            });
+
             UnsavedChangesDialogView dialog = new UnsavedChangesDialogView(ViewModel.CurrentProject);
             dialog.XamlRoot = this.XamlRoot;
             ContentDialogResult result = await dialog.ShowAsync();
 
             isDialogVisible = false;
+
+            // analytics: Save (Primary), Discard (Secondary), Cancel (CloseButton / None)
+            string selection = result switch
+            {
+                ContentDialogResult.Primary => "Save",
+                ContentDialogResult.Secondary => "Discard",
+                _ => "Cancel",
+            };
+            ViewModel.SentryService?.TrackEvent(AnalyticsEvent.UnsavedChangesDialogResolved, new Dictionary<string, string>
+            {
+                { "trigger", trigger },
+                { "result", selection },
+            });
+
             task.TrySetResult(result != ContentDialogResult.None);
         });
     }

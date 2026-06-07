@@ -55,6 +55,7 @@ public partial class SetupDialogView : ContentDialog
     {
         SettingsService.SettingErrorStatistics = ProxySettingErrorStatistics;
         SettingsService.SetupCompleted = true;
+        SentryService?.TrackEvent(AnalyticsEvent.SetupFinished);
     }
 
     private void ContentDialog_Closing(ContentDialog sender, ContentDialogClosingEventArgs args)

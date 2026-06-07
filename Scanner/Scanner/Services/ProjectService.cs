@@ -16,6 +16,7 @@ using Scanner.Messages;
 using Scanner.Models;
 using Scanner.Models.Interfaces;
 using Scanner.Services.Interfaces;
+using Sentry;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -351,7 +352,7 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
                     SoftwareBitmap softwareBitmap = await pdfProject.GetSoftwareBitmapForAIFileNameGenerationAsync(uiDispatcherQueue);
 
                     // generate name in the background
-                    _ = Task.Run(async () => await pdfProject.GenerateFileNameWithAIAsync(softwareBitmap, uiDispatcherQueue));
+                    _ = Task.Run(async () => await pdfProject.GenerateFileNameWithAIAsync(softwareBitmap, uiDispatcherQueue, true));
                 }
                 else if (CurrentProject is MultiFileProject imageProject)
                 {
@@ -581,7 +582,9 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
 
         await AppDataService.EmptyFolderAsync(AppDataService.IncomingFolder);
         IReadOnlyList<StorageFile> files = [];
+        Stopwatch scanStopwatch = Stopwatch.StartNew();
         await Task.Run(async () => files = await scanOptions.Scanner.GetScanAsync(scanOptions, AppDataService.IncomingFolder, uiDispatcherQueue));
+        scanStopwatch.Stop();
 
         if (files.Count == 0)
         {
@@ -606,6 +609,54 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
         }
 
         SettingsService.ScanNumber++;
+
+        // analytics
+        string mergeValue = "None";
+        if (scanOptions.ScanMergeConfig != null)
+        {
+            mergeValue = string.Format("{0} | {1}",
+                string.Join(",", scanOptions.ScanMergeConfig.InsertIndices),
+                scanOptions.ScanMergeConfig.SurplusPagesIndex);
+        }
+        ScannerAutoCropMode autoCropMode = scanOptions.ScanArea is AutoCropArea autoCropArea
+            ? autoCropArea.AutoCropMode
+            : ScannerAutoCropMode.Disabled;
+        string region = scanOptions.ScanArea switch
+        {
+            PaperSizeArea paperSizeArea => paperSizeArea.PaperSize.ToString(),  // fixed paper size, e.g. "DinA4"
+            AutoCropArea autoCrop => autoCrop.AutoCropMode.ToString(),          // e.g. "SingleRegion"
+            RectScanArea => "CustomRegion",                                     // user-selected region
+            _ => "WholeArea",                                                   // whole bed / no area set
+        };
+        SentryService?.TrackEvent(AnalyticsEvent.ScanCompleted, new Dictionary<string, string>
+        {
+            { "source", scanOptions.SourceMode.ToString() },
+            { "pages", files.Count.ToString() },
+            { "asked_for_save_location", (SettingsService.SettingSaveLocationType != SettingSaveLocationType.FixedLocation).ToString() },
+            { "target_format", scanOptions.TargetFormat.ToString() },
+            { "color_mode", scanOptions.ColorMode.ToString() },
+            { "resolution", scanOptions.Resolution != null ? ((int)scanOptions.Resolution.Resolution.DpiX).ToString() : "Unknown" },
+            { "duplex", scanOptions.Duplex.ToString() },
+            { "multi_page", scanOptions.ScanMultiplePages.ToString() },
+            { "auto_crop_mode", autoCropMode.ToString() },
+            { "brightness_adjusted", (scanOptions.Brightness != AppConfig.DefaultBrightness).ToString() },
+            { "contrast_adjusted", (scanOptions.Contrast != AppConfig.DefaultContrast).ToString() },
+            { "filter", scanOptions.GetFilter().ToString() },
+            { "merge", mergeValue },
+            { "region", region },
+            { "file_naming_pattern", SettingsService.SettingFileNamingPattern.ToString() },
+        });
+        SentryService?.TrackDistributionMetric(AnalyticsMetric.ScanDuration, scanStopwatch.Elapsed.TotalMilliseconds,
+            MeasurementUnit.Duration.Millisecond, new Dictionary<string, string>
+            {
+                { "source", scanOptions.SourceMode.ToString() },
+                { "pages", files.Count.ToString() },
+            });
+        SentryService?.TrackGaugeMetric(AnalyticsMetric.ScanPageCount, files.Count, MeasurementUnit.None, new Dictionary<string, string>
+        {
+            { "source", scanOptions.SourceMode.ToString() },
+        });
+
         ScanCompletedSuccessfully?.Invoke(this, EventArgs.Empty);
         return files;
     }
@@ -622,9 +673,16 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
                 return false;
 
             // close project
+            TargetFormat deletedFormat = CurrentProject.Format;
             Guid id = CurrentProject.Id;
             if (await TryCloseProjectAsync(ignoreUnsavedChanges: true))
+            {
                 await ProjectHistoryService.RemoveEntryAsync(id);
+                SentryService?.TrackEvent(AnalyticsEvent.ProjectDeleted, new Dictionary<string, string>
+                {
+                    { "format", deletedFormat.ToString() }
+                });
+            }
         }
         catch (ActionFailedAndRolledBackException)
         {
@@ -677,6 +735,7 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
             if (CurrentProject is PdfProject pdfProject)
             {
                 await pdfProject.CopyAsync();
+                SentryService?.TrackEvent(AnalyticsEvent.CopyDocument);
             }
         }
         catch (ActionFailedAndRolledBackException)
@@ -705,6 +764,7 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
             if (CurrentProject is MultiFileProject imageProject)
             {
                 await imageProject.CopyPagesAsync(pages);
+                SentryService?.TrackEvent(pages.Count >= 2 ? AnalyticsEvent.CopyPages : AnalyticsEvent.CopyPage);
             }
         }
         catch (ActionFailedAndRolledBackException)
@@ -732,7 +792,11 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
             // open with project
             if (CurrentProject is PdfProject pdfProject)
             {
-                return await pdfProject.TryOpenWithAsync(app);
+                bool result = await pdfProject.TryOpenWithAsync(app);
+                if (result)
+                    SentryService?.TrackEvent(AnalyticsEvent.OpenWith,
+                        app != null ? new Dictionary<string, string> { { "display_name", app.DisplayInfo.DisplayName } } : null);
+                return result;
             }
         }
         catch (ActionFailedAndRolledBackException)
@@ -761,7 +825,11 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
             // open with page
             if (CurrentProject is MultiFileProject imageProject)
             {
-                return await imageProject.TryOpenWithPageAsync(app, page);
+                bool result = await imageProject.TryOpenWithPageAsync(app, page);
+                if (result)
+                    SentryService?.TrackEvent(AnalyticsEvent.OpenWith,
+                        app != null ? new Dictionary<string, string> { { "display_name", app.DisplayInfo.DisplayName } } : null);
+                return result;
             }
         }
         catch (ActionFailedAndRolledBackException)
@@ -791,6 +859,7 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
             if (CurrentProject is PdfProject pdfProject)
             {
                 await pdfProject.ShareAsync();
+                SentryService?.TrackEvent(AnalyticsEvent.Share);
             }
         }
         catch (ActionFailedAndRolledBackException)
@@ -815,10 +884,11 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
 
         try
         {
-            // copy project
+            // share pages
             if (CurrentProject is MultiFileProject imageProject)
             {
                 await imageProject.SharePagesAsync(pages);
+                SentryService?.TrackEvent(AnalyticsEvent.Share);
             }
         }
         catch (ActionFailedAndRolledBackException)
@@ -988,6 +1058,14 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
                     await AppDataService.EmptyFolderAsync(AppDataService.RedoFolder);
                 }
                 OnPropertyChanged(nameof(CanRedo));
+
+                // analytics (genuine user actions only, not redos)
+                if (!redoing)
+                {
+                    (AnalyticsEvent Event, Dictionary<string, string>? Properties)? analytics = action.GetAnalyticsEvent();
+                    if (analytics != null)
+                        SentryService?.TrackEvent(analytics.Value.Event, analytics.Value.Properties);
+                }
             }
 
             return true;
@@ -1075,6 +1153,8 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
         if (!CanUndo) return;
         if (upUntil != null && !UndoStack.Contains(upUntil)) return;
 
+        SentryService?.TrackEvent(AnalyticsEvent.Undo);
+
         TaskCompletionSource process = new();
 
         if (upUntil == null)
@@ -1099,6 +1179,8 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
         if (!CanRedo) return;
         if (upUntil != null && !RedoStack.Contains(upUntil)) return;
 
+        SentryService?.TrackEvent(AnalyticsEvent.Redo);
+
         TaskCompletionSource process = new();
 
         if (upUntil == null)
@@ -1121,6 +1203,9 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
     {
         if (CurrentProject == null) return false;
         IsActionRunning = true;
+
+        // capture the original format before the project is closed/replaced
+        TargetFormat originalFormat = CurrentProject.Format;
 
         try
         {
@@ -1160,6 +1245,13 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
             Task createProjectTask = TryCreateProjectAsync(creationData, false, false, uiDispatcherQueue);
             Messenger.Send(new ShowIndeterminateProgressDialogMessage(Resources.Strings.Resources.ApplyingChanges, createProjectTask));
             await createProjectTask;
+
+            // analytics
+            SentryService?.TrackEvent(AnalyticsEvent.ConvertProject, new Dictionary<string, string>
+            {
+                { "from", originalFormat.ToString() },
+                { "to", targetFormat.ToString() },
+            });
         }
         finally
         {

@@ -45,6 +45,7 @@ partial class ProjectViewModel : ObservableRecipient, IDisposable
     public readonly IProjectService ProjectService = Ioc.Default.GetRequiredService<IProjectService>();
     public readonly ISaveLocationService SaveLocationService = Ioc.Default.GetRequiredService<ISaveLocationService>();
     public readonly ISettingsService SettingsService = Ioc.Default.GetRequiredService<ISettingsService>();
+    private readonly ISentryService? SentryService = Ioc.Default.GetService<ISentryService>();
     #endregion
 
     #region Commands
@@ -463,6 +464,11 @@ partial class ProjectViewModel : ObservableRecipient, IDisposable
         // add files to project
         AddFilesAction action = new AddFilesAction(insertions, true);
         await ProjectService.ApplyActionAsync(action);
+
+        SentryService?.TrackEvent(AnalyticsEvent.AddImageFiles, new Dictionary<string, string>
+        {
+            { "files", files.Count.ToString() }
+        });
     }
 
     private async Task ConvertProjectAsync(TargetFormat targetFormat)
@@ -474,13 +480,13 @@ partial class ProjectViewModel : ObservableRecipient, IDisposable
     private async Task SaveAsync()
     {
         if (CurrentProject == null) return;
-        await CurrentProject.SaveAsync(false, viewDispatcherQueue!);
+        await CurrentProject.SaveAsync(false, viewDispatcherQueue!, isUserInitiated: true);
     }
 
     private async Task SaveAsAsync()
     {
         if (CurrentProject == null) return;
-        await CurrentProject.SaveAsync(true, viewDispatcherQueue!);
+        await CurrentProject.SaveAsync(true, viewDispatcherQueue!, isUserInitiated: true);
     }
 
     private async Task SaveAsCurrentPageAsync()
@@ -683,7 +689,10 @@ partial class ProjectViewModel : ObservableRecipient, IDisposable
         if (CurrentProject is PdfProject pdfProject)
         {
             if (pdfProject.FileNameInfo.IsNameGenerationInProgress)
+            {
+                SentryService?.TrackEvent(AnalyticsEvent.AIFileNameGenerationCancelled);
                 pdfProject.FileNameInfo.NameGenerationCts?.Cancel();
+            }
             else
                 Task.Run(() => pdfProject.GenerateFileNameWithAIAsync(viewDispatcherQueue));
         }
@@ -733,6 +742,12 @@ partial class ProjectViewModel : ObservableRecipient, IDisposable
                         pages.Add(page, new PdfProjectSnapshotPage(pdfProject.SourceFile!.File, pdfPage.IndexInPdf, ImageFilter.None, AppConfig.DefaultBrightness, AppConfig.DefaultContrast));
                 }
                 await PdfProject.CreatePdfFromPagesAsync(pages, null, saveOptions.FileName, saveOptions.TargetFolder, SettingsService.SettingOcrPdfs, viewDispatcherQueue!);
+
+                SentryService?.TrackEvent(AnalyticsEvent.ExportPagesFromPdf, new Dictionary<string, string>
+                {
+                    { "scope", "Some" },
+                    { "pages", pages.Count.ToString() },
+                });
             }
             else if (ProjectService.SelectedPage != null)
             {
@@ -747,6 +762,12 @@ partial class ProjectViewModel : ObservableRecipient, IDisposable
 
                     await PdfProject.CreatePdfFromPagesAsync(pages, null, saveOptions.FileName, saveOptions.TargetFolder, SettingsService.SettingOcrPdfs, viewDispatcherQueue!);
                 }
+
+                SentryService?.TrackEvent(AnalyticsEvent.ExportPagesFromPdf, new Dictionary<string, string>
+                {
+                    { "scope", "All" },
+                    { "pages", CurrentProject.Pages.Count.ToString() },
+                });
             }
 
             tcs.TrySetResult();

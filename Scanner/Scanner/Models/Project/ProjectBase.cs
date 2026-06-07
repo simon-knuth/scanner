@@ -51,6 +51,8 @@ public abstract partial class ProjectBase : ObservableRecipient
     protected static readonly ILogService? LogService = Ioc.Default.GetService<ILogService>();
     protected static readonly ISaveLocationService SaveLocationService = Ioc.Default.GetRequiredService<ISaveLocationService>();
     protected static readonly IOcrService OcrService = Ioc.Default.GetRequiredService<IOcrService>();
+    protected static readonly ISentryService? SentryService = Ioc.Default.GetService<ISentryService>();
+    protected static readonly ISettingsService SettingsService = Ioc.Default.GetRequiredService<ISettingsService>();
     #endregion
 
     #region Events
@@ -138,7 +140,28 @@ public abstract partial class ProjectBase : ObservableRecipient
     // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public abstract Task DeleteAsync();
-    public abstract Task SaveAsync(bool saveAs, DispatcherQueue uiDispatcherQueue);
+
+    /// <param name="isUserInitiated">
+    /// Whether the save was explicitly invoked by the user (e.g. the Save button or the unsaved-changes
+    /// dialog) rather than an automatic save. Only user-initiated saves are tracked in analytics.
+    /// </param>
+    public abstract Task SaveAsync(bool saveAs, DispatcherQueue uiDispatcherQueue, bool isUserInitiated = false);
+
+    /// <summary>
+    /// Tracks a successful, user-initiated save and the relevant save configuration.
+    /// </summary>
+    protected void TrackSaveAnalytics(bool saveAs, bool currentPageOnly = false)
+    {
+        SentryService?.TrackEvent(AnalyticsEvent.ProjectSaved, new Dictionary<string, string>
+        {
+            { "save_as", saveAs.ToString() },
+            { "current_page_only", currentPageOnly.ToString() },
+            { "format", Format.ToString() },
+            { "sub_folder", SettingsService.SettingUseSubFolder.ToString() },
+            { "sub_folder_pattern", SettingsService.SettingSubFolderNamingPattern.ToString() },
+            { "file_pattern", SettingsService.SettingFileNamingPattern.ToString() },
+        });
+    }
 
 
     public async Task<List<ImagePage>> AddFilesAsync(List<ProjectFileInsertion> insertions, bool keepSourceFiles, DispatcherQueue uiDispatcherQueue)
@@ -609,6 +632,13 @@ public abstract partial class ProjectBase : ObservableRecipient
                 if (rotation != null)
                 {
                     mergedInstructions.Add(auto.Key, (BitmapRotation)rotation);
+
+                    // analytics
+                    if ((BitmapRotation)rotation != BitmapRotation.None)
+                        SentryService?.TrackEvent(AnalyticsEvent.AutoRotatedPage, new Dictionary<string, string>
+                        {
+                            { "rotation", ((BitmapRotation)rotation).ToString() }
+                        });
                 }
             }
         }

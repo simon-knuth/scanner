@@ -77,6 +77,15 @@ public partial class ApplyFilterAction : IProjectAction
         return performedChanges;
     }
 
+    public (AnalyticsEvent Event, Dictionary<string, string>? Properties)? GetAnalyticsEvent()
+    {
+        if (previousFilters == null || previousFilters.Count == 0) return null;
+        return (AnalyticsEvent.ApplyFilter, new Dictionary<string, string>
+        {
+            { "filter", filter.ToString() }
+        });
+    }
+
     public async Task UndoAsync(ProjectBase project, DispatcherQueue uiDispatcherQueue)
     {
         if (previousFilters == null)

@@ -67,6 +67,12 @@ public partial class CropPagesAsCopyAction : IProjectAction
         return addedPages.Count > 0;
     }
 
+    public (AnalyticsEvent Event, Dictionary<string, string>? Properties)? GetAnalyticsEvent()
+    {
+        if (addedPages == null || addedPages.Count == 0) return null;
+        return (AnalyticsEvent.CropAsCopy, null);
+    }
+
     public async Task UndoAsync(ProjectBase project, DispatcherQueue uiDispatcherQueue)
     {
         if (addedPages == null)

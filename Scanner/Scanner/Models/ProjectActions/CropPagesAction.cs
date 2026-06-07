@@ -67,6 +67,12 @@ public partial class CropPagesAction : IProjectAction
         return appliedCrops.Count > 0;
     }
 
+    public (AnalyticsEvent Event, Dictionary<string, string>? Properties)? GetAnalyticsEvent()
+    {
+        if (appliedCrops == null || appliedCrops.Count == 0) return null;
+        return (pages.Count >= 2 ? AnalyticsEvent.CropMultiple : AnalyticsEvent.Crop, null);
+    }
+
     public async Task UndoAsync(ProjectBase project, DispatcherQueue uiDispatcherQueue)
     {
         if (appliedCrops == null)

@@ -44,7 +44,7 @@ partial class ShellViewModel : ObservableRecipient, IDisposable
     #endregion
 
     #region Events
-    public event EventHandler<TaskCompletionSource<bool>> SaveChangesDialogRequested;
+    public event EventHandler<(TaskCompletionSource<bool> Task, string Trigger)> SaveChangesDialogRequested;
     public event EventHandler<(TaskCompletionSource<SaveOptions?> Process, ScanOptions ScanOptions, ProjectBase? Project, string? DesiredFileDisplayName)> SaveFileDialogRequested;
     public event EventHandler<(TaskCompletionSource<bool> Process, ProjectBase? Project)> ProjectDeletionDialogRequested;
     public event EventHandler<TaskCompletionSource> SaveInProgressDialogRequested;
@@ -104,7 +104,7 @@ partial class ShellViewModel : ObservableRecipient, IDisposable
 
         Messenger.Register<ShowUnsavedChangesDialogMessage>(this, (r, m) =>
         {
-            m.Reply(ShowSaveChangesDialogAsync());
+            m.Reply(ShowSaveChangesDialogAsync("ClosingProject"));
         });
         Messenger.Register<ShowSaveOptionsDialogMessage>(this, (r, m) =>
         {
@@ -190,10 +190,10 @@ partial class ShellViewModel : ObservableRecipient, IDisposable
         }
     }
 
-    private async Task<bool> ShowSaveChangesDialogAsync()
+    private async Task<bool> ShowSaveChangesDialogAsync(string trigger)
     {
         TaskCompletionSource<bool> result = new();
-        SaveChangesDialogRequested?.Invoke(this, result);
+        SaveChangesDialogRequested?.Invoke(this, (result, trigger));
         return await result.Task;
     }
 
@@ -254,7 +254,7 @@ partial class ShellViewModel : ObservableRecipient, IDisposable
             else
             {
                 // ask user
-                bool result = await ShowSaveChangesDialogAsync();
+                bool result = await ShowSaveChangesDialogAsync("ClosingWindow");
 
                 // process result
                 if (result)
@@ -276,13 +276,13 @@ partial class ShellViewModel : ObservableRecipient, IDisposable
     private async Task SaveAsync()
     {
         if (CurrentProject == null) return;
-        await CurrentProject.SaveAsync(false, viewDispatcherQueue!);
+        await CurrentProject.SaveAsync(false, viewDispatcherQueue!, isUserInitiated: true);
     }
 
     private async Task SaveAsAsync()
     {
         if (CurrentProject == null) return;
-        await CurrentProject.SaveAsync(true, viewDispatcherQueue!);
+        await CurrentProject.SaveAsync(true, viewDispatcherQueue!, isUserInitiated: true);
     }
 
     private async Task SaveAsCurrentPageAsync()
@@ -311,6 +311,10 @@ partial class ShellViewModel : ObservableRecipient, IDisposable
 
     private void ShowSettings(SettingsViewModelIntent? intent = null)
     {
+        SentryService?.TrackEvent(AnalyticsEvent.SettingsRequested, new Dictionary<string, string>
+        {
+            { "section", (intent?.DisplayedPage ?? SettingsPageType.General).ToString() }
+        });
         ((App)Application.Current).ShowSettings(intent);
     }
 
@@ -321,11 +325,13 @@ partial class ShellViewModel : ObservableRecipient, IDisposable
 
     private void ShowDonationDialog()
     {
+        SentryService?.TrackEvent(AnalyticsEvent.DonationDialogOpened);
         DonationDialogRequested?.Invoke(this, EventArgs.Empty);
     }
 
     private void ShowOtherAppsDialog()
     {
+        SentryService?.TrackEvent(AnalyticsEvent.OtherAppsDialogOpened);
         OtherAppsDialogRequested?.Invoke(this, EventArgs.Empty);
     }
 
@@ -341,6 +347,7 @@ partial class ShellViewModel : ObservableRecipient, IDisposable
 
     private void ShowSetupDialog()
     {
+        SentryService?.TrackEvent(AnalyticsEvent.SetupStarted);
         SetupDialogRequested?.Invoke(this, EventArgs.Empty);
     }
 
@@ -349,6 +356,11 @@ partial class ShellViewModel : ObservableRecipient, IDisposable
         IReadOnlyList<PickFileResult> pickerResults = await Helpers.Helpers.PickInputFilesAsync(true, viewDispatcherQueue!);
         if (pickerResults.Count == 0)
             return;
+
+        SentryService?.TrackEvent(AnalyticsEvent.ProjectOpenedFromDisk, new Dictionary<string, string>
+        {
+            { "files", pickerResults.Count.ToString() }
+        });
 
         await ProjectService.TryOpenProjectFromFilesAsync(pickerResults.Select(x => x.Path).ToArray(), null, viewDispatcherQueue!);
     }

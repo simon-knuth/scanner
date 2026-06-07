@@ -60,6 +60,19 @@ public partial class RotatePagesAction : IProjectAction
         return appliedRotations.Count > 0 && appliedRotations.Values.Any((x) => x != BitmapRotation.None);
     }
 
+    public (AnalyticsEvent Event, Dictionary<string, string>? Properties)? GetAnalyticsEvent()
+    {
+        if (appliedRotations == null) return null;
+
+        BitmapRotation firstRotation = appliedRotations.Values.FirstOrDefault((x) => x != BitmapRotation.None, BitmapRotation.None);
+        if (firstRotation == BitmapRotation.None) return null;
+
+        return (AnalyticsEvent.RotatePages, new Dictionary<string, string>
+        {
+            { "rotation", firstRotation.ToString() }
+        });
+    }
+
     public async Task UndoAsync(ProjectBase project, DispatcherQueue uiDispatcherQueue)
     {
         if (appliedRotations == null)
