@@ -183,8 +183,8 @@ public partial class PdfProject : ProjectBase
 
                     // get target folder
                     TargetFolder = saveOptions.TargetFolder;
-                    if (saveOptions.SubFolderName != null)
-                        TargetFolder = await TargetFolder.CreateFolderAsync(saveOptions.SubFolderName, CreationCollisionOption.OpenIfExists);
+                    if (saveOptions.SubfolderName != null)
+                        TargetFolder = await TargetFolder.CreateFolderAsync(saveOptions.SubfolderName, CreationCollisionOption.OpenIfExists);
 
                     if (saveAs)
                     {

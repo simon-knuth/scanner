@@ -44,10 +44,10 @@ public partial class SaveOptionsDialogView : ContentDialog
         set => ViewModel.SelectedFileNamingPattern = value != -1 ? (SettingFileNamingPattern)value : null;
     }
 
-    private int SelectedSubFolderNamingPatternIndex
+    private int SelectedSubfolderNamingPatternIndex
     {
-        get => ViewModel.SelectedSubFolderNamingPattern != null ? (int)ViewModel.SelectedSubFolderNamingPattern : -1;
-        set => ViewModel.SelectedSubFolderNamingPattern = value != -1 ? (SettingSubFolderNamingPattern)value : null;
+        get => ViewModel.SelectedSubfolderNamingPattern != null ? (int)ViewModel.SelectedSubfolderNamingPattern : -1;
+        set => ViewModel.SelectedSubfolderNamingPattern = value != -1 ? (SettingSubfolderNamingPattern)value : null;
     }
 
     [ObservableProperty]
@@ -82,8 +82,8 @@ public partial class SaveOptionsDialogView : ContentDialog
             case nameof(ViewModel.SelectedFileNamingPattern):
                 OnPropertyChanged(nameof(SelectedFileNamingPatternIndex));
                 break;
-            case nameof(ViewModel.SelectedSubFolderNamingPattern):
-                OnPropertyChanged(nameof(SelectedSubFolderNamingPatternIndex));
+            case nameof(ViewModel.SelectedSubfolderNamingPattern):
+                OnPropertyChanged(nameof(SelectedSubfolderNamingPatternIndex));
                 break;
             case nameof(ViewModel.IsFileNameCollision):
                 OnPropertyChanged(nameof(TextBoxFileNameCornerRadius));

@@ -56,7 +56,7 @@ public partial class CustomItemNamingViewModel : ObservableRecipient, IDisposabl
         set
         {
             SetProperty(ref kind, value);
-            Pattern = Kind == ItemNamingKind.File ? SettingsService.CustomFileNamingPattern : SettingsService.CustomSubFolderNamingPattern;
+            Pattern = Kind == ItemNamingKind.File ? SettingsService.CustomFileNamingPattern : SettingsService.CustomSubfolderNamingPattern;
             UpdatePattern();
         }
     }
@@ -94,7 +94,7 @@ public partial class CustomItemNamingViewModel : ObservableRecipient, IDisposabl
     public CustomItemNamingViewModel()
     {
         // get current pattern
-        Pattern = Kind == ItemNamingKind.File ? SettingsService.CustomFileNamingPattern : SettingsService.CustomSubFolderNamingPattern;
+        Pattern = Kind == ItemNamingKind.File ? SettingsService.CustomFileNamingPattern : SettingsService.CustomSubfolderNamingPattern;
 
         // ensure initial pattern is visible
         UpdatePattern();
@@ -116,7 +116,7 @@ public partial class CustomItemNamingViewModel : ObservableRecipient, IDisposabl
             if (Kind == ItemNamingKind.File)
                 SettingsService.CustomFileNamingPattern = Pattern;
             else
-                SettingsService.CustomSubFolderNamingPattern = Pattern;
+                SettingsService.CustomSubfolderNamingPattern = Pattern;
 
             LogService?.Log.Information("Changes in file naming pattern confirmed");
             CloseRequested?.Invoke(this, EventArgs.Empty);

@@ -157,8 +157,8 @@ public abstract partial class ProjectBase : ObservableRecipient
             { "save_as", saveAs.ToString() },
             { "current_page_only", currentPageOnly.ToString() },
             { "format", Format.ToString() },
-            { "sub_folder", SettingsService.SettingUseSubFolder.ToString() },
-            { "sub_folder_pattern", SettingsService.SettingSubFolderNamingPattern.ToString() },
+            { "sub_folder", SettingsService.SettingUseSubfolder.ToString() },
+            { "sub_folder_pattern", SettingsService.SettingSubfolderNamingPattern.ToString() },
             { "file_pattern", SettingsService.SettingFileNamingPattern.ToString() },
         });
     }

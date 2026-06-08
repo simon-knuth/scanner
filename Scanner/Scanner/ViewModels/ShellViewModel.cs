@@ -56,6 +56,7 @@ partial class ShellViewModel : ObservableRecipient, IDisposable
     public event EventHandler<Notification> ShowInAppNotificationRequested;
     public event EventHandler SetupDialogRequested;
     public event EventHandler FeedbackDialogRequested;
+    public event EventHandler ChangelogDialogRequested;
     #endregion
 
     #region Commands
@@ -63,6 +64,7 @@ partial class ShellViewModel : ObservableRecipient, IDisposable
     public RelayCommand ShowFeedbackCommand => new RelayCommand(ShowFeedback);
     public RelayCommand ShowDonationDialogCommand => new RelayCommand(ShowDonationDialog);
     public RelayCommand ShowOtherAppsDialogCommand => new RelayCommand(ShowOtherAppsDialog);
+    public RelayCommand ShowChangelogDialogCommand => new RelayCommand(ShowChangelogDialog);
     public AsyncRelayCommand TryCloseProjectAsyncCommand => new AsyncRelayCommand(TryCloseProjectAsync);
     public AsyncRelayCommand<IProjectAction> TryUndoAsyncCommand => new AsyncRelayCommand<IProjectAction>(TryUndoAsync);
     public AsyncRelayCommand<IProjectAction> TryRedoAsyncCommand => new AsyncRelayCommand<IProjectAction>(TryRedoAsync);
@@ -333,6 +335,12 @@ partial class ShellViewModel : ObservableRecipient, IDisposable
     {
         SentryService?.TrackEvent(AnalyticsEvent.OtherAppsDialogOpened);
         OtherAppsDialogRequested?.Invoke(this, EventArgs.Empty);
+    }
+
+    private void ShowChangelogDialog()
+    {
+        SentryService?.TrackEvent(AnalyticsEvent.ChangelogOpened);
+        ChangelogDialogRequested?.Invoke(this, EventArgs.Empty);
     }
 
     private void ShowScanMergeDialog()

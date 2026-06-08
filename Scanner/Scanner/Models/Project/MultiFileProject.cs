@@ -212,8 +212,8 @@ public partial class MultiFileProject : ProjectBase
 
                     // get target folder
                     StorageFolder targetFolder = saveOptions.TargetFolder;
-                    if (saveOptions.SubFolderName != null)
-                        targetFolder = await targetFolder.CreateFolderAsync(saveOptions.SubFolderName, CreationCollisionOption.OpenIfExists);
+                    if (saveOptions.SubfolderName != null)
+                        targetFolder = await targetFolder.CreateFolderAsync(saveOptions.SubfolderName, CreationCollisionOption.OpenIfExists);
 
                     foreach (IProjectPage page in pages)
                     {

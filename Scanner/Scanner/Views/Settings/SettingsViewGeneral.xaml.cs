@@ -58,7 +58,7 @@ public sealed partial class SettingsViewGeneral : SettingsPage
         OnPageNavigationRequested(typeof(SettingsViewCustomItemNaming), CustomItemNamingViewModel.ItemNamingKind.File);
     }
 
-    private void SettingsCardEditCustomSubFolderNamingPattern_Click(object sender, RoutedEventArgs e)
+    private void SettingsCardEditCustomSubfolderNamingPattern_Click(object sender, RoutedEventArgs e)
     {
         OnPageNavigationRequested(typeof(SettingsViewCustomItemNaming), CustomItemNamingViewModel.ItemNamingKind.Folder);
     }

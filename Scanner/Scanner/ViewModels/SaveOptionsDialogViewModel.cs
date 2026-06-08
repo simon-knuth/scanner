@@ -46,7 +46,7 @@ public partial class SaveOptionsDialogViewModel : ObservableRecipient, IDisposab
         {
             if (AreValidOptionsSelected)
             {
-                return new SaveOptions(SelectedFolder!, CreateSubFolder ? SubFolderName : null, FileDisplayName + FileExtension, GenerateAIFileName);
+                return new SaveOptions(SelectedFolder!, CreateSubfolder ? SubfolderName : null, FileDisplayName + FileExtension, GenerateAIFileName);
             }
             else
             {
@@ -116,30 +116,30 @@ public partial class SaveOptionsDialogViewModel : ObservableRecipient, IDisposab
     }
 
     [ObservableProperty]
-    private bool createSubFolder;
-    partial void OnCreateSubFolderChanged(bool value) => _ = Task.Run(UpdateOccupiedFoldersAsync);
+    private bool createSubfolder;
+    partial void OnCreateSubfolderChanged(bool value) => _ = Task.Run(UpdateOccupiedFoldersAsync);
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(AreValidOptionsSelected))]
-    [NotifyPropertyChangedFor(nameof(SelectedSubFolderNamingPattern))]
-    private string subFolderName;
-    partial void OnSubFolderNameChanged(string value) => _ = Task.Run(UpdateOccupiedFoldersAsync);
+    [NotifyPropertyChangedFor(nameof(SelectedSubfolderNamingPattern))]
+    private string subfolderName;
+    partial void OnSubfolderNameChanged(string value) => _ = Task.Run(UpdateOccupiedFoldersAsync);
 
-    public SettingSubFolderNamingPattern? SelectedSubFolderNamingPattern
+    public SettingSubfolderNamingPattern? SelectedSubfolderNamingPattern
     {
         get
         {
-            if (SubFolderName == DateSubFolderNamingPatternValue)
+            if (SubfolderName == DateSubfolderNamingPatternValue)
             {
-                return SettingSubFolderNamingPattern.Date;
+                return SettingSubfolderNamingPattern.Date;
             }
-            else if (SubFolderName == FileTypeSubFolderNamingPatternValue)
+            else if (SubfolderName == FileTypeSubfolderNamingPatternValue)
             {
-                return SettingSubFolderNamingPattern.FileType;
+                return SettingSubfolderNamingPattern.FileType;
             }
-            else if (SubFolderName == CustomSubFolderNamingPatternValue)
+            else if (SubfolderName == CustomSubfolderNamingPatternValue)
             {
-                return SettingSubFolderNamingPattern.Custom;
+                return SettingSubfolderNamingPattern.Custom;
             }
             else
             {
@@ -150,17 +150,17 @@ public partial class SaveOptionsDialogViewModel : ObservableRecipient, IDisposab
         {
             switch (value)
             {
-                case SettingSubFolderNamingPattern.Date:
-                    SubFolderName = DateSubFolderNamingPatternValue;
+                case SettingSubfolderNamingPattern.Date:
+                    SubfolderName = DateSubfolderNamingPatternValue;
                     break;
-                case SettingSubFolderNamingPattern.FileType:
-                    SubFolderName = FileTypeSubFolderNamingPatternValue;
+                case SettingSubfolderNamingPattern.FileType:
+                    SubfolderName = FileTypeSubfolderNamingPatternValue;
                     break;
-                case SettingSubFolderNamingPattern.Custom:
-                    SubFolderName = CustomSubFolderNamingPatternValue;
+                case SettingSubfolderNamingPattern.Custom:
+                    SubfolderName = CustomSubfolderNamingPatternValue;
                     break;
                 default:
-                    SubFolderName = "";
+                    SubfolderName = "";
                     break;
             }
         }
@@ -175,9 +175,9 @@ public partial class SaveOptionsDialogViewModel : ObservableRecipient, IDisposab
     public string DateFileNamingPatternValue;
     public string CustomFileNamingPatternValue;
 
-    public string DateSubFolderNamingPatternValue;
-    public string FileTypeSubFolderNamingPatternValue;
-    public string CustomSubFolderNamingPatternValue;
+    public string DateSubfolderNamingPatternValue;
+    public string FileTypeSubfolderNamingPatternValue;
+    public string CustomSubfolderNamingPatternValue;
 
     public string FileExtension;
 
@@ -213,12 +213,12 @@ public partial class SaveOptionsDialogViewModel : ObservableRecipient, IDisposab
         DateFileNamingPatternValue = ItemNamingStatics.FileDatePattern.GenerateResult(ScanOptions, false);
         CustomFileNamingPatternValue = SettingsService.CustomFileNamingPattern.GenerateResult(ScanOptions, false);
         SelectedFileNamingPattern = SettingsService.SettingFileNamingPattern;
-        SelectedSubFolderNamingPattern = SettingsService.SettingSubFolderNamingPattern;
+        SelectedSubfolderNamingPattern = SettingsService.SettingSubfolderNamingPattern;
 
-        DateSubFolderNamingPatternValue = ItemNamingStatics.FolderDatePattern.GenerateResult(ScanOptions, false);
-        FileTypeSubFolderNamingPatternValue = ItemNamingStatics.FolderFileTypePattern.GenerateResult(ScanOptions, false);
-        CustomSubFolderNamingPatternValue = SettingsService.CustomSubFolderNamingPattern.GenerateResult(ScanOptions, false);
-        SelectedSubFolderNamingPattern = SettingsService.SettingSubFolderNamingPattern;
+        DateSubfolderNamingPatternValue = ItemNamingStatics.FolderDatePattern.GenerateResult(ScanOptions, false);
+        FileTypeSubfolderNamingPatternValue = ItemNamingStatics.FolderFileTypePattern.GenerateResult(ScanOptions, false);
+        CustomSubfolderNamingPatternValue = SettingsService.CustomSubfolderNamingPattern.GenerateResult(ScanOptions, false);
+        SelectedSubfolderNamingPattern = SettingsService.SettingSubfolderNamingPattern;
 
         // keep name if already present
         if (desiredFileDisplayName != null)
@@ -264,12 +264,12 @@ public partial class SaveOptionsDialogViewModel : ObservableRecipient, IDisposab
                     FileDisplayName = CustomFileNamingPatternValue;
                 }
                 break;
-            case nameof(ISettingsService.CustomSubFolderNamingPattern):
-                bool updateSubFolderName = SelectedSubFolderNamingPattern == SettingSubFolderNamingPattern.Custom;
-                CustomSubFolderNamingPatternValue = SettingsService.CustomSubFolderNamingPattern.GenerateResult(ScanOptions, false);
-                if (updateSubFolderName)
+            case nameof(ISettingsService.CustomSubfolderNamingPattern):
+                bool updateSubfolderName = SelectedSubfolderNamingPattern == SettingSubfolderNamingPattern.Custom;
+                CustomSubfolderNamingPatternValue = SettingsService.CustomSubfolderNamingPattern.GenerateResult(ScanOptions, false);
+                if (updateSubfolderName)
                 {
-                    SubFolderName = CustomSubFolderNamingPatternValue;
+                    SubfolderName = CustomSubfolderNamingPatternValue;
                 }
                 break;
         }
@@ -287,8 +287,8 @@ public partial class SaveOptionsDialogViewModel : ObservableRecipient, IDisposab
 
         try
         {
-            if (CreateSubFolder)
-                folder = await SelectedFolder.GetFolderAsync(SubFolderName);
+            if (CreateSubfolder)
+                folder = await SelectedFolder.GetFolderAsync(SubfolderName);
         }
         catch (Exception) { }
 

@@ -239,22 +239,22 @@ internal class SettingsService : ObservableObject, ISettingsService
         set => SetSetting(nameof(CustomFileNamingPattern), value.GetSerialized(false));
     }
 
-    public bool SettingUseSubFolder
+    public bool SettingUseSubfolder
     {
-        get => GetSetting<bool>(nameof(SettingUseSubFolder), true);
-        set => SetSetting(nameof(SettingUseSubFolder), value);
+        get => GetSetting<bool>(nameof(SettingUseSubfolder), true);
+        set => SetSetting(nameof(SettingUseSubfolder), value);
     }
 
-    public SettingSubFolderNamingPattern SettingSubFolderNamingPattern
+    public SettingSubfolderNamingPattern SettingSubfolderNamingPattern
     {
-        get => (SettingSubFolderNamingPattern)GetSetting(nameof(SettingSubFolderNamingPattern), (int)SettingSubFolderNamingPattern.Date);
-        set => SetSetting(nameof(SettingSubFolderNamingPattern), (int)value);
+        get => (SettingSubfolderNamingPattern)GetSetting(nameof(SettingSubfolderNamingPattern), (int)SettingSubfolderNamingPattern.Date);
+        set => SetSetting(nameof(SettingSubfolderNamingPattern), (int)value);
     }
 
-    public ItemNamingPattern CustomSubFolderNamingPattern
+    public ItemNamingPattern CustomSubfolderNamingPattern
     {
-        get => new ItemNamingPattern(GetSetting(nameof(CustomSubFolderNamingPattern), ItemNamingStatics.FolderDefaultCustomPattern.GetSerialized(false)));
-        set => SetSetting(nameof(CustomSubFolderNamingPattern), value.GetSerialized(false));
+        get => new ItemNamingPattern(GetSetting(nameof(CustomSubfolderNamingPattern), ItemNamingStatics.FolderDefaultCustomPattern.GetSerialized(false)));
+        set => SetSetting(nameof(CustomSubfolderNamingPattern), value.GetSerialized(false));
     }
 
     public bool SettingGenerateFileNameWithAI

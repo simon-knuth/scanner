@@ -159,18 +159,18 @@ internal class SaveLocationService : ObservableRecipient, ISaveLocationService
             return result;
         }
 
-        // get sub folder name
-        string? subFolderName = null;
-        switch (SettingsService.SettingSubFolderNamingPattern)
+        // get subfolder name
+        string? subfolderName = null;
+        switch (SettingsService.SettingSubfolderNamingPattern)
         {
-            case SettingSubFolderNamingPattern.Date:
-                subFolderName = ItemNamingStatics.FolderDatePattern.GenerateResult(scanOptions, false);
+            case SettingSubfolderNamingPattern.Date:
+                subfolderName = ItemNamingStatics.FolderDatePattern.GenerateResult(scanOptions, false);
                 break;
-            case SettingSubFolderNamingPattern.FileType:
-                subFolderName = ItemNamingStatics.FolderFileTypePattern.GenerateResult(scanOptions, false);
+            case SettingSubfolderNamingPattern.FileType:
+                subfolderName = ItemNamingStatics.FolderFileTypePattern.GenerateResult(scanOptions, false);
                 break;
-            case SettingSubFolderNamingPattern.Custom:
-                subFolderName = SettingsService.CustomSubFolderNamingPattern.GenerateResult(scanOptions, false);
+            case SettingSubfolderNamingPattern.Custom:
+                subfolderName = SettingsService.CustomSubfolderNamingPattern.GenerateResult(scanOptions, false);
                 break;
         }
 
@@ -182,17 +182,17 @@ internal class SaveLocationService : ObservableRecipient, ISaveLocationService
                 TrackRecentlyUsedFolder(fixedSaveLocation!);
 
                 if (scanOptions.TargetFormat == TargetFormat.PDF)
-                    return new SaveOptions(fixedSaveLocation!, subFolderName, fileName, SettingsService.SettingGenerateFileNameWithAI);
+                    return new SaveOptions(fixedSaveLocation!, subfolderName, fileName, SettingsService.SettingGenerateFileNameWithAI);
                 else
-                    return new SaveOptions(fixedSaveLocation!, subFolderName, fileName, false);
+                    return new SaveOptions(fixedSaveLocation!, subfolderName, fileName, false);
 
             case SettingSaveLocationType.AskBeforeNewProject:
                 if (existingProject != null)
                 {
                     if (existingProject is PdfProject pdfProject)
-                        return new SaveOptions(pdfProject.TargetFolder!, subFolderName, fileName, false);
+                        return new SaveOptions(pdfProject.TargetFolder!, subfolderName, fileName, false);
                     else if (existingProject.Pages[0] is ImagePage imagePage)
-                        return new SaveOptions(imagePage.TargetFolder, subFolderName, fileName, false);
+                        return new SaveOptions(imagePage.TargetFolder, subfolderName, fileName, false);
                 }
 
                 // ask user for location
@@ -207,12 +207,12 @@ internal class SaveLocationService : ObservableRecipient, ISaveLocationService
                     if (existingProject is PdfProject pdfProject)
                     {
                         if (!forceTargetFolder || pdfProject.TargetFolder != null)
-                            return new SaveOptions(pdfProject.TargetFolder, subFolderName, fileName, false);
+                            return new SaveOptions(pdfProject.TargetFolder, subfolderName, fileName, false);
                     }
                     else if (existingProject.Pages[0] is ImagePage imagePage)
                     {
                         if (!forceTargetFolder || imagePage.TargetFolder != null)
-                            return new SaveOptions(imagePage.TargetFolder, subFolderName, fileName, false);
+                            return new SaveOptions(imagePage.TargetFolder, subfolderName, fileName, false);
                     }
                 }
 
@@ -235,11 +235,11 @@ internal class SaveLocationService : ObservableRecipient, ISaveLocationService
                 {
                     if (scanOptions.TargetFormat == TargetFormat.PDF)
                     {
-                        return new SaveOptions(null, subFolderName, fileName, SettingsService.SettingGenerateFileNameWithAI);
+                        return new SaveOptions(null, subfolderName, fileName, SettingsService.SettingGenerateFileNameWithAI);
                     }
                     else
                     {
-                        return new SaveOptions(null, subFolderName, fileName, false);
+                        return new SaveOptions(null, subfolderName, fileName, false);
                     }
                 }
 

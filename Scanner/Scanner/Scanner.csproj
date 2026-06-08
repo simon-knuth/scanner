@@ -175,6 +175,9 @@
 		<Page Update="Controls\AIProcessingBorder.xaml">
 			<SubType>Designer</SubType>
 		</Page>
+		<Page Update="Views\Dialogs\ChangelogDialogView.xaml">
+		  <SubType>Designer</SubType>
+		</Page>
 		<Page Update="Views\Dialogs\SetupDialogView.xaml">
 		  <SubType>Designer</SubType>
 		</Page>

@@ -88,12 +88,12 @@ public partial class SettingsViewModel : ObservableRecipient, IDisposable
     }
 
     [ObservableProperty]
-    private string subFolderNamingPatternPreview;
+    private string subfolderNamingPatternPreview;
 
-    public int SettingSubFolderNamingPattern
+    public int SettingSubfolderNamingPattern
     {
-        get => (int)SettingsService.SettingSubFolderNamingPattern;
-        set => SettingsService.SettingSubFolderNamingPattern = (SettingSubFolderNamingPattern)value;
+        get => (int)SettingsService.SettingSubfolderNamingPattern;
+        set => SettingsService.SettingSubfolderNamingPattern = (SettingSubfolderNamingPattern)value;
     }
 
     public int SettingScanAction
@@ -137,7 +137,7 @@ public partial class SettingsViewModel : ObservableRecipient, IDisposable
         SettingsService.PropertyChanged += SettingsService_PropertyChanged;
 
         UpdateFileNamingPatternPreview();
-        UpdateSubFolderNamingPatternPreview();
+        UpdateSubfolderNamingPatternPreview();
 
         Messenger.Register<ShowSettingsMessage>(this, (r, m) =>
         {
@@ -265,21 +265,21 @@ public partial class SettingsViewModel : ObservableRecipient, IDisposable
         FileNamingPatternPreview = previewPattern.GenerateResult(scanOptions, true);
     }
 
-    private void UpdateSubFolderNamingPatternPreview()
+    private void UpdateSubfolderNamingPatternPreview()
     {
         // get pattern
         ItemNamingPattern previewPattern;
-        switch ((SettingSubFolderNamingPattern)SettingSubFolderNamingPattern)
+        switch ((SettingSubfolderNamingPattern)SettingSubfolderNamingPattern)
         {
             default:
-            case Services.Interfaces.SettingSubFolderNamingPattern.Date:
+            case Services.Interfaces.SettingSubfolderNamingPattern.Date:
                 previewPattern = ItemNamingStatics.FolderDatePattern;
                 break;
-            case Services.Interfaces.SettingSubFolderNamingPattern.FileType:
+            case Services.Interfaces.SettingSubfolderNamingPattern.FileType:
                 previewPattern = ItemNamingStatics.FolderFileTypePattern;
                 break;
-            case Services.Interfaces.SettingSubFolderNamingPattern.Custom:
-                previewPattern = SettingsService.CustomSubFolderNamingPattern;
+            case Services.Interfaces.SettingSubfolderNamingPattern.Custom:
+                previewPattern = SettingsService.CustomSubfolderNamingPattern;
                 break;
         }
 
@@ -288,7 +288,7 @@ public partial class SettingsViewModel : ObservableRecipient, IDisposable
 
         // generate preview
         ScanOptions scanOptions = ItemNamingStatics.GetPreviewScanOptions(selectedScanner);
-        SubFolderNamingPatternPreview = previewPattern.GenerateResult(scanOptions, false);
+        SubfolderNamingPatternPreview = previewPattern.GenerateResult(scanOptions, false);
     }
 
     private void SettingsService_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -299,9 +299,9 @@ public partial class SettingsViewModel : ObservableRecipient, IDisposable
             case nameof(ISettingsService.CustomFileNamingPattern):
                 UpdateFileNamingPatternPreview();
                 break;
-            case nameof(ISettingsService.SettingSubFolderNamingPattern):
-            case nameof(ISettingsService.CustomSubFolderNamingPattern):
-                UpdateSubFolderNamingPatternPreview();
+            case nameof(ISettingsService.SettingSubfolderNamingPattern):
+            case nameof(ISettingsService.CustomSubfolderNamingPattern):
+                UpdateSubfolderNamingPatternPreview();
                 break;
             case nameof(ISettingsService.SettingSaveLocationType):
                 OnPropertyChanged(nameof(IsAutoSaveAvailable));

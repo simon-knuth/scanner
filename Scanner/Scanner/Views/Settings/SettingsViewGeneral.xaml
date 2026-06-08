@@ -140,19 +140,19 @@
                             </controls:SettingsExpander.Items>
                         </controls:SettingsExpander>
 
-                        <controls:SettingsExpander Header="Create sub folder" Description="Save scans in a sub folder of the selected folder. If the sub folder doesn't exist, it will be created.">
+                        <controls:SettingsExpander Header="Create subfolder" Description="Save scans in a subfolder of the selected folder. If the subfolder doesn't exist, it will be created.">
                             <controls:SettingsExpander.HeaderIcon>
                                 <FontIcon Glyph="&#xE8DE;" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                             </controls:SettingsExpander.HeaderIcon>
 
                             <controls:SettingsExpander.Content>
-                                <ToggleSwitch IsOn="{x:Bind ViewModel.SettingsService.SettingUseSubFolder, Mode=TwoWay}" />
+                                <ToggleSwitch IsOn="{x:Bind ViewModel.SettingsService.SettingUseSubfolder, Mode=TwoWay}" />
                             </controls:SettingsExpander.Content>
 
                             <controls:SettingsExpander.Items>
-                                <controls:SettingsCard Header="Sub folder naming pattern" IsEnabled="{x:Bind ViewModel.SettingsService.SettingUseSubFolder, Mode=OneWay}">
+                                <controls:SettingsCard Header="Subfolder naming pattern" IsEnabled="{x:Bind ViewModel.SettingsService.SettingUseSubfolder, Mode=OneWay}">
                                     <controls:SettingsCard.Content>
-                                        <ComboBox SelectedIndex="{x:Bind ViewModel.SettingSubFolderNamingPattern, Mode=TwoWay}">
+                                        <ComboBox SelectedIndex="{x:Bind ViewModel.SettingSubfolderNamingPattern, Mode=TwoWay}">
                                             <ComboBox.Items>
                                                 <ComboBoxItem FontWeight="SemiBold">
                                                     <StackPanel Orientation="Horizontal" Spacing="8">
@@ -180,11 +180,11 @@
                                     <controls:SettingsCard.Description>
                                         <StackPanel Orientation="Horizontal" Spacing="12" Margin="4,12,0,8">
                                             <FontIcon Glyph="&#xEA90;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
-                                            <TextBlock Text="{x:Bind ViewModel.SubFolderNamingPatternPreview, Mode=OneWay}" Style="{StaticResource BodyTextBlockStyle}" />
+                                            <TextBlock Text="{x:Bind ViewModel.SubfolderNamingPatternPreview, Mode=OneWay}" Style="{StaticResource BodyTextBlockStyle}" />
                                         </StackPanel>
                                     </controls:SettingsCard.Description>
                                 </controls:SettingsCard>
-                                <controls:SettingsCard x:Name="SettingsCardEditCustomSubFolderNamingPattern" Header="Edit custom pattern" IsClickEnabled="True" Click="SettingsCardEditCustomSubFolderNamingPattern_Click">
+                                <controls:SettingsCard x:Name="SettingsCardEditCustomSubfolderNamingPattern" Header="Edit custom pattern" IsClickEnabled="True" Click="SettingsCardEditCustomSubfolderNamingPattern_Click">
                                     <controls:SettingsCard.HeaderIcon>
                                         <FontIcon Glyph="&#xE70F;" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                                     </controls:SettingsCard.HeaderIcon>

@@ -57,9 +57,9 @@ public interface ISettingsService : INotifyPropertyChanged
     bool SettingAutoSave { get; set; }
     SettingFileNamingPattern SettingFileNamingPattern { get; set; }
     ItemNamingPattern CustomFileNamingPattern { get; set; }
-    bool SettingUseSubFolder { get; set; }
-    SettingSubFolderNamingPattern SettingSubFolderNamingPattern { get; set; }
-    ItemNamingPattern CustomSubFolderNamingPattern { get; set; }
+    bool SettingUseSubfolder { get; set; }
+    SettingSubfolderNamingPattern SettingSubfolderNamingPattern { get; set; }
+    ItemNamingPattern CustomSubfolderNamingPattern { get; set; }
     bool SettingGenerateFileNameWithAI { get; set; }
     bool SettingOcrPdfs { get; set; }
 
@@ -130,7 +130,7 @@ public enum SettingFileNamingPattern
     Custom = 2
 }
 
-public enum SettingSubFolderNamingPattern
+public enum SettingSubfolderNamingPattern
 {
     Date = 0,
     FileType = 1,

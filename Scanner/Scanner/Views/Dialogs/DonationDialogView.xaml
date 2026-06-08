@@ -73,7 +73,7 @@
                 </Grid.ColumnDefinitions>
 
                 <Polygon Grid.Column="0" Points="0,40 15,30 15,50" Fill="{ThemeResource ApplicationPageBackgroundThemeBrush}" />
-                <Frame Grid.Column="1" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" CornerRadius="{StaticResource OverlayCornerRadius}" Padding="16">
+                <Frame Grid.Column="1" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" CornerRadius="12" Padding="16">
                     <TextBlock Text="{x:Bind strings:Resources.DonateDialogBody}" TextWrapping="WrapWholeWords" IsTextSelectionEnabled="False" VerticalAlignment="Center" HorizontalAlignment="Stretch" />
                 </Frame>
                 <Polygon Grid.Column="0" Points="0,40 15,30 15,50" Fill="{ThemeResource ApplicationPageBackgroundThemeBrush}" Margin="0,0,-4,0" Stroke="{ThemeResource ApplicationPageBackgroundThemeBrush}" />

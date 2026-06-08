@@ -354,6 +354,11 @@
                                         <FontIcon Glyph="&#xE897;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                                     </MenuFlyoutItem.Icon>
                                 </MenuFlyoutItem>
+                                <MenuFlyoutItem x:Name="MenuFlyoutItemChangelog" Text="{x:Bind strings:Resources.ChangelogDialogHeading}" Command="{x:Bind ViewModel.ShowChangelogDialogCommand}">
+                                    <MenuFlyoutItem.Icon>
+                                        <FontIcon Glyph="&#xF133;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                    </MenuFlyoutItem.Icon>
+                                </MenuFlyoutItem>
                                 <MenuFlyoutItem x:Name="MenuFlyoutItemMoreSupportDevelopment" Text="{x:Bind strings:Resources.SupportDevelopment}" Command="{x:Bind ViewModel.ShowDonationDialogCommand}" x:Load="{x:Bind ShowAllMoreMenuItems, Mode=OneWay}">
                                     <MenuFlyoutItem.Icon>
                                         <FontIcon Glyph="&#xED56;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
@@ -413,6 +418,16 @@
                                             <controls:SettingsCard x:Name="SettingsCardDebugDialogFeedback" Header="Feedback" IsClickEnabled="True" Click="SettingsCardDebugDialogFeedback_Click">
                                                 <controls:SettingsCard.HeaderIcon>
                                                     <FontIcon Glyph="&#xED15;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                                </controls:SettingsCard.HeaderIcon>
+                                            </controls:SettingsCard>
+                                            <controls:SettingsCard x:Name="SettingsCardDebugDialogChangelog" Header="Changelog" IsClickEnabled="True" Click="SettingsCardDebugDialogChangelog_Click">
+                                                <controls:SettingsCard.HeaderIcon>
+                                                    <FontIcon Glyph="&#xF133;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                                </controls:SettingsCard.HeaderIcon>
+                                            </controls:SettingsCard>
+                                            <controls:SettingsCard x:Name="SettingsCardDebugDialogUpdated" Header="Updated" IsClickEnabled="True" Click="SettingsCardDebugDialogUpdated_Click">
+                                                <controls:SettingsCard.HeaderIcon>
+                                                    <FontIcon Glyph="&#xE896;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                                                 </controls:SettingsCard.HeaderIcon>
                                             </controls:SettingsCard>
                                         </controls:SettingsExpander.Items>
@@ -518,6 +533,12 @@
                 <Button x:Name="ButtonTeachingTipFeedbackGiveFeedback" Content="{x:Bind strings:Resources.GiveFeedback}" HorizontalAlignment="Stretch" Command="{x:Bind ViewModel.ShowFeedbackCommand}" Click="ButtonTeachingTipFeedbackGiveFeedback_Click" />
                 <Button Content="{x:Bind strings:Resources.SupportDevelopment}" HorizontalAlignment="Stretch" Style="{StaticResource AccentButtonStyle}" Command="{x:Bind ViewModel.ShowDonationDialogCommand}" />
             </StackPanel>
+        </TeachingTip>
+
+        <TeachingTip x:Name="TeachingTipUpdated" PreferredPlacement="Bottom" PlacementMargin="4" Title="{x:Bind strings:Resources.AppUpdatedDialogHeading}" Subtitle="{x:Bind strings:Resources.AppUpdatedDialogBody}" ActionButtonContent="{x:Bind strings:Resources.Changelog}" ActionButtonCommand="{x:Bind ViewModel.ShowChangelogDialogCommand}" ActionButtonStyle="{StaticResource AccentButtonStyle}">
+            <TeachingTip.IconSource>
+                <FontIconSource Glyph="&#xF133;" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+            </TeachingTip.IconSource>
         </TeachingTip>
     </Grid>
 </Page>

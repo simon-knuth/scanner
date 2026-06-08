@@ -103,6 +103,7 @@ public sealed partial class ShellView : Page
         ViewModel.ShowPreviewDialogRequested += ViewModel_ShowPreviewDialogRequested;
         ViewModel.SetupDialogRequested += ViewModel_SetupDialogRequested;
         ViewModel.FeedbackDialogRequested += ViewModel_FeedbackDialogRequested;
+        ViewModel.ChangelogDialogRequested += ViewModel_ChangelogDialogRequested;
         ViewModel.ProjectService.PropertyChanged += ProjectService_PropertyChanged;
         ViewModel.SettingsService.PropertyChanged += SettingsService_PropertyChanged;
     }
@@ -421,6 +422,11 @@ public sealed partial class ShellView : Page
         ShowScanMergeDialog();
     }
 
+    private void ViewModel_ChangelogDialogRequested(object? sender, EventArgs e)
+    {
+        ShowChangelogDialog();
+    }
+
     private void ViewModel_ShowPreviewDialogRequested(object? sender, ScanOptions scanOptions)
     {
         ShowPreviewDialog(scanOptions);
@@ -672,6 +678,30 @@ public sealed partial class ShellView : Page
         });
     }
 
+    private void ShowChangelogDialog()
+    {
+        this.RunOnUIThread(Microsoft.UI.Dispatching.DispatcherQueuePriority.Normal, async () =>
+        {
+            // return if dialog is already visible
+            if (isDialogVisible)
+            {
+                return;
+            }
+
+            TeachingTipUpdated.IsOpen = false;
+            isDialogVisible = true;
+
+            ChangelogDialogView dialog = new ChangelogDialogView();
+            dialog.XamlRoot = this.XamlRoot;
+            ContentDialogResult result = await dialog.ShowAsync();
+
+            isDialogVisible = false;
+
+            if (result is ContentDialogResult.Primary)
+                ViewModel.ShowDonationDialogCommand.Execute(null);
+        });
+    }
+
     private void ViewModel_ShowInAppNotificationRequested(object? sender, Notification e)
     {
         this.RunOnUIThread(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, () =>
@@ -813,5 +843,20 @@ public sealed partial class ShellView : Page
     private void ViewModel_FeedbackDialogRequested(object? sender, EventArgs e)
     {
         TeachingTipFeedback.IsOpen = true;
+    }
+
+    private void SettingsCardDebugDialogChangelog_Click(object sender, RoutedEventArgs e)
+    {
+        ShowChangelogDialog();
+    }
+
+    private void SettingsCardDebugDialogUpdated_Click(object sender, RoutedEventArgs e)
+    {
+        ShowUpdatedDialog();
+    }
+
+    private void ShowUpdatedDialog()
+    {
+        TeachingTipUpdated.IsOpen = true;
     }
 }
