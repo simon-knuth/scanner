@@ -80,11 +80,11 @@
                         <media:AttachedCardShadow Offset="0,8" BlurRadius="16" Color="Black" Opacity="0.02" CornerRadius="8" />
                     </ui:Effects.Shadow>
 
-                    <FontIcon Glyph="&#xE794;" FontSize="32" FontFamily="{StaticResource SymbolThemeFontFamily}" VerticalAlignment="Center" Foreground="{ThemeResource HeaderAccentGradientBrush}" />
+                    <FontIcon Glyph="&#xE794;" FontSize="36" FontFamily="{StaticResource SymbolThemeFontFamily}" VerticalAlignment="Center" Foreground="{ThemeResource HeaderAccentGradientBrush}" />
                 </Frame>
                 <StackPanel Grid.Column="1" Orientation="Vertical" Spacing="4" Margin="0,4,0,4" VerticalAlignment="Center">
-                    <TextBlock Text="A new, familiar design" FontSize="16" Style="{StaticResource BaseTextBlockStyle}" Foreground="{ThemeResource HeaderAccentGradientBrush}" TextWrapping="WrapWholeWords" AutomationProperties.HeadingLevel="Level2" />
-                    <TextBlock Text="Enjoy less friction and more personalization with page thumbnails, scanning from the page list, and resizable panes." Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords" />
+                    <TextBlock Text="{x:Bind strings:Resources.Changelog4_0_0_0DesignHeading}" FontSize="16" Style="{StaticResource BaseTextBlockStyle}" Foreground="{ThemeResource HeaderAccentGradientBrush}" TextWrapping="WrapWholeWords" AutomationProperties.HeadingLevel="Level2" />
+                    <TextBlock Text="{x:Bind strings:Resources.Changelog4_0_0_0DesignBody}" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords" />
                 </StackPanel>
             </Grid>
 
@@ -99,11 +99,11 @@
                         <media:AttachedCardShadow Offset="0,8" BlurRadius="16" Color="Black" Opacity="0.02" CornerRadius="8" />
                     </ui:Effects.Shadow>
 
-                    <FontIcon Glyph="&#xEC4A;" FontSize="32" FontFamily="{StaticResource SymbolThemeFontFamily}" VerticalAlignment="Center" Foreground="{ThemeResource HeaderAccentGradientBrush}" />
+                    <FontIcon Glyph="&#xEC4A;" FontSize="36" FontFamily="{StaticResource SymbolThemeFontFamily}" VerticalAlignment="Center" Foreground="{ThemeResource HeaderAccentGradientBrush}" />
                 </Frame>
                 <StackPanel Grid.Column="1" Orientation="Vertical" Spacing="4" Margin="0,4,0,4" VerticalAlignment="Center">
-                    <TextBlock Text="Faster and more efficient than ever" FontSize="16" Style="{StaticResource BaseTextBlockStyle}" Foreground="{ThemeResource HeaderAccentGradientBrush}" TextWrapping="WrapWholeWords" AutomationProperties.HeadingLevel="Level2" />
-                    <TextBlock Text="Scan without limits and effortlessly manage huge projects thanks to the completely overhauled resource management." Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords" />
+                    <TextBlock Text="{x:Bind strings:Resources.Changelog4_0_0_0PerformanceHeading}" FontSize="16" Style="{StaticResource BaseTextBlockStyle}" Foreground="{ThemeResource HeaderAccentGradientBrush}" TextWrapping="WrapWholeWords" AutomationProperties.HeadingLevel="Level2" />
+                    <TextBlock Text="{x:Bind strings:Resources.Changelog4_0_0_0PerformanceBody}" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords" />
                 </StackPanel>
             </Grid>
 
@@ -118,11 +118,11 @@
                         <media:AttachedCardShadow Offset="0,8" BlurRadius="16" Color="Black" Opacity="0.02" CornerRadius="8" />
                     </ui:Effects.Shadow>
 
-                    <FontIcon Glyph="&#xEA90;" FontSize="32" FontFamily="{StaticResource SymbolThemeFontFamily}" VerticalAlignment="Center" Foreground="{ThemeResource HeaderAccentGradientBrush}" />
+                    <FontIcon Glyph="&#xEA90;" FontSize="36" FontFamily="{StaticResource SymbolThemeFontFamily}" VerticalAlignment="Center" Foreground="{ThemeResource HeaderAccentGradientBrush}" />
                 </Frame>
                 <StackPanel Grid.Column="1" Orientation="Vertical" Spacing="4" Margin="0,4,0,4" VerticalAlignment="Center">
-                    <TextBlock Text="Advanced PDF tools" FontSize="16" Style="{StaticResource BaseTextBlockStyle}" Foreground="{ThemeResource HeaderAccentGradientBrush}" TextWrapping="WrapWholeWords" AutomationProperties.HeadingLevel="Level2" />
-                    <TextBlock Text="Scan to existing PDFs, make pages searchable with OCR, split into individual files, add images, and try the new single-page PDF format." Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords" />
+                    <TextBlock Text="{x:Bind strings:Resources.Changelog4_0_0_0PdfHeading}" FontSize="16" Style="{StaticResource BaseTextBlockStyle}" Foreground="{ThemeResource HeaderAccentGradientBrush}" TextWrapping="WrapWholeWords" AutomationProperties.HeadingLevel="Level2" />
+                    <TextBlock Text="{x:Bind strings:Resources.Changelog4_0_0_0PdfBody}" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords" />
                 </StackPanel>
             </Grid>
 
@@ -137,11 +137,11 @@
                         <media:AttachedCardShadow Offset="0,8" BlurRadius="16" Color="Black" Opacity="0.02" CornerRadius="8" />
                     </ui:Effects.Shadow>
 
-                    <FontIcon Glyph="&#xEA86;" FontSize="32" FontFamily="{StaticResource SymbolThemeFontFamily}" VerticalAlignment="Center" Foreground="{ThemeResource HeaderAccentGradientBrush}" />
+                    <FontIcon Glyph="&#xEA86;" FontSize="36" FontFamily="{StaticResource SymbolThemeFontFamily}" VerticalAlignment="Center" Foreground="{ThemeResource HeaderAccentGradientBrush}" />
                 </Frame>
                 <StackPanel Grid.Column="1" Orientation="Vertical" Spacing="4" Margin="0,4,0,4" VerticalAlignment="Center">
-                    <TextBlock Text="Highly-requested features" FontSize="16" Style="{StaticResource BaseTextBlockStyle}" Foreground="{ThemeResource HeaderAccentGradientBrush}" TextWrapping="WrapWholeWords" AutomationProperties.HeadingLevel="Level2" />
-                    <TextBlock Text="Select a save location after scanning, undo/redo, filters for all scanners, paper size selection, lossless editing, subfolder generation, templates, and many more!" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords" />
+                    <TextBlock Text="{x:Bind strings:Resources.Changelog4_0_0_0FeaturesHeading}" FontSize="16" Style="{StaticResource BaseTextBlockStyle}" Foreground="{ThemeResource HeaderAccentGradientBrush}" TextWrapping="WrapWholeWords" AutomationProperties.HeadingLevel="Level2" />
+                    <TextBlock Text="{x:Bind strings:Resources.Changelog4_0_0_0FeaturesBody}" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords" />
                 </StackPanel>
             </Grid>
         </StackPanel>

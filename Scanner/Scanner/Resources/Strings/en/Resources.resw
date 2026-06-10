@@ -1606,9 +1606,6 @@ Fuzzy</comment>
   <data name="ScanActionStartNewProjectShort" xml:space="preserve">
     <value>New</value>
   </data>
-  <data name="Templates" xml:space="preserve">
-    <value>Templates</value>
-  </data>
   <data name="History" xml:space="preserve">
     <value>History</value>
     <comment>The heading for the history that shows recent projects.</comment>
@@ -1914,9 +1911,15 @@ Fuzzy</comment>
     <value>Drag and drop blocks to build your own dynamic folder naming pattern. Select a block to modify its output or drag it into the bin to remove it.</value>
     <comment>The description for the custom file naming dialog.</comment>
   </data>
+  <data name="Template" xml:space="preserve">
+    <value>Template</value>
+  </data>
   <data name="SelectAll" xml:space="preserve">
     <value>Select all</value>
     <comment>The option to select all similar pages for cropping.</comment>
+  </data>
+  <data name="Templates" xml:space="preserve">
+    <value>Templates</value>
   </data>
   <data name="ScanMultiplePages" xml:space="preserve">
     <value>Scan multiple pages</value>
@@ -1945,7 +1948,28 @@ Fuzzy</comment>
   <data name="ScanAreaAlignmentHeading" xml:space="preserve">
     <value>Scan area alignment</value>
   </data>
-  <data name="Template" xml:space="preserve">
-    <value>Template</value>
+  <data name="Changelog4_0_0_0DesignHeading" xml:space="preserve">
+    <value>A new, familiar design</value>
+  </data>
+  <data name="Changelog4_0_0_0DesignBody" xml:space="preserve">
+    <value>Enjoy less friction and more personalization with page thumbnails, scanning from the page list, and resizable panes.</value>
+  </data>
+  <data name="Changelog4_0_0_0PerformanceHeading" xml:space="preserve">
+    <value>Faster and more efficient than ever</value>
+  </data>
+  <data name="Changelog4_0_0_0PerformanceBody" xml:space="preserve">
+    <value>Scan without limits and effortlessly manage huge projects thanks to the completely overhauled resource management.</value>
+  </data>
+  <data name="Changelog4_0_0_0PdfHeading" xml:space="preserve">
+    <value>Advanced PDF tools</value>
+  </data>
+  <data name="Changelog4_0_0_0PdfBody" xml:space="preserve">
+    <value>Scan to existing PDFs, make pages searchable with OCR, split into individual files, add images, and try the new single-page PDF format.</value>
+  </data>
+  <data name="Changelog4_0_0_0FeaturesHeading" xml:space="preserve">
+    <value>Highly-requested features</value>
+  </data>
+  <data name="Changelog4_0_0_0FeaturesBody" xml:space="preserve">
+    <value>Select a save location after scanning, undo/redo, filters for all scanners, paper size selection, lossless editing, subfolder generation, templates, and many more!</value>
   </data>
 </root>

@@ -1663,11 +1663,35 @@ Fuzzy</comment>
     <value>Przeciągnij i upuść bloki, aby zbudować własny dynamiczny wzorzec nazywania plików. Zaznacz blok, aby zmodyfikować jego dane wyjściowe, lub przeciągnij go do kosza, aby go usunąć.</value>
     <comment>The description for the custom file naming dialog.</comment>
   </data>
+  <data name="Template" xml:space="preserve">
+    <value />
+  </data>
   <data name="SelectAll" xml:space="preserve">
     <value>Zaznacz wszystkie</value>
     <comment>The option to select all similar pages for cropping.</comment>
   </data>
-  <data name="Template" xml:space="preserve">
+  <data name="Changelog4_0_0_0DesignHeading" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Changelog4_0_0_0DesignBody" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Changelog4_0_0_0PerformanceHeading" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Changelog4_0_0_0PerformanceBody" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Changelog4_0_0_0PdfHeading" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Changelog4_0_0_0PdfBody" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Changelog4_0_0_0FeaturesHeading" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Changelog4_0_0_0FeaturesBody" xml:space="preserve">
     <value />
   </data>
 </root>
