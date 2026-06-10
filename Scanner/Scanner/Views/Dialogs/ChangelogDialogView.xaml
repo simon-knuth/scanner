@@ -30,13 +30,31 @@
                 <ResourceDictionary Source="ms-appx:///StylesDictionary.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
+            <ResourceDictionary.ThemeDictionaries>
+                <ResourceDictionary x:Key="Default">
+                    <!-- Light accent variants read well against the dark dialog background. -->
+                    <LinearGradientBrush x:Key="HeaderAccentGradientBrush" StartPoint="0,0" EndPoint="1.5,0.5">
+                        <GradientStop Color="{ThemeResource SystemAccentColorLight2}" Offset="0" />
+                        <GradientStop Color="{ThemeResource SystemAccentColorLight1}" Offset="1.0" />
+                    </LinearGradientBrush>
+                </ResourceDictionary>
+                <ResourceDictionary x:Key="Light">
+                    <!-- Darker accent variants keep the headings readable on the light background. -->
+                    <LinearGradientBrush x:Key="HeaderAccentGradientBrush" StartPoint="0,0" EndPoint="1.5,0.5">
+                        <GradientStop Color="{ThemeResource SystemAccentColorDark1}" Offset="0" />
+                        <GradientStop Color="{ThemeResource SystemAccentColorDark2}" Offset="1.0" />
+                    </LinearGradientBrush>
+                </ResourceDictionary>
+                <ResourceDictionary x:Key="HighContrast">
+                    <LinearGradientBrush x:Key="HeaderAccentGradientBrush" StartPoint="0,0" EndPoint="1.5,0.5">
+                        <GradientStop Color="{ThemeResource SystemColorHighlightColor}" Offset="0" />
+                        <GradientStop Color="{ThemeResource SystemColorHighlightColor}" Offset="1.0" />
+                    </LinearGradientBrush>
+                </ResourceDictionary>
+            </ResourceDictionary.ThemeDictionaries>
+
             <x:Double x:Key="ContentDialogMinWidth">400</x:Double>
             <x:Double x:Key="ContentDialogMinHeight">400</x:Double>
-
-            <LinearGradientBrush x:Key="HeaderAccentGradientBrush" StartPoint="0,0" EndPoint="1.5,0.5">
-                <GradientStop Color="{ThemeResource SystemAccentColorLight2}" Offset="0" />
-                <GradientStop Color="{ThemeResource SystemAccentColorLight1}" Offset="1.0" />
-            </LinearGradientBrush>
         </ResourceDictionary>
     </ContentDialog.Resources>
 
@@ -44,14 +62,13 @@
     <!-- - - - - - - - - - - - - - - - - - - -  - - - - - - - - - - - - - - - - - - - - -->
     <!-- - - - - - - - - - - - - - - - -  PAGE CONTENT  - - - - - - - - - - - - - - - - -->
     <!-- - - - - - - - - - - - - - - - - - - -  - - - - - - - - - - - - - - - - - - - - -->
-    <ContentDialog.Title>
-        <StackPanel Orientation="Vertical" Spacing="4" Margin="0,0,0,12">
-            <TextBlock Text="{x:Bind strings:Resources.ChangelogDialogHeading}" AutomationProperties.HeadingLevel="Level1"/>
-        </StackPanel>
-    </ContentDialog.Title>
-
-    <ScrollViewer Margin="-24,0,-24,-24" Padding="8,0,16,24" HorizontalScrollMode="Disabled" VerticalScrollMode="Auto" VerticalScrollBarVisibility="Auto">
-        <StackPanel Orientation="Vertical" Spacing="12" Margin="16,0,16,0">
+    <ScrollViewer Margin="-24" Padding="8,0,16,0" HorizontalScrollMode="Disabled" VerticalScrollMode="Auto" VerticalScrollBarVisibility="Auto">
+        <StackPanel Orientation="Vertical" Spacing="12" Margin="16,24,16,24">
+            <StackPanel Orientation="Vertical" Spacing="4" Margin="0,0,0,12">
+                <TextBlock Text="{x:Bind strings:Resources.ChangelogDialogHeading}" FontSize="20" Style="{StaticResource BaseTextBlockStyle}" AutomationProperties.HeadingLevel="Level1" />
+                <TextBlock Text="v4.0" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Style="{StaticResource CaptionTextBlockStyle}" AutomationProperties.HeadingLevel="Level2" />
+            </StackPanel>
+            
             <Grid MinHeight="124" ColumnSpacing="24">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="124" />
@@ -65,8 +82,8 @@
 
                     <FontIcon Glyph="&#xE794;" FontSize="32" FontFamily="{StaticResource SymbolThemeFontFamily}" VerticalAlignment="Center" Foreground="{ThemeResource HeaderAccentGradientBrush}" />
                 </Frame>
-                <StackPanel Grid.Column="1" Orientation="Vertical" Spacing="4" VerticalAlignment="Center">
-                    <TextBlock Text="A new, familiar design" FontSize="16" Style="{StaticResource BaseTextBlockStyle}" Foreground="{StaticResource HeaderAccentGradientBrush}" TextWrapping="WrapWholeWords" AutomationProperties.HeadingLevel="Level2" />
+                <StackPanel Grid.Column="1" Orientation="Vertical" Spacing="4" Margin="0,4,0,4" VerticalAlignment="Center">
+                    <TextBlock Text="A new, familiar design" FontSize="16" Style="{StaticResource BaseTextBlockStyle}" Foreground="{ThemeResource HeaderAccentGradientBrush}" TextWrapping="WrapWholeWords" AutomationProperties.HeadingLevel="Level2" />
                     <TextBlock Text="Enjoy less friction and more personalization with page thumbnails, scanning from the page list, and resizable panes." Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords" />
                 </StackPanel>
             </Grid>
@@ -84,8 +101,8 @@
 
                     <FontIcon Glyph="&#xEC4A;" FontSize="32" FontFamily="{StaticResource SymbolThemeFontFamily}" VerticalAlignment="Center" Foreground="{ThemeResource HeaderAccentGradientBrush}" />
                 </Frame>
-                <StackPanel Grid.Column="1" Orientation="Vertical" Spacing="4" VerticalAlignment="Center">
-                    <TextBlock Text="Faster and more efficient than ever" FontSize="16" Style="{StaticResource BaseTextBlockStyle}" Foreground="{StaticResource HeaderAccentGradientBrush}" TextWrapping="WrapWholeWords" AutomationProperties.HeadingLevel="Level2" />
+                <StackPanel Grid.Column="1" Orientation="Vertical" Spacing="4" Margin="0,4,0,4" VerticalAlignment="Center">
+                    <TextBlock Text="Faster and more efficient than ever" FontSize="16" Style="{StaticResource BaseTextBlockStyle}" Foreground="{ThemeResource HeaderAccentGradientBrush}" TextWrapping="WrapWholeWords" AutomationProperties.HeadingLevel="Level2" />
                     <TextBlock Text="Scan without limits and effortlessly manage huge projects thanks to the completely overhauled resource management." Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords" />
                 </StackPanel>
             </Grid>
@@ -103,8 +120,8 @@
 
                     <FontIcon Glyph="&#xEA90;" FontSize="32" FontFamily="{StaticResource SymbolThemeFontFamily}" VerticalAlignment="Center" Foreground="{ThemeResource HeaderAccentGradientBrush}" />
                 </Frame>
-                <StackPanel Grid.Column="1" Orientation="Vertical" Spacing="4" VerticalAlignment="Center">
-                    <TextBlock Text="Advanced PDF tools" FontSize="16" Style="{StaticResource BaseTextBlockStyle}" Foreground="{StaticResource HeaderAccentGradientBrush}" TextWrapping="WrapWholeWords" AutomationProperties.HeadingLevel="Level2" />
+                <StackPanel Grid.Column="1" Orientation="Vertical" Spacing="4" Margin="0,4,0,4" VerticalAlignment="Center">
+                    <TextBlock Text="Advanced PDF tools" FontSize="16" Style="{StaticResource BaseTextBlockStyle}" Foreground="{ThemeResource HeaderAccentGradientBrush}" TextWrapping="WrapWholeWords" AutomationProperties.HeadingLevel="Level2" />
                     <TextBlock Text="Scan to existing PDFs, make pages searchable with OCR, split into individual files, add images, and try the new single-page PDF format." Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords" />
                 </StackPanel>
             </Grid>
@@ -122,8 +139,8 @@
 
                     <FontIcon Glyph="&#xEA86;" FontSize="32" FontFamily="{StaticResource SymbolThemeFontFamily}" VerticalAlignment="Center" Foreground="{ThemeResource HeaderAccentGradientBrush}" />
                 </Frame>
-                <StackPanel Grid.Column="1" Orientation="Vertical" Spacing="4" VerticalAlignment="Center">
-                    <TextBlock Text="Highly-requested features" FontSize="16" Style="{StaticResource BaseTextBlockStyle}" Foreground="{StaticResource HeaderAccentGradientBrush}" TextWrapping="WrapWholeWords" AutomationProperties.HeadingLevel="Level2" />
+                <StackPanel Grid.Column="1" Orientation="Vertical" Spacing="4" Margin="0,4,0,4" VerticalAlignment="Center">
+                    <TextBlock Text="Highly-requested features" FontSize="16" Style="{StaticResource BaseTextBlockStyle}" Foreground="{ThemeResource HeaderAccentGradientBrush}" TextWrapping="WrapWholeWords" AutomationProperties.HeadingLevel="Level2" />
                     <TextBlock Text="Select a save location after scanning, undo/redo, filters for all scanners, paper size selection, lossless editing, subfolder generation, templates, and many more!" Style="{StaticResource BodyTextBlockStyle}" TextWrapping="WrapWholeWords" />
                 </StackPanel>
             </Grid>
