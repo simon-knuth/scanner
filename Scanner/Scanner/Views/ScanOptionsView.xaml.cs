@@ -580,6 +580,9 @@ public sealed partial class ScanOptionsView : Page
                 if (ViewModel.ScanOptions != null)
                 {
                     ViewModel.ScanOptions.PropertyChanged += ScanOptions_PropertyChanged;
+                    
+                    if (ViewModel.ScanOptions.ScanArea is PaperSizeArea paperSizeArea)
+                        paperSizeArea.PropertyChanged += PaperSizeArea_PropertyChanged;
                 }
 
                 this.RunOnUIThread(Microsoft.UI.Dispatching.DispatcherQueuePriority.Normal, () =>
