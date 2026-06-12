@@ -87,6 +87,7 @@ public sealed partial class ScanActionsView : Page
 
         ViewModel.PropertyChanged += ViewModel_PropertyChanged;
         ViewModel.SettingsService.PropertyChanged += SettingsService_PropertyChanged;
+        ActualThemeChanged += ScanActionsView_ActualThemeChanged;
     }
 
 
@@ -115,6 +116,18 @@ public sealed partial class ScanActionsView : Page
     private void ButtonScanMode_Click(object sender, RoutedEventArgs e)
     {
         ViewModel.AddToProject = !ViewModel.AddToProject;
+    }
+
+    private void ScanActionsView_ActualThemeChanged(FrameworkElement sender, object args)
+    {
+        // Fix scan mode icons on theme change
+        IValueConverter converter = (IValueConverter)Resources["BoolOnAccentForegroundConverter"];
+        Brush brush = (Brush)converter.Convert(ViewModel.CanScan, typeof(Brush), null, null);
+
+        if (FontIconScanModeAdd is not null)
+            FontIconScanModeAdd.Foreground = brush;
+        if (FontIconScanModeNew is not null)
+            FontIconScanModeNew.Foreground = brush;
     }
 
     private void ButtonScanOptions_Click(object sender, RoutedEventArgs e)
