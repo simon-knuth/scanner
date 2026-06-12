@@ -1,4 +1,5 @@
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.WinUI;
 using Microsoft.Graphics.Canvas;
 using Microsoft.Graphics.Canvas.Effects;
@@ -228,6 +229,7 @@ public sealed partial class EditorView : Page
     public EditorView()
     {
         this.InitializeComponent();
+        Ioc.Default.GetService<ILogService>()?.Log.Information("View loaded");
 
         ViewModel.SettingsService.PropertyChanged += SettingsService_PropertyChanged;
         ViewModel.ProjectService.PropertyChanging += ProjectService_PropertyChanging;

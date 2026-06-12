@@ -1,3 +1,4 @@
+using CommunityToolkit.Mvvm.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -33,6 +34,7 @@ public sealed partial class SettingsViewPrivacy : SettingsPage
     public SettingsViewPrivacy()
     {
         this.InitializeComponent();
+        Ioc.Default.GetService<ILogService>()?.Log.Information("View loaded");
     }
 
 

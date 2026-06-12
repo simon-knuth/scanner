@@ -278,12 +278,14 @@ partial class ShellViewModel : ObservableRecipient, IDisposable
     private async Task SaveAsync()
     {
         if (CurrentProject == null) return;
+        LogService?.Log.Information("Saving the current project ({Format})", CurrentProject.Format);
         await CurrentProject.SaveAsync(false, viewDispatcherQueue!, isUserInitiated: true);
     }
 
     private async Task SaveAsAsync()
     {
         if (CurrentProject == null) return;
+        LogService?.Log.Information("Saving the current project ({Format}) to a new location", CurrentProject.Format);
         await CurrentProject.SaveAsync(true, viewDispatcherQueue!, isUserInitiated: true);
     }
 
@@ -293,7 +295,10 @@ partial class ShellViewModel : ObservableRecipient, IDisposable
         if (CurrentProject is not MultiFileProject imageProject) return;
 
         if (ProjectService.SelectedPage != null)
+        {
+            LogService?.Log.Information("Saving the current page to a new file");
             await imageProject.SaveAsSinglePageAsync(ProjectService.SelectedPage, viewDispatcherQueue!);
+        }
     }
 
     private async Task TryCloseProjectAsync()
@@ -313,6 +318,7 @@ partial class ShellViewModel : ObservableRecipient, IDisposable
 
     private void ShowSettings(SettingsViewModelIntent? intent = null)
     {
+        LogService?.Log.Information("Opening settings ({Section})", intent?.DisplayedPage ?? SettingsPageType.General);
         SentryService?.TrackEvent(AnalyticsEvent.SettingsRequested, new Dictionary<string, string>
         {
             { "section", (intent?.DisplayedPage ?? SettingsPageType.General).ToString() }
@@ -327,43 +333,53 @@ partial class ShellViewModel : ObservableRecipient, IDisposable
 
     private void ShowDonationDialog()
     {
+        LogService?.Log.Information("Opening donation dialog");
         SentryService?.TrackEvent(AnalyticsEvent.DonationDialogOpened);
         DonationDialogRequested?.Invoke(this, EventArgs.Empty);
     }
 
     private void ShowOtherAppsDialog()
     {
+        LogService?.Log.Information("Opening other apps dialog");
         SentryService?.TrackEvent(AnalyticsEvent.OtherAppsDialogOpened);
         OtherAppsDialogRequested?.Invoke(this, EventArgs.Empty);
     }
 
     private void ShowChangelogDialog()
     {
+        LogService?.Log.Information("Opening changelog dialog");
         SentryService?.TrackEvent(AnalyticsEvent.ChangelogOpened);
         ChangelogDialogRequested?.Invoke(this, EventArgs.Empty);
     }
 
     private void ShowScanMergeDialog()
     {
+        LogService?.Log.Information("Opening scan and merge dialog");
         ScanMergeDialogRequested?.Invoke(this, EventArgs.Empty);
     }
 
     private void ShowPreviewDialog(ScanOptions scanOptions)
     {
+        LogService?.Log.Information("Opening preview dialog");
         ShowPreviewDialogRequested?.Invoke(this, scanOptions);
     }
 
     private void ShowSetupDialog()
     {
+        LogService?.Log.Information("Opening setup dialog");
         SentryService?.TrackEvent(AnalyticsEvent.SetupStarted);
         SetupDialogRequested?.Invoke(this, EventArgs.Empty);
     }
 
     private async Task OpenFilesAsync()
     {
+        LogService?.Log.Information("Showing file picker to open a project");
         IReadOnlyList<PickFileResult> pickerResults = await Helpers.Helpers.PickInputFilesAsync(true, viewDispatcherQueue!);
         if (pickerResults.Count == 0)
+        {
+            LogService?.Log.Information("File picker cancelled without selecting files");
             return;
+        }
 
         SentryService?.TrackEvent(AnalyticsEvent.ProjectOpenedFromDisk, new Dictionary<string, string>
         {

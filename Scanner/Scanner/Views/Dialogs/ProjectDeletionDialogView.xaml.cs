@@ -40,6 +40,7 @@ public partial class ProjectDeletionDialogView : ContentDialog
         this.project = project;
 
         this.InitializeComponent();
+        Ioc.Default.GetService<ILogService>()?.Log.Information("Dialog loaded");
     }
 
 

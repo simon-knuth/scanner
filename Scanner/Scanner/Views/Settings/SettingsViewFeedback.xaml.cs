@@ -1,3 +1,4 @@
+using CommunityToolkit.Mvvm.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -5,6 +6,7 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
+using Scanner.Services.Interfaces;
 using Scanner.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -32,6 +34,7 @@ public sealed partial class SettingsViewFeedback : SettingsPage
     public SettingsViewFeedback()
     {
         this.InitializeComponent();
+        Ioc.Default.GetService<ILogService>()?.Log.Information("View loaded");
     }
 
 

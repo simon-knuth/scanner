@@ -83,7 +83,7 @@ internal class TemplatesService : ITemplatesService
             await using TemplatesDbContext context = CreateContext();
             await context.Database.EnsureCreatedAsync();
 
-            LogService?.Log.Information("Initialized database at '{Path}'", databasePath);
+            LogService?.Log.Information("Initialized database");
 
             IReadOnlyList<TemplateEntry> initial = await FetchEntriesFromDbAsync(context);
             uiDispatcherQueue.RunOnThread(DispatcherQueuePriority.Low, () =>
@@ -384,7 +384,7 @@ internal class TemplatesService : ITemplatesService
 
     private async Task RecreateAsync()
     {
-        LogService?.Log.Warning("Recreating database at '{Path}'", databasePath);
+        LogService?.Log.Warning("Recreating database");
 
         try
         {

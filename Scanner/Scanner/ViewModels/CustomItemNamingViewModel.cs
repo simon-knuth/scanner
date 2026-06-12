@@ -130,7 +130,7 @@ public partial class CustomItemNamingViewModel : ObservableRecipient, IDisposabl
 
     private void AddBlock(string blockName)
     {
-        LogService?.Log.Information("CustomFileNamingViewModel - Adding file naming {block}", blockName);
+        LogService?.Log.Information("Adding file naming {Block}", blockName);
 
         // construct block
         Type[] parameterTypes = [];
@@ -148,13 +148,13 @@ public partial class CustomItemNamingViewModel : ObservableRecipient, IDisposabl
 
     private void Block_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
     {
-        LogService?.Log.Information("File naming {block} {property} changed", ((IItemNamingBlock)sender).Name, e.PropertyName);
+        LogService?.Log.Information("File naming {Block} {Property} changed", ((IItemNamingBlock)sender).Name, e.PropertyName);
         UpdatePattern();
     }
 
     private void DeleteBlock(IItemNamingBlock block)
     {
-        LogService?.Log.Information("Removing file naming {block}", block.Name);
+        LogService?.Log.Information("Removing file naming {Block}", block.Name);
 
         block.PropertyChanged -= Block_PropertyChanged;
         SelectedBlocks.Remove(block);

@@ -44,6 +44,7 @@ public partial class IndeterminateProgressDialogView : ContentDialog
         this.process = process;
 
         this.InitializeComponent();
+        Ioc.Default.GetService<ILogService>()?.Log.Information("Dialog loaded");
     }
 
 

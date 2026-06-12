@@ -1,3 +1,4 @@
+using CommunityToolkit.Mvvm.DependencyInjection;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -7,6 +8,7 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
+using Scanner.Services.Interfaces;
 using Scanner.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -35,6 +37,7 @@ public sealed partial class SettingsView : Page
         ViewModel = new(intent);
 
         this.InitializeComponent();
+        Ioc.Default.GetService<ILogService>()?.Log.Information("View loaded");
 
         ViewModel.PropertyChanged += ViewModel_PropertyChanged;
         ApplySettingsPageEntry(ViewModel.SelectedPage);

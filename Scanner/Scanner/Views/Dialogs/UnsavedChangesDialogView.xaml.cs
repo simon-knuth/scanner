@@ -40,6 +40,7 @@ public partial class UnsavedChangesDialogView : ContentDialog
         this.project = project;
 
         this.InitializeComponent();
+        Ioc.Default.GetService<ILogService>()?.Log.Information("Dialog loaded");
     }
 
 
@@ -51,6 +52,7 @@ public partial class UnsavedChangesDialogView : ContentDialog
         this.IsEnabled = false;
 
         // save changes
+        LogService?.Log.Information("Saving unsaved changes from the unsaved-changes dialog");
         ContentDialogButtonClickDeferral deferral = args.GetDeferral();
         await project.SaveAsync(false, this.DispatcherQueue, isUserInitiated: true);
         deferral.Complete();

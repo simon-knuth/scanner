@@ -73,7 +73,7 @@ internal class ProjectHistoryService : IProjectHistoryService
             await using ProjectHistoryDbContext context = CreateContext();
             await context.Database.EnsureCreatedAsync();
 
-            LogService?.Log.Information("Initialized database at '{Path}'", databasePath);
+            LogService?.Log.Information("Initialized database");
 
             // Populate the observable collection from the initial DB state.
             IReadOnlyList<ProjectHistoryEntry> initial = await FetchEntriesFromDbAsync(context);
@@ -330,7 +330,7 @@ internal class ProjectHistoryService : IProjectHistoryService
     }
     private async Task RecreateAsync()
     {
-        LogService?.Log.Warning("Recreating database at '{Path}'", databasePath);
+        LogService?.Log.Warning("Recreating database");
 
         try
         {

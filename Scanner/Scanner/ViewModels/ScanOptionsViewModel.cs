@@ -80,6 +80,11 @@ partial class ScanOptionsViewModel : ObservableRecipient, IDisposable
         {
             if (SetProperty(ref selectedScanner, value))
             {
+                if (value != null)
+                    LogService?.Log.Information("Selected scanner changed to {@Scanner}", value);
+                else
+                    LogService?.Log.Information("Selected scanner cleared");
+
                 KnownScannerEntry? knownScanner = null;
                 if (value != null && knownScanners.Task.IsCompleted)
                     knownScanner = knownScanners.Task.Result.FirstOrDefault(x => x.Id == value.Id);
@@ -237,6 +242,7 @@ partial class ScanOptionsViewModel : ObservableRecipient, IDisposable
 
     private async Task AddDebugScannerAsync()
     {
+        LogService?.Log.Information("Adding debug scanner");
         DebugScanner debugScanner = new(DebugScannerSetupProperties);
         await ScannerDiscoveryService.AddDebugScannerAsync(debugScanner);
     }
@@ -245,6 +251,7 @@ partial class ScanOptionsViewModel : ObservableRecipient, IDisposable
     {
         if (SelectedScanner is DebugScanner debugScanner)
         {
+            LogService?.Log.Information("Removing debug scanner");
             await ScannerDiscoveryService.RemoveDebugScannerAsync(debugScanner);
         }
     }
@@ -254,6 +261,7 @@ partial class ScanOptionsViewModel : ObservableRecipient, IDisposable
         switch (e.PropertyName)
         {
             case nameof(ScanOptions.SourceMode):
+                LogService?.Log.Information("Scan source mode changed to {SourceMode}", ScanOptions.SourceMode);
                 UpdateScanOptionsForSourceMode();
                 await CleanUpScanAreaAlignmentBitmapAsync();
                 break;

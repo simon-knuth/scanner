@@ -40,6 +40,7 @@ public sealed partial class FeedbackWindow : WindowEx
     public FeedbackWindow()
     {
         this.InitializeComponent();
+        Ioc.Default.GetService<ILogService>()?.Log.Information("Window loaded");
 
         // backdrop
         if (IsWindows11())

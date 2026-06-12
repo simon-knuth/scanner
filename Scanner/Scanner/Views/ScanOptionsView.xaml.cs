@@ -1,5 +1,6 @@
 using CommunityToolkit.Labs.WinUI;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -509,6 +510,7 @@ public sealed partial class ScanOptionsView : Page
     public ScanOptionsView()
     {
         this.InitializeComponent();
+        Ioc.Default.GetService<ILogService>()?.Log.Information("View loaded");
 
         ViewModel.PropertyChanging += ViewModel_PropertyChanging;
         ViewModel.PropertyChanged += ViewModel_PropertyChanged;

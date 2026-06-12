@@ -39,6 +39,7 @@ public partial class ChangelogDialogView : ContentDialog
     public ChangelogDialogView()
     {
         this.InitializeComponent();
+        Ioc.Default.GetService<ILogService>()?.Log.Information("Dialog loaded");
     }
 
 

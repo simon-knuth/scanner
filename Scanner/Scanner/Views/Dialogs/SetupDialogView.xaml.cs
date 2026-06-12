@@ -45,6 +45,7 @@ public partial class SetupDialogView : ContentDialog
     public SetupDialogView()
     {
         this.InitializeComponent();
+        Ioc.Default.GetService<ILogService>()?.Log.Information("Dialog loaded");
     }
 
 

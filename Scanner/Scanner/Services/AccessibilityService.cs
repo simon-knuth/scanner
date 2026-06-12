@@ -66,6 +66,6 @@ internal partial class AccessibilityService : ObservableObject, IAccessibilitySe
                 InvertedFlowDirection = FlowDirection.LeftToRight;
             }
         });
-        LogService?.Log.Information("System text direction is {0}", DefaultFlowDirection);
+        LogService?.Log.Information("System text direction is {Direction}", DefaultFlowDirection);
     }
 }

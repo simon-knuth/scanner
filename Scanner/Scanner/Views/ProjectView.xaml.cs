@@ -1,4 +1,5 @@
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.WinUI;
 using CommunityToolkit.WinUI.Animations;
@@ -194,6 +195,7 @@ public sealed partial class ProjectView : Page
     public ProjectView()
     {
         this.InitializeComponent();
+        Ioc.Default.GetService<ILogService>()?.Log.Information("View loaded");
 
         ViewModel.PropertyChanged += ViewModel_PropertyChanged;
         ViewModel.ProjectService.PropertyChanged += ProjectService_PropertyChanged;

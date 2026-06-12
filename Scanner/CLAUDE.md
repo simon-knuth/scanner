@@ -76,7 +76,7 @@ Strict **MVVM** with `CommunityToolkit.Mvvm`. Three layers under `Scanner/`: `Vi
 - **AI features**: `CopilotRuntimeService` uses the Windows Copilot Runtime (on-device models, e.g. Phi Silica) — gated behind Copilot+ hardware availability.
 - **PDF**: PDFsharp.
 - **Native interop**: `Microsoft.Windows.CsWin32` (source-generated P/Invoke; see `NativeMethods.txt` if present) and CsWinRT.
-- **Telemetry / logging**: Sentry (`SentryService`) and Serilog (`LogService`, async file sink). Crashes/unobserved exceptions are funneled through `App.xaml.cs` handlers with a plain-text fallback log.
+- **Telemetry / logging**: Sentry (`SentryService`) and Serilog (`LogService`, async file sink). Crashes/unobserved exceptions are funneled through `App.xaml.cs` handlers with a plain-text fallback log. Log through `ILogService.Log` (a `CallerLogger`) with Serilog message templates — it auto-enriches each entry with the calling member name, so **do not** prefix messages with the method/class name. Use `Information` for meaningful user actions (scan, save, edit-action applied/undone, dialog opened, scanner selected, …), keeping volume low (Sentry storage is limited) and **never logging PII** — no file names or folder/database paths. Classes serialized often (`ScanOptions`, `ScanResolution`, `ScanArea`, `ScanMergeConfig`, `IScanningDevice`) have PII-free `Destructure.ByTransforming` policies in `LogService.ConfigureCustomDestructuring`; log those with the `{@X}` operator and extend that method for new such types.
 
 ### Localization
 

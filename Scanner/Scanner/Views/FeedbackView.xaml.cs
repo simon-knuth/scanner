@@ -61,6 +61,7 @@ public sealed partial class FeedbackView : Page
     public FeedbackView()
     {
         this.InitializeComponent();
+        Ioc.Default.GetService<ILogService>()?.Log.Information("View loaded");
     }
 
 

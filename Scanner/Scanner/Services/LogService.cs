@@ -2,6 +2,7 @@
 using Microsoft.UI;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml.Media;
+using Scanner.Models;
 using Scanner.Models.Interfaces;
 using Scanner.Services.Interfaces;
 using Serilog;
@@ -98,6 +99,7 @@ internal partial class LogService : ILogService
                     rollOnFileSizeLimit: true,
                     hooks: hook))
                 .Enrich.WithExceptionDetails()
+                .ConfigureCustomDestructuring()
                 .CreateLogger();
 
         log.Information("--- Log initialized ---");
@@ -178,5 +180,69 @@ internal partial class LogService : ILogService
             Path = path;
             return base.OnFileOpened(path, underlyingStream, encoding);
         }
+    }
+}
+
+internal static class LogDestructuringExtensions
+{
+    public static LoggerConfiguration ConfigureCustomDestructuring(this LoggerConfiguration loggerConfiguration)
+    {
+        return loggerConfiguration
+            // A scanner: its model name and capabilities, but not its raw device id.
+            .Destructure.ByTransforming<IScanningDevice>(s => new
+            {
+                s.Name,
+                IsAutoAllowed = s.IsAutoAllowed,
+                IsFlatbedAllowed = s.IsFlatbedAllowed,
+                IsFeederAllowed = s.IsFeederAllowed,
+                IsFeederDuplexSupported = s.IsFeederDuplexSupported,
+                FlatbedResolutionCount = s.FlatbedResolutions?.Count,
+                FeederResolutionCount = s.FeederResolutions?.Count,
+                Color = s.IsColorAllowedInAnyMode,
+                Grayscale = s.IsGrayscaleAllowedInAnyMode,
+                Monochrome = s.IsMonochromeAllowedInAnyMode,
+                AutoColor = s.IsAutoColorAllowedInAnyMode,
+            })
+            // The options chosen for a scan.
+            .Destructure.ByTransforming<ScanOptions>(o => new
+            {
+                o.SourceMode,
+                o.TargetFormat,
+                o.ColorMode,
+                ResolutionDpi = o.Resolution?.Resolution.DpiX,
+                o.Duplex,
+                o.ScanMultiplePages,
+                o.Brightness,
+                o.Contrast,
+                ScanArea = o.ScanArea,
+                HasScanMergeConfig = o.ScanMergeConfig != null,
+                HasScanner = o.Scanner != null,
+            })
+            // A single resolution value.
+            .Destructure.ByTransforming<ScanResolution>(r => new
+            {
+                Dpi = r.Resolution.DpiX,
+                r.Annotation,
+            })
+            // The configuration for merging a scan into an existing project.
+            .Destructure.ByTransforming<ScanMergeConfig>(c => new
+            {
+                c.InsertIndices,
+                c.SurplusPagesIndex,
+                c.InsertReversed,
+            })
+            // The selected scan area (one of several concrete shapes).
+            .Destructure.ByTransforming<ScanArea>(DescribeScanArea);
+    }
+
+    private static object DescribeScanArea(ScanArea area)
+    {
+        return area switch
+        {
+            AutoCropArea auto => (object)new { Type = "AutoCrop", auto.AutoCropMode },
+            PaperSizeArea paper => new { Type = "PaperSize", paper.PaperSize, paper.Corner, paper.Orientation },
+            PreviewSelectionArea preview => new { Type = "PreviewSelection", Region = preview.SelectedRegion.ToString() },
+            _ => new { Type = area.GetType().Name },
+        };
     }
 }

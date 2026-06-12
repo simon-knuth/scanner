@@ -37,6 +37,7 @@ public partial class OtherAppsDialogView : ContentDialog
     public OtherAppsDialogView()
     {
         this.InitializeComponent();
+        Ioc.Default.GetService<ILogService>()?.Log.Information("Dialog loaded");
     }
 
 

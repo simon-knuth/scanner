@@ -44,6 +44,7 @@ public partial class ScanMergeDialogView : ContentDialog
     public ScanMergeDialogView()
     {
         this.InitializeComponent();
+        Ioc.Default.GetService<ILogService>()?.Log.Information("Dialog loaded");
 
         ViewModel.CloseRequested += ViewModel_CloseRequested;
     }

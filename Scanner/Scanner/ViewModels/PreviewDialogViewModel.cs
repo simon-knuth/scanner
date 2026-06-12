@@ -73,7 +73,7 @@ public partial class PreviewDialogViewModel : ObservableRecipient, IDisposable
         get => isCustomRegionSelected;
         set
         {
-            LogService.Log.Information($"PreviewDialogViewModel: Setting IsCustomRegionSelected to {value}");
+            LogService?.Log.Information("Setting IsCustomRegionSelected to {Value}", value);
 
             if (value == true && previewFileBuffer != null)
             {
@@ -171,7 +171,7 @@ public partial class PreviewDialogViewModel : ObservableRecipient, IDisposable
                     Message = $"{GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.ErrorMessageBody)}\n{exc.Message}",
                     Severity = InfoBarSeverity.Warning,
                 }));
-                LogService.Log.Error(exc, $"Setting SelectedWidth to {value} failed");
+                LogService?.Log.Error(exc, "Setting SelectedWidth to {Inches} inches failed", value?.Inches);
                 SentryService.TrackError(exc);
                 Close(false);
             }
@@ -232,7 +232,7 @@ public partial class PreviewDialogViewModel : ObservableRecipient, IDisposable
                     Message = $"{GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.ErrorMessageBody)}\n{exc.Message}",
                     Severity = InfoBarSeverity.Warning,
                 }));
-                LogService?.Log.Error(exc, $"Setting SelectedHeight to {value} failed");
+                LogService?.Log.Error(exc, "Setting SelectedHeight to {Inches} inches failed", value?.Inches);
                 SentryService?.TrackError(exc);
                 Close(false);
             }
@@ -269,7 +269,7 @@ public partial class PreviewDialogViewModel : ObservableRecipient, IDisposable
                     Message = $"{GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.ErrorMessageBody)}\n{exc.Message}",
                     Severity = InfoBarSeverity.Warning,
                 }));
-                LogService.Log.Error(exc, $"Setting SelectedAspectRatio to {value} failed");
+                LogService?.Log.Error(exc, "Setting SelectedAspectRatio to {AspectRatio} failed", value);
                 SentryService.TrackError(exc);
                 Close(false);
             }
@@ -413,7 +413,8 @@ public partial class PreviewDialogViewModel : ObservableRecipient, IDisposable
         SelectedAspectRatio = SettingsService.LastUsedCropAspectRatio;
 
         // log result
-        LogService?.Log.Information("Datermined {@MinLength}, {@MaxWidth} and {@MaxHeight}", MinLength, MaxWidth, MaxHeight);
+        LogService?.Log.Information("Determined preview region bounds (min {MinLength}\", max {MaxWidth}\"x{MaxHeight}\")",
+            MinLength?.Inches, MaxWidth?.Inches, MaxHeight?.Inches);
     }
 
     private void Close(bool applySelection)
@@ -424,7 +425,7 @@ public partial class PreviewDialogViewModel : ObservableRecipient, IDisposable
         {
             Rect rect = new(SelectedX.Inches, SelectedY.Inches, SelectedWidth.Inches, SelectedHeight.Inches);
 
-            LogService?.Log.Information($"Closing preview dialog and returning region {rect}");
+            LogService?.Log.Information("Closing preview dialog and returning a custom region");
             scanOptions.ScanArea = new PreviewSelectionArea(rect);
 
             SentryService?.TrackEvent(AnalyticsEvent.PreviewRegionSelected, new Dictionary<string, string>
@@ -434,7 +435,7 @@ public partial class PreviewDialogViewModel : ObservableRecipient, IDisposable
         }
         else
         {
-            LogService?.Log.Information($"Closing preview dialog without returning region");
+            LogService?.Log.Information("Closing preview dialog without returning a region");
         }
 
         CloseRequested?.Invoke(this, EventArgs.Empty);
@@ -448,7 +449,7 @@ public partial class PreviewDialogViewModel : ObservableRecipient, IDisposable
     {
         try
         {
-            LogService?.Log.Information("PreviewScanAsync");
+            LogService?.Log.Information("Requesting preview scan for {SourceMode}", scanOptions.SourceMode);
 
             StorageFile? file = await scanOptions.Scanner.GetPreviewScanAsync(scanOptions.SourceMode, AppDataService.PreviewScanFolder, true, viewDispatcherQueue!);
             if (file == null)
@@ -506,7 +507,7 @@ public partial class PreviewDialogViewModel : ObservableRecipient, IDisposable
                 Message = $"{GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.ErrorMessageBody)}\n{exc.Message}",
                 Severity = InfoBarSeverity.Warning,
             }));
-            LogService?.Log.Error(exc, $"Flipping aspect ratio rect {currentRect} to failed");
+            LogService?.Log.Error(exc, "Flipping aspect ratio failed");
             SentryService?.TrackError(exc);
             Close(false);
         }

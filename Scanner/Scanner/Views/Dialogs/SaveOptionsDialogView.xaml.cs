@@ -69,6 +69,7 @@ public partial class SaveOptionsDialogView : ContentDialog
         ViewModel.PropertyChanged += ViewModel_PropertyChanged;
 
         this.InitializeComponent();
+        Ioc.Default.GetService<ILogService>()?.Log.Information("Dialog loaded");
     }
 
 

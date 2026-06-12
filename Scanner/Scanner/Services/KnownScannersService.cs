@@ -69,7 +69,7 @@ internal class KnownScannersService : IKnownScannersService
             await using KnownScannersDbContext context = CreateContext();
             await context.Database.EnsureCreatedAsync();
 
-            LogService?.Log.Information("Initialized database at '{Path}'", databasePath);
+            LogService?.Log.Information("Initialized database");
 
             initializationTcs.TrySetResult();
         }
@@ -182,7 +182,7 @@ internal class KnownScannersService : IKnownScannersService
 
     private async Task RecreateAsync()
     {
-        LogService?.Log.Information("Recreating database at '{Path}'", databasePath);
+        LogService?.Log.Information("Recreating database");
 
         try
         {

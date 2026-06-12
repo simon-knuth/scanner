@@ -1,4 +1,5 @@
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.DependencyInjection;
 using Microsoft.UI.Dispatching;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -9,6 +10,7 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using Scanner.Extensions;
 using Scanner.Models.ItemNaming;
+using Scanner.Services.Interfaces;
 using Scanner.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -45,6 +47,7 @@ public sealed partial class SettingsViewCustomItemNaming : SettingsPage
     public SettingsViewCustomItemNaming()
     {
         this.InitializeComponent();
+        Ioc.Default.GetService<ILogService>()?.Log.Information("View loaded");
 
         ViewModel.CloseRequested += ViewModel_CloseRequested;
     }

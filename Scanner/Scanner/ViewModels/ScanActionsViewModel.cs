@@ -120,6 +120,7 @@ partial class ScanActionsViewModel : ObservableRecipient, IDisposable
         {
             if (ScanOptions != null)
             {
+                LogService?.Log.Information("Starting scan and merge with {@ScanMergeConfig}", m.ScanMergeConfig);
                 ScanOptions.ScanMergeConfig = m.ScanMergeConfig;
                 await ScanAsync(true);
                 ScanOptions.ScanMergeConfig = null;
@@ -148,6 +149,8 @@ partial class ScanActionsViewModel : ObservableRecipient, IDisposable
     {
         if (ScanOptions == null)
             return;
+
+        LogService?.Log.Information("Scan triggered (add to project: {AddToProject})", addToProject);
 
         await viewLoading.Task;
 

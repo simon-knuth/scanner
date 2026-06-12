@@ -38,6 +38,7 @@ public partial class DonationDialogView : ContentDialog
     public DonationDialogView()
     {
         this.InitializeComponent();
+        Ioc.Default.GetService<ILogService>()?.Log.Information("Dialog loaded");
     }
 
 

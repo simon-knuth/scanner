@@ -273,6 +273,7 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
     {
         try
         {
+            LogService?.Log.Information("Creating a new project from scan with {@ScanOptions}", scanOptions);
             CurrentScanState = ScanState.Scanning;
 
             // close project
@@ -408,6 +409,7 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
     {
         try
         {
+            LogService?.Log.Information("Scanning to add to the current project with {@ScanOptions}", scanOptions);
             CurrentScanState = ScanState.Scanning;
 
             if (CurrentProject == null)
@@ -495,6 +497,7 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
         {
             // ensure single file type
             string extension = Path.GetExtension(filePaths[0]).ToLowerInvariant();
+            LogService?.Log.Information("Opening a project from {FileCount} {Extension} file(s)", filePaths.Length, extension);
             if (filePaths.Any(f => Path.GetExtension(f).ToLowerInvariant() != extension))
             {
                 Messenger.Send(new ShowInAppNotificationMessage(new Notification
@@ -588,6 +591,8 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
 
         if (files.Count == 0)
         {
+            LogService?.Log.Warning("Scan produced no pages (source {SourceMode})", scanOptions.SourceMode);
+
             // this should only happen if the feeder is empty
             if (scanOptions.SourceMode == ScannerSource.Feeder)
             {
@@ -607,6 +612,8 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
             }
             return null;
         }
+
+        LogService?.Log.Information("Scan completed with {PageCount} page(s) in {DurationMs:F0}ms", files.Count, scanStopwatch.Elapsed.TotalMilliseconds);
 
         SettingsService.ScanNumber++;
 
@@ -665,6 +672,7 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
     {
         if (CurrentProject == null) return true;
         IsActionRunning = true;
+        LogService?.Log.Information("Deleting the current project ({Format})", CurrentProject.Format);
 
         try
         {
@@ -728,6 +736,7 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
     {
         if (CurrentProject == null) return true;
         IsActionRunning = true;
+        LogService?.Log.Information("Copying the current project to the clipboard");
 
         try
         {
@@ -757,6 +766,7 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
     {
         if (CurrentProject == null) return true;
         IsActionRunning = true;
+        LogService?.Log.Information("Copying {PageCount} page(s) to the clipboard", pages.Count);
 
         try
         {
@@ -786,6 +796,7 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
     {
         if (CurrentProject == null) return true;
         IsActionRunning = true;
+        LogService?.Log.Information("Opening the current project with another app ({UsesDefaultApp})", app == null);
 
         try
         {
@@ -819,6 +830,7 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
     {
         if (CurrentProject == null) return true;
         IsActionRunning = true;
+        LogService?.Log.Information("Opening a page with another app ({UsesDefaultApp})", app == null);
 
         try
         {
@@ -852,6 +864,7 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
     {
         if (CurrentProject == null) return true;
         IsActionRunning = true;
+        LogService?.Log.Information("Sharing the current project");
 
         try
         {
@@ -881,6 +894,7 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
     {
         if (CurrentProject == null) return true;
         IsActionRunning = true;
+        LogService?.Log.Information("Sharing {PageCount} page(s)", pages.Count);
 
         try
         {
@@ -910,6 +924,8 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
     {
         if (CurrentProject == null)
             return true;
+
+        LogService?.Log.Information("Closing the current project ({Format})", CurrentProject.Format);
 
         // handle unsaved changes
         if (!ignoreUnsavedChanges && await TrySaveProjectAsync() == false)
@@ -1047,6 +1063,8 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
 
             if (changesMade && !merged && CurrentProject != null)
             {
+                LogService?.Log.Information("{Verb} action {Action}", redoing ? "Redid" : "Applied", action.GetType().Name);
+
                 // update undo stack
                 UndoStack.Push(action);
                 OnPropertyChanged(nameof(CanUndo));
@@ -1110,6 +1128,7 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
         try
         {
             IsActionRunning = true;
+            LogService?.Log.Information("Undoing action {Action}", action.GetType().Name);
             await action.UndoAsync(CurrentProject, UiDispatcherQueue!);
 
             // update undo/redo
@@ -1206,6 +1225,7 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
 
         // capture the original format before the project is closed/replaced
         TargetFormat originalFormat = CurrentProject.Format;
+        LogService?.Log.Information("Converting the current project from {From} to {To}", originalFormat, targetFormat);
 
         try
         {

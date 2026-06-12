@@ -42,6 +42,7 @@ public sealed partial class SettingsWindow : WindowEx
     public SettingsWindow(SettingsViewModelIntent? intent = null)
     {
         this.InitializeComponent();
+        Ioc.Default.GetService<ILogService>()?.Log.Information("Window loaded");
 
         Content = new SettingsView(intent);
 

@@ -1,4 +1,5 @@
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.WinUI.Animations;
 using Microsoft.UI.Text;
 using Microsoft.UI.Xaml;
@@ -84,6 +85,7 @@ public sealed partial class ScanActionsView : Page
     public ScanActionsView()
     {
         this.InitializeComponent();
+        Ioc.Default.GetService<ILogService>()?.Log.Information("View loaded");
 
         ViewModel.PropertyChanged += ViewModel_PropertyChanged;
         ViewModel.SettingsService.PropertyChanged += SettingsService_PropertyChanged;

@@ -110,7 +110,7 @@ internal class AppDataService : IAppDataService
         }
         catch (Exception exc)
         {
-            LogService?.Log.Error(exc, $"Failed to replace folder '{name}' in temp folder");
+            LogService?.Log.Error(exc, "Failed to replace folder {Folder} in temp folder", name);
             throw;
         }
     }

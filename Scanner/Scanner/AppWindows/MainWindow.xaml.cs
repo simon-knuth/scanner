@@ -51,6 +51,7 @@ public sealed partial class MainWindow : WindowEx
     public MainWindow()
     {
         this.InitializeComponent();
+        Ioc.Default.GetService<ILogService>()?.Log.Information("Window loaded");
         PersistenceId = "MainWindow";
 
         // backdrop

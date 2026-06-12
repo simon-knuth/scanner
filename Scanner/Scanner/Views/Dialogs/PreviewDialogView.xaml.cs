@@ -47,6 +47,7 @@ public partial class PreviewDialogView : ContentDialog
     {
         ViewModel = new(scanOptions);
         this.InitializeComponent();
+        Ioc.Default.GetService<ILogService>()?.Log.Information("Dialog loaded");
 
         ViewModel.PropertyChanged += ViewModel_PropertyChanged;
         ViewModel.CloseRequested += ViewModel_CloseRequested;

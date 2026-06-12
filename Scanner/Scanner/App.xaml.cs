@@ -86,6 +86,7 @@ public partial class App : Application
 
         WeakReferenceMessenger.Default.Register<MainWindowClosingMessage>(this, (r, m) =>
         {
+            LogService?.Log.Information("Main window closing, shutting down");
             Ioc.Default.GetService<ISentryService>()?.TrackEvent(AnalyticsEvent.Close);
             SettingsWindow?.Close();
             FeedbackWindow?.Close();
@@ -145,6 +146,7 @@ public partial class App : Application
                     {
                         MainWindow = new MainWindow();
                         MainWindow.Activate();
+                        LogService?.Log.Information("Main window shown");
                         KeyboardHookHelper.Initialize(MainWindow);
 
                         // cold-start time (process creation to first window shown)
@@ -169,6 +171,7 @@ public partial class App : Application
                 }
                 else
                 {
+                    LogService?.Log.Information("Reactivating the existing instance");
                     MainDispatcherQueue.RunOnThread(DispatcherQueuePriority.High, () =>
                     {
                         MainWindow?.Activate();

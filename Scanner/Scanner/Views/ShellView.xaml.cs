@@ -1,4 +1,5 @@
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.WinUI.Behaviors;
 using Microsoft.UI.Input;
 using Microsoft.UI.Windowing;
@@ -83,6 +84,7 @@ public sealed partial class ShellView : Page
     public ShellView()
     {
         this.InitializeComponent();
+        Ioc.Default.GetService<ILogService>()?.Log.Information("View loaded");
 
         if (ViewModel.SettingsService.SettingMirrorAppLayout)
         {
