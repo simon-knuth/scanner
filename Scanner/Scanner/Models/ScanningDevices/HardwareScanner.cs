@@ -46,6 +46,7 @@ internal partial class HardwareScanner : IScanningDevice
     public string Id { get; private set; }
     public string Name { get; private set; }
     private ImageScanner imageScanner;
+    private IAsyncOperationWithProgress<ImageScannerScanResult, uint>? currentScanOperation;
 
     #region Automatic configuration
     public bool IsAutoAllowed { get; private set; }
@@ -290,7 +291,14 @@ internal partial class HardwareScanner : IScanningDevice
 
     public void CancelScan()
     {
-        throw new NotImplementedException();
+        try
+        {
+            currentScanOperation?.Cancel();
+        }
+        catch (Exception exc)
+        {
+            LogService?.Log.Warning(exc, "Failed to cancel scan operation");
+        }
     }
 
     public async Task<StorageFile?> GetPreviewScanAsync(ScannerSource sourceMode, StorageFolder targetFolder, bool emptyTargetFolder, DispatcherQueue uiDispatcherQueue)
@@ -410,10 +418,18 @@ internal partial class HardwareScanner : IScanningDevice
         ApplyScanOptions(scanOptions);
 
         // scan
-        ImageScannerScanResult result = await imageScanner.ScanFilesToFolderAsync(scanOptions.GetSourceModeForScanning(), targetFolder);
+        currentScanOperation = imageScanner.ScanFilesToFolderAsync(scanOptions.GetSourceModeForScanning(), targetFolder);
+        try
+        {
+            ImageScannerScanResult result = await currentScanOperation;
 
-        // process result
-        return result.ScannedFiles;
+            // process result
+            return result.ScannedFiles;
+        }
+        finally
+        {
+            currentScanOperation = null;
+        }
     }
 
     private void ApplyScanOptions(ScanOptions scanOptions)

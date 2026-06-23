@@ -207,6 +207,9 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
 
     private ThreadPoolTimer? autoSaveTimer;
 
+    private CancellationTokenSource? scanCancellationTokenSource;
+    private IScanningDevice? activeScanningDevice;
+
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
@@ -271,6 +274,9 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
 
     public async Task<bool> TryCreateProjectFromScanAsync(ScanOptions scanOptions, DispatcherQueue uiDispatcherQueue)
     {
+        scanCancellationTokenSource = new CancellationTokenSource();
+        CancellationToken cancellationToken = scanCancellationTokenSource.Token;
+
         try
         {
             LogService?.Log.Information("Creating a new project from scan with {@ScanOptions}", scanOptions);
@@ -291,13 +297,14 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
                 _ = Task.Run(CopilotRuntimeService.PreheatFileNameGenerationModelsAsync);
 
             // scan
-            IReadOnlyList<StorageFile>? files = await ScanAsync(scanOptions, uiDispatcherQueue);
+            IReadOnlyList<StorageFile>? files = await ScanAsync(scanOptions, uiDispatcherQueue, cancellationToken);
             if (files == null)
                 return false;
 
             // automatic rotation
             if (SettingsService.SettingAutoRotate)
             {
+                cancellationToken.ThrowIfCancellationRequested();
                 CurrentScanState = ScanState.AutomaticRotation;
 
                 await Task.Run(async () =>
@@ -309,10 +316,11 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
                     }
 
                     await ProjectBase.RotateFilesAsync(instructions, true, AppDataService.IncomingFolder);
-                });
+                }, cancellationToken);
             }
 
             // create project
+            cancellationToken.ThrowIfCancellationRequested();
             CurrentScanState = ScanState.Processing;
             ProjectBase? project = null;
             await Task.Run(async () =>
@@ -364,6 +372,8 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
             // save if needed
             if (SettingsService.SettingAutoSave)
             {
+                cancellationToken.ThrowIfCancellationRequested();
+
                 // save
                 if (scanOptions.TargetFormat == TargetFormat.PDF)
                 {
@@ -377,7 +387,7 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
                 {
                     await CurrentProject.SaveAsync(false, UiDispatcherQueue!);
                     ResetAutoSaveTimer();
-                });
+                }, cancellationToken);
             }
 
             // free up space
@@ -386,6 +396,16 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
             ShowScanCompleteToastNotification();
 
             return true;
+        }
+        catch (OperationCanceledException)
+        {
+            LogService?.Log.Information("Scan cancelled");
+
+            // discard any project that was already created from the cancelled scan
+            if (CurrentProject != null)
+                await TryCloseProjectAsync(ignoreUnsavedChanges: true);
+
+            return false;
         }
         catch (Exception exc)
         {
@@ -401,12 +421,18 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
         finally
         {
             IsActionRunning = IsScanProcessRunning = false;
+            activeScanningDevice = null;
+            scanCancellationTokenSource?.Dispose();
+            scanCancellationTokenSource = null;
             _ = Task.Run(CopilotRuntimeService.StopPreheatingFileNameGenerationModelsAsync);
         }
     }
 
     public async Task<bool> TryScanToProjectAsync(ScanOptions scanOptions, DispatcherQueue uiDispatcherQueue)
     {
+        scanCancellationTokenSource = new CancellationTokenSource();
+        CancellationToken cancellationToken = scanCancellationTokenSource.Token;
+
         try
         {
             LogService?.Log.Information("Scanning to add to the current project with {@ScanOptions}", scanOptions);
@@ -428,13 +454,14 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
             }
 
             // scan
-            IReadOnlyList<StorageFile>? files = await ScanAsync(scanOptions, uiDispatcherQueue);
+            IReadOnlyList<StorageFile>? files = await ScanAsync(scanOptions, uiDispatcherQueue, cancellationToken);
             if (files == null)
                 return false;
 
             // automatic rotation
             if (SettingsService.SettingAutoRotate)
             {
+                cancellationToken.ThrowIfCancellationRequested();
                 CurrentScanState = ScanState.AutomaticRotation;
 
                 await Task.Run(async () =>
@@ -446,10 +473,11 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
                     }
 
                     await ProjectBase.RotateFilesAsync(instructions, true, AppDataService.IncomingFolder);
-                });
+                }, cancellationToken);
             }
 
             // add files
+            cancellationToken.ThrowIfCancellationRequested();
             CurrentScanState = ScanState.Processing;
             List<ProjectFileInsertion> insertions = new();
             for (int i = 0; i < files.Count; i++)
@@ -472,6 +500,11 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
 
             return true;
         }
+        catch (OperationCanceledException)
+        {
+            LogService?.Log.Information("Scan cancelled");
+            return false;
+        }
         catch (Exception exc)
         {
             LogService?.Log.Error(exc, "Failed to scan to project");
@@ -486,6 +519,9 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
         finally
         {
             IsActionRunning = IsScanProcessRunning = false;
+            activeScanningDevice = null;
+            scanCancellationTokenSource?.Dispose();
+            scanCancellationTokenSource = null;
         }
     }
 
@@ -573,12 +609,13 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
         }
     }
 
-    private async Task<IReadOnlyList<StorageFile>?> ScanAsync(ScanOptions scanOptions, DispatcherQueue uiDispatcherQueue)
+    private async Task<IReadOnlyList<StorageFile>?> ScanAsync(ScanOptions scanOptions, DispatcherQueue uiDispatcherQueue, CancellationToken cancellationToken)
     {
         if (scanOptions.Scanner == null)
             return null;
 
         IsScanProcessRunning = true;
+        activeScanningDevice = scanOptions.Scanner;
 
         if (SettingsService.SettingRememberScanOptions)
             await KnownScannersService.RecordScannerUsageAsync(scanOptions.Scanner, scanOptions);
@@ -586,8 +623,11 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
         await AppDataService.EmptyFolderAsync(AppDataService.IncomingFolder);
         IReadOnlyList<StorageFile> files = [];
         Stopwatch scanStopwatch = Stopwatch.StartNew();
-        await Task.Run(async () => files = await scanOptions.Scanner.GetScanAsync(scanOptions, AppDataService.IncomingFolder, uiDispatcherQueue));
+        await Task.Run(async () => files = await scanOptions.Scanner.GetScanAsync(scanOptions, AppDataService.IncomingFolder, uiDispatcherQueue), cancellationToken);
         scanStopwatch.Stop();
+
+        // a cancellation requested right as the scan finished should still abort before processing
+        cancellationToken.ThrowIfCancellationRequested();
 
         if (files.Count == 0)
         {
@@ -1469,5 +1509,23 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
             .AddText(GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.ScanCompleteNotificationBody));
 
         AppNotificationManager.Default.Show(builder.BuildNotification());
+    }
+
+    public void TryCancelScan()
+    {
+        try
+        {
+            if (!IsScanProcessRunning)
+                return;
+
+            LogService?.Log.Information("Trying to cancel scan");
+
+            activeScanningDevice?.CancelScan();
+            scanCancellationTokenSource?.Cancel();
+        }
+        catch (Exception exc)
+        {
+            LogService?.Log.Warning(exc, "Failed to cancel scan");
+        }
     }
 }

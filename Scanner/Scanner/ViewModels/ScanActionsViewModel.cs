@@ -7,6 +7,7 @@ using Microsoft.UI.Xaml;
 using Scanner.Helpers;
 using Scanner.Messages;
 using Scanner.Models;
+using Scanner.Models.Interfaces;
 using Scanner.Services.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -29,6 +30,7 @@ partial class ScanActionsViewModel : ObservableRecipient, IDisposable
 
     #region Commands
     public AsyncRelayCommand<bool> ScanCommand;
+    public RelayCommand CancelScanCommand => new RelayCommand(ProjectService.TryCancelScan);
     public RelayCommand ShowPreviewDialogCommand => new RelayCommand(() => Messenger.Send(new ShowPreviewDialogMessage(ScanOptions)));
     public RelayCommand ShowScanMergeDialogCommand => new RelayCommand(() => Messenger.Send(new ShowScanMergeDialogMessage()));
     public RelayCommand ShowSettingsCommand => new RelayCommand(ShowSettings);

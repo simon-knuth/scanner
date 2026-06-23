@@ -172,7 +172,7 @@
 
                 <FontIcon Glyph="&#xE773;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
             </Button>
-            <Button x:Name="ButtonCancel" Grid.Column="3" Margin="8,0,0,0" VerticalAlignment="Stretch" MinWidth="164" MaxWidth="200" Foreground="{ThemeResource AccentTextFillColorSecondaryBrush}" ui:VisualExtensions.Opacity="0.0" ToolTipService.ToolTip="{x:Bind strings:Resources.CancelScanToolTip}" x:Load="{x:Bind ViewModel.IsScanning, Mode=OneWay}" PointerEntered="ButtonCancel_PointerEntered" PointerExited="ButtonCancel_PointerExited">
+            <Button x:Name="ButtonCancel" Grid.Column="3" Margin="8,0,0,0" VerticalAlignment="Stretch" MinWidth="164" MaxWidth="200" Foreground="{ThemeResource AccentTextFillColorSecondaryBrush}" ui:VisualExtensions.Opacity="0.0" ToolTipService.ToolTip="{x:Bind strings:Resources.CancelScanToolTip}" Command="{x:Bind ViewModel.CancelScanCommand}" x:Load="{x:Bind ViewModel.IsScanning, Mode=OneWay}" PointerEntered="ButtonCancel_PointerEntered" PointerExited="ButtonCancel_PointerExited">
                 <animations:Implicit.ShowAnimations>
                     <animations:OpacityAnimation Duration="0:0:0.2" Delay="0:0:0.2" To="1.0" />
                 </animations:Implicit.ShowAnimations>

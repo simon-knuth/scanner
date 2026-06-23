@@ -36,11 +36,11 @@ partial class ShellViewModel : ObservableRecipient, IDisposable
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     #region Services
     public readonly IAccessibilityService AccessibilityService = Ioc.Default.GetRequiredService<IAccessibilityService>();
-    private ILogService? LogService = Ioc.Default.GetService<ILogService>();
-    public IProjectService ProjectService = Ioc.Default.GetRequiredService<IProjectService>();
-    private IScannerDiscoveryService ScannerDiscoveryService = Ioc.Default.GetRequiredService<IScannerDiscoveryService>();
-    public ISentryService? SentryService = Ioc.Default.GetService<ISentryService>();
-    public ISettingsService SettingsService = Ioc.Default.GetRequiredService<ISettingsService>();
+    public readonly ILogService? LogService = Ioc.Default.GetService<ILogService>();
+    public readonly IProjectService ProjectService = Ioc.Default.GetRequiredService<IProjectService>();
+    public readonly IScannerDiscoveryService ScannerDiscoveryService = Ioc.Default.GetRequiredService<IScannerDiscoveryService>();
+    public readonly ISentryService? SentryService = Ioc.Default.GetService<ISentryService>();
+    public readonly ISettingsService SettingsService = Ioc.Default.GetRequiredService<ISettingsService>();
     #endregion
 
     #region Events

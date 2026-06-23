@@ -84,7 +84,7 @@ public sealed partial class ShellView : Page
     public ShellView()
     {
         this.InitializeComponent();
-        Ioc.Default.GetService<ILogService>()?.Log.Information("View loaded");
+        ViewModel.LogService?.Log.Information("View loaded");
 
         if (ViewModel.SettingsService.SettingMirrorAppLayout)
         {
@@ -254,31 +254,39 @@ public sealed partial class ShellView : Page
 
     private void SetRegionsForCustomTitleBar()
     {
-        AppWindowTitleBar titlebar = ((App)Application.Current).MainWindow.AppWindow.TitleBar;
+        try
+        {
+            AppWindowTitleBar titlebar = ((App)Application.Current).MainWindow.AppWindow.TitleBar;
 
-        double scaleAdjustment = this.XamlRoot.RasterizationScale;
-        double headerInset = ViewModel.AccessibilityService.DefaultFlowDirection == FlowDirection.LeftToRight ? titlebar.LeftInset + 0 : titlebar.RightInset + 24;
-        double footerInset = ViewModel.AccessibilityService.DefaultFlowDirection == FlowDirection.LeftToRight ? titlebar.RightInset + 24 : titlebar.LeftInset + 0;
-        ColumnDefinitionTitlebarInsetHeader.Width = new GridLength(headerInset / scaleAdjustment);
-        ColumnDefinitionTitlebarInsetFooter.Width = new GridLength(footerInset / scaleAdjustment);
+            double scaleAdjustment = this.XamlRoot.RasterizationScale;
+            double headerInset = ViewModel.AccessibilityService.DefaultFlowDirection == FlowDirection.LeftToRight ? titlebar.LeftInset + 0 : titlebar.RightInset + 24;
+            double footerInset = ViewModel.AccessibilityService.DefaultFlowDirection == FlowDirection.LeftToRight ? titlebar.RightInset + 24 : titlebar.LeftInset + 0;
+            ColumnDefinitionTitlebarInsetHeader.Width = new GridLength(headerInset / scaleAdjustment);
+            ColumnDefinitionTitlebarInsetFooter.Width = new GridLength(footerInset / scaleAdjustment);
 
-        GeneralTransform transform = StackPanelTitlebarButtonsLeft.TransformToVisual(null);
-        Rect bounds = transform.TransformBounds(new Rect(0, 0,
-                                                         StackPanelTitlebarButtonsLeft.ActualWidth,
-                                                         StackPanelTitlebarButtonsLeft.ActualHeight));
-        Windows.Graphics.RectInt32 leftButtonsRect = GetRect(bounds, scaleAdjustment);
+            GeneralTransform transform = StackPanelTitlebarButtonsLeft.TransformToVisual(null);
+            Rect bounds = transform.TransformBounds(new Rect(0, 0,
+                                                             StackPanelTitlebarButtonsLeft.ActualWidth,
+                                                             StackPanelTitlebarButtonsLeft.ActualHeight));
+            Windows.Graphics.RectInt32 leftButtonsRect = GetRect(bounds, scaleAdjustment);
 
-        transform = StackPanelTitlebarButtonsRight.TransformToVisual(null);
-        bounds = transform.TransformBounds(new Rect(0, 0,
-                                                    StackPanelTitlebarButtonsRight.ActualWidth,
-                                                    StackPanelTitlebarButtonsRight.ActualHeight));
-        Windows.Graphics.RectInt32 rightButtonsRect = GetRect(bounds, scaleAdjustment);
+            transform = StackPanelTitlebarButtonsRight.TransformToVisual(null);
+            bounds = transform.TransformBounds(new Rect(0, 0,
+                                                        StackPanelTitlebarButtonsRight.ActualWidth,
+                                                        StackPanelTitlebarButtonsRight.ActualHeight));
+            Windows.Graphics.RectInt32 rightButtonsRect = GetRect(bounds, scaleAdjustment);
 
-        var rectArray = new Windows.Graphics.RectInt32[] { leftButtonsRect, rightButtonsRect };
+            var rectArray = new Windows.Graphics.RectInt32[] { leftButtonsRect, rightButtonsRect };
 
-        InputNonClientPointerSource nonClientInputSrc =
-            InputNonClientPointerSource.GetForWindowId(((App)Application.Current).MainWindow.AppWindow.Id);
-        nonClientInputSrc.SetRegionRects(NonClientRegionKind.Passthrough, rectArray);
+            InputNonClientPointerSource nonClientInputSrc =
+                InputNonClientPointerSource.GetForWindowId(((App)Application.Current).MainWindow.AppWindow.Id);
+            nonClientInputSrc.SetRegionRects(NonClientRegionKind.Passthrough, rectArray);
+        }
+        catch (Exception exc)
+        {
+            ViewModel.SentryService?.TrackError(exc);
+            ViewModel.LogService?.Log.Error(exc, "Failed to set custom title bar region");
+        }
     }
 
     private Windows.Graphics.RectInt32 GetRect(Rect bounds, double scale)
