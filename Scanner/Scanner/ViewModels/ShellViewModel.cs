@@ -71,7 +71,7 @@ partial class ShellViewModel : ObservableRecipient, IDisposable
     public AsyncRelayCommand SaveAsyncCommand;
     public AsyncRelayCommand SaveAsAsyncCommand;
     public AsyncRelayCommand SaveAsCurrentPageAsyncCommand;
-    public AsyncRelayCommand OpenFilesAsyncCommand => new AsyncRelayCommand(OpenFilesAsync);
+    public AsyncRelayCommand OpenFilesAsyncCommand => new AsyncRelayCommand(OpenFilesAsync, canExecute: () => !ProjectService.IsProcessRunning);
     public RelayCommand<DispatcherQueue> ViewLoadingCommand => new RelayCommand<DispatcherQueue>(ViewLoading);
     public RelayCommand DisposeCommand => new RelayCommand(Dispose);
     #endregion
@@ -188,6 +188,9 @@ partial class ShellViewModel : ObservableRecipient, IDisposable
                 break;
             case nameof(IProjectService.CanRedo):
                 OnPropertyChanged(nameof(CanRedo));
+                break;
+            case nameof(IProjectService.IsProcessRunning):
+                OpenFilesAsyncCommand.NotifyCanExecuteChanged();
                 break;
         }
     }

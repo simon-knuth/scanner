@@ -19,6 +19,8 @@ namespace Scanner.Helpers;
 
 public static class Helpers
 {
+    public static readonly string[] AcceptedInputFileExtensions = [".jpg", ".jpeg", ".png", ".bmp", ".tif", ".tiff", ".pdf"];
+
     private static ResourceLoader resourceLoader = new ResourceLoader();
 
     public static int ComparePackageVersions(PackageVersion x, PackageVersion y)
@@ -196,13 +198,10 @@ public static class Helpers
             FileOpenPicker picker = new(((App)Application.Current).MainWindow.AppWindow.Id);
             picker.ViewMode = PickerViewMode.Thumbnail;
             picker.SuggestedStartLocation = PickerLocationId.PicturesLibrary;
-            picker.FileTypeFilter.Add(".jpg");
-            picker.FileTypeFilter.Add(".jpeg");
-            picker.FileTypeFilter.Add(".png");
-            picker.FileTypeFilter.Add(".bmp");
-            picker.FileTypeFilter.Add(".tif");
-            picker.FileTypeFilter.Add(".tiff");
-            picker.FileTypeFilter.Add(".pdf");
+            foreach (string extension in AcceptedInputFileExtensions)
+            {
+                picker.FileTypeFilter.Add(extension);
+            }
 
             // pick files
             if (allowMultipleFiles)

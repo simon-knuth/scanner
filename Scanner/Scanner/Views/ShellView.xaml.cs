@@ -11,7 +11,9 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using Scanner.Extensions;
+using Scanner.Helpers;
 using Scanner.Models;
+using Scanner.Resources.Strings;
 using Scanner.Services;
 using Scanner.Services.Interfaces;
 using Scanner.Views.Dialogs;
@@ -22,6 +24,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Security.Cryptography.Certificates;
@@ -868,5 +871,41 @@ public sealed partial class ShellView : Page
     private void ShowUpdatedDialog()
     {
         TeachingTipUpdated.IsOpen = true;
+    }
+
+    private async void GridRoot_DragOver(object sender, DragEventArgs e)
+    {
+        if (!e.DataView.Contains(StandardDataFormats.StorageItems))
+            return;
+
+        DragOperationDeferral deferral = e.GetDeferral();
+
+        var files = await e.DataView.GetStorageItemsAsync();
+
+        try
+        {
+            if (!files.All(x => Helpers.Helpers.AcceptedInputFileExtensions.Contains(Path.GetExtension(x.Name))))
+                return;
+
+            e.AcceptedOperation = DataPackageOperation.Move;
+            e.DragUIOverride.IsCaptionVisible = false;
+            e.Handled = true;
+        }
+        finally
+        {
+            deferral.Complete();
+        }
+    }
+
+    private async void GridRoot_Drop(object sender, DragEventArgs e)
+    {
+        if (!ViewModel.OpenFilesAsyncCommand.CanExecute(null))
+            return;
+
+        DragOperationDeferral deferral = e.GetDeferral();
+        IReadOnlyList<IStorageItem> files = await e.DataView.GetStorageItemsAsync();
+        deferral.Complete();
+
+        await ViewModel.ProjectService.TryOpenProjectFromFilesAsync(files.Select(x => x.Path).ToArray(), null, DispatcherQueue);
     }
 }
