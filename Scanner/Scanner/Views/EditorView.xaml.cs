@@ -214,6 +214,22 @@ public sealed partial class EditorView : Page
         }
     }
 
+    private bool isNavigationTextBoxVisible;
+    public bool IsNavigationTextBoxVisible
+    {
+        get => isNavigationTextBoxVisible;
+        set
+        {
+            if (SetProperty(ref isNavigationTextBoxVisible, value))
+            {
+                if (value)
+                    Root.AddHandler(PointerPressedEvent, pointerPressedOutsideNavigationHandler, handledEventsToo: true);
+                else
+                    Root.RemoveHandler(PointerPressedEvent, pointerPressedOutsideNavigationHandler);
+            }
+        }
+    }
+
     private CoreInputDeviceTypes inkCanvasInputDeviceTypes => ViewModel.SettingsService.LastTouchDrawState ?
         CoreInputDeviceTypes.Pen | CoreInputDeviceTypes.Mouse | CoreInputDeviceTypes.Touch :
         CoreInputDeviceTypes.Pen;
@@ -221,6 +237,8 @@ public sealed partial class EditorView : Page
     private VirtualizingStackPanel? flipViewPanel;
     
     private ConcurrentDictionary<IProjectPage, CanvasControl> pageCanvases = [];
+
+    private readonly PointerEventHandler pointerPressedOutsideNavigationHandler;
 
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -230,6 +248,8 @@ public sealed partial class EditorView : Page
     {
         this.InitializeComponent();
         Ioc.Default.GetService<ILogService>()?.Log.Information("View loaded");
+
+        pointerPressedOutsideNavigationHandler = Root_PointerPressed;
 
         ViewModel.SettingsService.PropertyChanged += SettingsService_PropertyChanged;
         ViewModel.ProjectService.PropertyChanging += ProjectService_PropertyChanging;
@@ -887,6 +907,62 @@ public sealed partial class EditorView : Page
             ViewModel.LogService?.Log.Warning(exc, "Failed to clean up after unloading page CanvasControl");
             ViewModel.SentryService?.TrackWarning(exc);
         }
+    }
+
+    private void ButtonNavigation_Click(object sender, RoutedEventArgs e)
+    {
+        IsNavigationTextBoxVisible = true;
+    }
+
+    private void Root_PointerPressed(object sender, PointerRoutedEventArgs e)
+    {
+        // ignore clicks inside the navigation TextBox itself
+        if (e.OriginalSource is DependencyObject source && IsDescendantOf(source, TextBoxNavigation))
+            return;
+
+        IsNavigationTextBoxVisible = false;
+    }
+
+    private static bool IsDescendantOf(DependencyObject child, DependencyObject parent)
+    {
+        DependencyObject? current = child;
+        while (current != null)
+        {
+            if (current == parent)
+                return true;
+            current = VisualTreeHelper.GetParent(current);
+        }
+        return false;
+    }
+
+    private void TextBoxNavigation_Loaded(object sender, RoutedEventArgs e)
+    {
+        ((TextBox)sender).Focus(FocusState.Programmatic);
+        ((TextBox)sender).SelectAll();
+    }
+
+    private void TextBoxNavigation_LostFocus(object sender, RoutedEventArgs e)
+    {
+        if (int.TryParse(((TextBox)sender).Text, out int number) && number > 0 && ViewModel.CurrentProject.Pages.Count >= number)
+            ViewModel.ProjectService.SelectedPage = ViewModel.CurrentProject.Pages[number - 1];
+
+        IsNavigationTextBoxVisible = false;
+    }
+
+    private void TextBoxNavigation_KeyDown(object sender, KeyRoutedEventArgs e)
+    {
+        if (ViewModel.CurrentProject == null || ViewModel.ProjectService.SelectedPage == null)
+            return;
+
+        if (e.Key is Windows.System.VirtualKey.Escape or Windows.System.VirtualKey.Cancel)
+        {
+            ((TextBox)sender).Text = ViewModel.ProjectService.SelectedPage.PageNumber.ToString();
+            IsNavigationTextBoxVisible = false;
+            return;
+        }
+
+        if (e.Key is Windows.System.VirtualKey.Enter or Windows.System.VirtualKey.Accept)
+            IsNavigationTextBoxVisible = false;
     }
 
 

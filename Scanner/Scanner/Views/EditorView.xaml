@@ -190,10 +190,13 @@
                 <ColumnDefinition Width="64" />
             </Grid.ColumnDefinitions>
 
-            <Grid Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" Visibility="{x:Bind IsCropping, Mode=OneWay, Converter={StaticResource NegativeBoolVisibilityConverter}}">
-                <Border x:Name="BorderToolbarNavigationBackground" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{ThemeResource AcrylicBackgroundFillColorDefaultBrush}" CornerRadius="8" animations:Implicit.ShowAnimations="{StaticResource ToolbarBackgroundShowAnimations}" x:Load="{x:Bind IsToolbarBackgroundVisible, Mode=OneWay}" />
-                <TextBlock Text="{x:Bind ProjectNavigationIndicator, Mode=OneWay}" IsHitTestVisible="False" MaxLines="1" Margin="4" Padding="4" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Typography.NumeralAlignment="Tabular" Style="{StaticResource CaptionTextBlockStyle}" />
-            </Grid>
+            <Button x:Name="ButtonNavigation" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" Visibility="{x:Bind IsCropping, Mode=OneWay, Converter={StaticResource NegativeBoolVisibilityConverter}}" Style="{StaticResource MutedButtonStyle}" ToolTipService.ToolTip="{x:Bind strings:Resources.GoToPage}" x:Load="{x:Bind IsNavigationTextBoxVisible, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}" Click="ButtonNavigation_Click">
+                <Grid>
+                    <Border x:Name="BorderToolbarNavigationBackground" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{ThemeResource AcrylicBackgroundFillColorDefaultBrush}" CornerRadius="8" animations:Implicit.ShowAnimations="{StaticResource ToolbarBackgroundShowAnimations}" x:Load="{x:Bind IsToolbarBackgroundVisible, Mode=OneWay}" />
+                    <TextBlock Text="{x:Bind ProjectNavigationIndicator, Mode=OneWay}" IsHitTestVisible="False" MaxLines="1" Margin="4" Padding="4" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Typography.NumeralAlignment="Tabular" Style="{StaticResource CaptionTextBlockStyle}" />
+                </Grid>
+            </Button>
+            <TextBox x:Name="TextBoxNavigation" Grid.Column="0" FontSize="12" Padding="6,5,8,6" MinWidth="48" MinHeight="28" AcceptsReturn="False" HorizontalAlignment="Left" VerticalAlignment="Center" VerticalContentAlignment="Center" Typography.NumeralAlignment="Tabular" Text="{x:Bind ViewModel.ProjectService.SelectedPage.PageNumber, Mode=OneWay}" Style="{StaticResource NoClearButtonTextBoxStyle}" x:Load="{x:Bind IsNavigationTextBoxVisible, Mode=OneWay}" Loaded="TextBoxNavigation_Loaded" LostFocus="TextBoxNavigation_LostFocus" KeyDown="TextBoxNavigation_KeyDown" />
 
             <Grid Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center">
                 <Border x:Name="BorderToolbarToolsBackground" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{ThemeResource AcrylicBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource DividerStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="8" animations:Implicit.ShowAnimations="{StaticResource ToolbarBackgroundShowAnimations}" x:Load="{x:Bind IsToolbarBackgroundVisible, Mode=OneWay}" />

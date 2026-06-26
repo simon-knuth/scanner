@@ -1599,17 +1599,6 @@ Fuzzy</comment>
   <data name="ScanAreaPreviewSelection" xml:space="preserve">
     <value />
   </data>
-  <data name="SettingsFileNamingCustomPatternExplanation" xml:space="preserve">
-    <value>अपनी खुद की क्रियाशील फ़ाइल नामकरण प्रतिमान बनाने के लिए ब्लॉक उठाऍं और जोड़ें। ब्लॉक के निर्गम को संशोधित करने के लिए इसका चयन करें या इसे हटाने के लिए इसे बिन में खींचें।</value>
-    <comment>The description for the custom file naming dialog.</comment>
-  </data>
-  <data name="SettingsFolderNamingCustomPatternExplanation" xml:space="preserve">
-    <value>अपनी खुद की क्रियाशील फ़ाइल नामकरण प्रतिमान बनाने के लिए ब्लॉक उठाऍं और जोड़ें। ब्लॉक के निर्गम को संशोधित करने के लिए इसका चयन करें या इसे हटाने के लिए इसे बिन में खींचें।</value>
-    <comment>The description for the custom file naming dialog.</comment>
-  </data>
-  <data name="Template" xml:space="preserve">
-    <value />
-  </data>
   <data name="Changelog4_0_0_0DesignHeading" xml:space="preserve">
     <value />
   </data>
@@ -1632,6 +1621,20 @@ Fuzzy</comment>
     <value />
   </data>
   <data name="Changelog4_0_0_0FeaturesBody" xml:space="preserve">
+    <value />
+  </data>
+  <data name="SettingsFileNamingCustomPatternExplanation" xml:space="preserve">
+    <value>अपनी खुद की क्रियाशील फ़ाइल नामकरण प्रतिमान बनाने के लिए ब्लॉक उठाऍं और जोड़ें। ब्लॉक के निर्गम को संशोधित करने के लिए इसका चयन करें या इसे हटाने के लिए इसे बिन में खींचें।</value>
+    <comment>The description for the custom file naming dialog.</comment>
+  </data>
+  <data name="SettingsFolderNamingCustomPatternExplanation" xml:space="preserve">
+    <value>अपनी खुद की क्रियाशील फ़ाइल नामकरण प्रतिमान बनाने के लिए ब्लॉक उठाऍं और जोड़ें। ब्लॉक के निर्गम को संशोधित करने के लिए इसका चयन करें या इसे हटाने के लिए इसे बिन में खींचें।</value>
+    <comment>The description for the custom file naming dialog.</comment>
+  </data>
+  <data name="Template" xml:space="preserve">
+    <value />
+  </data>
+  <data name="GoToPage" xml:space="preserve">
     <value />
   </data>
 </root>

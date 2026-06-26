@@ -1376,9 +1376,6 @@ Fuzzy</comment>
   <data name="ScanAreaPreviewSelection" xml:space="preserve">
     <value />
   </data>
-  <data name="Template" xml:space="preserve">
-    <value />
-  </data>
   <data name="Changelog4_0_0_0DesignHeading" xml:space="preserve">
     <value />
   </data>
@@ -1401,6 +1398,12 @@ Fuzzy</comment>
     <value />
   </data>
   <data name="Changelog4_0_0_0FeaturesBody" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Template" xml:space="preserve">
+    <value />
+  </data>
+  <data name="GoToPage" xml:space="preserve">
     <value />
   </data>
 </root>

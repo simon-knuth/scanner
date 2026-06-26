@@ -1434,17 +1434,6 @@ Trunchierea „o singură regiune” creează o singură imagine, mod util pentr
   <data name="ScanAreaPreviewSelection" xml:space="preserve">
     <value />
   </data>
-  <data name="SettingsFileNamingCustomPatternExplanation" xml:space="preserve">
-    <value>Trageți și mutați blocuri pentru a vă crea propriul sistem dinamic de denumire a fișierelor. Selectați un bloc pentru a-i modifica opțiunile sau trageți-l în coș pentru a-l șterge.</value>
-    <comment>The description for the custom file naming dialog.</comment>
-  </data>
-  <data name="SettingsFolderNamingCustomPatternExplanation" xml:space="preserve">
-    <value>Trageți și mutați blocuri pentru a vă crea propriul sistem dinamic de denumire a fișierelor. Selectați un bloc pentru a-i modifica opțiunile sau trageți-l în coș pentru a-l șterge.</value>
-    <comment>The description for the custom file naming dialog.</comment>
-  </data>
-  <data name="Template" xml:space="preserve">
-    <value />
-  </data>
   <data name="Changelog4_0_0_0DesignHeading" xml:space="preserve">
     <value />
   </data>
@@ -1467,6 +1456,20 @@ Trunchierea „o singură regiune” creează o singură imagine, mod util pentr
     <value />
   </data>
   <data name="Changelog4_0_0_0FeaturesBody" xml:space="preserve">
+    <value />
+  </data>
+  <data name="SettingsFileNamingCustomPatternExplanation" xml:space="preserve">
+    <value>Trageți și mutați blocuri pentru a vă crea propriul sistem dinamic de denumire a fișierelor. Selectați un bloc pentru a-i modifica opțiunile sau trageți-l în coș pentru a-l șterge.</value>
+    <comment>The description for the custom file naming dialog.</comment>
+  </data>
+  <data name="SettingsFolderNamingCustomPatternExplanation" xml:space="preserve">
+    <value>Trageți și mutați blocuri pentru a vă crea propriul sistem dinamic de denumire a fișierelor. Selectați un bloc pentru a-i modifica opțiunile sau trageți-l în coș pentru a-l șterge.</value>
+    <comment>The description for the custom file naming dialog.</comment>
+  </data>
+  <data name="Template" xml:space="preserve">
+    <value />
+  </data>
+  <data name="GoToPage" xml:space="preserve">
     <value />
   </data>
 </root>
