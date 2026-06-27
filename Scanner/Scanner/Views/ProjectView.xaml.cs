@@ -206,7 +206,7 @@ public sealed partial class ProjectView : Page
         ViewModel.SettingsService.PropertyChanged += SettingsService_PropertyChanged;
 
         WeakReferenceMessenger.Default.Register<InvokeShareUIMessage>(this, (r, m) => InvokeShareUI());
-        gridViewDragOverHandler = new(GridViewPageList_DragOver);
+        gridViewDragOverHandler = new(GridViewDropZone_DragOver);
     }
 
 
@@ -967,7 +967,7 @@ public sealed partial class ProjectView : Page
         }
     }
 
-    private async void GridViewPageList_DragOver(object sender, DragEventArgs e)
+    private async void GridViewDropZone_DragOver(object sender, DragEventArgs e)
     {
         e.AcceptedOperation = DataPackageOperation.None;
         e.DragUIOverride.Caption = string.Empty;
@@ -1003,7 +1003,7 @@ public sealed partial class ProjectView : Page
         }
     }
 
-    private async void GridViewPageList_Drop(object sender, DragEventArgs e)
+    private async void GridViewDropZone_Drop(object sender, DragEventArgs e)
     {
         if (!ViewModel.AddDroppedFilesCommand.CanExecute(null))
             return;
@@ -1023,9 +1023,15 @@ public sealed partial class ProjectView : Page
         await ViewModel.AddDroppedFilesAsync([.. files]);
     }
 
-    private void GridViewPageList_Unloaded(object sender, RoutedEventArgs e)
+    private void GridViewDropZone_Unloaded(object sender, RoutedEventArgs e)
     {
         GridView gridView = (GridView)sender;
         gridView.RemoveHandler(GridView.DragOverEvent, gridViewDragOverHandler);
+    }
+
+    private void GridViewCarousel_Loaded(object sender, RoutedEventArgs e)
+    {
+        GridView gridView = (GridView)sender;
+        gridView.AddHandler(GridView.DragOverEvent, gridViewDragOverHandler, true);
     }
 }
