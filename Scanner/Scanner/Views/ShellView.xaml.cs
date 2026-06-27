@@ -916,6 +916,6 @@ public sealed partial class ShellView : Page
         IReadOnlyList<IStorageItem> files = await e.DataView.GetStorageItemsAsync();
         deferral.Complete();
 
-        await ViewModel.ProjectService.TryOpenProjectFromFilesAsync(files.Select(x => x.Path).ToArray(), null, DispatcherQueue);
+        await ViewModel.OpenFilesAsync(files.Select(x => x.Path).ToArray());
     }
 }

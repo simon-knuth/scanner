@@ -73,7 +73,7 @@ public enum AnalyticsEvent
     SettingsStats,
     ScannerAdded,
     ScanCompleted,
-    ScanCanceled,   // TODO
+    ScanCanceled,
     Share,
     Preview,
     RotatePages,
@@ -97,7 +97,7 @@ public enum AnalyticsEvent
     AutoRotatedPage,
     SetSaveLocationUnavailable,
     SettingsRequested,
-    ChangelogOpened,    // TODO
+    ChangelogOpened,
     ArchitectureDetected,
     OtherAppsDialogOpened,
     ApplyFilter,

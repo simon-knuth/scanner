@@ -71,7 +71,7 @@ partial class ShellViewModel : ObservableRecipient, IDisposable
     public AsyncRelayCommand SaveAsyncCommand;
     public AsyncRelayCommand SaveAsAsyncCommand;
     public AsyncRelayCommand SaveAsCurrentPageAsyncCommand;
-    public AsyncRelayCommand OpenFilesAsyncCommand => new AsyncRelayCommand(OpenFilesAsync, canExecute: () => !ProjectService.IsProcessRunning);
+    public AsyncRelayCommand OpenFilesAsyncCommand => new AsyncRelayCommand(PickAndOpenFilesAsync, canExecute: () => !ProjectService.IsProcessRunning);
     public RelayCommand<DispatcherQueue> ViewLoadingCommand => new RelayCommand<DispatcherQueue>(ViewLoading);
     public RelayCommand DisposeCommand => new RelayCommand(Dispose);
     #endregion
@@ -374,7 +374,7 @@ partial class ShellViewModel : ObservableRecipient, IDisposable
         SetupDialogRequested?.Invoke(this, EventArgs.Empty);
     }
 
-    private async Task OpenFilesAsync()
+    private async Task PickAndOpenFilesAsync()
     {
         LogService?.Log.Information("Showing file picker to open a project");
         IReadOnlyList<PickFileResult> pickerResults = await Helpers.Helpers.PickInputFilesAsync(true, viewDispatcherQueue!);
@@ -386,10 +386,24 @@ partial class ShellViewModel : ObservableRecipient, IDisposable
 
         SentryService?.TrackEvent(AnalyticsEvent.ProjectOpenedFromDisk, new Dictionary<string, string>
         {
-            { "files", pickerResults.Count.ToString() }
+            { "files", pickerResults.Count.ToString() },
+            { "dragAndDrop", "false" }
         });
 
         await ProjectService.TryOpenProjectFromFilesAsync(pickerResults.Select(x => x.Path).ToArray(), null, viewDispatcherQueue!);
+    }
+
+    public async Task OpenFilesAsync(string[] filePaths)
+    {
+        LogService?.Log.Information("Opening a project from dropped files");
+
+        SentryService?.TrackEvent(AnalyticsEvent.ProjectOpenedFromDisk, new Dictionary<string, string>
+        {
+            { "files", filePaths.Length.ToString() },
+            { "dragAndDrop", "true" }
+        });
+
+        await ProjectService.TryOpenProjectFromFilesAsync(filePaths, null, viewDispatcherQueue!);
     }
 
     private void ShowFeedbackDialog()

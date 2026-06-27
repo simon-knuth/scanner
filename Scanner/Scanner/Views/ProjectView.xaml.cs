@@ -977,7 +977,7 @@ public sealed partial class ProjectView : Page
 
         e.Handled = true;
 
-        if (!ViewModel.AddFilesCommand.CanExecute(null))
+        if (!ViewModel.AddDroppedFilesCommand.CanExecute(null))
             return;
 
         e.DragUIOverride.Caption = Scanner.Resources.Strings.Resources.SettingsScanActionAddToProject;
@@ -1005,7 +1005,7 @@ public sealed partial class ProjectView : Page
 
     private async void GridViewPageList_Drop(object sender, DragEventArgs e)
     {
-        if (!ViewModel.AddFilesCommand.CanExecute(null))
+        if (!ViewModel.AddDroppedFilesCommand.CanExecute(null))
             return;
 
         e.Handled = true;
@@ -1020,7 +1020,7 @@ public sealed partial class ProjectView : Page
                 files.Add(file);
         }
 
-        await ViewModel.AddFilesCommand.ExecuteAsync([.. files]);
+        await ViewModel.AddDroppedFilesAsync([.. files]);
     }
 
     private void GridViewPageList_Unloaded(object sender, RoutedEventArgs e)

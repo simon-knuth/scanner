@@ -400,6 +400,7 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
         catch (OperationCanceledException)
         {
             LogService?.Log.Information("Scan cancelled");
+            SentryService?.TrackEvent(AnalyticsEvent.ScanCanceled);
 
             // discard any project that was already created from the cancelled scan
             if (CurrentProject != null)
@@ -503,6 +504,7 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
         catch (OperationCanceledException)
         {
             LogService?.Log.Information("Scan cancelled");
+            SentryService?.TrackEvent(AnalyticsEvent.ScanCanceled);
             return false;
         }
         catch (Exception exc)

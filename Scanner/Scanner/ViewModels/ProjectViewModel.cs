@@ -63,7 +63,7 @@ partial class ProjectViewModel : ObservableRecipient, IDisposable
     public AsyncRelayCommand SaveAsAsyncCommand => new AsyncRelayCommand(SaveAsAsync);
     public AsyncRelayCommand SaveAsCurrentPageAsyncCommand => new AsyncRelayCommand(SaveAsCurrentPageAsync);
     public AsyncRelayCommand PickAndAddFilesCommand => new AsyncRelayCommand(PickAndAddFilesAsync, canExecute: () => CurrentProject?.IsPdf is true);
-    public AsyncRelayCommand<List<StorageFile>?> AddFilesCommand => new AsyncRelayCommand<List<StorageFile>?>(AddFilesAsync, canExecute: (x) => CurrentProject?.IsPdf is true);
+    public AsyncRelayCommand<List<StorageFile>?> AddDroppedFilesCommand => new AsyncRelayCommand<List<StorageFile>?>(AddDroppedFilesAsync, canExecute: (x) => CurrentProject?.IsPdf is true);
     public AsyncRelayCommand<TargetFormat> ConvertProjectAsyncCommand => new AsyncRelayCommand<TargetFormat>(ConvertProjectAsync);
     public AsyncRelayCommand FindAppForFileTypeCommand => new AsyncRelayCommand(FindAppForFileTypeAsync);
     public AsyncRelayCommand RotateSelectedPages90DegreesAsyncCommand => new AsyncRelayCommand(async (x) => await RotateSelectedPagesAsync(RotationIntent.Degrees90));
@@ -93,7 +93,8 @@ partial class ProjectViewModel : ObservableRecipient, IDisposable
             {
                 OnPropertyChanged(nameof(FileName));
                 OnPropertyChanged(nameof(IsFileNameGenerationInProgress));
-                AddFilesCommand.NotifyCanExecuteChanged();
+                PickAndAddFilesCommand.NotifyCanExecuteChanged();
+                AddDroppedFilesCommand.NotifyCanExecuteChanged();
 
                 if (value != null && value is PdfProject pdfProject2) pdfProject2.FileNameInfo.NameChanged += FileNameInfo_NameChanged;
             }
@@ -456,10 +457,12 @@ partial class ProjectViewModel : ObservableRecipient, IDisposable
         IReadOnlyList<StorageFile> files = await picker.PickMultipleFilesAsync();
 
         // insert
-        await AddFilesAsync([.. files]);
+        await AddFilesAsync([.. files], false);
     }
 
-    private async Task AddFilesAsync(List<StorageFile>? files)
+    public Task AddDroppedFilesAsync(List<StorageFile>? files) => AddFilesAsync(files, true);
+
+    private async Task AddFilesAsync(List<StorageFile>? files, bool viaDragAndDrop)
     {
         if (files is null)
             return;
@@ -486,7 +489,8 @@ partial class ProjectViewModel : ObservableRecipient, IDisposable
 
         SentryService?.TrackEvent(AnalyticsEvent.AddImageFiles, new Dictionary<string, string>
         {
-            { "files", files.Count.ToString() }
+            { "files", files.Count.ToString() },
+            { "dragAndDrop", viaDragAndDrop ? "true" : "false" }
         });
     }
 
