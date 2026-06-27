@@ -604,7 +604,24 @@ public partial class PdfProject : ProjectBase
             {
                 // page from image (OCR or not)
                 XImage image;
-                if (Helpers.Helpers.FileExtensionToTargetFormat(snapshotPage.SourceFile.FileType) != TargetFormat.JPG)
+                bool hasDestructiveEffects = snapshotPage.Filter != ImageFilter.None || snapshotPage.Brightness != 0 || snapshotPage.Contrast != 0;
+                if (hasDestructiveEffects)
+                {
+                    // bake the filter/brightness/contrast into the image (encoded as JPG to reduce PDF size)
+                    using InMemoryRandomAccessStream targetStream = new();
+                    await uiDispatcherQueue.RunOnThreadAndWaitAsync(DispatcherQueuePriority.Low, async () =>
+                    {
+                        using IRandomAccessStream sourceStream = await snapshotPage.SourceFile.OpenAsync(FileAccessMode.Read);
+
+                        BitmapPropertySet propertySet = new BitmapPropertySet();
+                        propertySet.Add("ImageQuality", new BitmapTypedValue(jpegQuality, Windows.Foundation.PropertyType.Single));
+                        BitmapEncoder encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.JpegEncoderId, targetStream, propertySet);
+
+                        await ApplyEffectsAsync(sourceStream, encoder, snapshotPage.Filter, snapshotPage.Brightness, snapshotPage.Contrast);
+                    });
+                    image = XImage.FromStream(targetStream.AsStream());
+                }
+                else if (Helpers.Helpers.FileExtensionToTargetFormat(snapshotPage.SourceFile.FileType) != TargetFormat.JPG)
                 {
                     // convert image to JPG to reduce PDF size
                     using InMemoryRandomAccessStream targetStream = new();

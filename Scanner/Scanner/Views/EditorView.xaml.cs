@@ -52,6 +52,18 @@ public sealed partial class EditorView : Page
     #region Constants
     private const float minZoomFactor = 1.0f;
     private const float maxZoomFactor = 2.5f;
+
+    /// <summary>
+    /// Factor applied to a PDF page's size (in DIPs) when rendering it for the editor canvas, yielding a
+    /// crisp image for display and zoom. Capped per page to <see cref="maxPdfDisplayDimension"/>.
+    /// </summary>
+    private const double pdfDisplayRenderScale = 2.0;
+
+    /// <summary>
+    /// Maximum length (in pixels) of either side of a PDF page rendered for the editor canvas. Prevents
+    /// unintentional extreme memory use. Independent of (and far below) the device's Direct3D bitmap size limit.
+    /// </summary>
+    private const double maxPdfDisplayDimension = 4096;
     #endregion
 
     [ObservableProperty]
@@ -580,8 +592,20 @@ public sealed partial class EditorView : Page
             {
                 using IRandomAccessStream fileStream = await pdfProject.SourceFile!.File.OpenAsync(FileAccessMode.Read);
                 Windows.Data.Pdf.PdfDocument document = await Windows.Data.Pdf.PdfDocument.LoadFromStreamAsync(fileStream);
+                Windows.Data.Pdf.PdfPage documentPage = document.GetPage(pdfPage.IndexInPdf);
+
+                // Render the page for display, prevent enormous bitmap sizes (that may even b too big to render)
+                double maxDimension = Math.Min(maxPdfDisplayDimension, canvas.Device.MaximumBitmapSizeInPixels);
+                double longestSide = Math.Max(documentPage.Size.Width, documentPage.Size.Height);
+                double scale = Math.Min(pdfDisplayRenderScale, maxDimension / longestSide);
+                Windows.Data.Pdf.PdfPageRenderOptions renderOptions = new()
+                {
+                    DestinationWidth = (uint)Math.Max(1, Math.Round(documentPage.Size.Width * scale)),
+                    DestinationHeight = (uint)Math.Max(1, Math.Round(documentPage.Size.Height * scale)),
+                };
+
                 InMemoryRandomAccessStream bitmapStream = new();
-                await document.GetPage(pdfPage.IndexInPdf).RenderToStreamAsync(bitmapStream);
+                await documentPage.RenderToStreamAsync(bitmapStream, renderOptions);
                 newBitmap = await CanvasBitmap.LoadAsync(canvas, bitmapStream);
             }
             else

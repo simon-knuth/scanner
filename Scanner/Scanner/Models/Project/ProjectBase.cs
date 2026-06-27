@@ -46,6 +46,18 @@ public abstract partial class ProjectBase : ObservableRecipient
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    #region Constants
+    /// <summary>
+    /// Length (in DIPs) of the longest side of a rendered PDF page thumbnail.
+    /// </summary>
+    private const uint pdfThumbnailSize = 92;
+
+    /// <summary>
+    /// Factor by which image-page preview files are downscaled relative to their source; never applied to saved files.
+    /// </summary>
+    private const double previewScale = 0.75;
+    #endregion
+
     #region Services
     protected static readonly IAppDataService AppDataService = Ioc.Default.GetRequiredService<IAppDataService>();
     protected static readonly ICopilotRuntimeService CopilotRuntimeService = Ioc.Default.GetRequiredService<ICopilotRuntimeService>();
@@ -766,7 +778,12 @@ public abstract partial class ProjectBase : ObservableRecipient
     /// <param name="filter">The filter to render.</param>
     /// <param name="brightness">The brightness adjustment to apply.</param>
     /// <param name="contrast">The contrast adjustment to apply.</param>
-    public static async Task ApplyEffectsAsync(IRandomAccessStream sourceStream, BitmapEncoder encoder, ImageFilter filter, int brightness, int contrast)
+    /// <param name="scale">
+    /// Factor by which to scale the encoded result. Defaults to <c>1.0</c> (full source resolution); pass a
+    /// smaller value to downscale (e.g. when generating previews). Final saves must keep the default so they
+    /// don't lose resolution.
+    /// </param>
+    public static async Task ApplyEffectsAsync(IRandomAccessStream sourceStream, BitmapEncoder encoder, ImageFilter filter, int brightness, int contrast, double scale = 1.0)
     {
         CanvasDevice device = CanvasDevice.GetSharedDevice();
         using CanvasBitmap bitmap = await CanvasBitmap.LoadAsync(device, sourceStream);
@@ -781,8 +798,11 @@ public abstract partial class ProjectBase : ObservableRecipient
         encoder.SetPixelData(BitmapPixelFormat.Bgra8, BitmapAlphaMode.Ignore,
                                  (uint)renderer.SizeInPixels.Width, (uint)renderer.SizeInPixels.Height,
                                  renderer.Dpi, renderer.Dpi, renderer.GetPixelBytes());
-        encoder.BitmapTransform.ScaledWidth = (uint)(renderer.SizeInPixels.Width * 0.75);
-        encoder.BitmapTransform.ScaledHeight = (uint)(renderer.SizeInPixels.Height * 0.75);
+        if (scale != 1.0)
+        {
+            encoder.BitmapTransform.ScaledWidth = (uint)(renderer.SizeInPixels.Width * scale);
+            encoder.BitmapTransform.ScaledHeight = (uint)(renderer.SizeInPixels.Height * scale);
+        }
         await encoder.FlushAsync();
     }
     
@@ -807,7 +827,7 @@ public abstract partial class ProjectBase : ObservableRecipient
                 using (var targetStream = await targetFile.OpenAsync(FileAccessMode.ReadWrite))
                 {
                     BitmapEncoder encoder = await BitmapEncoder.CreateAsync(GetBitmapEncoderIdForFile(targetFile), targetStream);
-                    await ApplyEffectsAsync(sourceStream, encoder, page.Filter, page.Brightness, page.Contrast);
+                    await ApplyEffectsAsync(sourceStream, encoder, page.Filter, page.Brightness, page.Contrast, previewScale);
                 }
 
                 // update preview file
@@ -831,12 +851,16 @@ public abstract partial class ProjectBase : ObservableRecipient
                 StorageFile previewFile = await AppDataService.PreviewFolder.CreateFileAsync("pdf_thumbnail.png", CreationCollisionOption.GenerateUniqueName);
                 using (IRandomAccessStream previewFileStream = await previewFile.OpenAsync(FileAccessMode.ReadWrite))
                 {
-                    Windows.Data.Pdf.PdfPageRenderOptions renderOptions = new()
-                    {
-                        DestinationWidth = 92,
-                        DestinationHeight = 92
-                    };
-                    await document.GetPage(page.IndexInPdf).RenderToStreamAsync(previewFileStream);
+                    // render a small thumbnail (instead of the page's full resolution); only constrain the
+                    // longest side so the page's aspect ratio is preserved
+                    Windows.Data.Pdf.PdfPage documentPage = document.GetPage(page.IndexInPdf);
+                    Windows.Data.Pdf.PdfPageRenderOptions renderOptions = new();
+                    if (documentPage.Size.Width >= documentPage.Size.Height)
+                        renderOptions.DestinationWidth = pdfThumbnailSize;
+                    else
+                        renderOptions.DestinationHeight = pdfThumbnailSize;
+
+                    await documentPage.RenderToStreamAsync(previewFileStream, renderOptions);
                 }
 
                 // update preview file
