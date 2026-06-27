@@ -1927,6 +1927,9 @@ Fuzzy</comment>
   <data name="Changelog4_0_0_0FeaturesBody" xml:space="preserve">
     <value>Select a save location after scanning, undo/redo, filters for all scanners, paper size selection, lossless editing, subfolder generation, templates, and many more!</value>
   </data>
+  <data name="GoToPage" xml:space="preserve">
+    <value>Go to page</value>
+  </data>
   <data name="SettingsFileNamingCustomPatternExplanation" xml:space="preserve">
     <value>Drag and drop blocks to build your own dynamic file naming pattern. Select a block to modify its output or drag it into the bin to remove it.</value>
     <comment>The description for the custom file naming dialog.</comment>
@@ -1972,7 +1975,7 @@ Fuzzy</comment>
   <data name="ScanAreaAlignmentHeading" xml:space="preserve">
     <value>Scan area alignment</value>
   </data>
-  <data name="GoToPage" xml:space="preserve">
-    <value>Go to page</value>
+  <data name="Open" xml:space="preserve">
+    <value>Open</value>
   </data>
 </root>

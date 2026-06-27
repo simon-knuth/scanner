@@ -1664,6 +1664,9 @@ Fuzzy</comment>
   <data name="Changelog4_0_0_0FeaturesBody" xml:space="preserve">
     <value />
   </data>
+  <data name="GoToPage" xml:space="preserve">
+    <value />
+  </data>
   <data name="SettingsFileNamingCustomPatternExplanation" xml:space="preserve">
     <value>Перетягуйте блоки, щоб створити свій власний динамічний шаблон іменування файлів. Виберіть блок, щоб змінити його вихід, або перетягніть його в кошик, щоб видалити.</value>
     <comment>The description for the custom file naming dialog.</comment>
@@ -1675,7 +1678,7 @@ Fuzzy</comment>
   <data name="Template" xml:space="preserve">
     <value />
   </data>
-  <data name="GoToPage" xml:space="preserve">
+  <data name="Open" xml:space="preserve">
     <value />
   </data>
 </root>

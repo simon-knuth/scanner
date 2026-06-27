@@ -1642,6 +1642,9 @@ Fuzzy</comment>
   <data name="Changelog4_0_0_0FeaturesBody" xml:space="preserve">
     <value />
   </data>
+  <data name="GoToPage" xml:space="preserve">
+    <value />
+  </data>
   <data name="SettingsFileNamingCustomPatternExplanation" xml:space="preserve">
     <value>Arrastre y suelte bloques para crear su propio patrón dinámico de nombres de archivos. Seleccione un bloque para modificar su salida o arrástrelo al contenedor para eliminarlo.</value>
     <comment>The description for the custom file naming dialog.</comment>
@@ -1653,7 +1656,7 @@ Fuzzy</comment>
   <data name="Template" xml:space="preserve">
     <value />
   </data>
-  <data name="GoToPage" xml:space="preserve">
+  <data name="Open" xml:space="preserve">
     <value />
   </data>
 </root>

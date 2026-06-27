@@ -1678,6 +1678,9 @@ Fuzzy</comment>
   <data name="Changelog4_0_0_0FeaturesBody" xml:space="preserve">
     <value />
   </data>
+  <data name="GoToPage" xml:space="preserve">
+    <value />
+  </data>
   <data name="SettingsFileNamingCustomPatternExplanation" xml:space="preserve">
     <value>Přetažením bloků si můžete vytvořit vlastní dynamický vzor pojmenování souborů. Výběrem bloku upravte jeho výstup nebo jej přetažením do koše odstraňte.</value>
     <comment>The description for the custom file naming dialog.</comment>
@@ -1693,7 +1696,7 @@ Fuzzy</comment>
     <value>Vybrat vše</value>
     <comment>The option to select all similar pages for cropping.</comment>
   </data>
-  <data name="GoToPage" xml:space="preserve">
+  <data name="Open" xml:space="preserve">
     <value />
   </data>
 </root>

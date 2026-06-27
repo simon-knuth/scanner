@@ -9,6 +9,7 @@ using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Media.Imaging;
 using Microsoft.UI.Xaml.Navigation;
 using Scanner.Extensions;
 using Scanner.Helpers;
@@ -878,6 +879,9 @@ public sealed partial class ShellView : Page
         if (!e.DataView.Contains(StandardDataFormats.StorageItems))
             return;
 
+        e.DragUIOverride.Caption = Scanner.Resources.Strings.Resources.Open;
+        e.DragUIOverride.IsCaptionVisible = true;
+
         DragOperationDeferral deferral = e.GetDeferral();
 
         var files = await e.DataView.GetStorageItemsAsync();
@@ -885,11 +889,13 @@ public sealed partial class ShellView : Page
         try
         {
             if (!files.All(x => Helpers.Helpers.AcceptedInputFileExtensions.Contains(Path.GetExtension(x.Name))))
+            {
+                e.DragUIOverride.IsCaptionVisible = false;
                 return;
+            }
 
-            e.AcceptedOperation = DataPackageOperation.Move;
-            e.DragUIOverride.IsCaptionVisible = false;
             e.Handled = true;
+            e.AcceptedOperation = DataPackageOperation.Move;
         }
         finally
         {

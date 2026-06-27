@@ -1400,10 +1400,13 @@ Fuzzy</comment>
   <data name="Changelog4_0_0_0FeaturesBody" xml:space="preserve">
     <value />
   </data>
+  <data name="GoToPage" xml:space="preserve">
+    <value />
+  </data>
   <data name="Template" xml:space="preserve">
     <value />
   </data>
-  <data name="GoToPage" xml:space="preserve">
+  <data name="Open" xml:space="preserve">
     <value />
   </data>
 </root>
