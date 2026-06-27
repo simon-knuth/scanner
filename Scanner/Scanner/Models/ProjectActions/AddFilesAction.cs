@@ -27,6 +27,8 @@ public partial class AddFilesAction : IProjectAction
     private static readonly ILogService? LogService = Ioc.Default.GetService<ILogService>();
     #endregion
 
+    public readonly static string[] AcceptedFileExtensions = [".jpg", ".jpeg", ".png", ".bmp", ".tif", ".tiff"];
+
     private List<ProjectFileInsertion> insertions;
     private bool keepSourceFiles;
 

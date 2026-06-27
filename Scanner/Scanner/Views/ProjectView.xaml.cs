@@ -30,6 +30,7 @@ using Windows.ApplicationModel;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Storage;
 using WinRT;
 using WinRT.Interop;
 using WinUIEx;
@@ -188,6 +189,8 @@ public sealed partial class ProjectView : Page
 
     private bool isTextBoxDiscardingUserInput;
 
+    private DragEventHandler gridViewDragOverHandler;
+
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
@@ -203,6 +206,7 @@ public sealed partial class ProjectView : Page
         ViewModel.SettingsService.PropertyChanged += SettingsService_PropertyChanged;
 
         WeakReferenceMessenger.Default.Register<InvokeShareUIMessage>(this, (r, m) => InvokeShareUI());
+        gridViewDragOverHandler = new(GridViewPageList_DragOver);
     }
 
 
@@ -608,6 +612,8 @@ public sealed partial class ProjectView : Page
         {
             gridView.ScrollIntoView(gridView.SelectedItem);
         }
+
+        gridView.AddHandler(GridView.DragOverEvent, gridViewDragOverHandler, true);
     }
 
     private void ButtonPageList_Click(object sender, RoutedEventArgs e)
@@ -959,5 +965,67 @@ public sealed partial class ProjectView : Page
             if (item != null)
                 InitializeGridViewItemAppearance(item);
         }
+    }
+
+    private async void GridViewPageList_DragOver(object sender, DragEventArgs e)
+    {
+        e.AcceptedOperation = DataPackageOperation.None;
+        e.DragUIOverride.Caption = string.Empty;
+
+        if (!e.DataView.Contains(StandardDataFormats.StorageItems))
+            return;
+
+        e.Handled = true;
+
+        if (!ViewModel.AddFilesCommand.CanExecute(null))
+            return;
+
+        e.DragUIOverride.Caption = Scanner.Resources.Strings.Resources.SettingsScanActionAddToProject;
+        e.DragUIOverride.IsCaptionVisible = true;
+
+        DragOperationDeferral deferral = e.GetDeferral();
+
+        var files = await e.DataView.GetStorageItemsAsync();
+
+        try
+        {
+            if (!files.All(x => AddFilesAction.AcceptedFileExtensions.Contains(System.IO.Path.GetExtension(x.Name))))
+            {
+                e.DragUIOverride.IsCaptionVisible = false;
+                return;
+            }
+
+            e.AcceptedOperation = DataPackageOperation.Copy;
+        }
+        finally
+        {
+            deferral.Complete();
+        }
+    }
+
+    private async void GridViewPageList_Drop(object sender, DragEventArgs e)
+    {
+        if (!ViewModel.AddFilesCommand.CanExecute(null))
+            return;
+
+        e.Handled = true;
+        DragOperationDeferral deferral = e.GetDeferral();
+        IReadOnlyList<IStorageItem> items = await e.DataView.GetStorageItemsAsync();
+        deferral.Complete();
+
+        List<StorageFile> files = [];
+        foreach (IStorageItem item in items)
+        {
+            if (item is StorageFile file)
+                files.Add(file);
+        }
+
+        await ViewModel.AddFilesCommand.ExecuteAsync([.. files]);
+    }
+
+    private void GridViewPageList_Unloaded(object sender, RoutedEventArgs e)
+    {
+        GridView gridView = (GridView)sender;
+        gridView.RemoveHandler(GridView.DragOverEvent, gridViewDragOverHandler);
     }
 }

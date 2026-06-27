@@ -62,7 +62,8 @@ partial class ProjectViewModel : ObservableRecipient, IDisposable
     public AsyncRelayCommand SaveAsyncCommand => new AsyncRelayCommand(SaveAsync);
     public AsyncRelayCommand SaveAsAsyncCommand => new AsyncRelayCommand(SaveAsAsync);
     public AsyncRelayCommand SaveAsCurrentPageAsyncCommand => new AsyncRelayCommand(SaveAsCurrentPageAsync);
-    public AsyncRelayCommand AddFilesCommand => new AsyncRelayCommand(AddFilesAsync);
+    public AsyncRelayCommand PickAndAddFilesCommand => new AsyncRelayCommand(PickAndAddFilesAsync, canExecute: () => CurrentProject?.IsPdf is true);
+    public AsyncRelayCommand<List<StorageFile>?> AddFilesCommand => new AsyncRelayCommand<List<StorageFile>?>(AddFilesAsync, canExecute: (x) => CurrentProject?.IsPdf is true);
     public AsyncRelayCommand<TargetFormat> ConvertProjectAsyncCommand => new AsyncRelayCommand<TargetFormat>(ConvertProjectAsync);
     public AsyncRelayCommand FindAppForFileTypeCommand => new AsyncRelayCommand(FindAppForFileTypeAsync);
     public AsyncRelayCommand RotateSelectedPages90DegreesAsyncCommand => new AsyncRelayCommand(async (x) => await RotateSelectedPagesAsync(RotationIntent.Degrees90));
@@ -92,6 +93,7 @@ partial class ProjectViewModel : ObservableRecipient, IDisposable
             {
                 OnPropertyChanged(nameof(FileName));
                 OnPropertyChanged(nameof(IsFileNameGenerationInProgress));
+                AddFilesCommand.NotifyCanExecuteChanged();
 
                 if (value != null && value is PdfProject pdfProject2) pdfProject2.FileNameInfo.NameChanged += FileNameInfo_NameChanged;
             }
@@ -428,7 +430,7 @@ partial class ProjectViewModel : ObservableRecipient, IDisposable
         await Windows.System.Launcher.LaunchFolderAsync(folder);
     }
 
-    private async Task AddFilesAsync()
+    private async Task PickAndAddFilesAsync()
     {
         if (CurrentProject == null) return;
         if (!CurrentProject.IsPdf) throw new ApplicationException("Adding files is only supported for PDF projects");
@@ -452,7 +454,24 @@ partial class ProjectViewModel : ObservableRecipient, IDisposable
 
         // pick files
         IReadOnlyList<StorageFile> files = await picker.PickMultipleFilesAsync();
-        if (files == null || files.Count == 0) return;
+
+        // insert
+        await AddFilesAsync([.. files]);
+    }
+
+    private async Task AddFilesAsync(List<StorageFile>? files)
+    {
+        if (files is null)
+            return;
+
+        if (CurrentProject == null)
+            return;
+
+        if (!CurrentProject.IsPdf)
+            throw new ApplicationException("Adding files is only supported for PDF projects");
+
+        if (files == null || files.Count == 0)
+            return;
 
         // construct insertions
         List<ProjectFileInsertion> insertions = new();

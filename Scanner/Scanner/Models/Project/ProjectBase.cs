@@ -20,6 +20,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Numerics;
 using System.Reflection;
@@ -198,6 +199,9 @@ public abstract partial class ProjectBase : ObservableRecipient
             {
                 foreach (ProjectFileInsertion insertion in insertions)
                 {
+                    if (!AddFilesAction.AcceptedFileExtensions.Contains(insertion.File.FileType.ToLower()))
+                        continue;
+
                     IProjectPage page = await CreatePageFromFileAsync(insertion.File, insertion.Index, IsPdf ? null : insertion.FileName, null, insertion.TargetFolder, keepSourceFiles, AppDataService.ChangesFolder, insertion.BaseFilter, insertion.Filter, insertion.Brightness, insertion.Contrast);
                     copiedFiles.Add(((ImagePage)page).SourceFile);
 

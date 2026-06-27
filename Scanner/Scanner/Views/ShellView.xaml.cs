@@ -879,6 +879,9 @@ public sealed partial class ShellView : Page
         if (!e.DataView.Contains(StandardDataFormats.StorageItems))
             return;
 
+        if (!ViewModel.OpenFilesAsyncCommand.CanExecute(null))
+            return;
+
         e.DragUIOverride.Caption = Scanner.Resources.Strings.Resources.Open;
         e.DragUIOverride.IsCaptionVisible = true;
 
@@ -888,7 +891,7 @@ public sealed partial class ShellView : Page
 
         try
         {
-            if (!files.All(x => Helpers.Helpers.AcceptedInputFileExtensions.Contains(Path.GetExtension(x.Name))))
+            if (!files.All(x => Helpers.Helpers.AcceptedInputFileExtensions.Contains(Path.GetExtension(x.Name).ToLower())))
             {
                 e.DragUIOverride.IsCaptionVisible = false;
                 return;
@@ -908,6 +911,7 @@ public sealed partial class ShellView : Page
         if (!ViewModel.OpenFilesAsyncCommand.CanExecute(null))
             return;
 
+        e.Handled = true;
         DragOperationDeferral deferral = e.GetDeferral();
         IReadOnlyList<IStorageItem> files = await e.DataView.GetStorageItemsAsync();
         deferral.Complete();

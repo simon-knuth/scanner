@@ -385,7 +385,7 @@
                                 </MenuFlyoutSubItem.Items>
                             </MenuFlyoutSubItem>
                             <MenuFlyoutSeparator />
-                            <MenuFlyoutItem Text="{x:Bind strings:Resources.AddPagesFromImages}" Width="{x:Bind ProjectFlyoutWidth, Mode=OneWay}" Visibility="{x:Bind ViewModel.CurrentProject.IsPdf, Mode=OneWay}" Command="{x:Bind ViewModel.AddFilesCommand}">
+                            <MenuFlyoutItem Text="{x:Bind strings:Resources.AddPagesFromImages}" Width="{x:Bind ProjectFlyoutWidth, Mode=OneWay}" Visibility="{x:Bind ViewModel.CurrentProject.IsPdf, Mode=OneWay}" Command="{x:Bind ViewModel.PickAndAddFilesCommand}">
                                 <MenuFlyoutItem.Icon>
                                     <FontIcon Glyph="&#xE710;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                                 </MenuFlyoutItem.Icon>
@@ -617,7 +617,7 @@
                                 <animations:TranslationAnimation Duration="0:0:0.25" To="0,-64" EasingMode="EaseInOut" />
                             </animations:Implicit.HideAnimations>
 
-                            <GridView x:Name="GridViewPageList" Grid.Row="1" HorizontalAlignment="Stretch" VerticalContentAlignment="Center" ItemsSource="{x:Bind ViewModel.Pages, Mode=OneWay}" SelectedItem="{x:Bind ViewModel.ProjectService.SelectedPage, Mode=OneWay}" SelectionMode="Single" AllowDrop="True" CanReorderItems="{x:Bind ViewModel.CurrentProject.IsPdf, Mode=OneWay}" CanDragItems="{x:Bind ViewModel.CurrentProject.IsPdf, Mode=OneWay}" ReorderMode="Enabled" ScrollViewer.HorizontalScrollMode="Disabled" ScrollViewer.VerticalScrollMode="Auto" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Auto" SelectionChanged="GridViewPageList_SelectionChanged" Loaded="GridViewPageList_Loaded" SizeChanged="GridViewPageList_SizeChanged">
+                            <GridView x:Name="GridViewPageList" Grid.Row="1" HorizontalAlignment="Stretch" VerticalContentAlignment="Center" ItemsSource="{x:Bind ViewModel.Pages, Mode=OneWay}" SelectedItem="{x:Bind ViewModel.ProjectService.SelectedPage, Mode=OneWay}" SelectionMode="Single" AllowDrop="True" CanReorderItems="{x:Bind ViewModel.CurrentProject.IsPdf, Mode=OneWay}" CanDragItems="{x:Bind ViewModel.CurrentProject.IsPdf, Mode=OneWay}" ReorderMode="Enabled" ScrollViewer.HorizontalScrollMode="Disabled" ScrollViewer.VerticalScrollMode="Auto" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Auto" SelectionChanged="GridViewPageList_SelectionChanged" Loaded="GridViewPageList_Loaded" SizeChanged="GridViewPageList_SizeChanged" Drop="GridViewPageList_Drop" Unloaded="GridViewPageList_Unloaded">
                                 <GridView.ItemContainerTransitions>
                                     <TransitionCollection>
                                         <ReorderThemeTransition />
