@@ -1094,6 +1094,7 @@ public abstract partial class ProjectBase : ObservableRecipient
     /// <param name="targetOrder">The desired order.</param>
     public async Task<bool> ApplyOrderOfPagesAsync(List<IProjectPage> targetOrder, DispatcherQueue uiDispatcherQueue)
     {
+        bool reordered = false;
         await StartEditingAsync();
         try
         {
@@ -1105,19 +1106,21 @@ public abstract partial class ProjectBase : ObservableRecipient
                     if (currentIndex != i)
                     {
                         Pages.Move(currentIndex, i);
+                        reordered = true;
                     }
                     Pages[i].Index = i;
                 }
             });
 
-            areFilesSaved = false;
+            if (reordered)
+                areFilesSaved = false;
         }
         finally
         {
             FinishEditing();
         }
 
-        return true;
+        return reordered;
     }
 
     public static Guid GetBitmapEncoderIdForFile(StorageFile file)

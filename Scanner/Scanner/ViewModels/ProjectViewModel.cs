@@ -729,6 +729,28 @@ partial class ProjectViewModel : ObservableRecipient, IDisposable
     {
         if (CurrentProject == null) return;
 
+        // can never cause an imported PDF page to change its position
+        bool readOnlyPageDisplaced = false;
+        for (int i = 0; i < Pages.Count; i++)
+        {
+            if (Pages[i].IsReadOnly && CurrentProject.Pages.IndexOf(Pages[i]) != i)
+            {
+                readOnlyPageDisplaced = true;
+                break;
+            }
+        }
+
+        if (readOnlyPageDisplaced)
+        {
+            for (int i = 0; i < CurrentProject.Pages.Count; i++)
+            {
+                int currentIndex = Pages.IndexOf(CurrentProject.Pages[i]);
+                if (currentIndex != i)
+                    Pages.Move(currentIndex, i);
+            }
+            return;
+        }
+
         IProjectPage? selectedPage = ProjectService.SelectedPage;
         await ProjectService.ApplyActionAsync(new ApplyOrderOfPagesAction(Pages.ToList()));
         ProjectService.SelectedPage = selectedPage;

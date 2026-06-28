@@ -951,6 +951,13 @@ public sealed partial class ProjectView : Page
         InitializeGridViewItemAppearance((GridViewItem)sender);
     }
 
+    private void GridViewPageList_DragItemsStarting(object sender, DragItemsStartingEventArgs e)
+    {
+        // prevent dragging read-only pages
+        if (e.Items.Any(item => item is IProjectPage { IsReadOnly: true }))
+            e.Cancel = true;
+    }
+
     private async void GridViewItem_DropCompleted(UIElement sender, DropCompletedEventArgs args)
     {
         await ViewModel.ApplyOrderOfPagesToProjectAsyncCommand.ExecuteAsync(null);
@@ -969,12 +976,11 @@ public sealed partial class ProjectView : Page
 
     private async void GridViewDropZone_DragOver(object sender, DragEventArgs e)
     {
-        e.AcceptedOperation = DataPackageOperation.None;
-        e.DragUIOverride.Caption = string.Empty;
-
         if (!e.DataView.Contains(StandardDataFormats.StorageItems))
             return;
 
+        e.AcceptedOperation = DataPackageOperation.None;
+        e.DragUIOverride.Caption = string.Empty;
         e.Handled = true;
 
         if (!ViewModel.AddDroppedFilesCommand.CanExecute(null))
@@ -1005,6 +1011,9 @@ public sealed partial class ProjectView : Page
 
     private async void GridViewDropZone_Drop(object sender, DragEventArgs e)
     {
+        if (!e.DataView.Contains(StandardDataFormats.StorageItems))
+            return;
+
         if (!ViewModel.AddDroppedFilesCommand.CanExecute(null))
             return;
 
