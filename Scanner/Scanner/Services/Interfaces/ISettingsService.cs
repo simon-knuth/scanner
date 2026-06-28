@@ -54,6 +54,7 @@ public interface ISettingsService : INotifyPropertyChanged
     bool SettingMirrorAppLayout { get; set; }
     string UserId { get; set; }
     int DiagnosticEventsSentThisSession { get; set; }
+    int ErrorFeedbackSentThisSession { get; set; }
     bool SettingAutoSave { get; set; }
     SettingFileNamingPattern SettingFileNamingPattern { get; set; }
     ItemNamingPattern CustomFileNamingPattern { get; set; }

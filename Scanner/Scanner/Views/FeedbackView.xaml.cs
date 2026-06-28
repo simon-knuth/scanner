@@ -52,7 +52,7 @@ public sealed partial class FeedbackView : Page
     [NotifyPropertyChangedFor(nameof(CanSend))]
     private string message;
 
-    public bool CanSend => !string.IsNullOrEmpty(Message) && Message.Length > 24;
+    public bool CanSend => !string.IsNullOrEmpty(Message) && Message.Length > 8;
 
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

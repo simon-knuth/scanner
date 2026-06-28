@@ -70,6 +70,7 @@ internal class SentryService : ISentryService
             LogService.LogFilePathChanged += LogService_LogFilePathChanged;
         }
         SettingsService.DiagnosticEventsSentThisSession = 0;
+        SettingsService.ErrorFeedbackSentThisSession = 0;
 
         defaultScope = (scope) =>
         {
@@ -117,16 +118,19 @@ internal class SentryService : ISentryService
 
         errorFeedbackScope = (scope) =>
         {
-            scope.Level = SentryLevel.Info;
+            scope.Level = SentryLevel.Error;
 
             // attachment
             scope.ClearAttachments();
-            if (new Random().NextDouble() <= AppConfig.WarningAttachmentRate)
+            int errorFeedbackSentThisSession = SettingsService.ErrorFeedbackSentThisSession;
+            if (errorFeedbackSentThisSession < AppConfig.MaxErrorFeedbackPerSession)
             {
                 FileAttachmentContent fileAttachment = new FileAttachmentContent(LogService?.LogFilePath);
                 SentryAttachment attachment = new SentryAttachment(AttachmentType.Default, fileAttachment, "log.log", "application/log");
                 scope.AddAttachment(attachment);
             }
+
+            SettingsService.ErrorFeedbackSentThisSession = errorFeedbackSentThisSession + 1;
         };
 
         suggestionFeedbackScope = (scope) =>

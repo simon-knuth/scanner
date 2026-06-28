@@ -221,6 +221,12 @@ internal class SettingsService : ObservableObject, ISettingsService
         set => SetSetting(nameof(DiagnosticEventsSentThisSession), value);
     }
 
+    public int ErrorFeedbackSentThisSession
+    {
+        get => GetSetting(nameof(DiagnosticEventsSentThisSession), 0);
+        set => SetSetting(nameof(DiagnosticEventsSentThisSession), value);
+    }
+
     public bool SettingAutoSave
     {
         get => GetSetting<bool>(nameof(SettingAutoSave), true);

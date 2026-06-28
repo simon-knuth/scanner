@@ -17,6 +17,7 @@ public static partial class AppConfig
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     #region Analytics & Diagnostics
     public static int MaxDiagnosticEventsPerSession = 3;
+    public static int MaxErrorFeedbackPerSession = 2;
     public static double DefaultRate = 0.1;
     public static double CrashRate = 1.0;
     public static double ErrorRate = 0.3;
