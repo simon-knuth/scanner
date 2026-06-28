@@ -1930,6 +1930,9 @@ Fuzzy</comment>
   <data name="GoToPage" xml:space="preserve">
     <value>Go to page</value>
   </data>
+  <data name="Open" xml:space="preserve">
+    <value>Open</value>
+  </data>
   <data name="SettingsFileNamingCustomPatternExplanation" xml:space="preserve">
     <value>Drag and drop blocks to build your own dynamic file naming pattern. Select a block to modify its output or drag it into the bin to remove it.</value>
     <comment>The description for the custom file naming dialog.</comment>
@@ -1975,7 +1978,10 @@ Fuzzy</comment>
   <data name="ScanAreaAlignmentHeading" xml:space="preserve">
     <value>Scan area alignment</value>
   </data>
-  <data name="Open" xml:space="preserve">
-    <value>Open</value>
+  <data name="HistoryEmpty" xml:space="preserve">
+    <value>Previous projects will appear here</value>
+  </data>
+  <data name="TemplatesEmpty" xml:space="preserve">
+    <value>Saved templates will appear here</value>
   </data>
 </root>

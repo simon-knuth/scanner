@@ -1621,6 +1621,9 @@ Fuzzy</comment>
   <data name="GoToPage" xml:space="preserve">
     <value />
   </data>
+  <data name="Open" xml:space="preserve">
+    <value />
+  </data>
   <data name="SettingsFileNamingCustomPatternExplanation" xml:space="preserve">
     <value>גרור ושחרר בלוקים כדי לבנות דפוס שמות קבצים דינמי משלך. בחר בלוק כדי לשנות את הפלט שלו או גרור אותו לפח כדי להסיר אותו.</value>
     <comment>The description for the custom file naming dialog.</comment>
@@ -1636,7 +1639,10 @@ Fuzzy</comment>
     <value>בחר הכל</value>
     <comment>The option to select all similar pages for cropping.</comment>
   </data>
-  <data name="Open" xml:space="preserve">
+  <data name="HistoryEmpty" xml:space="preserve">
+    <value />
+  </data>
+  <data name="TemplatesEmpty" xml:space="preserve">
     <value />
   </data>
 </root>

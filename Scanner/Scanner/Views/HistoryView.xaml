@@ -50,6 +50,7 @@
             </ResourceDictionary.ThemeDictionaries>
 
             <!-- XAML Converters -->
+            <converters:IntComparisonConverter x:Key="IntComparisonConverter" />
             <converters:NegativeBoolConverter x:Key="NegativeBoolConverter" />
             <converters:NegativeBoolVisibilityConverter x:Key="NegativeBoolVisibilityConverter" />
         </ResourceDictionary>
@@ -88,6 +89,7 @@
                 </Button>
             </Grid>
 
+            <TextBlock x:Name="TextBlockNoItems" Grid.Row="1" Text="{x:Bind strings:Resources.HistoryEmpty}" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" TextWrapping="WrapWholeWords" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Style="{StaticResource CaptionTextBlockStyle}" x:Load="{x:Bind ViewModel.ProjectHistoryService.Entries.Count, Mode=OneWay, Converter={StaticResource IntComparisonConverter}, ConverterParameter=0}" />
             <ListView Grid.Row="1" Padding="8,4,8,12" SelectionMode="None" IsItemClickEnabled="True" ItemsSource="{x:Bind ViewModel.ProjectHistoryService.Entries, Mode=OneWay}" ScrollViewer.VerticalScrollMode="Auto" ItemClick="ListView_ItemClick">
                 <ListView.ItemTemplate>
                     <DataTemplate x:DataType="models:ProjectHistoryEntry">

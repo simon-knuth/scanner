@@ -41,6 +41,7 @@
             <converters:EnumStringConverter x:Key="EnumStringConverter" />
             <converters:EnumStringVisibilityConverter x:Key="EnumStringVisibilityConverter" />
             <converters:NegativeEnumIntComparisonConverter x:Key="NegativeEnumIntComparisonConverter" />
+            <converters:IntComparisonConverter x:Key="IntComparisonConverter" />
             <converters:IntNotZeroVisibilityConverter x:Key="IntNotZeroVisibilityConverter" />
             <converters:ScanOptionsSnapshotScanAreaStringConverter x:Key="ScanOptionsSnapshotScanAreaStringConverter" />
         </ResourceDictionary>
@@ -94,6 +95,7 @@
                 </StackPanel>
             </Grid>
 
+            <TextBlock x:Name="TextBlockNoItems" Grid.Row="1" Text="{x:Bind strings:Resources.TemplatesEmpty}" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" TextWrapping="WrapWholeWords" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Style="{StaticResource CaptionTextBlockStyle}" x:Load="{x:Bind ViewModel.TemplateService.Entries.Count, Mode=OneWay, Converter={StaticResource IntComparisonConverter}, ConverterParameter=0}" />
             <ListView x:Name="ListViewTemplates" Grid.Row="1" Padding="8,4,8,12" VerticalAlignment="Stretch" SelectionMode="None" IsItemClickEnabled="True" ItemsSource="{x:Bind ViewModel.TemplateService.Entries, Mode=OneWay}" ScrollViewer.VerticalScrollMode="Auto" ItemClick="ListViewTemplates_ItemClick">
                 <ListView.ItemContainerTransitions>
                     <TransitionCollection>

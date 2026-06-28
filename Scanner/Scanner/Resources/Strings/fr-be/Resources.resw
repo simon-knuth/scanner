@@ -1403,10 +1403,16 @@ Fuzzy</comment>
   <data name="GoToPage" xml:space="preserve">
     <value />
   </data>
+  <data name="Open" xml:space="preserve">
+    <value />
+  </data>
   <data name="Template" xml:space="preserve">
     <value />
   </data>
-  <data name="Open" xml:space="preserve">
+  <data name="HistoryEmpty" xml:space="preserve">
+    <value />
+  </data>
+  <data name="TemplatesEmpty" xml:space="preserve">
     <value />
   </data>
 </root>

@@ -1663,6 +1663,9 @@ Fuzzy</comment>
   <data name="GoToPage" xml:space="preserve">
     <value />
   </data>
+  <data name="Open" xml:space="preserve">
+    <value />
+  </data>
   <data name="SettingsFileNamingCustomPatternExplanation" xml:space="preserve">
     <value>Presuňte bloky a vytvorte si vlastný dynamický vzor pomenovania súborov. Vyberte blok, ak chcete upraviť jeho výstup, alebo ho potiahnutím do koša odstráňte.</value>
     <comment>The description for the custom file naming dialog.</comment>
@@ -1674,7 +1677,10 @@ Fuzzy</comment>
   <data name="Template" xml:space="preserve">
     <value />
   </data>
-  <data name="Open" xml:space="preserve">
+  <data name="HistoryEmpty" xml:space="preserve">
+    <value />
+  </data>
+  <data name="TemplatesEmpty" xml:space="preserve">
     <value />
   </data>
 </root>

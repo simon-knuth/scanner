@@ -1922,4 +1922,10 @@ Fuzzy</comment>
   <data name="Open" xml:space="preserve">
     <value />
   </data>
+  <data name="HistoryEmpty" xml:space="preserve">
+    <value />
+  </data>
+  <data name="TemplatesEmpty" xml:space="preserve">
+    <value />
+  </data>
 </root>

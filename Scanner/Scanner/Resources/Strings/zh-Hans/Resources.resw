@@ -1644,6 +1644,9 @@ Fuzzy</comment>
   <data name="GoToPage" xml:space="preserve">
     <value />
   </data>
+  <data name="Open" xml:space="preserve">
+    <value />
+  </data>
   <data name="SettingsFileNamingCustomPatternExplanation" xml:space="preserve">
     <value>拖放方块以构建自己的自动文件命名模式。选择一个方块以修改其输出，或将其拖动到垃圾箱中以将其删除。</value>
     <comment>The description for the custom file naming dialog.</comment>
@@ -1655,7 +1658,10 @@ Fuzzy</comment>
   <data name="Template" xml:space="preserve">
     <value />
   </data>
-  <data name="Open" xml:space="preserve">
+  <data name="HistoryEmpty" xml:space="preserve">
+    <value />
+  </data>
+  <data name="TemplatesEmpty" xml:space="preserve">
     <value />
   </data>
 </root>
