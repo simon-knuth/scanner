@@ -181,7 +181,7 @@ internal class SettingsService : ObservableObject, ISettingsService
 
     public string SettingAppLanguage
     {
-        get => GetSetting<string>(nameof(SettingAppLanguage), "");
+        get => GetSetting<string>(nameof(SettingAppLanguage), "SYSTEM");
         set => SetSetting(nameof(SettingAppLanguage), value);
     }
 

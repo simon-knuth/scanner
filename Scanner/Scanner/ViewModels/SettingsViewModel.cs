@@ -6,8 +6,8 @@ using Microsoft.UI.Dispatching;
 using Microsoft.UI.Xaml;
 using Scanner.Messages;
 using Scanner.Models;
-using Scanner.Models.ItemNaming;
 using Scanner.Models.Interfaces;
+using Scanner.Models.ItemNaming;
 using Scanner.Services;
 using Scanner.Services.Interfaces;
 using System;
@@ -15,6 +15,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.Devices.Bluetooth.Advertisement;
+using Windows.Globalization;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 using WinRT.Interop;
@@ -120,9 +122,17 @@ public partial class SettingsViewModel : ObservableRecipient, IDisposable
         set => SettingsService.SettingEditorOrientation = (SettingEditorOrientation)value;
     }
 
+    public DisplayedLanguage? SettingAppLanguage
+    {
+        get => AvailableAppLanguages.FirstOrDefault(x => x?.Language != null && x.Language.LanguageTag == SettingsService.SettingAppLanguage) ?? AvailableAppLanguages[0];
+        set => SettingsService.SettingAppLanguage = value?.Language?.LanguageTag ?? "SYSTEM";
+    }
+
     public bool IsAutoSaveAvailable => SettingsService.SettingSaveLocationType != Services.Interfaces.SettingSaveLocationType.AskAfterNewProject;
 
     public string CurrentVersion => Helpers.Helpers.GetCurrentVersion();
+
+    public readonly List<DisplayedLanguage> AvailableAppLanguages;
 
     private DispatcherQueue? viewDispatcherQueue;
 
@@ -143,6 +153,10 @@ public partial class SettingsViewModel : ObservableRecipient, IDisposable
         {
             ApplyIntent(m.Intent);
         });
+
+        // prepare language list
+        AvailableAppLanguages = [.. ApplicationLanguages.ManifestLanguages.Select(x => new DisplayedLanguage(new Language(x))).OrderBy(x => x.FriendlyName)];
+        AvailableAppLanguages.Insert(0, new(null));
     }
 
     public SettingsViewModel() : this(null)
@@ -344,3 +358,14 @@ public enum SettingsPageType
 }
 
 public record SettingsViewModelIntent(SettingsPageType DisplayedPage);
+
+public class DisplayedLanguage
+{
+    public Language? Language;
+    public string FriendlyName => Language?.DisplayName ?? Scanner.Resources.Strings.Resources.SettingsAppLanguageSystem;
+
+    public DisplayedLanguage(Language? language)
+    {
+        Language = language;
+    }
+}

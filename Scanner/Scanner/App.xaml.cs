@@ -10,6 +10,7 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using Microsoft.Windows.AppLifecycle;
+using Microsoft.Windows.Globalization;
 using Scanner.AppWindows;
 using Scanner.Extensions;
 using Scanner.Helpers;
@@ -138,6 +139,23 @@ public partial class App : Application
                         { "architecture", System.Runtime.InteropServices.RuntimeInformation.OSArchitecture.ToString() }
                     });
                     TrackSettingsStats(sentryService);
+
+                    // set app language
+                    ISettingsService settingsService = Ioc.Default.GetRequiredService<ISettingsService>();
+                    string languageTag = settingsService.SettingAppLanguage;
+                    if (languageTag == "SYSTEM")
+                    {
+                        // no custom language selected
+                        if (!string.IsNullOrEmpty(ApplicationLanguages.PrimaryLanguageOverride))
+                            ApplicationLanguages.PrimaryLanguageOverride = string.Empty;    // This does not work atm, see https://github.com/haonanttt/WindowsAppSDK/issues/17
+                    }
+                    else
+                    {
+                        // custom language selected
+                        if (ApplicationLanguages.PrimaryLanguageOverride != languageTag)
+                            ApplicationLanguages.PrimaryLanguageOverride = languageTag;
+                    }
+
                     await Ioc.Default.GetRequiredService<IAppDataService>().InitializeAsync();
                     Ioc.Default.GetRequiredService<ISaveLocationService>();
 
