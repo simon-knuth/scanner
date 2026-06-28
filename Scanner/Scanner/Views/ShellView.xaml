@@ -397,6 +397,11 @@
                                                     <FontIcon Glyph="&#xEBC4;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                                                 </controls:SettingsCard.HeaderIcon>
                                             </controls:SettingsCard>
+                                            <controls:SettingsCard x:Name="SettingsCardDebugCrash" Header="Test crash" IsClickEnabled="True" Click="SettingsCardDebugCrash_Click">
+                                                <controls:SettingsCard.HeaderIcon>
+                                                    <FontIcon Glyph="&#xE81F;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                                </controls:SettingsCard.HeaderIcon>
+                                            </controls:SettingsCard>
                                         </controls:SettingsExpander.Items>
                                     </controls:SettingsExpander>
                                     <controls:SettingsExpander Header="Dialogs">

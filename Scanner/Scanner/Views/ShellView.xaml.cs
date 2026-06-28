@@ -839,6 +839,11 @@ public sealed partial class ShellView : Page
         ViewModel.SettingsService.ResetAllSettingsAndRestart();
     }
 
+    private void SettingsCardDebugCrash_Click(object sender, RoutedEventArgs e)
+    {
+        throw new InvalidOperationException("Test crash");
+    }
+
     private void SettingsCardDebugDialogFeedback_Click(object sender, RoutedEventArgs e)
     {
         TeachingTipFeedback.IsOpen = true;
