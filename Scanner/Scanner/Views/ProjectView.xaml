@@ -461,7 +461,7 @@
                                     <MenuFlyoutItem Text="{x:Bind strings:Resources.OpenWithShowAllApps}" FontWeight="SemiBold" Command="{x:Bind ViewModel.TryOpenWithAsyncCommand}" />
                                 </SplitMenuFlyoutItem.Items>
                             </SplitMenuFlyoutItem>
-                            <MenuFlyoutItem Text="{x:Bind strings:Resources.Print}" Width="{x:Bind ProjectFlyoutWidth, Mode=OneWay}">
+                            <MenuFlyoutItem Text="{x:Bind strings:Resources.Print}" Width="{x:Bind ProjectFlyoutWidth, Mode=OneWay}" Visibility="Collapsed">
                                 <MenuFlyoutItem.Icon>
                                     <FontIcon Glyph="&#xE749;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                                 </MenuFlyoutItem.Icon>
