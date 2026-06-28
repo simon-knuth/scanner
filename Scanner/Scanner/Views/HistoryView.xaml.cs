@@ -16,6 +16,7 @@ using System.IO.Pipes;
 using System.Linq;
 using System.Reflection.Metadata;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading;
 using Windows.Data.Pdf;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
@@ -32,6 +33,10 @@ public sealed partial class HistoryView : Page
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     #region Events
     public event EventHandler CloseRequested;
+    #endregion
+
+    #region Fields
+    private static readonly SemaphoreSlim thumbnailGenerationLock = new(1, 1);
     #endregion
 
 
@@ -59,37 +64,54 @@ public sealed partial class HistoryView : Page
         if (args.NewValue is not ProjectHistoryEntry historyEntry)
             return;
 
-        if (historyEntry.AreFilesMissing)
+        if (historyEntry.AreFilesMissing || historyEntry.Files is not { Count: > 0 })
             return;
+
+        Image image = (Image)sender;
 
         try
         {
             // get first file's thumbnail
+            BitmapImage thumbnail;
             if (historyEntry.Format is TargetFormat.PDF)
             {
-                BitmapImage image = new BitmapImage();
-                StorageFile file = await StorageFile.GetFileFromPathAsync(historyEntry.Files[0].FilePath);
-                using IRandomAccessStream pdfStream = await file.OpenReadAsync();
-                PdfDocument document = await PdfDocument.LoadFromStreamAsync(pdfStream);
-                using (InMemoryRandomAccessStream bitmapStream = new())
+                await thumbnailGenerationLock.WaitAsync();
+                try
                 {
+                    // check container wasn't recycled while waiting
+                    if (sender.DataContext != historyEntry)
+                        return;
+
+                    thumbnail = new BitmapImage();
+                    StorageFile file = await StorageFile.GetFileFromPathAsync(historyEntry.Files[0].FilePath);
+                    using IRandomAccessStream pdfStream = await file.OpenReadAsync();
+                    PdfDocument document = await PdfDocument.LoadFromStreamAsync(pdfStream);
+                    using InMemoryRandomAccessStream bitmapStream = new();
                     PdfPageRenderOptions renderOptions = new()
                     {
                         DestinationHeight = 72
                     };
-                    await document.GetPage(0).RenderToStreamAsync(bitmapStream, renderOptions);
-                    await image.SetSourceAsync(bitmapStream);
+                    using (Windows.Data.Pdf.PdfPage page = document.GetPage(0))
+                    {
+                        await page.RenderToStreamAsync(bitmapStream, renderOptions);
+                    }
+                    await thumbnail.SetSourceAsync(bitmapStream);
                 }
-
-                ((Image)sender).Source = image;
+                finally
+                {
+                    thumbnailGenerationLock.Release();
+                }
             }
             else
             {
-                BitmapImage image = new BitmapImage(new Uri("file:///" + historyEntry.Files[0].FilePath.Replace('\\', '/')));
-                image.DecodePixelType = DecodePixelType.Logical;
-                image.DecodePixelHeight = 72;
-                ((Image)sender).Source = image;
+                thumbnail = new BitmapImage(new Uri("file:///" + historyEntry.Files[0].FilePath.Replace('\\', '/')));
+                thumbnail.DecodePixelType = DecodePixelType.Logical;
+                thumbnail.DecodePixelHeight = 72;
             }
+
+            // only apply if container wasn't recycled up until now
+            if (sender.DataContext == historyEntry)
+                image.Source = thumbnail;
         }
         catch (Exception)
         {
