@@ -1984,4 +1984,7 @@ Fuzzy</comment>
   <data name="TemplatesEmpty" xml:space="preserve">
     <value>Saved templates will appear here</value>
   </data>
+  <data name="Remove" xml:space="preserve">
+    <value>Remove</value>
+  </data>
 </root>

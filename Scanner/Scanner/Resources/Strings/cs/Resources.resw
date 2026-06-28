@@ -1705,4 +1705,7 @@ Fuzzy</comment>
   <data name="TemplatesEmpty" xml:space="preserve">
     <value />
   </data>
+  <data name="Remove" xml:space="preserve">
+    <value />
+  </data>
 </root>

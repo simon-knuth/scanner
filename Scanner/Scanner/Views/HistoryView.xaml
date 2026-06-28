@@ -127,7 +127,7 @@
 
                                     <SwipeControl.RightItems>
                                         <SwipeItems Mode="Execute">
-                                            <SwipeItem Text="Remove" Command="{x:Bind ViewModel.RemoveEntryAsyncCommand}" CommandParameter="{x:Bind}">
+                                            <SwipeItem Text="{x:Bind strings:Resources.Remove}" Command="{x:Bind ViewModel.RemoveEntryAsyncCommand}" CommandParameter="{x:Bind}">
                                                 <SwipeItem.IconSource>
                                                     <FontIconSource Glyph="&#xE738;" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                                                 </SwipeItem.IconSource>
@@ -139,14 +139,14 @@
 
                             <ListViewItem.ContextFlyout>
                                 <MenuFlyout>
-                                    <MenuFlyoutItem Text="Open" Command="{x:Bind ViewModel.OpenEntryAsyncCommand}" CommandParameter="{x:Bind}" />
-                                    <MenuFlyoutItem Text="Show in File Explorer" Command="{x:Bind ViewModel.ShowInFileExplorerAsyncCommand}" CommandParameter="{x:Bind}">
+                                    <MenuFlyoutItem Text="{x:Bind strings:Resources.Open}" Command="{x:Bind ViewModel.OpenEntryAsyncCommand}" CommandParameter="{x:Bind}" />
+                                    <MenuFlyoutItem Text="{x:Bind strings:Resources.ShowInFileExplorer}" Command="{x:Bind ViewModel.ShowInFileExplorerAsyncCommand}" CommandParameter="{x:Bind}">
                                         <MenuFlyoutItem.Icon>
                                             <FontIcon Glyph="&#xE8DA;" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                                         </MenuFlyoutItem.Icon>
                                     </MenuFlyoutItem>
                                     <MenuFlyoutSeparator />
-                                    <MenuFlyoutItem Text="Remove" Command="{x:Bind ViewModel.RemoveEntryAsyncCommand}" CommandParameter="{x:Bind}">
+                                    <MenuFlyoutItem Text="{x:Bind strings:Resources.Remove}" Command="{x:Bind ViewModel.RemoveEntryAsyncCommand}" CommandParameter="{x:Bind}">
                                         <MenuFlyoutItem.Icon>
                                             <FontIcon Glyph="&#xE738;" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                                         </MenuFlyoutItem.Icon>
