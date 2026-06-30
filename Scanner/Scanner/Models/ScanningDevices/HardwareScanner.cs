@@ -16,6 +16,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Windows.Devices.Enumeration;
 using Windows.Devices.Scanners;
@@ -46,7 +47,8 @@ internal partial class HardwareScanner : IScanningDevice
     public string Id { get; private set; }
     public string Name { get; private set; }
     private ImageScanner imageScanner;
-    private IAsyncOperationWithProgress<ImageScannerScanResult, uint>? currentScanOperation;
+    private CancellationTokenSource? scanCancellationTokenSource;
+    private CancellationTokenSource? previewCancellationTokenSource;
 
     #region Automatic configuration
     public bool IsAutoAllowed { get; private set; }
@@ -286,14 +288,21 @@ internal partial class HardwareScanner : IScanningDevice
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public void CancelPreview()
     {
-        throw new NotImplementedException();
+        try
+        {
+            previewCancellationTokenSource?.Cancel();
+        }
+        catch (Exception exc)
+        {
+            LogService?.Log.Warning(exc, "Failed to cancel preview operation");
+        }
     }
 
     public void CancelScan()
     {
         try
         {
-            currentScanOperation?.Cancel();
+            scanCancellationTokenSource?.Cancel();
         }
         catch (Exception exc)
         {
@@ -335,19 +344,30 @@ internal partial class HardwareScanner : IScanningDevice
         {
             // use scanner's native preview capability
             using IRandomAccessStream sourceStream = new InMemoryRandomAccessStream();
-            switch (sourceMode)
+            previewCancellationTokenSource = new CancellationTokenSource();
+            try
             {
-                case ScannerSource.Flatbed:
-                    await imageScanner.ScanPreviewToStreamAsync(ImageScannerScanSource.Flatbed, sourceStream);
-                    break;
-                case ScannerSource.Feeder:
-                    await imageScanner.ScanPreviewToStreamAsync(ImageScannerScanSource.Feeder, sourceStream);
-                    break;
-                case ScannerSource.Auto:
-                case ScannerSource.None:
-                default:
-                    LogService?.Log.Error("Can't scan preview to stream for source mode " + sourceMode);
-                    throw new ApplicationException("Failed to scan preview to stream for source mode " + sourceMode);
+                switch (sourceMode)
+                {
+                    case ScannerSource.Flatbed:
+                        await imageScanner.ScanPreviewToStreamAsync(ImageScannerScanSource.Flatbed, sourceStream)
+                            .AsTask(previewCancellationTokenSource.Token);
+                        break;
+                    case ScannerSource.Feeder:
+                        await imageScanner.ScanPreviewToStreamAsync(ImageScannerScanSource.Feeder, sourceStream)
+                            .AsTask(previewCancellationTokenSource.Token);
+                        break;
+                    case ScannerSource.Auto:
+                    case ScannerSource.None:
+                    default:
+                        LogService?.Log.Error("Can't scan preview to stream for source mode " + sourceMode);
+                        throw new ApplicationException("Failed to scan preview to stream for source mode " + sourceMode);
+                }
+            }
+            finally
+            {
+                previewCancellationTokenSource.Dispose();
+                previewCancellationTokenSource = null;
             }
 
             // convert to JPG and save to file
@@ -418,17 +438,20 @@ internal partial class HardwareScanner : IScanningDevice
         ApplyScanOptions(scanOptions);
 
         // scan
-        currentScanOperation = imageScanner.ScanFilesToFolderAsync(scanOptions.GetSourceModeForScanning(), targetFolder);
+        scanCancellationTokenSource = new CancellationTokenSource();
         try
         {
-            ImageScannerScanResult result = await currentScanOperation;
+            ImageScannerScanResult result = await imageScanner
+                .ScanFilesToFolderAsync(scanOptions.GetSourceModeForScanning(), targetFolder)
+                .AsTask(scanCancellationTokenSource.Token);
 
             // process result
             return result.ScannedFiles;
         }
         finally
         {
-            currentScanOperation = null;
+            scanCancellationTokenSource.Dispose();
+            scanCancellationTokenSource = null;
         }
     }
 
