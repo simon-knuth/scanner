@@ -77,14 +77,14 @@ public interface ISettingsService : INotifyPropertyChanged
 public enum SettingSaveLocationType
 {
     /// <summary>
-    /// Save files to a fixed location.
-    /// </summary>
-    FixedLocation = 0,
-
-    /// <summary>
     /// Ask for a location once the user saves a project.
     /// </summary>
-    AskAfterNewProject = 1,
+    AskAfterNewProject = 0,
+
+    /// <summary>
+    /// Save files to a fixed location.
+    /// </summary>
+    FixedLocation = 1,
 
     [Obsolete("Not exposed to user")]
     /// <summary>

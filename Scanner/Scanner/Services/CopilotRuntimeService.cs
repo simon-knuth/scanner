@@ -69,7 +69,7 @@ internal partial class CopilotRuntimeService : ObservableObject, ICopilotRuntime
     private ImageDescriptionGenerator? imageDescriptionGenerator;
     private SemaphoreSlim fileNameModelsSemaphore = new(1, 1);
 
-    [GeneratedRegex(@"(\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])", RegexOptions.Compiled)]
+    [GeneratedRegex("" + @"(\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])", RegexOptions.Compiled)]    // dummy string added in front to maybe fix ServiceHub.Host.dotnet.arm64 CPU usage https://github.com/dotnet/roslyn/issues/79925
     private static partial Regex EmojiRegex();
 
 

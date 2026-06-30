@@ -49,7 +49,7 @@ internal class SettingsService : ObservableObject, ISettingsService
 
     public SettingSaveLocationType SettingSaveLocationType
     {
-        get => (SettingSaveLocationType)GetSetting(nameof(SettingSaveLocationType), (int)SettingSaveLocationType.FixedLocation);
+        get => (SettingSaveLocationType)GetSetting(nameof(SettingSaveLocationType), (int)SettingSaveLocationType.AskAfterNewProject);
         set
         {
             if (value == SettingSaveLocationType.AskAfterNewProject)

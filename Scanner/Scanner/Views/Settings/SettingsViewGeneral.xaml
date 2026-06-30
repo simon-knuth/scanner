@@ -63,7 +63,7 @@
                         </StackPanel.ChildrenTransitions>
 
                         <InfoBar x:Name="InfoBarProjectOpen" Title="Project open" Message="The current project has to be closed to access all settings on this page." IsOpen="True" IsClosable="False" x:Load="{x:Bind ViewModel.ProjectService.CurrentProject, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}}" />
-                        <controls:SettingsExpander Header="Save location" IsExpanded="{x:Bind ViewModel.SettingsService.SettingSaveLocationType, Mode=OneWay, Converter={StaticResource EnumIntComparisonConverter}, ConverterParameter=0}">
+                        <controls:SettingsExpander Header="Save location" IsExpanded="{x:Bind ViewModel.SettingsService.SettingSaveLocationType, Mode=OneWay, Converter={StaticResource EnumIntComparisonConverter}, ConverterParameter=1}">
                             <controls:SettingsExpander.HeaderIcon>
                                 <FontIcon Glyph="&#xE8B7;" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                             </controls:SettingsExpander.HeaderIcon>
@@ -71,17 +71,6 @@
                             <controls:SettingsExpander.Content>
                                 <ComboBox x:Name="ComboBoxSettingSaveLocation" SelectedIndex="{x:Bind ViewModel.SettingSaveLocationType, Mode=TwoWay}">
                                     <ComboBox.Items>
-                                        <ComboBoxItem IsEnabled="{x:Bind ViewModel.IsFixedSaveLocationSupported}">
-                                            <Grid>
-                                                <Grid.RowDefinitions>
-                                                    <RowDefinition Height="20" />
-                                                    <RowDefinition Height="Auto" />
-                                                </Grid.RowDefinitions>
-
-                                                <TextBlock Grid.Row="0" Text="Fixed location" MaxLines="1" Style="{StaticResource BaseTextBlockStyle}" />
-                                                <TextBlock Grid.Row="1" Text="Save all files to the same folder." MaxWidth="300" HorizontalAlignment="Left" Visibility="{x:Bind ComboBoxSettingSaveLocation.IsDropDownOpen, Mode=OneWay}" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="WrapWholeWords" />
-                                            </Grid>
-                                        </ComboBoxItem>
                                         <ComboBoxItem>
                                             <Grid>
                                                 <Grid.RowDefinitions>
@@ -89,8 +78,19 @@
                                                     <RowDefinition Height="Auto" />
                                                 </Grid.RowDefinitions>
 
-                                                <TextBlock Grid.Row="0" Text="Ask after starting a new project" MaxLines="1" Style="{StaticResource BodyTextBlockStyle}" />
+                                                <TextBlock Grid.Row="0" Text="Choose a location" MaxLines="1" Style="{StaticResource BaseTextBlockStyle}" />
                                                 <TextBlock Grid.Row="1" Text="Select where to save files when saving the project for the first time." MaxWidth="300" HorizontalAlignment="Left" Visibility="{x:Bind ComboBoxSettingSaveLocation.IsDropDownOpen, Mode=OneWay}" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="WrapWholeWords" />
+                                            </Grid>
+                                        </ComboBoxItem>
+                                        <ComboBoxItem IsEnabled="{x:Bind ViewModel.IsFixedSaveLocationSupported}">
+                                            <Grid>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="20" />
+                                                    <RowDefinition Height="Auto" />
+                                                </Grid.RowDefinitions>
+
+                                                <TextBlock Grid.Row="0" Text="Fixed location" MaxLines="1" Style="{StaticResource BodyTextBlockStyle}" />
+                                                <TextBlock Grid.Row="1" Text="Save all files to the same folder." MaxWidth="300" HorizontalAlignment="Left" Visibility="{x:Bind ComboBoxSettingSaveLocation.IsDropDownOpen, Mode=OneWay}" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="WrapWholeWords" />
                                             </Grid>
                                         </ComboBoxItem>
                                         <ComboBoxItem Visibility="Collapsed">
@@ -120,7 +120,7 @@
                             </controls:SettingsExpander.Content>
 
                             <controls:SettingsExpander.Items>
-                                <controls:SettingsCard IsEnabled="{x:Bind ViewModel.SettingsService.SettingSaveLocationType, Mode=OneWay, Converter={StaticResource EnumIntComparisonConverter}, ConverterParameter=0}">
+                                <controls:SettingsCard IsEnabled="{x:Bind ViewModel.SettingsService.SettingSaveLocationType, Mode=OneWay, Converter={StaticResource EnumIntComparisonConverter}, ConverterParameter=1}">
                                     <controls:SettingsCard.Header>
                                         <TextBlock Text="{x:Bind ViewModel.FixedSaveLocationPath, Mode=OneWay}" Margin="-8,-4,-8,-4" Padding="8,4,8,4" IsTextSelectionEnabled="True" Style="{StaticResource CaptionTextBlockStyle}" />
                                     </controls:SettingsCard.Header>
