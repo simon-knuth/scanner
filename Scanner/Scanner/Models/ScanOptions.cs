@@ -361,6 +361,8 @@ public enum TargetFormat
     BMP = 4,
     SinglePagePDF = 5,
     TIFF = 6,
+
+    [Obsolete("Not exposed to user")]
     RAW = 7
 }
 

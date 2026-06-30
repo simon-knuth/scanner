@@ -235,7 +235,7 @@
                                                 <TextBlock Grid.Row="1" Grid.Column="1" Text="{x:Bind strings:Resources.FileFormatDescriptionTIFF}" Foreground="{ThemeResource TextFillColorTertiaryBrush}" TextWrapping="WrapWholeWords" Style="{StaticResource CaptionTextBlockStyle}" />
                                             </Grid>
                                         </ComboBoxItem>
-                                        <ComboBoxItem Foreground="{ThemeResource TextFillColorSecondaryBrush}">
+                                        <!--<ComboBoxItem Foreground="{ThemeResource TextFillColorSecondaryBrush}">
                                             <Grid ColumnSpacing="12">
                                                 <Grid.RowDefinitions>
                                                     <RowDefinition Height="20" />
@@ -251,7 +251,7 @@
                                                 <TextBlock Grid.Row="0" Grid.Column="1" Text="RAW" MaxLines="1" Style="{StaticResource BodyTextBlockStyle}" />
                                                 <TextBlock Grid.Row="1" Grid.Column="1" Text="{x:Bind strings:Resources.FileFormatDescriptionRAW}" Foreground="{ThemeResource TextFillColorTertiaryBrush}" TextWrapping="WrapWholeWords" Style="{StaticResource CaptionTextBlockStyle}" />
                                             </Grid>
-                                        </ComboBoxItem>
+                                        </ComboBoxItem>-->
                                     </ComboBox.Items>
                                 </ComboBox>
                             </StackPanel>

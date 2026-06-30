@@ -365,7 +365,7 @@
                                             <TextBlock Grid.Row="1" Grid.Column="1" Text="{x:Bind strings:Resources.FileFormatDescriptionTIFF}" Foreground="{ThemeResource TextFillColorTertiaryBrush}" TextWrapping="WrapWholeWords" Style="{StaticResource CaptionTextBlockStyle}" />
                                         </Grid>
                                     </customcontrols:MenuFlyoutItemCustomContent>
-                                    <customcontrols:MenuFlyoutItemCustomContent Visibility="{x:Bind ViewModel.CurrentProject.Format, Mode=OneWay, Converter={StaticResource NegativeEnumIntComparisonVisibilityConverter}, ConverterParameter=7}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Style="{StaticResource ConversionFormatMenuFlyoutItemCustomContentStyle}" Command="{x:Bind ViewModel.ConvertProjectAsyncCommand}" CommandParameter="{x:Bind models:TargetFormat.RAW}">
+                                    <!--<customcontrols:MenuFlyoutItemCustomContent Visibility="{x:Bind ViewModel.CurrentProject.Format, Mode=OneWay, Converter={StaticResource NegativeEnumIntComparisonVisibilityConverter}, ConverterParameter=7}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Style="{StaticResource ConversionFormatMenuFlyoutItemCustomContentStyle}" Command="{x:Bind ViewModel.ConvertProjectAsyncCommand}" CommandParameter="{x:Bind models:TargetFormat.RAW}">
                                         <Grid ColumnSpacing="12">
                                             <Grid.RowDefinitions>
                                                 <RowDefinition Height="20" />
@@ -381,7 +381,7 @@
                                             <TextBlock Grid.Row="0" Grid.Column="1" Text="RAW" MaxLines="1" Style="{StaticResource BodyTextBlockStyle}" />
                                             <TextBlock Grid.Row="1" Grid.Column="1" Text="{x:Bind strings:Resources.FileFormatDescriptionRAW}" Foreground="{ThemeResource TextFillColorTertiaryBrush}" TextWrapping="WrapWholeWords" Style="{StaticResource CaptionTextBlockStyle}" />
                                         </Grid>
-                                    </customcontrols:MenuFlyoutItemCustomContent>
+                                    </customcontrols:MenuFlyoutItemCustomContent>-->
                                 </MenuFlyoutSubItem.Items>
                             </MenuFlyoutSubItem>
                             <MenuFlyoutSeparator />
