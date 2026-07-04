@@ -31,7 +31,7 @@ public interface IProjectCreationData
     
     TargetFormat Format { get; }
 
-    ScanOptions InitialScanOptions { get; }
+    ScanOptions CreationScanOptions { get; }
 
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

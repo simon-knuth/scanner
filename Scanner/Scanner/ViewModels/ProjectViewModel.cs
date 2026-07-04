@@ -765,7 +765,7 @@ partial class ProjectViewModel : ObservableRecipient, IDisposable
         await Task.Run(async () =>
         {
             // get save options
-            SaveOptions? saveOptions = await SaveLocationService.GetSaveOptionsAsync(((App)Application.Current).MainWindow, CurrentProject.InitialScanOptions, CurrentProject,
+            SaveOptions? saveOptions = await SaveLocationService.GetSaveOptionsAsync(((App)Application.Current).MainWindow, CurrentProject.CreationScanOptions, CurrentProject,
                 true, viewDispatcherQueue!, true, pdfProject.FileNameInfo.DesiredDisplayName);
             if (saveOptions == null)
                 return;

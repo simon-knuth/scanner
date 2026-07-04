@@ -41,7 +41,7 @@ public partial class MultiFileProjectCreationData : IProjectCreationData
 
     public TargetFormat Format { get; private set; }
 
-    public ScanOptions InitialScanOptions { get; }
+    public ScanOptions CreationScanOptions { get; }
 
     public bool IsAlreadySaved { get; }
 
@@ -49,24 +49,24 @@ public partial class MultiFileProjectCreationData : IProjectCreationData
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    public MultiFileProjectCreationData(Guid? id, List<(StorageFile SourceFile, string? TargetFileName, StorageFile? TargetFile)> pages, TargetFormat format, StorageFolder? targetFolder, ScanOptions initialScanOptions, bool isAlreadySaved)
+    public MultiFileProjectCreationData(Guid? id, List<(StorageFile SourceFile, string? TargetFileName, StorageFile? TargetFile)> pages, TargetFormat format, StorageFolder? targetFolder, ScanOptions creationScanOptions, bool isAlreadySaved)
     {
         Id = id;
         Format = format;
-        InitialScanOptions = initialScanOptions;
+        CreationScanOptions = creationScanOptions;
         IsAlreadySaved = isAlreadySaved;
 
         foreach ((StorageFile SourceFile, string? TargetFileName, StorageFile? TargetFile) page in pages)
         {
-            Pages.Add(new PageCreationData(page.SourceFile, page.TargetFileName, page.TargetFile, targetFolder, initialScanOptions.GetBaseFilter(), initialScanOptions.GetFilter(), initialScanOptions.Brightness, initialScanOptions.Contrast));
+            Pages.Add(new PageCreationData(page.SourceFile, page.TargetFileName, page.TargetFile, targetFolder, creationScanOptions.GetBaseFilter(), creationScanOptions.GetFilter(), creationScanOptions.Brightness, creationScanOptions.Contrast));
         }
     }
 
-    public MultiFileProjectCreationData(Guid? id, Collection<IProjectPage> pages, TargetFormat format, string? targetFileName, ScanOptions initialScanOptions, bool isAlreadySaved)
+    public MultiFileProjectCreationData(Guid? id, Collection<IProjectPage> pages, TargetFormat format, string? targetFileName, ScanOptions creationScanOptions, bool isAlreadySaved)
     {
         Id = id;
         Format = format;
-        InitialScanOptions = initialScanOptions;
+        CreationScanOptions = creationScanOptions;
         IsAlreadySaved = isAlreadySaved;
 
         foreach (IProjectPage page in pages)

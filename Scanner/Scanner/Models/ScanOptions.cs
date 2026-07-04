@@ -92,6 +92,30 @@ public partial class ScanOptions : ObservableObject
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /// <summary>
+    /// Creates a copy of these scan options. The live <see cref="Scanner"/> device and the
+    /// <see cref="Resolution"/> (which is matched by identity against the device's supported
+    /// resolutions) are shared by reference; <see cref="ScanArea"/> and <see cref="ScanMergeConfig"/>
+    /// are deep-copied so the copy can be mutated independently.
+    /// </summary>
+    public ScanOptions Clone()
+    {
+        return new ScanOptions(Scanner)
+        {
+            SourceMode = SourceMode,
+            TargetFormat = TargetFormat,
+            ColorMode = ColorMode,
+            Resolution = Resolution,
+            ScanArea = ScanArea?.Clone(),
+            Duplex = Duplex,
+            ScanMultiplePages = ScanMultiplePages,
+            Brightness = Brightness,
+            Contrast = Contrast,
+            ScanMergeConfig = ScanMergeConfig?.Clone(),
+            ScanTime = ScanTime,
+        };
+    }
+
     public ImageScannerScanSource GetSourceModeForScanning()
     {
         switch (SourceMode)

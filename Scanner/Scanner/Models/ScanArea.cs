@@ -18,7 +18,10 @@ namespace Scanner.Models;
 
 public abstract class ScanArea
 {
-
+    /// <summary>
+    /// Creates a deep copy of this scan area.
+    /// </summary>
+    public abstract ScanArea Clone();
 }
 
 public abstract class RectScanArea : ScanArea
@@ -67,6 +70,8 @@ public abstract class RectScanArea : ScanArea
 public class AutoCropArea : ScanArea
 {
     public ScannerAutoCropMode AutoCropMode { get; set; }
+
+    public override ScanArea Clone() => new AutoCropArea { AutoCropMode = AutoCropMode };
 }
 
 [ObservableObject]
@@ -80,6 +85,13 @@ public partial class PaperSizeArea : RectScanArea
 
     [ObservableProperty]
     private ScanOrientation orientation;
+
+    public override ScanArea Clone() => new PaperSizeArea
+    {
+        PaperSize = PaperSize,
+        Corner = Corner,
+        Orientation = Orientation,
+    };
 
     internal override Rect GetRect(double minX, double maxX, double minY, double MaxY, double minWidth, double maxWidth, double minHeight, double maxHeight)
     {
@@ -129,6 +141,8 @@ public class PreviewSelectionArea : RectScanArea
     {
         SelectedRegion = selectedRegion;
     }
+
+    public override ScanArea Clone() => new PreviewSelectionArea(SelectedRegion);
 
     internal override Rect GetRect(double minX, double maxX, double minY, double MaxY, double minWidth, double maxWidth, double minHeight, double maxHeight)
     {

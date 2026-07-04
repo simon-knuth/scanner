@@ -41,7 +41,7 @@ public partial class PdfProjectCreationData : IProjectCreationData
 
     public TargetFormat Format { get; private set; } = TargetFormat.PDF;
 
-    public ScanOptions InitialScanOptions { get; }
+    public ScanOptions CreationScanOptions { get; }
 
     public bool IsAlreadySaved { get; }
 
@@ -53,40 +53,40 @@ public partial class PdfProjectCreationData : IProjectCreationData
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    public PdfProjectCreationData(Guid? id, IReadOnlyList<StorageFile> files, string targetFileName, StorageFolder? targetFolder, ScanOptions initialScanOptions, bool isAlreadySaved)
+    public PdfProjectCreationData(Guid? id, IReadOnlyList<StorageFile> files, string targetFileName, StorageFolder? targetFolder, ScanOptions creationScanOptions, bool isAlreadySaved)
     {
         Id = id;
         TargetFileName = targetFileName;
         TargetFolder = targetFolder;
-        InitialScanOptions = initialScanOptions;
+        CreationScanOptions = creationScanOptions;
         IsAlreadySaved = isAlreadySaved;
 
         foreach (StorageFile file in files)
         {
-            Pages.Add(new PageCreationData(file, targetFileName, null, targetFolder, initialScanOptions.GetBaseFilter(), initialScanOptions.GetFilter(), initialScanOptions.Brightness, initialScanOptions.Contrast));
+            Pages.Add(new PageCreationData(file, targetFileName, null, targetFolder, creationScanOptions.GetBaseFilter(), creationScanOptions.GetFilter(), creationScanOptions.Brightness, creationScanOptions.Contrast));
         }
     }
 
-    public PdfProjectCreationData(Guid? id, StorageFile pdfFile, uint pagesInPdf, StorageFolder? targetFolder, ScanOptions initialScanOptions, bool isAlreadySaved)
+    public PdfProjectCreationData(Guid? id, StorageFile pdfFile, uint pagesInPdf, StorageFolder? targetFolder, ScanOptions creationScanOptions, bool isAlreadySaved)
     {
         Id = id;
         TargetFileName = pdfFile.Name;
         TargetFolder = targetFolder;
-        InitialScanOptions = initialScanOptions;
+        CreationScanOptions = creationScanOptions;
         IsAlreadySaved = isAlreadySaved;
 
         for (int i = 0; i < pagesInPdf; i++)
         {
-            Pages.Add(new PageCreationData(pdfFile, TargetFileName, null, targetFolder, initialScanOptions.GetBaseFilter(), initialScanOptions.GetFilter(), initialScanOptions.Brightness, initialScanOptions.Contrast));
+            Pages.Add(new PageCreationData(pdfFile, TargetFileName, null, targetFolder, creationScanOptions.GetBaseFilter(), creationScanOptions.GetFilter(), creationScanOptions.Brightness, creationScanOptions.Contrast));
         }
     }
 
-    public PdfProjectCreationData(Guid? id, Collection<IProjectPage> pages, string targetFileName, StorageFolder? targetFolder, ScanOptions initialScanOptions, bool isAlreadySaved)
+    public PdfProjectCreationData(Guid? id, Collection<IProjectPage> pages, string targetFileName, StorageFolder? targetFolder, ScanOptions creationScanOptions, bool isAlreadySaved)
     {
         Id = id;
         TargetFileName = targetFileName;
         TargetFolder = targetFolder;
-        InitialScanOptions = initialScanOptions;
+        CreationScanOptions = creationScanOptions;
         IsAlreadySaved = isAlreadySaved;
 
         foreach (IProjectPage page in pages)

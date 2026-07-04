@@ -49,7 +49,7 @@ public partial class MultiFileProject : ProjectBase
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    private MultiFileProject(Guid? id, IList<IProjectPage> pages, TargetFormat format, ScanOptions initialScanOptions) : base(id, pages, format, initialScanOptions)
+    private MultiFileProject(Guid? id, IList<IProjectPage> pages, TargetFormat format, ScanOptions creationScanOptions) : base(id, pages, format, creationScanOptions)
     {
         foreach (IProjectPage page in pages)
         {
@@ -77,7 +77,7 @@ public partial class MultiFileProject : ProjectBase
         }
 
         // create project and update previews
-        MultiFileProject project = new MultiFileProject(creationData.Id, pages, creationData.Format, creationData.InitialScanOptions);
+        MultiFileProject project = new MultiFileProject(creationData.Id, pages, creationData.Format, creationData.CreationScanOptions);
         await project.GeneratePagePreviewsAsync(pages.OfType<ImagePage>().ToList(), uiDispatcherQueue);
 
         if (isAlreadySaved)
@@ -206,7 +206,7 @@ public partial class MultiFileProject : ProjectBase
                         desiredFileDisplayName = imagePage.FileNameInfo?.DesiredDisplayName;
 
                     // get save options
-                    SaveOptions? saveOptions = await SaveLocationService.GetSaveOptionsAsync(((App)Application.Current).MainWindow, InitialScanOptions!, this, true, uiDispatcherQueue, saveAs, desiredFileDisplayName);
+                    SaveOptions? saveOptions = await SaveLocationService.GetSaveOptionsAsync(((App)Application.Current).MainWindow, CreationScanOptions!, this, true, uiDispatcherQueue, saveAs, desiredFileDisplayName);
                     if (saveOptions == null || saveOptions.TargetFolder == null)
                         return;
 

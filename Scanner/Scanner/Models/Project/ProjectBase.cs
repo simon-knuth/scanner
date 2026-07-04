@@ -92,7 +92,7 @@ public abstract partial class ProjectBase : ObservableRecipient
     /// <summary>
     /// The <see cref="ScanOptions"/> in use when this project was created in the first place.
     /// </summary>
-    public readonly ScanOptions InitialScanOptions;
+    public readonly ScanOptions CreationScanOptions;
     public readonly TargetFormat Format;
     public string FriendlyFormatName => Format.GetFriendlyName();
 
@@ -141,12 +141,12 @@ public abstract partial class ProjectBase : ObservableRecipient
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    protected ProjectBase(Guid? id, IList<IProjectPage> pages, TargetFormat targetFormat, ScanOptions initialScanOptions)
+    protected ProjectBase(Guid? id, IList<IProjectPage> pages, TargetFormat targetFormat, ScanOptions creationScanOptions)
     {
         Id = id ?? Guid.NewGuid();
         Pages = new ObservableCollection<IProjectPage>(pages);
         Format = targetFormat;
-        InitialScanOptions = initialScanOptions;
+        CreationScanOptions = creationScanOptions;
     }
 
 

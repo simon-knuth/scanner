@@ -257,6 +257,10 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
         }
         catch (Exception exc)
         {
+#if DEBUG
+            Debugger.Break();
+#endif
+
             LogService?.Log.Error(exc, "Failed to create project from data");
             SentryService?.TrackError(exc);
             Messenger.Send(new ShowInAppNotificationMessage(new Notification()
@@ -1279,6 +1283,8 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
         try
         {
             // collect page data for new project
+            ScanOptions scanOptions = CurrentProject.CreationScanOptions.Clone();
+            scanOptions.TargetFormat = targetFormat;
             IProjectCreationData? creationData = null;
             switch (targetFormat)
             {
@@ -1286,7 +1292,7 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
                     // get file name and target folder from first page
                     ImagePage imagePage = (ImagePage)CurrentProject.Pages.First(x => x is ImagePage);
 
-                    creationData = new PdfProjectCreationData(null, CurrentProject.Pages, imagePage.FileNameInfo!.DesiredName, imagePage.TargetFolder, CurrentProject.InitialScanOptions, false);
+                    creationData = new PdfProjectCreationData(null, CurrentProject.Pages, imagePage.FileNameInfo!.DesiredName, imagePage.TargetFolder, scanOptions, false);
                     break;
                 case TargetFormat.JPG:
                 case TargetFormat.PNG:
@@ -1295,9 +1301,9 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
                 case TargetFormat.TIFF:
                 case TargetFormat.RAW:
                     if (CurrentProject is MultiFileProject imageProject)
-                        creationData = new MultiFileProjectCreationData(null, CurrentProject.Pages, targetFormat, null, CurrentProject.InitialScanOptions, false);
+                        creationData = new MultiFileProjectCreationData(null, CurrentProject.Pages, targetFormat, null, scanOptions, false);
                     else if (CurrentProject is PdfProject pdfProject)
-                        creationData = new MultiFileProjectCreationData(null, CurrentProject.Pages, targetFormat, pdfProject.FileNameInfo.DesiredDisplayName + TargetFormatToFileExtension(targetFormat), CurrentProject.InitialScanOptions, false);
+                        creationData = new MultiFileProjectCreationData(null, CurrentProject.Pages, targetFormat, pdfProject.FileNameInfo.DesiredDisplayName + TargetFormatToFileExtension(targetFormat), scanOptions, false);
                     break;
                 default:
                     throw new ArgumentException("Can't convert project to " + targetFormat.ToString());

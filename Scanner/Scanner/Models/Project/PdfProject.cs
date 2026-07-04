@@ -49,7 +49,7 @@ public partial class PdfProject : ProjectBase
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    private PdfProject(Guid? id, IList<IProjectPage> pages, string targetFileName, StorageFolder? targetFolder, ScanOptions initialScanOptions) : base(id, pages, TargetFormat.PDF, initialScanOptions)
+    private PdfProject(Guid? id, IList<IProjectPage> pages, string targetFileName, StorageFolder? targetFolder, ScanOptions creationScanOptions) : base(id, pages, TargetFormat.PDF, creationScanOptions)
     {
         // folder saved at project level for PDF and page level for all other formats
         TargetFolder = targetFolder;
@@ -76,7 +76,7 @@ public partial class PdfProject : ProjectBase
         }
 
         // create project and update previews
-        PdfProject project = new(creationData.Id, pages, creationData.TargetFileName, creationData.TargetFolder, creationData.InitialScanOptions);
+        PdfProject project = new(creationData.Id, pages, creationData.TargetFileName, creationData.TargetFolder, creationData.CreationScanOptions);
 
         if (isAlreadySaved)
             project.areFilesSaved = true;
@@ -177,7 +177,7 @@ public partial class PdfProject : ProjectBase
                 if (saveAs || (TargetFile == null && TargetFolder == null))
                 {
                     // get save options
-                    SaveOptions? saveOptions = await SaveLocationService.GetSaveOptionsAsync(((App)Application.Current).MainWindow, InitialScanOptions!, this, true, uiDispatcherQueue, saveAs, FileNameInfo.DesiredDisplayName);
+                    SaveOptions? saveOptions = await SaveLocationService.GetSaveOptionsAsync(((App)Application.Current).MainWindow, CreationScanOptions!, this, true, uiDispatcherQueue, saveAs, FileNameInfo.DesiredDisplayName);
                     if (saveOptions == null || saveOptions.TargetFolder == null)
                         return;
 
