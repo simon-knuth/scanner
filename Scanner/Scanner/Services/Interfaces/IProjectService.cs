@@ -86,7 +86,7 @@ public interface IProjectService : INotifyPropertyChanged, INotifyPropertyChangi
 
     Task<bool> TryConvertProjectAsync(TargetFormat targetFormat, DispatcherQueue uiDispatcherQueue);
 
-    Task<bool> TryDeleteProjectAsync();
+    Task<bool> TryDeleteProjectAsync(DispatcherQueue uiDispatcherQueue);
     Task<bool> TrySaveProjectAsync();
 
     Task<bool> TryCopyProjectAsync();
@@ -98,7 +98,7 @@ public interface IProjectService : INotifyPropertyChanged, INotifyPropertyChangi
     Task<bool> TryShareProjectAsync();
     Task<bool> TrySharePagesAsync(List<ImagePage> pages);
 
-    Task<bool> TryCloseProjectAsync(bool preserveSourceFilesInIncomingFolder = false, bool ignoreUnsavedChanges = false);
+    Task<bool> TryCloseProjectAsync(DispatcherQueue uiDispatcherQueue, bool preserveSourceFilesInIncomingFolder = false, bool ignoreUnsavedChanges = false);
 
     void SelectPreviousPage();
     void SelectNextPage();

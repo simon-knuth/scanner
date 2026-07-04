@@ -62,6 +62,7 @@ public abstract partial class ProjectBase : ObservableRecipient
     protected static readonly IAppDataService AppDataService = Ioc.Default.GetRequiredService<IAppDataService>();
     protected static readonly ICopilotRuntimeService CopilotRuntimeService = Ioc.Default.GetRequiredService<ICopilotRuntimeService>();
     protected static readonly ILogService? LogService = Ioc.Default.GetService<ILogService>();
+    protected static readonly IProjectService ProjectService = Ioc.Default.GetRequiredService<IProjectService>();
     protected static readonly ISaveLocationService SaveLocationService = Ioc.Default.GetRequiredService<ISaveLocationService>();
     protected static readonly IOcrService OcrService = Ioc.Default.GetRequiredService<IOcrService>();
     protected static readonly ISentryService? SentryService = Ioc.Default.GetService<ISentryService>();

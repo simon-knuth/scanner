@@ -56,7 +56,7 @@ public partial class RemovePagesAction : ObservableRecipient, IProjectAction
     public async Task<bool> ExecuteAsync(ProjectBase project, DispatcherQueue uiDispatcherQueue)
     {
         if (project.Pages.Count == removals.Count)
-            return await ProjectService.TryDeleteProjectAsync();
+            return await ProjectService.TryDeleteProjectAsync(uiDispatcherQueue);
         else
             await project.RemovePagesAsync(removals, false, uiDispatcherQueue);
 

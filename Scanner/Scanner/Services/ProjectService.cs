@@ -228,7 +228,7 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
         try
         {
             // close project
-            if (await TryCloseProjectAsync() == false)
+            if (await TryCloseProjectAsync(uiDispatcherQueue) == false)
                 return false;
 
             // create project
@@ -283,7 +283,7 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
             CurrentScanState = ScanState.Scanning;
 
             // close project
-            if (await TryCloseProjectAsync() == false)
+            if (await TryCloseProjectAsync(uiDispatcherQueue) == false)
                 return false;
 
             // get save options
@@ -404,7 +404,7 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
 
             // discard any project that was already created from the cancelled scan
             if (CurrentProject != null)
-                await TryCloseProjectAsync(ignoreUnsavedChanges: true);
+                await TryCloseProjectAsync(uiDispatcherQueue, ignoreUnsavedChanges: true);
 
             return false;
         }
@@ -558,7 +558,7 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
             }
 
             // close project
-            if (await TryCloseProjectAsync() == false)
+            if (await TryCloseProjectAsync(uiDispatcherQueue) == false)
                 return false;
 
             Messenger.Send(new ShowIndeterminateProgressDialogMessage("Opening project", openTcs.Task));
@@ -710,7 +710,7 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
         return files;
     }
 
-    public async Task<bool> TryDeleteProjectAsync()
+    public async Task<bool> TryDeleteProjectAsync(DispatcherQueue uiDispatcherQueue)
     {
         if (CurrentProject == null) return true;
         IsActionRunning = true;
@@ -725,7 +725,7 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
             // close project
             TargetFormat deletedFormat = CurrentProject.Format;
             Guid id = CurrentProject.Id;
-            if (await TryCloseProjectAsync(ignoreUnsavedChanges: true))
+            if (await TryCloseProjectAsync(uiDispatcherQueue, ignoreUnsavedChanges: true))
             {
                 await ProjectHistoryService.RemoveEntryAsync(id);
                 SentryService?.TrackEvent(AnalyticsEvent.ProjectDeleted, new Dictionary<string, string>
@@ -749,7 +749,7 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
             }));
 
             // close project
-            await TryCloseProjectAsync(ignoreUnsavedChanges: true);
+            await TryCloseProjectAsync(uiDispatcherQueue, ignoreUnsavedChanges: true);
         }
         finally
         {
@@ -962,7 +962,7 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
         return true;
     }
 
-    public async Task<bool> TryCloseProjectAsync(bool preserveSourceFilesInIncomingFolder = false, bool ignoreUnsavedChanges = false)
+    public async Task<bool> TryCloseProjectAsync(DispatcherQueue uiDispatcherQueue, bool preserveSourceFilesInIncomingFolder = false, bool ignoreUnsavedChanges = false)
     {
         if (CurrentProject == null)
             return true;
@@ -970,65 +970,69 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
         LogService?.Log.Information("Closing the current project ({Format})", CurrentProject.Format);
 
         // handle unsaved changes
-        if (!ignoreUnsavedChanges && await TrySaveProjectAsync() == false)
+        bool result = false;
+        await uiDispatcherQueue.RunOnThreadAndWaitAsync(DispatcherQueuePriority.Normal, async () =>
         {
-            return false;
-        }
+            if (!ignoreUnsavedChanges && await TrySaveProjectAsync() == false)
+                return;
 
-        // close project
-        ObservableCollection<IProjectPage> pages = CurrentProject.Pages;
-        ProjectBase project = CurrentProject;
-        CurrentProject = null;
-        SelectedPage = null;
-        await AppDataService.EmptyFolderAsync(AppDataService.IncomingFolder);
+            // close project
+            ObservableCollection<IProjectPage> pages = CurrentProject.Pages;
+            ProjectBase project = CurrentProject;
+            CurrentProject = null;
+            SelectedPage = null;
+            await AppDataService.EmptyFolderAsync(AppDataService.IncomingFolder);
 
-        // release files
-        if (project is PdfProject pdfProject && pdfProject.TargetFile != null)
-        {
-            pdfProject.TargetFile.FileStream.Dispose();
-
-            if (pdfProject.SourceFile != null && pdfProject.SourceFile != pdfProject.TargetFile)
-                pdfProject.SourceFile.FileStream.Dispose();
-        }
-        else
-        {
-            foreach (IProjectPage page in pages)
+            // release files
+            if (project is PdfProject pdfProject && pdfProject.TargetFile != null)
             {
-                if (page is ImagePage imagePage && imagePage.TargetFile != null)
-                    imagePage.TargetFile.FileStream.Dispose();
-            }
-        }
+                pdfProject.TargetFile.FileStream.Dispose();
 
-        if (preserveSourceFilesInIncomingFolder)
-        {
-            // move all source files to the Incoming folder before clearing
-            List<Task> tasks = [];
-            for (int i = 0; i < pages.Count; i++)
+                if (pdfProject.SourceFile != null && pdfProject.SourceFile != pdfProject.TargetFile)
+                    pdfProject.SourceFile.FileStream.Dispose();
+            }
+            else
             {
-                if (pages[i] is ImagePage imagePage)
-                    tasks.Add(imagePage.SourceFile.MoveAsync(AppDataService.IncomingFolder, imagePage.SourceFile.Name, NameCollisionOption.GenerateUniqueName).AsTask());
+                foreach (IProjectPage page in pages)
+                {
+                    if (page is ImagePage imagePage && imagePage.TargetFile != null)
+                        imagePage.TargetFile.FileStream.Dispose();
+                }
             }
-            await Task.WhenAll(tasks);
-        }
 
-        await AppDataService.EmptyFolderAsync(AppDataService.ProjectFolder);
-        await AppDataService.EmptyFolderAsync(AppDataService.UndoFolder);
-        await AppDataService.EmptyFolderAsync(AppDataService.RedoFolder);
-        await AppDataService.EmptyFolderAsync(AppDataService.PreviewFolder);
-        await AppDataService.EmptyFolderAsync(AppDataService.ChangesFolder);                
+            if (preserveSourceFilesInIncomingFolder)
+            {
+                // move all source files to the Incoming folder before clearing
+                List<Task> tasks = [];
+                for (int i = 0; i < pages.Count; i++)
+                {
+                    if (pages[i] is ImagePage imagePage)
+                        tasks.Add(imagePage.SourceFile.MoveAsync(AppDataService.IncomingFolder, imagePage.SourceFile.Name, NameCollisionOption.GenerateUniqueName).AsTask());
+                }
+                await Task.WhenAll(tasks);
+            }
 
-        // update undo/redo stacks
-        UndoStack.Clear();
-        RedoStack.Clear();
-        OnPropertyChanged(nameof(CanUndo));
-        OnPropertyChanged(nameof(CanRedo));
+            await AppDataService.EmptyFolderAsync(AppDataService.ProjectFolder);
+            await AppDataService.EmptyFolderAsync(AppDataService.UndoFolder);
+            await AppDataService.EmptyFolderAsync(AppDataService.RedoFolder);
+            await AppDataService.EmptyFolderAsync(AppDataService.PreviewFolder);
+            await AppDataService.EmptyFolderAsync(AppDataService.ChangesFolder);
 
-        // end processes
-        IsActionRunning = false;
-        IsEditing = false;
-        IsScanProcessRunning = false;
+            // update undo/redo stacks
+            UndoStack.Clear();
+            RedoStack.Clear();
+            OnPropertyChanged(nameof(CanUndo));
+            OnPropertyChanged(nameof(CanRedo));
 
-        return true;
+            // end processes
+            IsActionRunning = false;
+            IsEditing = false;
+            IsScanProcessRunning = false;
+
+            result = true;
+        });
+
+        return result;
     }
 
     public void SelectPreviousPage()
@@ -1099,7 +1103,7 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
             }
             else
             {
-                IsActionRunning = true;
+                await UiDispatcherQueue.RunOnThreadAndWaitAsync(DispatcherQueuePriority.High, () => IsActionRunning = true);
                 changesMade = await action.ExecuteAsync(CurrentProject, UiDispatcherQueue!);
             }
 
@@ -1109,16 +1113,19 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
 
                 // update undo stack
                 UndoStack.Push(action);
-                OnPropertyChanged(nameof(CanUndo));
-
-                // update redo
-                if (!redoing)
+                await UiDispatcherQueue.RunOnThreadAndWaitAsync(DispatcherQueuePriority.Low, async () =>
                 {
-                    RedoStack.Clear();
-                    await AppDataService.EmptyFolderAsync(AppDataService.RedoFolder);
-                }
-                OnPropertyChanged(nameof(CanRedo));
+                    OnPropertyChanged(nameof(CanUndo));
 
+                    // update redo
+                    if (!redoing)
+                    {
+                        RedoStack.Clear();
+                        await AppDataService.EmptyFolderAsync(AppDataService.RedoFolder);
+                    }
+                    OnPropertyChanged(nameof(CanRedo));
+                });
+                
                 // analytics (genuine user actions only, not redos)
                 if (!redoing)
                 {
@@ -1152,13 +1159,13 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
             {
                 Title = "Something went wrong and the project needs to be closed"
             }));
-            await TryCloseProjectAsync(ignoreUnsavedChanges: true);
+            await TryCloseProjectAsync(UiDispatcherQueue!, ignoreUnsavedChanges: true);
 
             return false;
         }
         finally
         {
-            IsActionRunning = false;
+            await UiDispatcherQueue.RunOnThreadAndWaitAsync(DispatcherQueuePriority.High, () => IsActionRunning = false);
         }
     }
 
@@ -1199,7 +1206,7 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
             {
                 Title = "Something went wrong and the project needs to be closed"
             }));
-            await TryCloseProjectAsync(ignoreUnsavedChanges: true);
+            await TryCloseProjectAsync(UiDispatcherQueue!, ignoreUnsavedChanges: true);
 
             return false;
         }
@@ -1300,7 +1307,7 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
                 return false;
 
             // close project and preserve files
-            if (!await TryCloseProjectAsync(preserveSourceFilesInIncomingFolder: true))
+            if (!await TryCloseProjectAsync(uiDispatcherQueue, preserveSourceFilesInIncomingFolder: true))
                 return false;
 
             // create new project from preserved files

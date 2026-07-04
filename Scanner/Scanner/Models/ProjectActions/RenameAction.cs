@@ -31,6 +31,7 @@ public partial class RenameAction : IProjectAction
 
     private IProjectPage? page;
     private string newName;
+    private bool isAIGenerated;
 
     private string? oldName;
     private AnalyticsEvent? analyticsEvent;
@@ -42,10 +43,11 @@ public partial class RenameAction : IProjectAction
     /// <summary>
     /// Renames a page.
     /// </summary>
-    public RenameAction(IProjectPage? page, string newName)
+    public RenameAction(IProjectPage? page, string newName, bool isAIGenerated = false)
     {
         this.page = page;
         this.newName = newName;
+        this.isAIGenerated = isAIGenerated;
     }
 
 
@@ -56,17 +58,21 @@ public partial class RenameAction : IProjectAction
     {
         if (project is PdfProject pdfProject)
         {
-            pdfProject.FileNameInfo!.NameGenerationCts?.Cancel();
+            if (!isAIGenerated)
+                pdfProject.FileNameInfo!.NameGenerationCts?.Cancel();
             oldName = pdfProject.FileNameInfo!.DesiredName;
-            await pdfProject.FileNameInfo!.UpdateNamesAsync(newName, pdfProject.FileNameInfo.ActualName, false, uiDispatcherQueue);
-            analyticsEvent = AnalyticsEvent.RenamePDF;
+            await pdfProject.FileNameInfo!.UpdateNamesAsync(newName, pdfProject.FileNameInfo.ActualName, isAIGenerated, uiDispatcherQueue);
+            if (!isAIGenerated)
+                analyticsEvent = AnalyticsEvent.RenamePDF;
         }
         else if (page is ImagePage imagePage)
         {
-            imagePage.FileNameInfo.NameGenerationCts?.Cancel();
+            if (!isAIGenerated)
+                imagePage.FileNameInfo.NameGenerationCts?.Cancel();
             oldName = imagePage.FileNameInfo.DesiredName;
-            await imagePage.FileNameInfo.UpdateNamesAsync(newName, imagePage.FileNameInfo.ActualName, false, uiDispatcherQueue);
-            analyticsEvent = AnalyticsEvent.RenamePage;
+            await imagePage.FileNameInfo.UpdateNamesAsync(newName, imagePage.FileNameInfo.ActualName, isAIGenerated, uiDispatcherQueue);
+            if (!isAIGenerated)
+                analyticsEvent = AnalyticsEvent.RenamePage;
         }
 
         return true;

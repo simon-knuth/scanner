@@ -502,7 +502,10 @@ public partial class PdfProject : ProjectBase
             // apply result
             if (fileName != null)
             {
-                await FileNameInfo.UpdateNamesAsync(fileName + Helpers.Helpers.TargetFormatToFileExtension(Format), FileNameInfo.ActualName, true, uiDispatcherQueue);
+                string newName = fileName + Helpers.Helpers.TargetFormatToFileExtension(Format);
+                if (newName != FileNameInfo.DesiredName)
+                    await ProjectService.ApplyActionAsync(new RenameAction(null, newName, true));
+
                 successful = true;
             }
         }

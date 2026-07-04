@@ -380,12 +380,12 @@ partial class ProjectViewModel : ObservableRecipient, IDisposable
 
     private async Task TryDeleteProjectAsync()
     {
-        await ProjectService.TryDeleteProjectAsync();
+        await ProjectService.TryDeleteProjectAsync(viewDispatcherQueue!);
     }
 
     private async Task TryCloseProjectAsync()
     {
-        await ProjectService.TryCloseProjectAsync();
+        await ProjectService.TryCloseProjectAsync(viewDispatcherQueue!);
     }
 
     private void ShowSettings()

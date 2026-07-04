@@ -306,7 +306,7 @@ partial class ShellViewModel : ObservableRecipient, IDisposable
 
     private async Task TryCloseProjectAsync()
     {
-        await ProjectService.TryCloseProjectAsync();
+        await ProjectService.TryCloseProjectAsync(viewDispatcherQueue!);
     }
 
     private async Task TryUndoAsync(IProjectAction? upUntil = null)
