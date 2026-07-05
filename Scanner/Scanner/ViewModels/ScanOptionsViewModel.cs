@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Dispatching;
+using Microsoft.UI.Xaml.Controls;
 using Scanner.Data;
 using Scanner.Extensions;
 using Scanner.Messages;
@@ -516,11 +517,25 @@ partial class ScanOptionsViewModel : ObservableRecipient, IDisposable
 
     private async Task UpdateScanAreaAlignmentBitmapAsync()
     {
-        await CleanUpScanAreaAlignmentBitmapAsync();
+        try
+        {
+            await CleanUpScanAreaAlignmentBitmapAsync();
 
-        if (SelectedScanner == null)
-            return;
+            if (SelectedScanner == null)
+                return;
 
-        ScanAreaAlignmentBitmap = await SelectedScanner.GetPreviewScanAsync(ScanOptions.SourceMode, AppDataService.PreviewScanFolder, true, viewDispatcherQueue);
+            ScanAreaAlignmentBitmap = await SelectedScanner.GetPreviewScanAsync(ScanOptions.SourceMode, AppDataService.PreviewScanFolder, true, viewDispatcherQueue);
+        }
+        catch (Exception exc)
+        {
+            LogService?.Log.Error(exc, "Failed to update bitmap for scan area alignment.");
+            SentryService?.TrackError(exc);
+            Messenger.Send(new ShowInAppNotificationMessage(new CommunityToolkit.WinUI.Behaviors.Notification
+            {
+                Title = Resources.Strings.Resources.ErrorMessageHeading,
+                Message = Resources.Strings.Resources.ErrorMessageBody,
+                Severity = InfoBarSeverity.Error,
+            }));
+        }
     }
 }
