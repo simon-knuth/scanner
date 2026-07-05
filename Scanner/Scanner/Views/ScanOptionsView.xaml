@@ -496,7 +496,6 @@
                                                         <RowDefinition Height="Auto" />
                                                         <RowDefinition Height="32" />
                                                         <RowDefinition Height="Auto" />
-                                                        <RowDefinition Height="Auto" />
                                                     </Grid.RowDefinitions>
 
                                                     <Grid.Resources>
@@ -517,6 +516,32 @@
                                                     <StackPanel Grid.Row="0" Orientation="Vertical" Spacing="4" CornerRadius="7,7,0,0" Background="{ThemeResource LayerOnAcrylicFillColorDefaultBrush}" Margin="-16,-16,-16,0" Padding="16" BorderBrush="{ThemeResource DividerStrokeColorDefaultBrush}" BorderThickness="0,0,0,1">
                                                         <TextBlock Text="{x:Bind strings:Resources.ScanAreaAlignmentHeading}" Style="{StaticResource BaseTextBlockStyle}" />
                                                         <TextBlock Text="{x:Bind strings:Resources.ScanAreaAlignmentBody}" Style="{StaticResource BodyTextBlockStyle}" />
+
+                                                        <Button Margin="0,12,0,0" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" Command="{x:Bind ViewModel.UpdateScanAreaAlignmentBitmapAsyncCommand}">
+                                                            <Grid>
+                                                                <StackPanel Orientation="Horizontal" Spacing="12" HorizontalAlignment="Center">
+                                                                    <FontIcon Glyph="&#xE773;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" VerticalAlignment="Center" />
+                                                                    <TextBlock Text="{x:Bind strings:Resources.ScanAlignmentPreview}" VerticalAlignment="Center" />
+                                                                </StackPanel>
+
+                                                                <ProgressRing HorizontalAlignment="Right" IsActive="{x:Bind ViewModel.UpdateScanAreaAlignmentBitmapAsyncCommand.IsRunning, Mode=OneWay}" IsIndeterminate="True" Width="12" Height="12" />
+                                                            </Grid>
+                                                        </Button>
+                                                        <Grid ColumnSpacing="8" Margin="0,8,0,0">
+                                                            <Grid.RowDefinitions>
+                                                                <RowDefinition Height="Auto" />
+                                                                <RowDefinition Height="Auto" />
+                                                            </Grid.RowDefinitions>
+
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="Auto" />
+                                                                <ColumnDefinition Width="1*" />
+                                                            </Grid.ColumnDefinitions>
+
+                                                            <FontIcon Grid.Row="0" Grid.Column="0" Glyph="&#xF167;" FontSize="16" Foreground="DeepSkyBlue" FontFamily="{StaticResource SymbolThemeFontFamily}" VerticalAlignment="Center" />
+                                                            <TextBlock Grid.Row="0" Grid.Column="1" Text="{x:Bind strings:Resources.Tip}" FontWeight="SemiBold" Style="{StaticResource CaptionTextBlockStyle}" VerticalAlignment="Center" />
+                                                            <TextBlock Grid.Row="1" Grid.Column="1" Text="{x:Bind strings:Resources.ScanAreaAlignmentTip}" Style="{StaticResource CaptionTextBlockStyle}" />
+                                                        </Grid>
                                                     </StackPanel>
                                                     <labs:Segmented x:Name="SegmentedPaperSizeAreaOrientation" Grid.Row="1" SelectedIndex="{x:Bind SelectedOrientationInt, Mode=TwoWay}" HorizontalAlignment="Stretch" MinWidth="248">
                                                         <labs:Segmented.Items>
@@ -549,32 +574,7 @@
                                                         </labs:Segmented.Items>
                                                     </labs:Segmented>
 
-                                                    <customcontrols:ScanAreaAlignmentControl Grid.Row="2" LongestSide="400" MaxScanArea="{x:Bind MaxScanArea, Mode=OneWay}" PaperSize="{x:Bind SelectedPaperSize, Mode=OneWay}" PreviewBitmapUri="{x:Bind ViewModel.ScanAreaAlignmentBitmapUri, Mode=OneWay}" SelectedOrientation="{x:Bind SelectedOrientation, Mode=OneWay}" SelectedCorner="{x:Bind SelectedCorner, Mode=TwoWay}" />
-
-                                                    <StackPanel Grid.Row="3" Orientation="Vertical" Spacing="4" CornerRadius="0,0,7,7" Background="{ThemeResource LayerOnAcrylicFillColorDefaultBrush}" Margin="-16,0,-16,-16" Padding="16" BorderBrush="{ThemeResource DividerStrokeColorDefaultBrush}" BorderThickness="0,1,0,0">
-                                                        <Button Style="{StaticResource AccentButtonStyle}" HorizontalAlignment="Stretch" Command="{x:Bind ViewModel.UpdateScanAreaAlignmentBitmapAsyncCommand}">
-                                                            <StackPanel Orientation="Horizontal" Spacing="12">
-                                                                <FontIcon Glyph="&#xE773;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" VerticalAlignment="Center" />
-                                                                <TextBlock Text="{x:Bind strings:Resources.ScanAlignmentPreview}" VerticalAlignment="Center" />
-                                                            </StackPanel>
-                                                        </Button>
-
-                                                        <Grid ColumnSpacing="8" Margin="0,12,0,0">
-                                                            <Grid.RowDefinitions>
-                                                                <RowDefinition Height="Auto" />
-                                                                <RowDefinition Height="Auto" />
-                                                            </Grid.RowDefinitions>
-
-                                                            <Grid.ColumnDefinitions>
-                                                                <ColumnDefinition Width="Auto" />
-                                                                <ColumnDefinition Width="1*" />
-                                                            </Grid.ColumnDefinitions>
-
-                                                            <FontIcon Grid.Row="0" Grid.Column="0" Glyph="&#xF167;" FontSize="16" Foreground="DeepSkyBlue" FontFamily="{StaticResource SymbolThemeFontFamily}" VerticalAlignment="Center" />
-                                                            <TextBlock Grid.Row="0" Grid.Column="1" Text="{x:Bind strings:Resources.Tip}" FontWeight="SemiBold" Style="{StaticResource CaptionTextBlockStyle}" VerticalAlignment="Center" />
-                                                            <TextBlock Grid.Row="1" Grid.Column="1" Text="{x:Bind strings:Resources.ScanAreaAlignmentTip}" Style="{StaticResource CaptionTextBlockStyle}" />
-                                                        </Grid>
-                                                    </StackPanel>
+                                                    <customcontrols:ScanAreaAlignmentControl Grid.Row="2" Margin="-16,0,-16,0" LongestSide="400" MaxScanArea="{x:Bind MaxScanArea, Mode=OneWay}" PaperSize="{x:Bind SelectedPaperSize, Mode=OneWay}" PreviewBitmapUri="{x:Bind ViewModel.ScanAreaAlignmentBitmapUri, Mode=OneWay}" SelectedOrientation="{x:Bind SelectedOrientation, Mode=OneWay}" SelectedCorner="{x:Bind SelectedCorner, Mode=TwoWay}" />
                                                 </Grid>
                                             </Flyout>
                                         </Button.Flyout>

@@ -226,15 +226,17 @@ public sealed partial class ScanAreaAlignmentControl : UserControl
         Rect paperSizeRect = PaperSize.ToRect();
         double widthIn = Measurement.FromCentimeters(paperSizeRect.Width / 10).GetInches();
         double heightIn = Measurement.FromCentimeters(paperSizeRect.Height / 10).GetInches();
+        double borderWidth = BorderThickness.Left + BorderThickness.Right;
+        double borderHeight = BorderThickness.Top + BorderThickness.Bottom;
         switch (SelectedOrientation)
         {
             case ScanOrientation.Portrait:
-                BorderSelectedArea.Width = widthIn / MaxScanArea.Width * GridContent.Width;
-                BorderSelectedArea.Height = heightIn / MaxScanArea.Height * GridContent.Height;
+                BorderSelectedArea.Width = (widthIn - borderWidth) / MaxScanArea.Width * GridContent.Width;
+                BorderSelectedArea.Height = (heightIn - borderHeight) / MaxScanArea.Height * GridContent.Height;
                 break;
             case ScanOrientation.Landscape:
-                BorderSelectedArea.Width = heightIn / MaxScanArea.Width * GridContent.Width;
-                BorderSelectedArea.Height = widthIn / MaxScanArea.Height * GridContent.Height;
+                BorderSelectedArea.Width = (heightIn - borderHeight) / MaxScanArea.Width * GridContent.Width;
+                BorderSelectedArea.Height = (widthIn - borderWidth) / MaxScanArea.Height * GridContent.Height;
                 break;
             default:
                 LogService?.Log.Error("Can't size scan region alignment Border for orientation " + SelectedOrientation);
