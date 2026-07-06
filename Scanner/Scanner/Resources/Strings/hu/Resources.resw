@@ -1666,6 +1666,15 @@ Fuzzy</comment>
   <data name="Open" xml:space="preserve">
     <value />
   </data>
+  <data name="HistoryEmpty" xml:space="preserve">
+    <value />
+  </data>
+  <data name="TemplatesEmpty" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Remove" xml:space="preserve">
+    <value />
+  </data>
   <data name="SettingsFileNamingCustomPatternExplanation" xml:space="preserve">
     <value>Húzzon ide blokkokat saját dinamikus fájlelnevezési minta létrehozásához. Válasszon egy blokkot a kimenet módosításához, vagy húzza a tálcába az eltávolításhoz.</value>
     <comment>The description for the custom file naming dialog.</comment>
@@ -1677,13 +1686,7 @@ Fuzzy</comment>
   <data name="Template" xml:space="preserve">
     <value />
   </data>
-  <data name="HistoryEmpty" xml:space="preserve">
-    <value />
-  </data>
-  <data name="TemplatesEmpty" xml:space="preserve">
-    <value />
-  </data>
-  <data name="Remove" xml:space="preserve">
+  <data name="ScannerBusy" xml:space="preserve">
     <value />
   </data>
 </root>

@@ -23,6 +23,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -419,7 +420,7 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
             Messenger.Send(new ShowInAppNotificationMessage(new Notification()
             {
                 Title = "Something went wrong",
-                Message = string.IsNullOrEmpty(exc.Message) ? exc.Message : "Please try again later."
+                Message = GetScanErrorNotificationMessage(exc)
             }));
             return false;
         }
@@ -518,7 +519,7 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
             Messenger.Send(new ShowInAppNotificationMessage(new Notification()
             {
                 Title = "Something went wrong",
-                Message = string.IsNullOrEmpty(exc.Message) ? exc.Message : "Please try again later."
+                Message = GetScanErrorNotificationMessage(exc)
             }));
             return false;
         }
@@ -529,6 +530,20 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
             scanCancellationTokenSource?.Dispose();
             scanCancellationTokenSource = null;
         }
+    }
+
+    private static string GetScanErrorNotificationMessage(Exception exc)
+    {
+        if (!string.IsNullOrEmpty(exc.Message) && exc is COMException comException)
+        {
+            switch (comException.HResult)
+            {
+                case -2145320954:   // the scanner is busy
+                    return GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.ScannerBusy);
+            }
+        }
+
+        return GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.ErrorMessageBody);
     }
 
     public async Task<bool> TryOpenProjectFromFilesAsync(string[] filePaths, Guid? id, DispatcherQueue uiDispatcherQueue)

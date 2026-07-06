@@ -1669,6 +1669,15 @@ Fuzzy</comment>
   <data name="Open" xml:space="preserve">
     <value />
   </data>
+  <data name="HistoryEmpty" xml:space="preserve">
+    <value />
+  </data>
+  <data name="TemplatesEmpty" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Remove" xml:space="preserve">
+    <value />
+  </data>
   <data name="SettingsFileNamingCustomPatternExplanation" xml:space="preserve">
     <value>Arraste e solte blocos para gerar seu próprio padrão dinâmico de nomeação de arquivos. Selecione um bloco para modificar seu resultado ou arraste-o para a lixeira para removê-lo.</value>
     <comment>The description for the custom file naming dialog.</comment>
@@ -1684,13 +1693,7 @@ Fuzzy</comment>
     <value>Selecionar tudo</value>
     <comment>The option to select all similar pages for cropping.</comment>
   </data>
-  <data name="HistoryEmpty" xml:space="preserve">
-    <value />
-  </data>
-  <data name="TemplatesEmpty" xml:space="preserve">
-    <value />
-  </data>
-  <data name="Remove" xml:space="preserve">
+  <data name="ScannerBusy" xml:space="preserve">
     <value />
   </data>
 </root>

@@ -1610,14 +1610,6 @@ Fuzzy</comment>
     <value>History</value>
     <comment>The heading for the history that shows recent projects.</comment>
   </data>
-  <data name="HistoryGroupToday" xml:space="preserve">
-    <value>Today</value>
-    <comment>Header for the history group containing projects last used today.</comment>
-  </data>
-  <data name="HistoryGroupYesterday" xml:space="preserve">
-    <value>Yesterday</value>
-    <comment>Header for the history group containing projects last used yesterday.</comment>
-  </data>
   <data name="NewProjectToolTip" xml:space="preserve">
     <value>New (Ctrl + N)</value>
   </data>
@@ -1941,6 +1933,15 @@ Fuzzy</comment>
   <data name="Open" xml:space="preserve">
     <value>Open</value>
   </data>
+  <data name="HistoryEmpty" xml:space="preserve">
+    <value>Previous projects will appear here</value>
+  </data>
+  <data name="TemplatesEmpty" xml:space="preserve">
+    <value>Saved templates will appear here</value>
+  </data>
+  <data name="Remove" xml:space="preserve">
+    <value>Remove</value>
+  </data>
   <data name="SettingsFileNamingCustomPatternExplanation" xml:space="preserve">
     <value>Drag and drop blocks to build your own dynamic file naming pattern. Select a block to modify its output or drag it into the bin to remove it.</value>
     <comment>The description for the custom file naming dialog.</comment>
@@ -1955,6 +1956,14 @@ Fuzzy</comment>
   <data name="SelectAll" xml:space="preserve">
     <value>Select all</value>
     <comment>The option to select all similar pages for cropping.</comment>
+  </data>
+  <data name="HistoryGroupToday" xml:space="preserve">
+    <value>Today</value>
+    <comment>Header for the history group containing projects last used today.</comment>
+  </data>
+  <data name="HistoryGroupYesterday" xml:space="preserve">
+    <value>Yesterday</value>
+    <comment>Header for the history group containing projects last used yesterday.</comment>
   </data>
   <data name="Templates" xml:space="preserve">
     <value>Templates</value>
@@ -1986,13 +1995,7 @@ Fuzzy</comment>
   <data name="ScanAreaAlignmentHeading" xml:space="preserve">
     <value>Scan area alignment</value>
   </data>
-  <data name="HistoryEmpty" xml:space="preserve">
-    <value>Previous projects will appear here</value>
-  </data>
-  <data name="TemplatesEmpty" xml:space="preserve">
-    <value>Saved templates will appear here</value>
-  </data>
-  <data name="Remove" xml:space="preserve">
-    <value>Remove</value>
+  <data name="ScannerBusy" xml:space="preserve">
+    <value>The scanner is busy. Please try again once it has finished its current action.</value>
   </data>
 </root>
