@@ -72,17 +72,18 @@
                     <Button Width="32" Height="32" HorizontalAlignment="Center" VerticalAlignment="Center" Style="{StaticResource MutedButtonStyle}" ToolTipService.ToolTip="{x:Bind strings:Resources.More}">
                         <Button.Flyout>
                             <MenuFlyout Placement="Bottom">
-                                <MenuFlyoutSubItem Text="Sort by">
+                                <MenuFlyoutSubItem Text="{x:Bind strings:Resources.SortBy}">
                                     <MenuFlyoutSubItem.Items>
-                                        <RadioMenuFlyoutItem Text="Recently used" />
-                                        <RadioMenuFlyoutItem Text="Name" />
+                                        <RadioMenuFlyoutItem Text="{x:Bind strings:Resources.RecentlyUsed}" GroupName="TemplateSort" IsChecked="{x:Bind ViewModel.SortByRecentlyUsed, Mode=TwoWay}" />
+                                        <RadioMenuFlyoutItem Text="{x:Bind strings:Resources.Name}" GroupName="TemplateSort" IsChecked="{x:Bind ViewModel.SortByName, Mode=TwoWay}" />
                                     </MenuFlyoutSubItem.Items>
 
                                     <MenuFlyoutSubItem.Icon>
                                         <FontIcon Glyph="&#xE8CB;" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                                     </MenuFlyoutSubItem.Icon>
                                 </MenuFlyoutSubItem>
-                                <MenuFlyoutItem Text="Delete all" Command="{x:Bind ViewModel.ClearListAsyncCommand}">
+                                <MenuFlyoutSeparator />
+                                <MenuFlyoutItem Text="{x:Bind strings:Resources.DeleteAll}" Command="{x:Bind ViewModel.ClearListAsyncCommand}">
                                     <MenuFlyoutItem.Icon>
                                         <FontIcon Glyph="&#xE74D;" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                                     </MenuFlyoutItem.Icon>
@@ -95,8 +96,8 @@
                 </StackPanel>
             </Grid>
 
-            <TextBlock x:Name="TextBlockNoItems" Grid.Row="1" Text="{x:Bind strings:Resources.TemplatesEmpty}" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" TextWrapping="WrapWholeWords" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Style="{StaticResource CaptionTextBlockStyle}" x:Load="{x:Bind ViewModel.TemplateService.Entries.Count, Mode=OneWay, Converter={StaticResource IntComparisonConverter}, ConverterParameter=0}" />
-            <ListView x:Name="ListViewTemplates" Grid.Row="1" Padding="8,4,8,12" VerticalAlignment="Stretch" SelectionMode="None" IsItemClickEnabled="True" ItemsSource="{x:Bind ViewModel.TemplateService.Entries, Mode=OneWay}" ScrollViewer.VerticalScrollMode="Auto" ItemClick="ListViewTemplates_ItemClick">
+            <TextBlock x:Name="TextBlockNoItems" Grid.Row="1" Text="{x:Bind strings:Resources.TemplatesEmpty}" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" TextWrapping="WrapWholeWords" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Style="{StaticResource CaptionTextBlockStyle}" x:Load="{x:Bind ViewModel.SortedEntries.Count, Mode=OneWay, Converter={StaticResource IntComparisonConverter}, ConverterParameter=0}" />
+            <ListView x:Name="ListViewTemplates" Grid.Row="1" Padding="8,4,8,12" VerticalAlignment="Stretch" SelectionMode="None" IsItemClickEnabled="True" ItemsSource="{x:Bind ViewModel.SortedEntries, Mode=OneWay}" ScrollViewer.VerticalScrollMode="Auto" ItemClick="ListViewTemplates_ItemClick">
                 <ListView.ItemContainerTransitions>
                     <TransitionCollection>
                         <AddDeleteThemeTransition />

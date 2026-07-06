@@ -1998,4 +1998,16 @@ Fuzzy</comment>
   <data name="ScannerBusy" xml:space="preserve">
     <value>The scanner is busy. Please try again once it has finished its current action.</value>
   </data>
+  <data name="SortBy" xml:space="preserve">
+    <value>Sort by</value>
+  </data>
+  <data name="DeleteAll" xml:space="preserve">
+    <value>Delete all</value>
+  </data>
+  <data name="RecentlyUsed" xml:space="preserve">
+    <value>Recently used</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>Name</value>
+  </data>
 </root>

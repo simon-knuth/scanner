@@ -275,6 +275,12 @@ internal class SettingsService : ObservableObject, ISettingsService
         set => SetSetting(nameof(SettingOcrPdfs), value);
     }
 
+    public TemplateSortMode SettingTemplateSortMode
+    {
+        get => (TemplateSortMode)GetSetting(nameof(SettingTemplateSortMode), (int)TemplateSortMode.RecentlyUsed);
+        set => SetSetting(nameof(SettingTemplateSortMode), (int)value);
+    }
+
     public string? LastOpenWithAppPdf
     {
         get => GetSetting<string?>(nameof(LastOpenWithAppPdf), null);

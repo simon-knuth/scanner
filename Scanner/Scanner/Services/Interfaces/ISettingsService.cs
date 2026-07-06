@@ -63,6 +63,7 @@ public interface ISettingsService : INotifyPropertyChanged
     ItemNamingPattern CustomSubfolderNamingPattern { get; set; }
     bool SettingGenerateFileNameWithAI { get; set; }
     bool SettingOcrPdfs { get; set; }
+    TemplateSortMode SettingTemplateSortMode { get; set; }
 
     string? LastOpenWithAppPdf { get; set; }
     string? LastOpenWithAppJpg { get; set; }
@@ -136,4 +137,10 @@ public enum SettingSubfolderNamingPattern
     Date = 0,
     FileType = 1,
     Custom = 2
+}
+
+public enum TemplateSortMode
+{
+    RecentlyUsed = 0,
+    Name = 1
 }
