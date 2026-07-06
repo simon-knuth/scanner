@@ -46,6 +46,7 @@ public sealed partial class HistoryView : Page
     public HistoryView()
     {
         this.InitializeComponent();
+        GroupedEntriesViewSource.Source = ViewModel.GroupedEntries;
         Ioc.Default.GetService<ILogService>()?.Log.Information("View loaded");
     }
 

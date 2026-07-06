@@ -368,7 +368,7 @@ public sealed partial class ShellView : Page
         {
             Margin = new Thickness(-16),
             Width = 348,
-            Height = 400,
+            Height = 448,
         };
         EventHandler closeRequestedHandler = new((sender, args) => flyout.Hide());
         historyView.CloseRequested += closeRequestedHandler;

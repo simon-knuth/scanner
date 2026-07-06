@@ -49,6 +49,8 @@
                 </ResourceDictionary>
             </ResourceDictionary.ThemeDictionaries>
 
+            <CollectionViewSource x:Name="GroupedEntriesViewSource" x:Key="GroupedEntriesViewSource" IsSourceGrouped="True" />
+
             <!-- XAML Converters -->
             <converters:IntComparisonConverter x:Key="IntComparisonConverter" />
             <converters:NegativeBoolConverter x:Key="NegativeBoolConverter" />
@@ -90,10 +92,10 @@
             </Grid>
 
             <TextBlock x:Name="TextBlockNoItems" Grid.Row="1" Text="{x:Bind strings:Resources.HistoryEmpty}" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" TextWrapping="WrapWholeWords" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Style="{StaticResource CaptionTextBlockStyle}" x:Load="{x:Bind ViewModel.ProjectHistoryService.Entries.Count, Mode=OneWay, Converter={StaticResource IntComparisonConverter}, ConverterParameter=0}" />
-            <ListView Grid.Row="1" Padding="8,4,8,12" SelectionMode="None" IsItemClickEnabled="True" ItemsSource="{x:Bind ViewModel.ProjectHistoryService.Entries, Mode=OneWay}" ScrollViewer.VerticalScrollMode="Auto" ItemClick="ListView_ItemClick">
+            <ListView Grid.Row="1" Margin="-8,0,-8,0" ui:ScrollViewerExtensions.VerticalScrollBarMargin="8,0,8,0" Padding="8,4,8,12" SelectionMode="None" IsItemClickEnabled="True" ItemsSource="{Binding Source={StaticResource GroupedEntriesViewSource}}" ScrollViewer.VerticalScrollMode="Auto" ItemClick="ListView_ItemClick">
                 <ListView.ItemTemplate>
                     <DataTemplate x:DataType="models:ProjectHistoryEntry">
-                        <ListViewItem Padding="4,2,4,2" Height="80" IsEnabled="{x:Bind AreFilesMissing, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}">
+                        <ListViewItem Margin="8,0,8,0" Padding="4,2,4,2" Height="80" IsEnabled="{x:Bind AreFilesMissing, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}">
                             <Border CornerRadius="4">
                                 <SwipeControl>
                                     <Grid RowSpacing="4" ColumnSpacing="12" Padding="8">
@@ -156,6 +158,16 @@
                         </ListViewItem>
                     </DataTemplate>
                 </ListView.ItemTemplate>
+
+                <ListView.GroupStyle>
+                    <GroupStyle>
+                        <GroupStyle.HeaderTemplate>
+                            <DataTemplate x:DataType="models:ProjectHistoryEntryGroup">
+                                <TextBlock Text="{x:Bind Key}" Margin="8,0,0,4" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                            </DataTemplate>
+                        </GroupStyle.HeaderTemplate>
+                    </GroupStyle>
+                </ListView.GroupStyle>
 
                 <ListView.ItemContainerTransitions>
                     <TransitionCollection>
