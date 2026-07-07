@@ -521,8 +521,11 @@ public sealed partial class ProjectView : Page
 
     private void GridViewCarousel_SizeChanged(object sender, SizeChangedEventArgs e)
     {
+        if (sender is not GridView gridView)
+            return;
+
         // set padding
-        GridViewCarousel.Padding = new Thickness(e.NewSize.Width / 2 - 32, 4, e.NewSize.Width / 2 - 32, 8);
+        gridView.Padding = new Thickness(e.NewSize.Width / 2 - 32, 4, e.NewSize.Width / 2 - 32, 8);
     }
 
     private void ScrollViewer_ViewChanged(object? sender, ScrollViewerViewChangedEventArgs e)
