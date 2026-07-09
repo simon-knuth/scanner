@@ -62,7 +62,7 @@ public partial class MultiFileProjectCreationData : IProjectCreationData
         }
     }
 
-    public MultiFileProjectCreationData(Guid? id, Collection<IProjectPage> pages, TargetFormat format, string? targetFileName, ScanOptions creationScanOptions, bool isAlreadySaved)
+    public MultiFileProjectCreationData(Guid? id, Collection<IProjectPage> pages, TargetFormat format, string? targetFileName, ScanOptions creationScanOptions, bool isAlreadySaved, StorageFolder? targetFolder = null)
     {
         Id = id;
         Format = format;
@@ -73,7 +73,7 @@ public partial class MultiFileProjectCreationData : IProjectCreationData
         {
             if (page is ImagePage imagePage)
             {
-                Pages.Add(new PageCreationData(imagePage.SourceFile, targetFileName ?? imagePage.FileNameInfo?.DesiredName, null, imagePage.TargetFolder,
+                Pages.Add(new PageCreationData(imagePage.SourceFile, targetFileName ?? imagePage.FileNameInfo?.DesiredName, null, targetFolder ?? imagePage.TargetFolder,
                     imagePage.BaseFilter, imagePage.Filter, imagePage.Brightness, imagePage.Contrast));
             }
         }

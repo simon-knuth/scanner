@@ -1306,8 +1306,9 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
                 case TargetFormat.PDF:
                     // get file name and target folder from first page
                     ImagePage imagePage = (ImagePage)CurrentProject.Pages.First(x => x is ImagePage);
+                    string desiredName = Path.GetFileNameWithoutExtension(imagePage.FileNameInfo!.DesiredName) + ".pdf";
 
-                    creationData = new PdfProjectCreationData(null, CurrentProject.Pages, imagePage.FileNameInfo!.DesiredName, imagePage.TargetFolder, scanOptions, false);
+                    creationData = new PdfProjectCreationData(null, CurrentProject.Pages, desiredName, imagePage.TargetFolder, scanOptions, false);
                     break;
                 case TargetFormat.JPG:
                 case TargetFormat.PNG:
@@ -1318,7 +1319,7 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
                     if (CurrentProject is MultiFileProject imageProject)
                         creationData = new MultiFileProjectCreationData(null, CurrentProject.Pages, targetFormat, null, scanOptions, false);
                     else if (CurrentProject is PdfProject pdfProject)
-                        creationData = new MultiFileProjectCreationData(null, CurrentProject.Pages, targetFormat, pdfProject.FileNameInfo.DesiredDisplayName + TargetFormatToFileExtension(targetFormat), scanOptions, false);
+                        creationData = new MultiFileProjectCreationData(null, CurrentProject.Pages, targetFormat, pdfProject.FileNameInfo.DesiredDisplayName + TargetFormatToFileExtension(targetFormat), scanOptions, false, pdfProject.TargetFolder);
                     break;
                 default:
                     throw new ArgumentException("Can't convert project to " + targetFormat.ToString());
