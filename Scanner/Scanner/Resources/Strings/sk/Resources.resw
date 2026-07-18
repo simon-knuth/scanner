@@ -1675,17 +1675,6 @@ Fuzzy</comment>
   <data name="Remove" xml:space="preserve">
     <value />
   </data>
-  <data name="SettingsFileNamingCustomPatternExplanation" xml:space="preserve">
-    <value>Presuňte bloky a vytvorte si vlastný dynamický vzor pomenovania súborov. Vyberte blok, ak chcete upraviť jeho výstup, alebo ho potiahnutím do koša odstráňte.</value>
-    <comment>The description for the custom file naming dialog.</comment>
-  </data>
-  <data name="SettingsFolderNamingCustomPatternExplanation" xml:space="preserve">
-    <value>Presuňte bloky a vytvorte si vlastný dynamický vzor pomenovania súborov. Vyberte blok, ak chcete upraviť jeho výstup, alebo ho potiahnutím do koša odstráňte.</value>
-    <comment>The description for the custom file naming dialog.</comment>
-  </data>
-  <data name="Template" xml:space="preserve">
-    <value />
-  </data>
   <data name="ScannerBusy" xml:space="preserve">
     <value />
   </data>
@@ -1699,6 +1688,20 @@ Fuzzy</comment>
     <value />
   </data>
   <data name="Name" xml:space="preserve">
+    <value />
+  </data>
+  <data name="SettingsFileNamingCustomPatternExplanation" xml:space="preserve">
+    <value>Presuňte bloky a vytvorte si vlastný dynamický vzor pomenovania súborov. Vyberte blok, ak chcete upraviť jeho výstup, alebo ho potiahnutím do koša odstráňte.</value>
+    <comment>The description for the custom file naming dialog.</comment>
+  </data>
+  <data name="SettingsFolderNamingCustomPatternExplanation" xml:space="preserve">
+    <value>Presuňte bloky a vytvorte si vlastný dynamický vzor pomenovania súborov. Vyberte blok, ak chcete upraviť jeho výstup, alebo ho potiahnutím do koša odstráňte.</value>
+    <comment>The description for the custom file naming dialog.</comment>
+  </data>
+  <data name="Template" xml:space="preserve">
+    <value />
+  </data>
+  <data name="ComingSoon" xml:space="preserve">
     <value />
   </data>
 </root>

@@ -1675,6 +1675,21 @@ Fuzzy</comment>
   <data name="Remove" xml:space="preserve">
     <value />
   </data>
+  <data name="ScannerBusy" xml:space="preserve">
+    <value />
+  </data>
+  <data name="SortBy" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DeleteAll" xml:space="preserve">
+    <value />
+  </data>
+  <data name="RecentlyUsed" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value />
+  </data>
   <data name="SettingsFileNamingCustomPatternExplanation" xml:space="preserve">
     <value>Ziehen und platzieren Sie Blöcke um Ihr eigenes dynamisches Dateinamenmuster zu bauen. Wählen Sie einen Block um seine Ausgabe anzupassen, oder ziehen Sie ihn den Mülleimer, um ihn zu löschen.</value>
     <comment>The description for the custom file naming dialog.</comment>
@@ -1690,19 +1705,7 @@ Fuzzy</comment>
     <value>Alle auswählen</value>
     <comment>The option to select all similar pages for cropping.</comment>
   </data>
-  <data name="ScannerBusy" xml:space="preserve">
-    <value />
-  </data>
-  <data name="SortBy" xml:space="preserve">
-    <value />
-  </data>
-  <data name="DeleteAll" xml:space="preserve">
-    <value />
-  </data>
-  <data name="RecentlyUsed" xml:space="preserve">
-    <value />
-  </data>
-  <data name="Name" xml:space="preserve">
+  <data name="ComingSoon" xml:space="preserve">
     <value />
   </data>
 </root>

@@ -1693,6 +1693,21 @@ Fuzzy</comment>
   <data name="Remove" xml:space="preserve">
     <value />
   </data>
+  <data name="ScannerBusy" xml:space="preserve">
+    <value />
+  </data>
+  <data name="SortBy" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DeleteAll" xml:space="preserve">
+    <value />
+  </data>
+  <data name="RecentlyUsed" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value />
+  </data>
   <data name="SettingsFileNamingCustomPatternExplanation" xml:space="preserve">
     <value>Přetažením bloků si můžete vytvořit vlastní dynamický vzor pojmenování souborů. Výběrem bloku upravte jeho výstup nebo jej přetažením do koše odstraňte.</value>
     <comment>The description for the custom file naming dialog.</comment>
@@ -1708,19 +1723,7 @@ Fuzzy</comment>
     <value>Vybrat vše</value>
     <comment>The option to select all similar pages for cropping.</comment>
   </data>
-  <data name="ScannerBusy" xml:space="preserve">
-    <value />
-  </data>
-  <data name="SortBy" xml:space="preserve">
-    <value />
-  </data>
-  <data name="DeleteAll" xml:space="preserve">
-    <value />
-  </data>
-  <data name="RecentlyUsed" xml:space="preserve">
-    <value />
-  </data>
-  <data name="Name" xml:space="preserve">
+  <data name="ComingSoon" xml:space="preserve">
     <value />
   </data>
 </root>

@@ -540,5 +540,7 @@
                 </Button>
             </Grid>
         </Grid>
+
+        <TeachingTip x:Name="TeachingTipComingSoon" Title="{x:Bind strings:Resources.ComingSoon}" IsLightDismissEnabled="True" PreferredPlacement="Bottom" Target="{x:Bind ButtonDraw}" />
     </Grid>
 </Page>

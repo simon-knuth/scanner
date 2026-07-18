@@ -829,7 +829,8 @@ public sealed partial class EditorView : Page
 
     private void ButtonDraw_Click(object sender, RoutedEventArgs e)
     {
-        IsDrawing = true;
+        TeachingTipComingSoon.IsOpen = true;
+        //IsDrawing = true;
     }
 
     private void ButtonDiscardDraw_Click(object sender, RoutedEventArgs e)

@@ -1942,6 +1942,21 @@ Fuzzy</comment>
   <data name="Remove" xml:space="preserve">
     <value>Remove</value>
   </data>
+  <data name="ScannerBusy" xml:space="preserve">
+    <value>The scanner is busy. Please try again once it has finished its current action.</value>
+  </data>
+  <data name="SortBy" xml:space="preserve">
+    <value>Sort by</value>
+  </data>
+  <data name="DeleteAll" xml:space="preserve">
+    <value>Delete all</value>
+  </data>
+  <data name="RecentlyUsed" xml:space="preserve">
+    <value>Recently used</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>Name</value>
+  </data>
   <data name="SettingsFileNamingCustomPatternExplanation" xml:space="preserve">
     <value>Drag and drop blocks to build your own dynamic file naming pattern. Select a block to modify its output or drag it into the bin to remove it.</value>
     <comment>The description for the custom file naming dialog.</comment>
@@ -1995,19 +2010,7 @@ Fuzzy</comment>
   <data name="ScanAreaAlignmentHeading" xml:space="preserve">
     <value>Scan area alignment</value>
   </data>
-  <data name="ScannerBusy" xml:space="preserve">
-    <value>The scanner is busy. Please try again once it has finished its current action.</value>
-  </data>
-  <data name="SortBy" xml:space="preserve">
-    <value>Sort by</value>
-  </data>
-  <data name="DeleteAll" xml:space="preserve">
-    <value>Delete all</value>
-  </data>
-  <data name="RecentlyUsed" xml:space="preserve">
-    <value>Recently used</value>
-  </data>
-  <data name="Name" xml:space="preserve">
-    <value>Name</value>
+  <data name="ComingSoon" xml:space="preserve">
+    <value>Coming soon</value>
   </data>
 </root>

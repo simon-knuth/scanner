@@ -1946,4 +1946,7 @@ Fuzzy</comment>
   <data name="Name" xml:space="preserve">
     <value />
   </data>
+  <data name="ComingSoon" xml:space="preserve">
+    <value />
+  </data>
 </root>

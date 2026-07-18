@@ -923,4 +923,9 @@ public sealed partial class ShellView : Page
 
         await ViewModel.OpenFilesAsync(files.Select(x => x.Path).ToArray());
     }
+
+    private void ButtonHelp_Click(object sender, RoutedEventArgs e)
+    {
+        TeachingTipComingSoon.IsOpen = true;
+    }
 }

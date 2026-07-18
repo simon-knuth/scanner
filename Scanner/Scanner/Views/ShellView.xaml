@@ -333,7 +333,7 @@
                                 <KeyboardAccelerator Modifiers="Control" Key="H" />
                             </Button.KeyboardAccelerators>
                         </Button>
-                        <Button Foreground="{ThemeResource TextFillColorPrimaryBrush}" ToolTipService.ToolTip="{x:Bind strings:Resources.Help}" Style="{StaticResource TitlebarButtonStyle}">
+                        <Button x:Name="ButtonHelp" Foreground="{ThemeResource TextFillColorPrimaryBrush}" ToolTipService.ToolTip="{x:Bind strings:Resources.Help}" Style="{StaticResource TitlebarButtonStyle}" Click="ButtonHelp_Click">
                             <FontIcon Glyph="&#xE897;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                         </Button>
                         <Button x:Name="ButtonSupportDevelopment" Foreground="{ThemeResource TextFillColorPrimaryBrush}" ToolTipService.ToolTip="{x:Bind strings:Resources.SupportDevelopmentToolTip}" Style="{StaticResource TitlebarButtonStyle}" Command="{x:Bind ViewModel.ShowDonationDialogCommand}">
@@ -355,7 +355,7 @@
                                         <FontIcon Glyph="&#xED15;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                                     </MenuFlyoutItem.Icon>
                                 </MenuFlyoutItem>
-                                <MenuFlyoutItem x:Name="MenuFlyoutItemMoreHelp" Text="{x:Bind strings:Resources.Help}" x:Load="{x:Bind ShowAllMoreMenuItems, Mode=OneWay}">
+                                <MenuFlyoutItem x:Name="MenuFlyoutItemMoreHelp" Text="{x:Bind strings:Resources.Help}" x:Load="{x:Bind ShowAllMoreMenuItems, Mode=OneWay}" Click="ButtonHelp_Click">
                                     <MenuFlyoutItem.Icon>
                                         <FontIcon Glyph="&#xE897;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                                     </MenuFlyoutItem.Icon>
@@ -551,5 +551,7 @@
                 <FontIconSource Glyph="&#xF133;" FontFamily="{StaticResource SymbolThemeFontFamily}" />
             </TeachingTip.IconSource>
         </TeachingTip>
+
+        <TeachingTip x:Name="TeachingTipComingSoon" Title="{x:Bind strings:Resources.ComingSoon}" IsLightDismissEnabled="True" PreferredPlacement="Bottom" Target="{x:Bind StackPanelTitlebarButtonsRight}" />
     </Grid>
 </Page>
