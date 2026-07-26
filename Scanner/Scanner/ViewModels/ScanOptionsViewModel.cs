@@ -245,7 +245,7 @@ partial class ScanOptionsViewModel : ObservableRecipient, IDisposable
     {
         LogService?.Log.Information("Adding debug scanner");
         DebugScanner debugScanner = new(DebugScannerSetupProperties);
-        await ScannerDiscoveryService.AddDebugScannerAsync(debugScanner);
+        await Task.Run(async () => await ScannerDiscoveryService.AddDebugScannerAsync(debugScanner));
     }
 
     private async Task RemoveDebugScannerAsync()
@@ -253,7 +253,7 @@ partial class ScanOptionsViewModel : ObservableRecipient, IDisposable
         if (SelectedScanner is DebugScanner debugScanner)
         {
             LogService?.Log.Information("Removing debug scanner");
-            await ScannerDiscoveryService.RemoveDebugScannerAsync(debugScanner);
+            await Task.Run(async () => await ScannerDiscoveryService.RemoveDebugScannerAsync(debugScanner));
         }
     }
 
