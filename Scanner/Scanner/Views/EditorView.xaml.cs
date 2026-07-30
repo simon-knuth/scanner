@@ -793,13 +793,14 @@ public sealed partial class EditorView : Page
     private async void ButtonCropSimilarPagesConfirm_Click(object sender, RoutedEventArgs e)
     {
         // collect pages
-        List<IProjectPage> pages = ListViewCropSimilarPages.SelectedItems.OfType<IProjectPage>().ToList();
+        List<ImagePage> pages = ListViewCropSimilarPages.SelectedItems.OfType<ImagePage>().ToList();
         if (ViewModel.ProjectService.SelectedPage != null)
-            pages.Insert(0, ViewModel.ProjectService.SelectedPage);
+            pages.Insert(0, (ImagePage)ViewModel.ProjectService.SelectedPage);
 
         // crop
         FlyoutBase.GetAttachedFlyout(GridCropToolbar).Hide();
         await ViewModel.CropPagesAsyncCommand.ExecuteAsync((pages, ImageCropper.CroppedRegion));
+        IsCropping = false;
     }
 
     private void FlyoutCropSimilarPages_Opened(object sender, object e)
