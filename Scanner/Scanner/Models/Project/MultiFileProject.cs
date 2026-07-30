@@ -45,6 +45,9 @@ public partial class MultiFileProject : ProjectBase
     /// </summary>
     public List<IProjectPage> PagesWithTargetFilesToDelete { get; } = [];
 
+    public override bool HasSaveLocation
+        => Pages.Count > 0 && !Pages.Any(x => x is ImagePage imagePage && imagePage.TargetFile == null && imagePage.TargetFolder == null);
+
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////

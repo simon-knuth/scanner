@@ -255,7 +255,7 @@
                             </controls:SettingsExpander.Items>
                         </controls:SettingsExpander>
 
-                        <controls:SettingsCard Header="Save changes automatically" IsEnabled="{x:Bind ViewModel.IsAutoSaveAvailable, Mode=OneWay}">
+                        <controls:SettingsCard Header="Save changes automatically">
                             <controls:SettingsCard.HeaderIcon>
                                 <FontIcon Glyph="&#xE74E;" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                             </controls:SettingsCard.HeaderIcon>

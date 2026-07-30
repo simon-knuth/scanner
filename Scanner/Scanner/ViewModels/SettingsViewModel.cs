@@ -128,8 +128,6 @@ public partial class SettingsViewModel : ObservableRecipient, IDisposable
         set => SettingsService.SettingAppLanguage = value?.Language?.LanguageTag ?? "SYSTEM";
     }
 
-    public bool IsAutoSaveAvailable => SettingsService.SettingSaveLocationType != Services.Interfaces.SettingSaveLocationType.AskAfterNewProject;
-
     public string CurrentVersion => Helpers.Helpers.GetCurrentVersion();
 
     public readonly List<DisplayedLanguage> AvailableAppLanguages;
@@ -316,9 +314,6 @@ public partial class SettingsViewModel : ObservableRecipient, IDisposable
             case nameof(ISettingsService.SettingSubfolderNamingPattern):
             case nameof(ISettingsService.CustomSubfolderNamingPattern):
                 UpdateSubfolderNamingPatternPreview();
-                break;
-            case nameof(ISettingsService.SettingSaveLocationType):
-                OnPropertyChanged(nameof(IsAutoSaveAvailable));
                 break;
         }
     }

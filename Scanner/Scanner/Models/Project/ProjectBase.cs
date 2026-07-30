@@ -81,6 +81,8 @@ public abstract partial class ProjectBase : ObservableRecipient
 
     public bool IsSaved => areFilesSaved && hasFileNameBeenApplied;
 
+    public abstract bool HasSaveLocation { get; }
+
     public TaskCompletionSource<bool>? LatestSaveProcess;
 
     public ObservableCollection<IProjectPage> Pages
