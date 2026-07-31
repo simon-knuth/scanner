@@ -238,7 +238,8 @@ partial class ShellViewModel : ObservableRecipient, IDisposable
             args.Handled = true;
 
             // unsaved changes present
-            if (SettingsService.SettingAutoSave)
+            if (SettingsService.SettingAutoSave
+                && (CurrentProject.HasSaveLocation || SettingsService.SettingSaveLocationType == SettingSaveLocationType.FixedLocation))
             {
                 // inform user
                 await ShowSaveInProgressDialogAsync();

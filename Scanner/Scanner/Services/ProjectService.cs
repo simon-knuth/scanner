@@ -99,10 +99,8 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
                         ProjectHistoryService.AddOrUpdateEntryAsync(value);
                     });
                 }
-                else
-                {
-                    ResetAutoSaveTimer();
-                }
+
+                ResetAutoSaveTimer();
             }
         }
     }
@@ -242,7 +240,7 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
             CurrentProject = project;
 
             // save if needed
-            if (SettingsService.SettingAutoSave)
+            if (SettingsService.SettingAutoSave && CanAutoSaveSilently(project))
             {
                 // save
                 await Task.Run(async () =>
@@ -375,7 +373,7 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
             }
 
             // save if needed
-            if (SettingsService.SettingAutoSave)
+            if (SettingsService.SettingAutoSave && CanAutoSaveSilently(CurrentProject))
             {
                 cancellationToken.ThrowIfCancellationRequested();
 
@@ -1362,6 +1360,11 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
         }
     }
 
+    private bool CanAutoSaveSilently(ProjectBase project)
+    {
+        return project.HasSaveLocation || SettingsService.SettingSaveLocationType == SettingSaveLocationType.FixedLocation;
+    }
+
     private void ResetAutoSaveTimer()
     {
         // TODO: ensure auto save continues after exception
@@ -1373,7 +1376,7 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
                 if (SettingsService?.SettingAutoSave == false)
                     return;
 
-                if (CurrentProject != null && !CurrentProject.IsSaved)
+                if (CurrentProject != null && !CurrentProject.IsSaved && CanAutoSaveSilently(CurrentProject))
                 {
                     await CurrentProject.SaveAsync(false, UiDispatcherQueue);
                 }

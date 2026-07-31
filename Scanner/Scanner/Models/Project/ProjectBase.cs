@@ -81,6 +81,8 @@ public abstract partial class ProjectBase : ObservableRecipient
 
     public bool IsSaved => areFilesSaved && hasFileNameBeenApplied;
 
+    public abstract bool HasSaveLocation { get; }
+
     public TaskCompletionSource<bool>? LatestSaveProcess;
 
     public ObservableCollection<IProjectPage> Pages
@@ -786,6 +788,14 @@ public abstract partial class ProjectBase : ObservableRecipient
     /// </param>
     public static async Task ApplyEffectsAsync(IRandomAccessStream sourceStream, BitmapEncoder encoder, ImageFilter filter, int brightness, int contrast, double scale = 1.0)
     {
+        // get source DPI
+        double dpiX = 96.0;
+        double dpiY = 96.0;
+        BitmapDecoder sourceDecoder = await BitmapDecoder.CreateAsync(sourceStream);
+        if (sourceDecoder.DpiX > 0) dpiX = sourceDecoder.DpiX;
+        if (sourceDecoder.DpiY > 0) dpiY = sourceDecoder.DpiY;
+        sourceStream.Seek(0);
+
         CanvasDevice device = CanvasDevice.GetSharedDevice();
         using CanvasBitmap bitmap = await CanvasBitmap.LoadAsync(device, sourceStream);
         using CanvasRenderTarget renderer = new CanvasRenderTarget(device, bitmap.SizeInPixels.Width, bitmap.SizeInPixels.Height, bitmap.Dpi);
@@ -795,10 +805,10 @@ public abstract partial class ProjectBase : ObservableRecipient
         session.DrawImage(effectChain);
         session.Flush();
 
-        // encode result
+        // encode result, preserving the source's real DPI
         encoder.SetPixelData(BitmapPixelFormat.Bgra8, BitmapAlphaMode.Ignore,
                                  (uint)renderer.SizeInPixels.Width, (uint)renderer.SizeInPixels.Height,
-                                 renderer.Dpi, renderer.Dpi, renderer.GetPixelBytes());
+                                 dpiX, dpiY, renderer.GetPixelBytes());
         if (scale != 1.0)
         {
             encoder.BitmapTransform.ScaledWidth = (uint)(renderer.SizeInPixels.Width * scale);
