@@ -141,7 +141,7 @@
 
                             <ListViewItem.ContextFlyout>
                                 <MenuFlyout>
-                                    <MenuFlyoutItem Text="{x:Bind strings:Resources.Open}" Command="{x:Bind ViewModel.OpenEntryAsyncCommand}" CommandParameter="{x:Bind}" />
+                                    <MenuFlyoutItem x:Name="MenuFlyoutItemOpen" Text="{x:Bind strings:Resources.Open}" Tag="{x:Bind}" Click="MenuFlyoutItemOpen_Click" />
                                     <MenuFlyoutItem Text="{x:Bind strings:Resources.ShowInFileExplorer}" Command="{x:Bind ViewModel.ShowInFileExplorerAsyncCommand}" CommandParameter="{x:Bind}">
                                         <MenuFlyoutItem.Icon>
                                             <FontIcon Glyph="&#xE8DA;" FontFamily="{StaticResource SymbolThemeFontFamily}" />
