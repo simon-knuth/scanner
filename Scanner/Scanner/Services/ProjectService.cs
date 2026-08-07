@@ -77,6 +77,7 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
                     currentProject.PagesAdded -= CurrentProject_PagesAdded;
                     currentProject.PagesRemoved -= CurrentProject_PagesRemoved;
                     currentProject.PropertyChanged -= CurrentProject_PropertyChanged;
+                    currentProject.ContentChanged -= CurrentProject_ContentChanged;
                 }
 
                 if (SetProperty(ref currentProject, value))
@@ -93,6 +94,7 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
                     value.PagesAdded += CurrentProject_PagesAdded;
                     value.PagesRemoved += CurrentProject_PagesRemoved;
                     value.PropertyChanged += CurrentProject_PropertyChanged;
+                    value.ContentChanged += CurrentProject_ContentChanged;
 
                     UiDispatcherQueue?.RunOnThread(DispatcherQueuePriority.Low, () =>
                     {
@@ -204,7 +206,13 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
 
     public DispatcherQueue? UiDispatcherQueue { get; set; }
 
-    private ThreadPoolTimer? autoSaveTimer;
+    private static readonly TimeSpan AutoSaveDebounceInterval = TimeSpan.FromSeconds(1.5);
+    private ThreadPoolTimer? autoSaveDebounceTimer;
+
+    private static readonly TimeSpan AutoSaveSafetyInterval = TimeSpan.FromSeconds(30);
+    private ThreadPoolTimer? autoSaveSafetyTimer;
+    
+    private readonly object autoSaveLock = new();
 
     private CancellationTokenSource? scanCancellationTokenSource;
     private IScanningDevice? activeScanningDevice;
@@ -1365,30 +1373,75 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
         return project.HasSaveLocation || SettingsService.SettingSaveLocationType == SettingSaveLocationType.FixedLocation;
     }
 
+    /// <summary>
+    /// Resets auto-save for the current project. Auto-save fires shortly after the user stops making changes
+    /// (debounce) and, as a safety net, periodically while the project has unsaved changes.
+    /// </summary>
     private void ResetAutoSaveTimer()
     {
-        // TODO: ensure auto save continues after exception
-        if (CurrentProject != null && SettingsService?.SettingAutoSave == true)
+        lock (autoSaveLock)
         {
-            TimerElapsedHandler? handler = null;
-            handler = new TimerElapsedHandler(async (source) =>
-            {
-                if (SettingsService?.SettingAutoSave == false)
-                    return;
+            autoSaveDebounceTimer?.Cancel();
+            autoSaveDebounceTimer = null;
+            autoSaveSafetyTimer?.Cancel();
+            autoSaveSafetyTimer = null;
 
-                if (CurrentProject != null && !CurrentProject.IsSaved && CanAutoSaveSilently(CurrentProject))
-                {
-                    await CurrentProject.SaveAsync(false, UiDispatcherQueue);
-                }
-                autoSaveTimer = ThreadPoolTimer.CreateTimer(handler, TimeSpan.FromSeconds(5));
-            });
-            autoSaveTimer?.Cancel();
-            autoSaveTimer = ThreadPoolTimer.CreateTimer(handler, TimeSpan.FromSeconds(5));
+            if (CurrentProject != null && SettingsService?.SettingAutoSave == true)
+                SetAutoSaveSafetyTimer();
         }
-        else
+    }
+
+    /// <summary>
+    /// Recreates the debounce timer on every content change to roughly adhere to the <see cref="AutoSaveDebounceInterval"/>
+    /// after the user stops editing, avoiding saves while editing.
+    /// </summary>
+    private void CurrentProject_ContentChanged(object? sender, EventArgs e)
+    {
+        if (SettingsService?.SettingAutoSave != true)
+            return;
+
+        lock (autoSaveLock)
         {
-            autoSaveTimer?.Cancel();
-            autoSaveTimer = null;
+            autoSaveDebounceTimer?.Cancel();
+            autoSaveDebounceTimer = ThreadPoolTimer.CreateTimer(async (t) => await TryAutoSaveAsync(), AutoSaveDebounceInterval);
+        }
+    }
+
+    private void SetAutoSaveSafetyTimer()
+    {
+        autoSaveSafetyTimer = ThreadPoolTimer.CreateTimer(async (t) =>
+        {
+            try
+            {
+                await TryAutoSaveAsync();
+            }
+            finally
+            {
+                lock (autoSaveLock)
+                {
+                    if (CurrentProject != null && SettingsService?.SettingAutoSave == true)
+                        SetAutoSaveSafetyTimer();
+                    else
+                        autoSaveSafetyTimer = null;
+                }
+            }
+        }, AutoSaveSafetyInterval);
+    }
+
+    private async Task TryAutoSaveAsync()
+    {
+        try
+        {
+            ProjectBase? project = CurrentProject;
+            if (SettingsService?.SettingAutoSave == true
+                && project != null && !project.IsSaved && CanAutoSaveSilently(project))
+            {
+                await project.SaveAsync(false, UiDispatcherQueue!);
+            }
+        }
+        catch (Exception exc)
+        {
+            LogService?.Log.Error(exc, "Auto-save failed");
         }
     }
 
