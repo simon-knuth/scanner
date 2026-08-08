@@ -227,9 +227,10 @@ internal partial class CopilotRuntimeService : ObservableObject, ICopilotRuntime
         AIFeatureReadyState languageModelState = LanguageModel.GetReadyState();
 
         // check support
-        IsSupported = imageDescriptionGeneratorState is AIFeatureReadyState.Ready or AIFeatureReadyState.NotReady;
-        if (IsSupported)
-            IsSupported = languageModelState is AIFeatureReadyState.Ready or AIFeatureReadyState.NotReady;
+        //IsSupported = imageDescriptionGeneratorState is AIFeatureReadyState.Ready or AIFeatureReadyState.NotReady;
+        //if (IsSupported)
+        //    IsSupported = languageModelState is AIFeatureReadyState.Ready or AIFeatureReadyState.NotReady;
+        IsSupported = false;    // disabled in the preview version
 
         // check install status
         AreModelsInstalled = imageDescriptionGeneratorState is AIFeatureReadyState.Ready;
