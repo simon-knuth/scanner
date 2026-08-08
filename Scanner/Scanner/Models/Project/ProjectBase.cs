@@ -79,7 +79,7 @@ public abstract partial class ProjectBase : ObservableRecipient
     [ObservableProperty]
     private bool isSaving;
 
-    public bool IsSaved => areFilesSaved && hasFileNameBeenApplied;
+    public bool IsSaved => Interlocked.Read(ref savedRevision) >= Interlocked.Read(ref contentRevision) && hasFileNameBeenApplied;
 
     public abstract bool HasSaveLocation { get; }
 
@@ -101,21 +101,25 @@ public abstract partial class ProjectBase : ObservableRecipient
     public bool IsPdf => Format == TargetFormat.PDF;
     public bool HasBeenCreatedFromPdf { init; get; }
 
-    private bool _areFilesSaved;
-    protected bool areFilesSaved
-    {
-        get => _areFilesSaved;
-        set
-        {
-            if (!SetProperty(ref _areFilesSaved, value))
-                return;
+    /// <summary>
+    /// Incremented for every change.
+    /// </summary>
+    private long contentRevision;
 
-            if (!value && LatestSaveProcess != null && !LatestSaveProcess.Task.IsCompleted)
-                hasMadeChangesDuringSaveProcess = true;
+    /// <summary>
+    /// Highest <see cref="contentRevision"/> that's been saved to a file.
+    /// </summary>
+    private long savedRevision = -1;
 
-            OnPropertyChanged(nameof(IsSaved));
-        }
-    }
+    /// <summary>
+    /// Whether there is content that has not yet been written to the final file (independent of the file name).
+    /// </summary>
+    protected bool HasUnsavedContent => Interlocked.Read(ref savedRevision) < Interlocked.Read(ref contentRevision);
+
+    /// <summary>
+    /// Raised whenever the project has unsaved changes (including a rename).
+    /// </summary>
+    public event EventHandler? ContentChanged;
 
     private bool _hasFileNameBeenApplied = true;
     protected bool hasFileNameBeenApplied
@@ -123,13 +127,17 @@ public abstract partial class ProjectBase : ObservableRecipient
         get => _hasFileNameBeenApplied;
         set
         {
-            SetProperty(ref _hasFileNameBeenApplied, value);
+            bool changed = SetProperty(ref _hasFileNameBeenApplied, value);
             OnPropertyChanged(nameof(IsSaved));
+
+            // A pending rename makes the project dirty just like a content edit; fire ContentChanged so auto-save
+            // debounces it promptly instead of waiting for the slow safety-net timer.
+            if (changed && !value)
+                ContentChanged?.Invoke(this, EventArgs.Empty);
         }
     }
 
     protected bool saveProcessWaitingToStart;
-    protected bool hasMadeChangesDuringSaveProcess;
 
     protected SemaphoreSlim saveSemaphore = new(1, 1);                // needed to run a save process
 
@@ -262,7 +270,7 @@ public abstract partial class ProjectBase : ObservableRecipient
 
         PagesAdded?.Invoke(this, EventArgs.Empty);
 
-        areFilesSaved = false;
+        BumpRevision();
         return insertedPages;
     }
 
@@ -343,7 +351,7 @@ public abstract partial class ProjectBase : ObservableRecipient
 
             PagesAdded?.Invoke(this, EventArgs.Empty);
 
-            areFilesSaved = false;
+            BumpRevision();
         }
         finally
         {
@@ -436,7 +444,7 @@ public abstract partial class ProjectBase : ObservableRecipient
 
             PagesRemoved?.Invoke(this, EventArgs.Empty);
 
-            areFilesSaved = false;
+            BumpRevision();
         }
         finally
         {
@@ -518,7 +526,7 @@ public abstract partial class ProjectBase : ObservableRecipient
                         StorageFile newFile;
                         newFile = await RotateFileAsync(instruction.Key.SourceFile, instruction.Value, false, pagesFolder);
                         await instruction.Key.ChangeSourceFileAsync(pagesFolder, newFile, uiDispatcherQueue);
-                        areFilesSaved = false;
+                        BumpRevision();
                         finalStepData.Add((instruction.Key, instruction.Key.SourceFile, newFile));
                     }
                 }
@@ -724,9 +732,7 @@ public abstract partial class ProjectBase : ObservableRecipient
 
         // update save state
         if (mergedInstructions.Count > 0 && mergedInstructions.Values.Any((x) => x != BitmapRotation.None))
-        {
-            areFilesSaved = false;
-        }
+            BumpRevision();
 
         return mergedInstructions;
     }
@@ -767,7 +773,7 @@ public abstract partial class ProjectBase : ObservableRecipient
         }
         finally
         {
-            areFilesSaved = false;
+            BumpRevision();
             FinishEditing();
             process.TrySetResult();
         }
@@ -906,9 +912,6 @@ public abstract partial class ProjectBase : ObservableRecipient
 
                 await page.ChangeSourceFileAsync(pagesFolder, newFile!, uiDispatcherQueue);
 
-                // move to undo folder
-                await oldFile.MoveAsync(AppDataService.UndoFolder, oldFile.Name, NameCollisionOption.GenerateUniqueName);
-
                 result.Add(appliedCrop);
             }
 
@@ -923,7 +926,9 @@ public abstract partial class ProjectBase : ObservableRecipient
                 StorageFile croppedFile = appliedCrop.Page.SourceFile;
 
                 // restore previous file
-                await appliedCrop.PreviousFile.MoveAsync(pagesFolder, appliedCrop.PreviousFile.Name, NameCollisionOption.GenerateUniqueName);
+                StorageFolder? previousParent = await appliedCrop.PreviousFile.GetParentAsync();
+                if (previousParent == null || previousParent.Path != pagesFolder.Path)
+                    await appliedCrop.PreviousFile.MoveAsync(pagesFolder, appliedCrop.PreviousFile.Name, NameCollisionOption.GenerateUniqueName);
                 appliedCrop.Page.Width = appliedCrop.PreviousWidth;
                 appliedCrop.Page.Height = appliedCrop.PreviousHeight;
 
@@ -937,9 +942,27 @@ public abstract partial class ProjectBase : ObservableRecipient
         }
         finally
         {
-            areFilesSaved = false;
+            BumpRevision();
             FinishEditing();
             process.TrySetResult();
+        }
+
+        // move previous files to undo folder, making sure that concurrent saves aren't interrupted
+        foreach (AppliedCrop appliedCrop in result)
+        {            
+            await saveSemaphore.WaitAsync();
+            try
+            {
+                await appliedCrop.PreviousFile.MoveAsync(AppDataService.UndoFolder, appliedCrop.PreviousFile.Name, NameCollisionOption.GenerateUniqueName);
+            }
+            catch (Exception exc)
+            {
+                LogService?.Log.Error(exc, "Failed to retire a cropped page's former source file");
+            }
+            finally
+            {
+                saveSemaphore.Release();
+            }
         }
 
         return result;
@@ -995,7 +1018,7 @@ public abstract partial class ProjectBase : ObservableRecipient
         }
         finally
         {
-            areFilesSaved = false;
+            BumpRevision();
             FinishEditing();
             process.TrySetResult();
         }
@@ -1064,19 +1087,17 @@ public abstract partial class ProjectBase : ObservableRecipient
         consecutiveAtomicActionMergeTimers.TryGetValue(page, out ThreadPoolTimer? existingTimer);
         existingTimer?.Cancel();
 
+        // Commit the value immediately so a save that fires before the debounce elapses persists the current
+        // value rather than a stale one. The timer now only debounces the expensive preview regeneration.
         page.DisplayedBrightness = brightness;
+        page.Brightness = brightness;
+        BumpRevision();
+
         consecutiveAtomicActionMergeTimers[page] = ThreadPoolTimer.CreateTimer(async (timer) =>
         {
             consecutiveAtomicActionMergeTimers.TryRemove(page, out _);
-
-            await StartEditingAsync();
-            page.Brightness = page.DisplayedBrightness;
-            FinishEditing();
-
             await GeneratePagePreviewsAsync(new List<ImagePage>([page]), uiDispatcherQueue);
         }, AppConfig.ConsecutiveAtomicActionMergeTime);
-
-        areFilesSaved = false;
     }
 
     public void SetContrast(ImagePage page, int contrast, DispatcherQueue uiDispatcherQueue)
@@ -1085,18 +1106,14 @@ public abstract partial class ProjectBase : ObservableRecipient
         existingTimer?.Cancel();
 
         page.DisplayedContrast = contrast;
+        page.Contrast = contrast;
+        BumpRevision();
+
         consecutiveAtomicActionMergeTimers[page] = ThreadPoolTimer.CreateTimer(async (timer) =>
         {
             consecutiveAtomicActionMergeTimers.TryRemove(page, out _);
-
-            await StartEditingAsync();
-            page.Contrast = page.DisplayedContrast;
-            FinishEditing();
-
             await GeneratePagePreviewsAsync(new List<ImagePage>([page]), uiDispatcherQueue);
         }, AppConfig.ConsecutiveAtomicActionMergeTime);
-
-        areFilesSaved = false;
     }
 
     /// <summary>
@@ -1124,7 +1141,7 @@ public abstract partial class ProjectBase : ObservableRecipient
             });
 
             if (reordered)
-                areFilesSaved = false;
+                BumpRevision();
         }
         finally
         {
@@ -1163,6 +1180,36 @@ public abstract partial class ProjectBase : ObservableRecipient
     {
         projectObjectSemaphore.Release();
         changesFolderSemaphore.Release();
+    }
+
+    protected void BumpRevision()
+    {
+        Interlocked.Increment(ref contentRevision);
+        OnPropertyChanged(nameof(IsSaved));
+        ContentChanged?.Invoke(this, EventArgs.Empty);
+    }
+
+    /// <summary>
+    /// Captures the current content revision. Call while holding <see cref="projectObjectSemaphore"/> together
+    /// with building the save snapshot, so the returned value matches exactly what the snapshot captured.
+    /// </summary>
+    protected long CaptureContentRevision() => Interlocked.Read(ref contentRevision);
+
+    /// <summary>
+    /// Marks the given content revision (captured via <see cref="CaptureContentRevision"/> at snapshot time) as
+    /// saved.
+    /// </summary>
+    protected void MarkRevisionSaved(long revision)
+    {
+        long current = Interlocked.Read(ref savedRevision);
+        while (revision > current)
+        {
+            long original = Interlocked.CompareExchange(ref savedRevision, revision, current);
+            if (original == current)
+                break;
+            current = original;
+        }
+        OnPropertyChanged(nameof(IsSaved));
     }
 }
 

@@ -60,6 +60,15 @@ public sealed partial class HistoryView : Page
         await ViewModel.OpenEntryAsync((ProjectHistoryEntry)e.ClickedItem);
     }
 
+    private async void MenuFlyoutItemOpen_Click(object sender, RoutedEventArgs e)
+    {
+        if (((FrameworkElement)sender).Tag is not ProjectHistoryEntry entry)
+            return;
+
+        CloseRequested?.Invoke(this, EventArgs.Empty);
+        await ViewModel.OpenEntryAsync(entry);
+    }
+
     private async void ImageHistoryEntry_DataContextChanged(FrameworkElement sender, DataContextChangedEventArgs args)
     {
         if (args.NewValue is not ProjectHistoryEntry historyEntry)

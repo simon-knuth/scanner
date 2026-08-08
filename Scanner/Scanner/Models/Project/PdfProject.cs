@@ -81,7 +81,7 @@ public partial class PdfProject : ProjectBase
         PdfProject project = new(creationData.Id, pages, creationData.TargetFileName, creationData.TargetFolder, creationData.CreationScanOptions);
 
         if (isAlreadySaved)
-            project.areFilesSaved = true;
+            project.MarkRevisionSaved(project.CaptureContentRevision());
 
         if (pages[0] is PdfPage)
         {
@@ -166,6 +166,9 @@ public partial class PdfProject : ProjectBase
         {
             await saveSemaphore.WaitAsync();
 
+            // revision at snapshot time (-1 means no bytes were written this pass)
+            long revisionAtSnapshot = -1;
+
             try
             {
                 uiDispatcherQueue.RunOnThread(DispatcherQueuePriority.Low, () =>
@@ -201,7 +204,7 @@ public partial class PdfProject : ProjectBase
                 }
 
                 // apply actual file changes
-                if (!areFilesSaved || forceSaving)
+                if (HasUnsavedContent || forceSaving)
                 {
                     // lock data
                     await projectObjectSemaphore.WaitAsync();
@@ -247,6 +250,9 @@ public partial class PdfProject : ProjectBase
                         snapshot = new PdfProjectSnapshot(this);
                     });
                     if (snapshot == null) throw new ApplicationException("Failed to save Project (snapshot is null)");
+
+                    // capture the revision the snapshot represents before releasing object lock
+                    revisionAtSnapshot = CaptureContentRevision();
 
                     // continue processing edits during save process
                     projectObjectSemaphore.Release();
@@ -295,11 +301,10 @@ public partial class PdfProject : ProjectBase
                 {
                     IsSaving = false;
 
-                    // update saved state
-                    if (success && !saveProcessWaitingToStart && !hasMadeChangesDuringSaveProcess)
-                        areFilesSaved = true;
+                    // only set IsSaved to true if no newer revision was created while saving
+                    if (success && revisionAtSnapshot >= 0)
+                        MarkRevisionSaved(revisionAtSnapshot);
 
-                    hasMadeChangesDuringSaveProcess = false;
                     saveProcess.TrySetResult(success);
                 });
                 saveSemaphore.Release();

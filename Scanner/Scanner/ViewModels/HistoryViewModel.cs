@@ -34,7 +34,6 @@ class HistoryViewModel : ObservableRecipient, IDisposable
     #endregion
 
     #region Commands
-    public AsyncRelayCommand<ProjectHistoryEntry> OpenEntryAsyncCommand;
     public AsyncRelayCommand<ProjectHistoryEntry> RemoveEntryAsyncCommand;
     public AsyncRelayCommand ClearListAsyncCommand;
     public AsyncRelayCommand<ProjectHistoryEntry> ShowInFileExplorerAsyncCommand;
@@ -55,7 +54,6 @@ class HistoryViewModel : ObservableRecipient, IDisposable
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public HistoryViewModel()
     {
-        OpenEntryAsyncCommand = new(OpenEntryAsync);
         RemoveEntryAsyncCommand = new(RemoveEntryAsync);
         ClearListAsyncCommand = new(ClearListAsync);
         ShowInFileExplorerAsyncCommand = new(ShowInFileExplorerAsync);
