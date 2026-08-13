@@ -94,23 +94,23 @@
                 </Grid.ColumnDefinitions>
 
                 <Grid Grid.Row="0" Grid.Column="0">
-                    <FontIcon Glyph="&#xE91C;" FontSize="20" Foreground="{StaticResource SystemAccentColor}" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                    <FontIcon Glyph="&#xE91C;" FontSize="20" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                     <Line X1="0" Y1="28" X2="28" Y2="0" Stroke="{ThemeResource ApplicationPageBackgroundThemeBrush}" StrokeThickness="3" Margin="0,6,0,0"/>
-                    <Line X1="0" Y1="28" X2="28" Y2="0" Stroke="{ThemeResource SystemAccentColor}" StrokeThickness="1" Margin="0,6,0,0"/>
+                    <Line X1="0" Y1="28" X2="28" Y2="0" Stroke="{ThemeResource AccentFillColorDefaultBrush}" StrokeThickness="1" Margin="0,6,0,0"/>
                 </Grid>
                 <TextBlock Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" Margin="16,12,0,12" Text="{x:Bind strings:Resources.PromiseNoAds}" Style="{StaticResource BaseTextBlockStyle}" TextWrapping="WrapWholeWords" AutomationProperties.PositionInSet="1" AutomationProperties.SizeOfSet="4" />
 
                 <Grid Grid.Row="1" Grid.Column="0">
-                    <FontIcon Glyph="&#xE8C7;" FontSize="20" Foreground="{StaticResource SystemAccentColor}" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                    <FontIcon Glyph="&#xE8C7;" FontSize="20" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                     <Line X1="0" Y1="28" X2="28" Y2="0" Stroke="{ThemeResource ApplicationPageBackgroundThemeBrush}" StrokeThickness="3" Margin="0,6,0,0"/>
-                    <Line X1="0" Y1="28" X2="28" Y2="0" Stroke="{ThemeResource SystemAccentColor}" StrokeThickness="1" Margin="0,6,0,0"/>
+                    <Line X1="0" Y1="28" X2="28" Y2="0" Stroke="{ThemeResource AccentFillColorDefaultBrush}" StrokeThickness="1" Margin="0,6,0,0"/>
                 </Grid>
                 <TextBlock Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" Margin="16,12,0,12" Text="{x:Bind strings:Resources.PromiseNoSubscriptions}" Style="{StaticResource BaseTextBlockStyle}" TextWrapping="WrapWholeWords" AutomationProperties.PositionInSet="2" AutomationProperties.SizeOfSet="4" />
 
-                <FontIcon Grid.Row="2" Grid.Column="0" Glyph="&#xE72E;" FontSize="20" VerticalAlignment="Center" Margin="0,0,6,0" Foreground="{StaticResource SystemAccentColor}" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                <FontIcon Grid.Row="2" Grid.Column="0" Glyph="&#xE72E;" FontSize="20" VerticalAlignment="Center" Margin="0,0,6,0" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                 <TextBlock Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" Margin="16,12,0,12" Text="{x:Bind strings:Resources.PromisePrivacy}" Style="{StaticResource BaseTextBlockStyle}" TextWrapping="WrapWholeWords" AutomationProperties.PositionInSet="3" AutomationProperties.SizeOfSet="4" />
 
-                <FontIcon Grid.Row="3" Grid.Column="0" Glyph="&#xF133;" FontSize="20" VerticalAlignment="Center" Margin="0,0,6,0" Foreground="{StaticResource SystemAccentColor}" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                <FontIcon Grid.Row="3" Grid.Column="0" Glyph="&#xF133;" FontSize="20" VerticalAlignment="Center" Margin="0,0,6,0" Foreground="{ThemeResource AccentFillColorDefaultBrush}" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                 <TextBlock Grid.Row="3" Grid.Column="1" VerticalAlignment="Center" Margin="16,12,0,12" Text="{x:Bind strings:Resources.PromiseUpdates}" Style="{StaticResource BaseTextBlockStyle}" TextWrapping="WrapWholeWords" AutomationProperties.PositionInSet="4" AutomationProperties.SizeOfSet="4" />
             </Grid>
         </Grid>

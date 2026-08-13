@@ -10,11 +10,11 @@
     xmlns:views="using:Scanner.Views"
     mc:Ignorable="d"
     MinWidth="500"
-    MinHeight="700"
+    MinHeight="800"
     Width="500"
-    Height="700"
+    Height="800"
     MaxWidth="500"
-    MaxHeight="700"
+    MaxHeight="800"
     IsMinimizable="False"
     IsMaximizable="False">
 
