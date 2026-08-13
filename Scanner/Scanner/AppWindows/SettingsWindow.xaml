@@ -10,7 +10,6 @@
     xmlns:views="using:Scanner.Views"
     xmlns:settings="using:Scanner.Views.Settings"
     mc:Ignorable="d"
-    Title="Settings"
     MinWidth="800"
     MinHeight="600"
     Width="900"

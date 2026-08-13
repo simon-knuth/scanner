@@ -416,8 +416,8 @@ public partial class MultiFileProject : ProjectBase
             {
                 Messenger.Send(new ShowInAppNotificationMessage(new CommunityToolkit.WinUI.Behaviors.Notification
                 {
-                    Title = "Project not saved",
-                    Message = "The project needs to be saved to complete this action.",
+                    Title = Resources.Strings.Resources.ProjectNotSavedHeading,
+                    Message = Resources.Strings.Resources.ProjectNotSavedBody,
                     Severity = InfoBarSeverity.Error
                 }));
             }
@@ -449,8 +449,8 @@ public partial class MultiFileProject : ProjectBase
             {
                 Messenger.Send(new ShowInAppNotificationMessage(new CommunityToolkit.WinUI.Behaviors.Notification
                 {
-                    Title = "Project not saved",
-                    Message = "The project needs to be saved to complete this action.",
+                    Title = Resources.Strings.Resources.ProjectNotSavedHeading,
+                    Message = Resources.Strings.Resources.ProjectNotSavedBody,
                     Severity = InfoBarSeverity.Error
                 }));
                 return false;
@@ -520,8 +520,8 @@ public partial class MultiFileProject : ProjectBase
             {
                 Messenger.Send(new ShowInAppNotificationMessage(new CommunityToolkit.WinUI.Behaviors.Notification
                 {
-                    Title = "Project not saved",
-                    Message = "The project needs to be saved to complete this action.",
+                    Title = Resources.Strings.Resources.ProjectNotSavedHeading,
+                    Message = Resources.Strings.Resources.ProjectNotSavedBody,
                     Severity = InfoBarSeverity.Error
                 }));
             }

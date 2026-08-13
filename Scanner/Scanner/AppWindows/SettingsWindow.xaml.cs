@@ -44,6 +44,8 @@ public sealed partial class SettingsWindow : WindowEx
         this.InitializeComponent();
         Ioc.Default.GetService<ILogService>()?.Log.Information("Window loaded");
 
+        Title = GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.Settings);
+
         Content = new SettingsView(intent);
 
         // backdrop

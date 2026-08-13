@@ -1813,10 +1813,10 @@ Fuzzy</comment>
     <value>Give feedback</value>
   </data>
   <data name="GiveFeedbackDialogHeading" xml:space="preserve">
-    <value>We'd love your feedback</value>
+    <value>I'd love your feedback</value>
   </data>
   <data name="GiveFeedbackDialogBody" xml:space="preserve">
-    <value>Share your thoughts, suggestions, or bug reports to help us improve.</value>
+    <value>Share your thoughts, suggestions, or bug reports to help me improve the app.</value>
   </data>
   <data name="GiveFeedbackDialogName" xml:space="preserve">
     <value>Your Name (optional)</value>
@@ -1843,7 +1843,7 @@ Fuzzy</comment>
     <value>Heads up</value>
   </data>
   <data name="GiveFeedbackDialogInfoBody" xml:space="preserve">
-    <value>This app is free and open-source, mostly built by a single developer. While you may not get a reply to your message, your feedback truly helps shape the future of this project. Thank you for being part of it.</value>
+    <value>This app is free and open-source, mostly built by a single developer. I can't offer tech support, and you may not get a reply to your message, but your feedback truly helps shape the future of this project. Thank you for being part of it.</value>
   </data>
   <data name="ProjectActionApplyOrderToPages" xml:space="preserve">
     <value>Reorder pages</value>
@@ -2012,5 +2012,206 @@ Fuzzy</comment>
   </data>
   <data name="ComingSoon" xml:space="preserve">
     <value>Coming soon</value>
+  </data>
+  <data name="SettingsGeneralHeading" xml:space="preserve">
+    <value>General</value>
+  </data>
+  <data name="SettingsFilesHeading" xml:space="preserve">
+    <value>Files</value>
+  </data>
+  <data name="SettingsProjectOpenHeading" xml:space="preserve">
+    <value>Project open</value>
+  </data>
+  <data name="SettingsProjectOpenBody" xml:space="preserve">
+    <value>The current project has to be closed to access all settings on this page.</value>
+  </data>
+  <data name="SettingsSaveLocationChooseHeading" xml:space="preserve">
+    <value>Choose a location</value>
+  </data>
+  <data name="SettingsSaveLocationChooseBody" xml:space="preserve">
+    <value>Select where to save files when saving the project for the first time.</value>
+  </data>
+  <data name="SettingsSaveLocationFixedHeading" xml:space="preserve">
+    <value>Fixed location</value>
+  </data>
+  <data name="SettingsSaveLocationFixedBody" xml:space="preserve">
+    <value>Save all files to the same folder.</value>
+  </data>
+  <data name="SettingsSaveLocationAskNewProjectHeading" xml:space="preserve">
+    <value>Ask before starting a new project</value>
+  </data>
+  <data name="SettingsSaveLocationAskNewProjectBody" xml:space="preserve">
+    <value>Select where to save files when starting a new project.</value>
+  </data>
+  <data name="SettingsSaveLocationAskEveryFileHeading" xml:space="preserve">
+    <value>Ask for every new file</value>
+  </data>
+  <data name="SettingsSaveLocationAskEveryFileBody" xml:space="preserve">
+    <value>Select a folder every time you start a new PDF project or scan to a new image file.</value>
+  </data>
+  <data name="SelectFolder" xml:space="preserve">
+    <value>Select folder</value>
+  </data>
+  <data name="SettingsSaveLocationFixedUnavailableHeading" xml:space="preserve">
+    <value>Fixed location is unavailable on this PC</value>
+  </data>
+  <data name="SettingsSaveLocationFixedUnavailableBody" xml:space="preserve">
+    <value>Windows is blocking Scanner from using a fixed save location across app sessions. This is a system limitation and can not be bypassed.</value>
+  </data>
+  <data name="SettingsCreateSubfolderHeading" xml:space="preserve">
+    <value>Create subfolder</value>
+  </data>
+  <data name="SettingsCreateSubfolderBody" xml:space="preserve">
+    <value>Save scans in a subfolder of the selected folder. If the subfolder doesn't exist, it will be created.</value>
+  </data>
+  <data name="SettingsSubfolderNamingHeading" xml:space="preserve">
+    <value>Subfolder naming pattern</value>
+  </data>
+  <data name="SettingsFileNamingTimeAndDatePattern" xml:space="preserve">
+    <value>Time and date</value>
+  </data>
+  <data name="SettingsGeneratePdfNameWithAi" xml:space="preserve">
+    <value>Generate PDF file name using AI</value>
+  </data>
+  <data name="SettingsAutoSave" xml:space="preserve">
+    <value>Save changes automatically</value>
+  </data>
+  <data name="SettingsSearchablePdfHeading" xml:space="preserve">
+    <value>Searchable PDFs</value>
+  </data>
+  <data name="SettingsSearchablePdfBody" xml:space="preserve">
+    <value>Use OCR to add text data to saved PDF files. Disable this setting if saving PDFs takes too long.</value>
+  </data>
+  <data name="SettingsScanningHeading" xml:space="preserve">
+    <value>Scanning</value>
+  </data>
+  <data name="SettingsThemeHeading" xml:space="preserve">
+    <value>App theme</value>
+  </data>
+  <data name="SettingsExpandPageListHeading" xml:space="preserve">
+    <value>Expand page list</value>
+  </data>
+  <data name="SettingsExpandPageListBody" xml:space="preserve">
+    <value>Automatically expand the page list when a second page has been scanned</value>
+  </data>
+  <data name="SettingsMirrorLayout" xml:space="preserve">
+    <value>Mirror app layout</value>
+  </data>
+  <data name="SettingsLanguageHeading" xml:space="preserve">
+    <value>Language</value>
+  </data>
+  <data name="SettingsAnimationsDescription" xml:space="preserve">
+    <value>Disable prominent animations throughout the app</value>
+  </data>
+  <data name="Version" xml:space="preserve">
+    <value>Version</value>
+  </data>
+  <data name="GitHub" xml:space="preserve">
+    <value>GitHub</value>
+  </data>
+  <data name="SettingsGitHubBody" xml:space="preserve">
+    <value>Access the source code, see existing issues and open new ones</value>
+  </data>
+  <data name="SettingsLicensesHeading" xml:space="preserve">
+    <value>Licenses</value>
+  </data>
+  <data name="SettingsFeedbackSendMessageHeading" xml:space="preserve">
+    <value>Send a message</value>
+  </data>
+  <data name="SettingsFeedbackSendMessageBody" xml:space="preserve">
+    <value>Suggest changes or report bugs with a direct message</value>
+  </data>
+  <data name="SettingsPrivacyHeading" xml:space="preserve">
+    <value>Privacy</value>
+  </data>
+  <data name="SettingsErrorReportsBody" xml:space="preserve">
+    <value>This helps investigate bugs and makes the app better for everyone.&#x0a;Rest assured that your scans are never included in these reports.</value>
+  </data>
+  <data name="Feedback" xml:space="preserve">
+    <value>Feedback</value>
+  </data>
+  <data name="UnsavedChangesDialogHeading" xml:space="preserve">
+    <value>Save changes?</value>
+  </data>
+  <data name="UnsavedChangesDialogBody" xml:space="preserve">
+    <value>The project has been modified.</value>
+  </data>
+  <data name="Discard" xml:space="preserve">
+    <value>Discard</value>
+  </data>
+  <data name="SaveOptionsCreateOrUseSubFolder" xml:space="preserve">
+    <value>Create or use sub folder</value>
+  </data>
+  <data name="ClearList" xml:space="preserve">
+    <value>Clear list</value>
+  </data>
+  <data name="ManageScannersBody" xml:space="preserve">
+    <value>Install and manage scanners in the Windows Settings app.</value>
+  </data>
+  <data name="EditorPdfReadOnly" xml:space="preserve">
+    <value>Opened PDF pages are read-only</value>
+  </data>
+  <data name="Page" xml:space="preserve">
+    <value>Page</value>
+  </data>
+  <data name="ScanAreaAlignmentTooLargeWarning" xml:space="preserve">
+    <value>Selection exceeds max scan area; the actual scan area will be smaller</value>
+  </data>
+  <data name="ScanAreaAlignmentTooSmallWarning" xml:space="preserve">
+    <value>Selection is too small; the actual scan area will be larger</value>
+  </data>
+  <data name="AIDisclaimerHeading" xml:space="preserve">
+    <value>Good to know</value>
+  </data>
+  <data name="CopilotRuntimeDownloadHeading" xml:space="preserve">
+    <value>Download required</value>
+  </data>
+  <data name="Download" xml:space="preserve">
+    <value>Download</value>
+  </data>
+  <data name="NotNow" xml:space="preserve">
+    <value>Not now</value>
+  </data>
+  <data name="LearnMore" xml:space="preserve">
+    <value>Learn more</value>
+  </data>
+  <data name="ErrorMessageActionFailedHeading" xml:space="preserve">
+    <value>Something went wrong and the action couldn't be completed</value>
+  </data>
+  <data name="ErrorMessageActionsFailedHeading" xml:space="preserve">
+    <value>Something went wrong and the actions couldn't be completed</value>
+  </data>
+  <data name="ErrorMessageProjectMustCloseHeading" xml:space="preserve">
+    <value>Something went wrong and the project needs to be closed</value>
+  </data>
+  <data name="ProjectNotSavedHeading" xml:space="preserve">
+    <value>Project not saved</value>
+  </data>
+  <data name="ProjectNotSavedBody" xml:space="preserve">
+    <value>The project needs to be saved to complete this action.</value>
+  </data>
+  <data name="ErrorMessageMultipleFileTypesHeading" xml:space="preserve">
+    <value>Can not open multiple file types</value>
+  </data>
+  <data name="ErrorMessageMultipleFileTypesBody" xml:space="preserve">
+    <value>Please select files of the same type to open a project.</value>
+  </data>
+  <data name="ErrorMessageMultiplePdfsHeading" xml:space="preserve">
+    <value>Can not open multiple PDF files</value>
+  </data>
+  <data name="ErrorMessageMultiplePdfsBody" xml:space="preserve">
+    <value>Please select just one PDF file to open a project.</value>
+  </data>
+  <data name="ErrorMessageOpenFilesBody" xml:space="preserve">
+    <value>Failed to open files.</value>
+  </data>
+  <data name="FeederEmptyHeading" xml:space="preserve">
+    <value>Feeder empty</value>
+  </data>
+  <data name="FeederEmptyBody" xml:space="preserve">
+    <value>There are no pages in the feeder. Please make sure you have inserted them correctly for the scanner to detect them.</value>
+  </data>
+  <data name="ErrorMessageTryAgainLaterBody" xml:space="preserve">
+    <value>Please try again later.</value>
   </data>
 </root>

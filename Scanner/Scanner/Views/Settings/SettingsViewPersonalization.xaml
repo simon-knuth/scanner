@@ -15,6 +15,7 @@
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:settings="using:Scanner.Views.Settings"
     xmlns:globalization="using:Windows.Globalization"
+    xmlns:strings="using:Scanner.Resources.Strings"
     mc:Ignorable="d">
 
 
@@ -39,21 +40,21 @@
     <Grid x:Name="GridRoot">
         <ScrollViewer HorizontalScrollMode="Disabled" VerticalScrollMode="Auto" VerticalScrollBarVisibility="Auto">
             <StackPanel Orientation="Vertical" Spacing="4" Padding="32">
-                <TextBlock Text="Personalization" Margin="0,0,0,16" FontSize="24" Style="{StaticResource BaseTextBlockStyle}" />
-                <controls:SettingsCard Header="App theme">
+                <TextBlock Text="{x:Bind strings:Resources.SettingsPersonalizationHeading}" Margin="0,0,0,16" FontSize="24" Style="{StaticResource BaseTextBlockStyle}" />
+                <controls:SettingsCard Header="{x:Bind strings:Resources.SettingsThemeHeading}">
                     <controls:SettingsCard.HeaderIcon>
                         <FontIcon Glyph="&#xE793;" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                     </controls:SettingsCard.HeaderIcon>
 
                     <ComboBox SelectedIndex="{x:Bind ViewModel.SettingAppTheme, Mode=TwoWay}">
                         <ComboBox.Items>
-                            <ComboBoxItem Content="System" />
-                            <ComboBoxItem Content="Light" />
-                            <ComboBoxItem Content="Dark" />
+                            <ComboBoxItem Content="{x:Bind strings:Resources.SettingsThemeSystem}" />
+                            <ComboBoxItem Content="{x:Bind strings:Resources.SettingsThemeLight}" />
+                            <ComboBoxItem Content="{x:Bind strings:Resources.SettingsThemeDark}" />
                         </ComboBox.Items>
                     </ComboBox>
                 </controls:SettingsCard>
-                <controls:SettingsCard Header="Expand page list" Description="Automatically expand the page list when a second page has been scanned">
+                <controls:SettingsCard Header="{x:Bind strings:Resources.SettingsExpandPageListHeading}" Description="{x:Bind strings:Resources.SettingsExpandPageListBody}">
                     <controls:SettingsCard.HeaderIcon>
                         <FontIcon Glyph="&#xE7EA;" FontFamily="{StaticResource SymbolThemeFontFamily}" RenderTransformOrigin="0.5,0.5">
                             <FontIcon.RenderTransform>
@@ -64,38 +65,38 @@
 
                     <ToggleSwitch IsOn="{x:Bind ViewModel.SettingsService.SettingExpandPageList, Mode=TwoWay}" />
                 </controls:SettingsCard>
-                <controls:SettingsCard Header="Units of measurement">
+                <controls:SettingsCard Header="{x:Bind strings:Resources.SettingsMeasurementUnitsHeading}">
                     <controls:SettingsCard.HeaderIcon>
                         <FontIcon Glyph="&#xED5E;" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                     </controls:SettingsCard.HeaderIcon>
 
                     <ComboBox SelectedIndex="{x:Bind ViewModel.SettingMeasurementUnits, Mode=TwoWay}">
                         <ComboBox.Items>
-                            <ComboBoxItem Content="Metric" />
-                            <ComboBoxItem Content="Imperial/US" />
+                            <ComboBoxItem Content="{x:Bind strings:Resources.SettingsMeasurementUnitsMetric}" />
+                            <ComboBoxItem Content="{x:Bind strings:Resources.SettingsMeasurementUnitsImperialUS}" />
                         </ComboBox.Items>
                     </ComboBox>
                 </controls:SettingsCard>
-                <controls:SettingsCard Header="Editor orientation">
+                <controls:SettingsCard Header="{x:Bind strings:Resources.SettingsEditorOrientationHeading}">
                     <controls:SettingsCard.HeaderIcon>
                         <FontIcon Glyph="&#xECE7;" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                     </controls:SettingsCard.HeaderIcon>
 
                     <ComboBox SelectedIndex="{x:Bind ViewModel.SettingEditorOrientation, Mode=TwoWay}">
                         <ComboBox.Items>
-                            <ComboBoxItem Content="Horizontal" />
-                            <ComboBoxItem Content="Vertical" />
+                            <ComboBoxItem Content="{x:Bind strings:Resources.SettingsEditorOrientationHorizontal}" />
+                            <ComboBoxItem Content="{x:Bind strings:Resources.SettingsEditorOrientationVertical}" />
                         </ComboBox.Items>
                     </ComboBox>
                 </controls:SettingsCard>
-                <controls:SettingsCard Header="Mirror app layout">
+                <controls:SettingsCard Header="{x:Bind strings:Resources.SettingsMirrorLayout}">
                     <controls:SettingsCard.HeaderIcon>
                         <FontIcon Glyph="&#xE90D;" MirroredWhenRightToLeft="True" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                     </controls:SettingsCard.HeaderIcon>
 
                     <ToggleSwitch IsOn="{x:Bind ViewModel.SettingsService.SettingMirrorAppLayout, Mode=TwoWay}" />
                 </controls:SettingsCard>
-                <controls:SettingsCard Header="Language">
+                <controls:SettingsCard Header="{x:Bind strings:Resources.SettingsLanguageHeading}">
                     <controls:SettingsCard.HeaderIcon>
                         <FontIcon Glyph="&#xF2B7;" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                     </controls:SettingsCard.HeaderIcon>
@@ -108,7 +109,7 @@
                         </ComboBox.ItemTemplate>
                     </ComboBox>
                 </controls:SettingsCard>
-                <controls:SettingsCard Header="Animations" Description="Disable prominent animations throughout the app">
+                <controls:SettingsCard Header="{x:Bind strings:Resources.SettingsAnimations}" Description="{x:Bind strings:Resources.SettingsAnimationsDescription}">
                     <controls:SettingsCard.HeaderIcon>
                         <FontIcon Glyph="&#xE805;" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                     </controls:SettingsCard.HeaderIcon>

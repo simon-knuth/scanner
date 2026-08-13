@@ -6,10 +6,11 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
+    xmlns:strings="using:Scanner.Resources.Strings"
     mc:Ignorable="d"
     IsLightDismissEnabled="True"
     ActionButtonStyle="{StaticResource AccentButtonStyle}"
-    Title="Good to know"
+    Title="{x:Bind strings:Resources.AIDisclaimerHeading}"
     Subtitle="Your data stays private and is processed securely on-device by the Windows Copilot Runtime.&#x0a;AI content can be surprising or inaccurate. Always double-check results.">
 
     <StackPanel Orientation="Vertical" Spacing="12" Padding="0,24,0,0">
@@ -20,12 +21,12 @@
             </Grid.ColumnDefinitions>
 
             <FontIcon Grid.Column="0" Glyph="&#xE72E;" FontFamily="{StaticResource SymbolThemeFontFamily}" Foreground="{ThemeResource AccentTextFillColorTertiaryBrush}" />
-            <TextBlock Grid.Column="1" Text="Personal data stays on your device" Style="{StaticResource BaseTextBlockStyle}" />
+            <TextBlock Grid.Column="1" Text="{x:Bind strings:Resources.PromisePrivacy}" Style="{StaticResource BaseTextBlockStyle}" />
         </Grid>
 
         <HyperlinkButton x:Name="HyperlinkButtonPrivacyPolicy" Margin="0,0,0,-4" HorizontalAlignment="Stretch" Click="HyperlinkButtonPrivacyPolicy_Click">
             <StackPanel Orientation="Horizontal" Spacing="12">
-                <TextBlock Text="Privacy policy" />
+                <TextBlock Text="{x:Bind strings:Resources.PrivacyPolicy}" />
                 <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE71B;" />
             </StackPanel>
         </HyperlinkButton>

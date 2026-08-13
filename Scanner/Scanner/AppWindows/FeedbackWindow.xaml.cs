@@ -42,6 +42,8 @@ public sealed partial class FeedbackWindow : WindowEx
         this.InitializeComponent();
         Ioc.Default.GetService<ILogService>()?.Log.Information("Window loaded");
 
+        Title = GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.Feedback);
+
         // backdrop
         if (IsWindows11())
         {

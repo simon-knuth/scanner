@@ -107,7 +107,7 @@
                 </Grid.ColumnDefinitions>
 
                 <FontIcon Grid.Column="0" Glyph="&#xF736;" FontSize="16" Foreground="{ThemeResource SystemFillColorCautionBrush}" FontFamily="{StaticResource SymbolThemeFontFamily}" HorizontalAlignment="Center" VerticalAlignment="Center" />
-                <TextBlock Grid.Column="1" Text="Selection exceeds max scan area; the actual scan area will be smaller" MaxLines="4" TextTrimming="WordEllipsis" Style="{StaticResource CaptionTextBlockStyle}" VerticalAlignment="Center" />
+                <TextBlock Grid.Column="1" Text="{x:Bind strings:Resources.ScanAreaAlignmentTooLargeWarning}" MaxLines="4" TextTrimming="WordEllipsis" Style="{StaticResource CaptionTextBlockStyle}" VerticalAlignment="Center" />
             </Grid>
 
             <Grid x:Name="GridWarningSelectionTooSmall" ColumnSpacing="8" Padding="8,4,8,4" CornerRadius="8" Background="{ThemeResource AcrylicInAppFillColorDefaultBrush}" x:Load="{x:Bind IsSelectionTooSmall, Mode=OneWay}">
@@ -117,7 +117,7 @@
                 </Grid.ColumnDefinitions>
 
                 <FontIcon Grid.Column="0" Glyph="&#xF736;" FontSize="16" Foreground="{ThemeResource SystemFillColorCautionBrush}" FontFamily="{StaticResource SymbolThemeFontFamily}" HorizontalAlignment="Center" VerticalAlignment="Center" />
-                <TextBlock Grid.Column="1" Text="Selection is too small; the actual scan area will be larger" MaxLines="4" TextTrimming="WordEllipsis" Style="{StaticResource CaptionTextBlockStyle}" VerticalAlignment="Center" />
+                <TextBlock Grid.Column="1" Text="{x:Bind strings:Resources.ScanAreaAlignmentTooSmallWarning}" MaxLines="4" TextTrimming="WordEllipsis" Style="{StaticResource CaptionTextBlockStyle}" VerticalAlignment="Center" />
             </Grid>
         </StackPanel>
     </Grid>

@@ -655,7 +655,7 @@
 
                                         <FontIcon Grid.Row="0" Grid.Column="0" Glyph="&#xE712;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                                         <TextBlock Grid.Row="0" Grid.Column="1" Text="{x:Bind strings:Resources.ManageScanners}" MaxLines="1" />
-                                        <TextBlock Grid.Row="1" Grid.Column="1" Text="Install and manage scanners in the Windows Settings app." Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="WrapWholeWords" Style="{StaticResource CaptionTextBlockStyle}" />
+                                        <TextBlock Grid.Row="1" Grid.Column="1" Text="{x:Bind strings:Resources.ManageScannersBody}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="WrapWholeWords" Style="{StaticResource CaptionTextBlockStyle}" />
                                     </Grid>
                                 </ComboBoxItem>
                             </ComboBox.Items>
