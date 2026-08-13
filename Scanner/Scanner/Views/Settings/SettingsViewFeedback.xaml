@@ -45,7 +45,7 @@
                         <FontIcon Glyph="&#xE8BD;" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                     </controls:SettingsCard.HeaderIcon>
                 </controls:SettingsCard>
-                <controls:SettingsCard Header="{x:Bind strings:Resources.SettingsFeedbackRateInStore}" IsClickEnabled="True" Command="{x:Bind ViewModel.RateInStoreCommand}">
+                <controls:SettingsCard Visibility="Collapsed" Header="{x:Bind strings:Resources.SettingsFeedbackRateInStore}" IsClickEnabled="True" Command="{x:Bind ViewModel.RateInStoreCommand}">
                     <controls:SettingsCard.HeaderIcon>
                         <FontIcon Glyph="&#xE734;" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                     </controls:SettingsCard.HeaderIcon>
