@@ -1,0 +1,135 @@
+# This workflow will build, sign, and package a WinUI 3 MSIX desktop application
+# built on .NET.
+
+name: Build MSIX
+
+on:
+  workflow_dispatch:  
+  push:
+    branches:
+      - main
+
+jobs:
+
+  build:
+    strategy:
+      matrix:
+        configuration: [Release]
+        platform: [ARM64, x64, x86]
+
+    runs-on: windows-latest  # For a list of available runner types, refer to
+                             # https://help.github.com/en/actions/reference/workflow-syntax-for-github-actions#jobsjob_idruns-on
+
+    defaults:
+      run:
+        working-directory: Scanner
+
+    env:
+      Solution_Name: Scanner.slnx                         # Replace with your solution name, i.e. App1.sln.
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    # Install the .NET workload
+    - name: Install .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 10.0.x
+
+    # Add MSBuild to the PATH: https://github.com/microsoft/setup-msbuild
+    - name: Setup MSBuild.exe
+      uses: microsoft/setup-msbuild@v2
+
+    # Restore the application to populate the obj folder with RuntimeIdentifiers
+    - name: Restore the application
+      run: msbuild $env:Solution_Name /t:Restore /p:Configuration=$env:Configuration
+      env:
+        Configuration: ${{ matrix.configuration }}
+
+    # Decode the base 64 encoded pfx and save the Signing_Certificate
+    - name: Decode the pfx
+      run: |
+        $pfx_cert_byte = [System.Convert]::FromBase64String("${{ secrets.BASE64_ENCODED_PFX }}")
+        $certificatePath = "GitHubActionsWorkflow.pfx"
+        [IO.File]::WriteAllBytes("$certificatePath", $pfx_cert_byte)
+
+    # Import the certificate into the Windows certificate store
+    - name: Import certificate
+      run: |
+        $pass = ConvertTo-SecureString -String "${{ secrets.PFX_PASSWORD }}" -Force -AsPlainText
+        $cert = Import-PfxCertificate -FilePath "GitHubActionsWorkflow.pfx" -CertStoreLocation Cert:\CurrentUser\My -Password $pass
+        echo "THUMBPRINT=$($cert.Thumbprint)" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+        
+    # Insert secret into the Secrets.resx file
+    - name: Replace Sentry DSN in Secrets.resx
+      shell: pwsh
+      run: |
+        $file = "Scanner\Resources\Secrets.resx"
+        $content = Get-Content $file -Raw
+        if ($content -notmatch 'SENTRY_DSN_GOES_HERE') {
+          Write-Error "Sentry DSN placeholder not found in Secrets.resx!"
+          exit 1
+        }
+        $content -replace 'SENTRY_DSN_GOES_HERE', '${{ secrets.SENTRY_DSN }}' | Set-Content $file
+
+    # Create the app package by building and packaging the project
+    - name: Create the app package
+      run: msbuild $env:Solution_Name /p:Configuration=$env:Configuration /p:Platform=$env:Platform /p:UapAppxPackageBuildMode=$env:Appx_Package_Build_Mode /p:AppxBundle=$env:Appx_Bundle /p:AppxPackageDir="$env:Appx_Package_Dir" /p:GenerateAppxPackageOnBuild=true
+      env:
+        Appx_Bundle: Never
+        Appx_Package_Build_Mode: SideloadOnly
+        Appx_Package_Dir: Packages\${{ matrix.platform }}
+        Configuration: ${{ matrix.configuration }}
+        Platform: ${{ matrix.platform }}
+        SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+    
+    # Remove the pfx
+    - name: Remove the pfx
+      run: |
+        Remove-Item -path GitHubActionsWorkflow.pfx
+      if: ${{ always() }}
+
+    # Remove the certificate from the store
+    - name: Remove certificate from store
+      run: |
+        Remove-Item -Path "Cert:\CurrentUser\My\$env:THUMBPRINT"
+      if: ${{ always() }}
+    
+    # Upload the MSIX
+    - name: Upload package
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ matrix.platform }}
+        path: Scanner\Scanner\Packages\*\*.msix
+
+  create_sentry_release:
+    needs: build
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Get app version
+      id: version
+      shell: pwsh
+      run: |
+        [xml]$manifest = Get-Content "Scanner\Scanner\Package.appxmanifest"
+        $version = $manifest.Package.Identity.Version
+        echo "version=$version" >> $env:GITHUB_OUTPUT
+
+    - name: Create Sentry release
+      uses: getsentry/action-release@v1
+      env:
+        SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+        SENTRY_ORG: simon-knuth
+        SENTRY_PROJECT: scanner
+      with:
+        environment: release
+        set_commits: auto
+        version: ${{ steps.version.outputs.version }}
