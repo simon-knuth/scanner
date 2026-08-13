@@ -1843,7 +1843,7 @@ Fuzzy</comment>
     <value>Heads up</value>
   </data>
   <data name="GiveFeedbackDialogInfoBody" xml:space="preserve">
-    <value>This app is free and open-source, mostly built by a single developer. I can't offer tech support, and you may not get a reply to your message, but your feedback truly helps shape the future of this project. Thank you for being part of it.</value>
+    <value>This app is free and open-source, built mostly by a single developer. I can't offer tech support and may not be able to reply, but your feedback shapes where this project goes. Thank you!</value>
   </data>
   <data name="ProjectActionApplyOrderToPages" xml:space="preserve">
     <value>Reorder pages</value>
