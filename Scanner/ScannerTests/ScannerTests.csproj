@@ -25,8 +25,14 @@
     <PackageReference Include="System.Private.Uri" Version="4.3.2" />
   </ItemGroup>
 
+  <!--
+    The tests drive the *installed* MSIX through UI automation, so they need no
+    reference to the app assembly. Linking the automation IDs keeps them declared
+    once without making this project platform-specific (a ProjectReference to the
+    x86/x64/ARM64 app would trigger MSB3270 against this AnyCPU project).
+    -->
   <ItemGroup>
-    <ProjectReference Include="..\Scanner\Scanner.csproj" />
+    <Compile Include="..\Scanner\Tests\AutomationIds.cs" Link="AutomationIds.cs" />
   </ItemGroup>
 
   <ItemGroup>
