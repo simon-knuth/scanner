@@ -14,6 +14,7 @@
     xmlns:converters="using:Scanner.Views.Converters"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:settings="using:Scanner.Views.Settings"
+    xmlns:strings="using:Scanner.Resources.Strings"
     mc:Ignorable="d">
 
 
@@ -49,7 +50,7 @@
                     </AnimatedIcon.FallbackIconSource>
                 </AnimatedIcon>
             </Button>
-            <TextBlock Text="Licenses" FontSize="24" VerticalAlignment="Center" Style="{StaticResource BaseTextBlockStyle}" />
+            <TextBlock Text="{x:Bind strings:Resources.SettingsLicensesHeading}" FontSize="24" VerticalAlignment="Center" Style="{StaticResource BaseTextBlockStyle}" />
         </StackPanel>
 
         <ListView Grid.Row="1" Padding="16,0,16,0" ItemsSource="{x:Bind Licenses, Mode=OneWay}" IsItemClickEnabled="False" SelectionMode="None">

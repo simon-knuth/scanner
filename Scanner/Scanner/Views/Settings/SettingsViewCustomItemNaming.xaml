@@ -464,8 +464,8 @@
                     <ColumnDefinition Width="1*" />
                 </Grid.ColumnDefinitions>
 
-                <Button Grid.Column="0" Content="Confirm" HorizontalAlignment="Stretch" Style="{StaticResource AccentButtonStyle}" IsEnabled="{x:Bind ViewModel.Pattern.IsValid, Mode=OneWay}" Command="{x:Bind ViewModel.AcceptCommand}" />
-                <Button x:Name="ButtonCancel" Grid.Column="1" Content="Cancel" HorizontalAlignment="Stretch" Click="ButtonCancel_Click" />
+                <Button Grid.Column="0" Content="{x:Bind strings:Resources.Confirm}" HorizontalAlignment="Stretch" Style="{StaticResource AccentButtonStyle}" IsEnabled="{x:Bind ViewModel.Pattern.IsValid, Mode=OneWay}" Command="{x:Bind ViewModel.AcceptCommand}" />
+                <Button x:Name="ButtonCancel" Grid.Column="1" Content="{x:Bind strings:Resources.Cancel}" HorizontalAlignment="Stretch" Click="ButtonCancel_Click" />
             </Grid>
         </Grid>
     </Grid>

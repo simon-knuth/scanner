@@ -420,8 +420,8 @@ partial class ProjectViewModel : ObservableRecipient, IDisposable
         {
             Messenger.Send(new ShowInAppNotificationMessage(new CommunityToolkit.WinUI.Behaviors.Notification
             {
-                Title = "Project not saved",
-                Message = "The project needs to be saved to complete this action.",
+                Title = GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.ProjectNotSavedHeading),
+                Message = GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.ProjectNotSavedBody),
                 Severity = InfoBarSeverity.Error
             }));
             return;

@@ -5,15 +5,16 @@
     xmlns:local="using:Scanner.Views.TeachingTips"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:strings="using:Scanner.Resources.Strings"
     mc:Ignorable="d"
     IsLightDismissEnabled="False"
     ActionButtonStyle="{StaticResource AccentButtonStyle}"
-    Title="Download required"
+    Title="{x:Bind strings:Resources.CopilotRuntimeDownloadHeading}"
     Subtitle="To use AI features, your PC needs to download some models using Windows Update. Would you like to continue?"
-    ActionButtonContent="Download"
-    CloseButtonContent="Not now"
+    ActionButtonContent="{x:Bind strings:Resources.Download}"
+    CloseButtonContent="{x:Bind strings:Resources.NotNow}"
     ActionButtonClick="TeachingTip_ActionButtonClick">
 
-    <HyperlinkButton x:Name="HyperlinkButtonLearnMore" Margin="0,12,0,-4" Content="Learn more" HorizontalAlignment="Stretch" Click="HyperlinkButtonLearnMore_Click" />
+    <HyperlinkButton x:Name="HyperlinkButtonLearnMore" Margin="0,12,0,-4" Content="{x:Bind strings:Resources.LearnMore}" HorizontalAlignment="Stretch" Click="HyperlinkButtonLearnMore_Click" />
 
 </TeachingTip>

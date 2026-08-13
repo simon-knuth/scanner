@@ -186,7 +186,7 @@
             </Grid>
 
             <!-- Subfolder -->
-            <CheckBox x:Name="CheckBoxSubfolder" Content="Create or use sub folder" Margin="0,0,0,-4" IsChecked="{x:Bind ViewModel.CreateSubfolder, Mode=TwoWay}" />
+            <CheckBox x:Name="CheckBoxSubfolder" Content="{x:Bind strings:Resources.SaveOptionsCreateOrUseSubFolder}" Margin="0,0,0,-4" IsChecked="{x:Bind ViewModel.CreateSubfolder, Mode=TwoWay}" />
 
             <StackPanel x:Name="StackPanelSubfolder" Orientation="Vertical" Spacing="8" x:Load="{x:Bind ViewModel.CreateSubfolder, Mode=OneWay}">
                 <StackPanel.Transitions>
@@ -206,7 +206,7 @@
                     <labs:SegmentedItem CornerRadius="4,4,0,0">
                         <StackPanel Orientation="Vertical" Spacing="4" Margin="0,4,0,4">
                             <FontIcon Glyph="&#xE8A5;" FontSize="16" HorizontalAlignment="Center" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontFamily="{StaticResource SymbolThemeFontFamily}"/>
-                            <TextBlock Text="File type" TextAlignment="Center" Style="{StaticResource BodyTextBlockStyle}" />
+                            <TextBlock Text="{x:Bind strings:Resources.FileNamingBlockFileType}" TextAlignment="Center" Style="{StaticResource BodyTextBlockStyle}" />
                         </StackPanel>
                     </labs:SegmentedItem>
                     <labs:SegmentedItem x:Name="SegmentedItemCustomSubfolderNamingPattern" CornerRadius="4,4,0,0">

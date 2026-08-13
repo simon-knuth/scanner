@@ -272,8 +272,8 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
             SentryService?.TrackError(exc);
             Messenger.Send(new ShowInAppNotificationMessage(new Notification()
             {
-                Title = "Something went wrong",
-                Message = string.IsNullOrEmpty(exc.Message) ? exc.Message : "Please try again later."
+                Title = GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.ErrorMessageHeading),
+                Message = string.IsNullOrEmpty(exc.Message) ? exc.Message : GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.ErrorMessageTryAgainLaterBody)
             }));
             return false;
         }
@@ -425,7 +425,7 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
             SentryService?.TrackError(exc);
             Messenger.Send(new ShowInAppNotificationMessage(new Notification()
             {
-                Title = "Something went wrong",
+                Title = GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.ErrorMessageHeading),
                 Message = GetScanErrorNotificationMessage(exc)
             }));
             return false;
@@ -524,7 +524,7 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
             SentryService?.TrackError(exc);
             Messenger.Send(new ShowInAppNotificationMessage(new Notification()
             {
-                Title = "Something went wrong",
+                Title = GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.ErrorMessageHeading),
                 Message = GetScanErrorNotificationMessage(exc)
             }));
             return false;
@@ -565,8 +565,8 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
             {
                 Messenger.Send(new ShowInAppNotificationMessage(new Notification
                 {
-                    Title = "Can not open multiple file types",
-                    Message = "Please select files of the same type to open a project.",
+                    Title = GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.ErrorMessageMultipleFileTypesHeading),
+                    Message = GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.ErrorMessageMultipleFileTypesBody),
                     Severity = Microsoft.UI.Xaml.Controls.InfoBarSeverity.Error
                 }));
                 return false;
@@ -575,8 +575,8 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
             {
                 Messenger.Send(new ShowInAppNotificationMessage(new Notification
                 {
-                    Title = "Can not open multiple PDF files",
-                    Message = "Please select just one PDF file to open a project.",
+                    Title = GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.ErrorMessageMultiplePdfsHeading),
+                    Message = GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.ErrorMessageMultiplePdfsBody),
                     Severity = Microsoft.UI.Xaml.Controls.InfoBarSeverity.Error
                 }));
                 return false;
@@ -624,8 +624,8 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
             LogService?.Log.Error(exc, "Failed to open files");
             Messenger.Send(new ShowInAppNotificationMessage(new Notification
             {
-                Title = "Something went wrong",
-                Message = "Failed to open files.",
+                Title = GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.ErrorMessageHeading),
+                Message = GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.ErrorMessageOpenFilesBody),
                 Severity = Microsoft.UI.Xaml.Controls.InfoBarSeverity.Error
             }));
             return false;
@@ -665,16 +665,16 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
             {
                 Messenger.Send(new ShowInAppNotificationMessage(new Notification()
                 {
-                    Title = "Feeder empty",
-                    Message = "There are no pages in the feeder. Please make sure you have inserted them correctly for the scanner to detect them."
+                    Title = GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.FeederEmptyHeading),
+                    Message = GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.FeederEmptyBody)
                 }));
             }
             else
             {
                 Messenger.Send(new ShowInAppNotificationMessage(new Notification()
                 {
-                    Title = "Something went wrong",
-                    Message = "Please try again later."
+                    Title = GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.ErrorMessageHeading),
+                    Message = GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.ErrorMessageTryAgainLaterBody)
                 }));
             }
             return null;
@@ -763,14 +763,14 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
         {
             Messenger.Send(new ShowInAppNotificationMessage(new Notification
             {
-                Title = "Something went wrong and the actions couldn't be completed"
+                Title = GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.ErrorMessageActionsFailedHeading)
             }));
         }
         catch (Exception)
         {
             Messenger.Send(new ShowInAppNotificationMessage(new Notification
             {
-                Title = "Something went wrong and the project needs to be closed"
+                Title = GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.ErrorMessageProjectMustCloseHeading)
             }));
 
             // close project
@@ -818,7 +818,7 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
         {
             Messenger.Send(new ShowInAppNotificationMessage(new Notification
             {
-                Title = "Something went wrong and the action couldn't be completed"
+                Title = GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.ErrorMessageActionFailedHeading)
             }));
         }
         finally
@@ -848,7 +848,7 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
         {
             Messenger.Send(new ShowInAppNotificationMessage(new Notification
             {
-                Title = "Something went wrong and the action couldn't be completed"
+                Title = GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.ErrorMessageActionFailedHeading)
             }));
         }
         finally
@@ -881,7 +881,7 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
         {
             Messenger.Send(new ShowInAppNotificationMessage(new Notification
             {
-                Title = "Something went wrong and the action couldn't be completed"
+                Title = GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.ErrorMessageActionFailedHeading)
             }));
             return false;
         }
@@ -915,7 +915,7 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
         {
             Messenger.Send(new ShowInAppNotificationMessage(new Notification
             {
-                Title = "Something went wrong and the action couldn't be completed"
+                Title = GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.ErrorMessageActionFailedHeading)
             }));
             return false;
         }
@@ -946,7 +946,7 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
         {
             Messenger.Send(new ShowInAppNotificationMessage(new Notification
             {
-                Title = "Something went wrong and the action couldn't be completed"
+                Title = GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.ErrorMessageActionFailedHeading)
             }));
         }
         finally
@@ -976,7 +976,7 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
         {
             Messenger.Send(new ShowInAppNotificationMessage(new Notification
             {
-                Title = "Something went wrong and the action couldn't be completed"
+                Title = GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.ErrorMessageActionFailedHeading)
             }));
         }
         finally
@@ -1166,7 +1166,7 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
         {
             Messenger.Send(new ShowInAppNotificationMessage(new Notification
             {
-                Title = "Something went wrong and the actions couldn't be completed"
+                Title = GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.ErrorMessageActionsFailedHeading)
             }));
 
             if (redoing)
@@ -1182,7 +1182,7 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
         {
             Messenger.Send(new ShowInAppNotificationMessage(new Notification
             {
-                Title = "Something went wrong and the project needs to be closed"
+                Title = GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.ErrorMessageProjectMustCloseHeading)
             }));
             await TryCloseProjectAsync(UiDispatcherQueue!, ignoreUnsavedChanges: true);
 
@@ -1216,7 +1216,7 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
         {
             Messenger.Send(new ShowInAppNotificationMessage(new Notification
             {
-                Title = "Something went wrong and the actions couldn't be completed"
+                Title = GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.ErrorMessageActionsFailedHeading)
             }));
 
             // update undo stack
@@ -1229,7 +1229,7 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
         {
             Messenger.Send(new ShowInAppNotificationMessage(new Notification
             {
-                Title = "Something went wrong and the project needs to be closed"
+                Title = GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.ErrorMessageProjectMustCloseHeading)
             }));
             await TryCloseProjectAsync(UiDispatcherQueue!, ignoreUnsavedChanges: true);
 

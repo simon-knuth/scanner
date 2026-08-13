@@ -47,8 +47,8 @@
                     </TransitionCollection>
                 </StackPanel.ChildrenTransitions>
                 
-                <TextBlock Text="Privacy" Margin="0,0,0,16" FontSize="24" Style="{StaticResource BaseTextBlockStyle}" />
-                <controls:SettingsCard Header="{x:Bind strings:Resources.SettingsErrorReportsHeading}" Description="This helps investigate bugs and makes the app better for everyone.&#x0a;Rest assured that your scans are never included in these reports.">
+                <TextBlock Text="{x:Bind strings:Resources.SettingsPrivacyHeading}" Margin="0,0,0,16" FontSize="24" Style="{StaticResource BaseTextBlockStyle}" />
+                <controls:SettingsCard Header="{x:Bind strings:Resources.SettingsErrorReportsHeading}" Description="{x:Bind strings:Resources.SettingsErrorReportsBody}">
                     <controls:SettingsCard.HeaderIcon>
                         <FontIcon Glyph="&#xEBE8;" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                     </controls:SettingsCard.HeaderIcon>

@@ -50,7 +50,7 @@
 
     <ScrollViewer Margin="-24,0,-24,-24" Padding="24,0,24,12" VerticalScrollMode="Auto" VerticalScrollBarVisibility="Auto">
         <StackPanel Orientation="Vertical">
-            <controls:SettingsCard Background="{ThemeResource CardBackgroundFillColorSecondaryBrush}" Header="{x:Bind strings:Resources.SettingsErrorReportsHeading}" Description="This helps investigate bugs and makes the app better for everyone.&#x0a;Rest assured that your scans are never included in these reports.">
+            <controls:SettingsCard Background="{ThemeResource CardBackgroundFillColorSecondaryBrush}" Header="{x:Bind strings:Resources.SettingsErrorReportsHeading}" Description="{x:Bind strings:Resources.SettingsErrorReportsBody}">
                 <controls:SettingsCard.Resources>
                     <x:Double x:Key="SettingsCardWrapThreshold">0</x:Double>
                 </controls:SettingsCard.Resources>

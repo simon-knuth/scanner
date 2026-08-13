@@ -15,6 +15,7 @@
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:settings="using:Scanner.Views.Settings"
     xmlns:teachingtips="using:Scanner.Views.TeachingTips"
+    xmlns:strings="using:Scanner.Resources.Strings"
     mc:Ignorable="d"
     Loading="Page_Loading">
 
@@ -50,10 +51,10 @@
                     </TransitionCollection>
                 </StackPanel.ChildrenTransitions>
                 
-                <TextBlock Text="General" Margin="0,0,0,16" FontSize="24" Style="{StaticResource BaseTextBlockStyle}" />
+                <TextBlock Text="{x:Bind strings:Resources.SettingsGeneralHeading}" Margin="0,0,0,16" FontSize="24" Style="{StaticResource BaseTextBlockStyle}" />
                 
                 <!-- Files -->
-                <TextBlock Text="Files" Margin="0,0,0,4" Style="{StaticResource BaseTextBlockStyle}" />
+                <TextBlock Text="{x:Bind strings:Resources.SettingsFilesHeading}" Margin="0,0,0,4" Style="{StaticResource BaseTextBlockStyle}" />
                 <Frame IsEnabled="{x:Bind ViewModel.ProjectService.CurrentProject, Mode=OneWay, Converter={StaticResource NullBoolConverter}}">
                     <StackPanel Orientation="Vertical" Spacing="4">
                         <StackPanel.ChildrenTransitions>
@@ -62,8 +63,8 @@
                             </TransitionCollection>
                         </StackPanel.ChildrenTransitions>
 
-                        <InfoBar x:Name="InfoBarProjectOpen" Title="Project open" Message="The current project has to be closed to access all settings on this page." IsOpen="True" IsClosable="False" x:Load="{x:Bind ViewModel.ProjectService.CurrentProject, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}}" />
-                        <controls:SettingsExpander Header="Save location" IsExpanded="{x:Bind ViewModel.SettingsService.SettingSaveLocationType, Mode=OneWay, Converter={StaticResource EnumIntComparisonConverter}, ConverterParameter=1}">
+                        <InfoBar x:Name="InfoBarProjectOpen" Title="{x:Bind strings:Resources.SettingsProjectOpenHeading}" Message="{x:Bind strings:Resources.SettingsProjectOpenBody}" IsOpen="True" IsClosable="False" x:Load="{x:Bind ViewModel.ProjectService.CurrentProject, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}}" />
+                        <controls:SettingsExpander Header="{x:Bind strings:Resources.SaveLocation}" IsExpanded="{x:Bind ViewModel.SettingsService.SettingSaveLocationType, Mode=OneWay, Converter={StaticResource EnumIntComparisonConverter}, ConverterParameter=1}">
                             <controls:SettingsExpander.HeaderIcon>
                                 <FontIcon Glyph="&#xE8B7;" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                             </controls:SettingsExpander.HeaderIcon>
@@ -78,8 +79,8 @@
                                                     <RowDefinition Height="Auto" />
                                                 </Grid.RowDefinitions>
 
-                                                <TextBlock Grid.Row="0" Text="Choose a location" MaxLines="1" Style="{StaticResource BaseTextBlockStyle}" />
-                                                <TextBlock Grid.Row="1" Text="Select where to save files when saving the project for the first time." MaxWidth="300" HorizontalAlignment="Left" Visibility="{x:Bind ComboBoxSettingSaveLocation.IsDropDownOpen, Mode=OneWay}" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="WrapWholeWords" />
+                                                <TextBlock Grid.Row="0" Text="{x:Bind strings:Resources.SettingsSaveLocationChooseHeading}" MaxLines="1" Style="{StaticResource BaseTextBlockStyle}" />
+                                                <TextBlock Grid.Row="1" Text="{x:Bind strings:Resources.SettingsSaveLocationChooseBody}" MaxWidth="300" HorizontalAlignment="Left" Visibility="{x:Bind ComboBoxSettingSaveLocation.IsDropDownOpen, Mode=OneWay}" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="WrapWholeWords" />
                                             </Grid>
                                         </ComboBoxItem>
                                         <ComboBoxItem IsEnabled="{x:Bind ViewModel.IsFixedSaveLocationSupported}">
@@ -89,8 +90,8 @@
                                                     <RowDefinition Height="Auto" />
                                                 </Grid.RowDefinitions>
 
-                                                <TextBlock Grid.Row="0" Text="Fixed location" MaxLines="1" Style="{StaticResource BodyTextBlockStyle}" />
-                                                <TextBlock Grid.Row="1" Text="Save all files to the same folder." MaxWidth="300" HorizontalAlignment="Left" Visibility="{x:Bind ComboBoxSettingSaveLocation.IsDropDownOpen, Mode=OneWay}" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="WrapWholeWords" />
+                                                <TextBlock Grid.Row="0" Text="{x:Bind strings:Resources.SettingsSaveLocationFixedHeading}" MaxLines="1" Style="{StaticResource BodyTextBlockStyle}" />
+                                                <TextBlock Grid.Row="1" Text="{x:Bind strings:Resources.SettingsSaveLocationFixedBody}" MaxWidth="300" HorizontalAlignment="Left" Visibility="{x:Bind ComboBoxSettingSaveLocation.IsDropDownOpen, Mode=OneWay}" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="WrapWholeWords" />
                                             </Grid>
                                         </ComboBoxItem>
                                         <ComboBoxItem Visibility="Collapsed">
@@ -100,8 +101,8 @@
                                                     <RowDefinition Height="Auto" />
                                                 </Grid.RowDefinitions>
 
-                                                <TextBlock Grid.Row="0" Text="Ask before starting a new project" MaxLines="1" Style="{StaticResource BodyTextBlockStyle}" />
-                                                <TextBlock Grid.Row="1" Text="Select where to save files when starting a new project." MaxWidth="300" HorizontalAlignment="Left" Visibility="{x:Bind ComboBoxSettingSaveLocation.IsDropDownOpen, Mode=OneWay}" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="WrapWholeWords" />
+                                                <TextBlock Grid.Row="0" Text="{x:Bind strings:Resources.SettingsSaveLocationAskNewProjectHeading}" MaxLines="1" Style="{StaticResource BodyTextBlockStyle}" />
+                                                <TextBlock Grid.Row="1" Text="{x:Bind strings:Resources.SettingsSaveLocationAskNewProjectBody}" MaxWidth="300" HorizontalAlignment="Left" Visibility="{x:Bind ComboBoxSettingSaveLocation.IsDropDownOpen, Mode=OneWay}" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="WrapWholeWords" />
                                             </Grid>
                                         </ComboBoxItem>
                                         <ComboBoxItem Visibility="Collapsed">
@@ -111,8 +112,8 @@
                                                     <RowDefinition Height="Auto" />
                                                 </Grid.RowDefinitions>
 
-                                                <TextBlock Grid.Row="0" Text="Ask for every new file" MaxLines="1" Style="{StaticResource BodyTextBlockStyle}" />
-                                                <TextBlock Grid.Row="1" Text="Select a folder every time you start a new PDF project or scan to a new image file." MaxWidth="300" HorizontalAlignment="Left" Visibility="{x:Bind ComboBoxSettingSaveLocation.IsDropDownOpen, Mode=OneWay}" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="WrapWholeWords" />
+                                                <TextBlock Grid.Row="0" Text="{x:Bind strings:Resources.SettingsSaveLocationAskEveryFileHeading}" MaxLines="1" Style="{StaticResource BodyTextBlockStyle}" />
+                                                <TextBlock Grid.Row="1" Text="{x:Bind strings:Resources.SettingsSaveLocationAskEveryFileBody}" MaxWidth="300" HorizontalAlignment="Left" Visibility="{x:Bind ComboBoxSettingSaveLocation.IsDropDownOpen, Mode=OneWay}" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="WrapWholeWords" />
                                             </Grid>
                                         </ComboBoxItem>
                                     </ComboBox.Items>
@@ -127,12 +128,12 @@
 
                                     <controls:SettingsCard.Content>
                                         <StackPanel Orientation="Horizontal" Spacing="4">
-                                            <Button Content="Select folder" Style="{StaticResource AccentButtonStyle}" Command="{x:Bind ViewModel.SelectFixedSaveLocationAsyncCommand}" />
-                                            <Button Content="Reset to default" Command="{x:Bind ViewModel.ResetFixedSaveLocationAsyncCommand}" />
+                                            <Button Content="{x:Bind strings:Resources.SelectFolder}" Style="{StaticResource AccentButtonStyle}" Command="{x:Bind ViewModel.SelectFixedSaveLocationAsyncCommand}" />
+                                            <Button Content="{x:Bind strings:Resources.SaveLocationReset}" Command="{x:Bind ViewModel.ResetFixedSaveLocationAsyncCommand}" />
                                         </StackPanel>
                                     </controls:SettingsCard.Content>
                                 </controls:SettingsCard>
-                                <controls:SettingsCard Header="Fixed location is unavailable on this PC" Description="Windows is blocking Scanner from using a fixed save location across app sessions. This is a system limitation and can not be bypassed." Background="{ThemeResource SystemFillColorCautionBackgroundBrush}" Visibility="{x:Bind ViewModel.IsFixedSaveLocationSupported, Mode=OneWay, Converter={StaticResource NegativeBoolVisibilityConverter}}">
+                                <controls:SettingsCard Header="{x:Bind strings:Resources.SettingsSaveLocationFixedUnavailableHeading}" Description="{x:Bind strings:Resources.SettingsSaveLocationFixedUnavailableBody}" Background="{ThemeResource SystemFillColorCautionBackgroundBrush}" Visibility="{x:Bind ViewModel.IsFixedSaveLocationSupported, Mode=OneWay, Converter={StaticResource NegativeBoolVisibilityConverter}}">
                                     <controls:SettingsCard.HeaderIcon>
                                         <FontIcon Glyph="&#xEDB1;" Foreground="{ThemeResource SystemFillColorCautionBrush}" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                                     </controls:SettingsCard.HeaderIcon>
@@ -140,7 +141,7 @@
                             </controls:SettingsExpander.Items>
                         </controls:SettingsExpander>
 
-                        <controls:SettingsExpander Header="Create subfolder" Description="Save scans in a subfolder of the selected folder. If the subfolder doesn't exist, it will be created.">
+                        <controls:SettingsExpander Header="{x:Bind strings:Resources.SettingsCreateSubfolderHeading}" Description="{x:Bind strings:Resources.SettingsCreateSubfolderBody}">
                             <controls:SettingsExpander.HeaderIcon>
                                 <FontIcon Glyph="&#xE8DE;" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                             </controls:SettingsExpander.HeaderIcon>
@@ -150,33 +151,33 @@
                             </controls:SettingsExpander.Content>
 
                             <controls:SettingsExpander.Items>
-                                <controls:SettingsCard Header="Subfolder naming pattern" IsEnabled="{x:Bind ViewModel.SettingsService.SettingUseSubfolder, Mode=OneWay}">
+                                <controls:SettingsCard Header="{x:Bind strings:Resources.SettingsSubfolderNamingHeading}" IsEnabled="{x:Bind ViewModel.SettingsService.SettingUseSubfolder, Mode=OneWay}">
                                     <controls:SettingsCard.Content>
                                         <ComboBox SelectedIndex="{x:Bind ViewModel.SettingSubfolderNamingPattern, Mode=TwoWay}">
                                             <ComboBox.Items>
                                                 <ComboBoxItem FontWeight="SemiBold">
                                                     <StackPanel Orientation="Horizontal" Spacing="8">
                                                         <FontIcon Glyph="&#xE787;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}"/>
-                                                        <TextBlock Text="Date" />
+                                                        <TextBlock Text="{x:Bind strings:Resources.SettingsFileNamingDatePattern}" />
                                                     </StackPanel>
                                                 </ComboBoxItem>
                                                 <ComboBoxItem>
                                                     <StackPanel Orientation="Horizontal" Spacing="8">
                                                         <FontIcon Glyph="&#xE8A5;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}"/>
-                                                        <TextBlock Text="File type" />
+                                                        <TextBlock Text="{x:Bind strings:Resources.FileNamingBlockFileType}" />
                                                     </StackPanel>
                                                 </ComboBoxItem>
                                                 <ComboBoxItem>
                                                     <StackPanel Orientation="Horizontal" Spacing="8">
                                                         <FontIcon Glyph="&#xEF60;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}"/>
-                                                        <TextBlock Text="Custom pattern" />
+                                                        <TextBlock Text="{x:Bind strings:Resources.SettingsFileNamingCustomPattern}" />
                                                     </StackPanel>
                                                 </ComboBoxItem>
                                             </ComboBox.Items>
                                         </ComboBox>
                                     </controls:SettingsCard.Content>
                                 </controls:SettingsCard>
-                                <controls:SettingsCard Header="Preview">
+                                <controls:SettingsCard Header="{x:Bind strings:Resources.FileNamingPreviewHeading}">
                                     <controls:SettingsCard.Description>
                                         <StackPanel Orientation="Horizontal" Spacing="12" Margin="4,12,0,8">
                                             <FontIcon Glyph="&#xEA90;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
@@ -184,7 +185,7 @@
                                         </StackPanel>
                                     </controls:SettingsCard.Description>
                                 </controls:SettingsCard>
-                                <controls:SettingsCard x:Name="SettingsCardEditCustomSubfolderNamingPattern" Header="Edit custom pattern" IsClickEnabled="True" Click="SettingsCardEditCustomSubfolderNamingPattern_Click">
+                                <controls:SettingsCard x:Name="SettingsCardEditCustomSubfolderNamingPattern" Header="{x:Bind strings:Resources.FileNamingEditCustomPattern}" IsClickEnabled="True" Click="SettingsCardEditCustomSubfolderNamingPattern_Click">
                                     <controls:SettingsCard.HeaderIcon>
                                         <FontIcon Glyph="&#xE70F;" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                                     </controls:SettingsCard.HeaderIcon>
@@ -192,7 +193,7 @@
                             </controls:SettingsExpander.Items>
                         </controls:SettingsExpander>
 
-                        <controls:SettingsExpander Header="File naming">
+                        <controls:SettingsExpander Header="{x:Bind strings:Resources.SettingsFileNamingHeading}">
                             <controls:SettingsExpander.HeaderIcon>
                                 <FontIcon Glyph="&#xE8AC;" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                             </controls:SettingsExpander.HeaderIcon>
@@ -203,19 +204,19 @@
                                         <ComboBoxItem FontWeight="SemiBold">
                                             <StackPanel Orientation="Horizontal" Spacing="8">
                                                 <FontIcon Glyph="&#xEC92;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}"/>
-                                                <TextBlock Text="Time and date" />
+                                                <TextBlock Text="{x:Bind strings:Resources.SettingsFileNamingTimeAndDatePattern}" />
                                             </StackPanel>
                                         </ComboBoxItem>
                                         <ComboBoxItem>
                                             <StackPanel Orientation="Horizontal" Spacing="8">
                                                 <FontIcon Glyph="&#xE787;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}"/>
-                                                <TextBlock Text="Date" />
+                                                <TextBlock Text="{x:Bind strings:Resources.SettingsFileNamingDatePattern}" />
                                             </StackPanel>
                                         </ComboBoxItem>
                                         <ComboBoxItem>
                                             <StackPanel Orientation="Horizontal" Spacing="8">
                                                 <FontIcon Glyph="&#xEF60;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}"/>
-                                                <TextBlock Text="Custom pattern" />
+                                                <TextBlock Text="{x:Bind strings:Resources.SettingsFileNamingCustomPattern}" />
                                             </StackPanel>
                                         </ComboBoxItem>
                                     </ComboBox.Items>
@@ -223,7 +224,7 @@
                             </controls:SettingsExpander.Content>
 
                             <controls:SettingsExpander.Items>
-                                <controls:SettingsCard Header="Preview">
+                                <controls:SettingsCard Header="{x:Bind strings:Resources.FileNamingPreviewHeading}">
                                     <controls:SettingsCard.Description>
                                         <StackPanel Orientation="Horizontal" Spacing="12" Margin="4,12,0,8">
                                             <FontIcon Glyph="&#xEA90;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
@@ -231,12 +232,12 @@
                                         </StackPanel>
                                     </controls:SettingsCard.Description>
                                 </controls:SettingsCard>
-                                <controls:SettingsCard x:Name="SettingsCardEditCustomFileNamingPattern" Header="Edit custom pattern" IsClickEnabled="True" Click="SettingsCardEditCustomFileNamingPattern_Click">
+                                <controls:SettingsCard x:Name="SettingsCardEditCustomFileNamingPattern" Header="{x:Bind strings:Resources.FileNamingEditCustomPattern}" IsClickEnabled="True" Click="SettingsCardEditCustomFileNamingPattern_Click">
                                     <controls:SettingsCard.HeaderIcon>
                                         <FontIcon Glyph="&#xE70F;" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                                     </controls:SettingsCard.HeaderIcon>
                                 </controls:SettingsCard>
-                                <controls:SettingsCard Header="Generate PDF file name using AI" Visibility="{x:Bind ViewModel.CopilotRuntimeService.IsSupported}">
+                                <controls:SettingsCard Header="{x:Bind strings:Resources.SettingsGeneratePdfNameWithAi}" Visibility="{x:Bind ViewModel.CopilotRuntimeService.IsSupported}">
                                     <controls:SettingsCard.HeaderIcon>
                                         <ImageIcon>
                                             <ImageIcon.Source>
@@ -255,7 +256,7 @@
                             </controls:SettingsExpander.Items>
                         </controls:SettingsExpander>
 
-                        <controls:SettingsCard Header="Save changes automatically">
+                        <controls:SettingsCard Header="{x:Bind strings:Resources.SettingsAutoSave}">
                             <controls:SettingsCard.HeaderIcon>
                                 <FontIcon Glyph="&#xE74E;" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                             </controls:SettingsCard.HeaderIcon>
@@ -263,7 +264,7 @@
                             <ToggleSwitch IsOn="{x:Bind ViewModel.SettingsService.SettingAutoSave, Mode=TwoWay}" />
                         </controls:SettingsCard>
 
-                        <controls:SettingsCard Header="Searchable PDFs" Description="Use OCR to add text data to saved PDF files. Disable this setting if saving PDFs takes too long.">
+                        <controls:SettingsCard Header="{x:Bind strings:Resources.SettingsSearchablePdfHeading}" Description="{x:Bind strings:Resources.SettingsSearchablePdfBody}">
                             <controls:SettingsCard.HeaderIcon>
                                 <FontIcon Glyph="&#xE721;" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                             </controls:SettingsCard.HeaderIcon>
@@ -274,30 +275,30 @@
                 </Frame>
 
                 <!-- Scanning -->
-                <TextBlock Text="Scanning" Margin="0,24,0,4" Style="{StaticResource BaseTextBlockStyle}" />
-                <controls:SettingsCard Header="Automatic rotation">
+                <TextBlock Text="{x:Bind strings:Resources.SettingsScanningHeading}" Margin="0,24,0,4" Style="{StaticResource BaseTextBlockStyle}" />
+                <controls:SettingsCard Header="{x:Bind strings:Resources.PerformedAutoRotationHeading}">
                     <controls:SettingsCard.HeaderIcon>
                         <FontIcon Glyph="&#xE7AD;" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                     </controls:SettingsCard.HeaderIcon>
 
                     <ToggleSwitch IsOn="{x:Bind ViewModel.SettingsService.SettingAutoRotate, Mode=TwoWay}" />
                 </controls:SettingsCard>
-                <controls:SettingsCard Header="Remember last used scan options">
+                <controls:SettingsCard Header="{x:Bind strings:Resources.SettingsRememberScanOptions}">
                     <controls:SettingsCard.HeaderIcon>
                         <FontIcon Glyph="&#xE8FE;" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                     </controls:SettingsCard.HeaderIcon>
 
                     <ToggleSwitch IsOn="{x:Bind ViewModel.SettingsService.SettingRememberScanOptions, Mode=TwoWay}" />
                 </controls:SettingsCard>
-                <controls:SettingsCard Header="Default scan action">
+                <controls:SettingsCard Header="{x:Bind strings:Resources.SettingsScanActionBody}">
                     <controls:SettingsCard.HeaderIcon>
                         <FontIcon Glyph="&#xE8A5;" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                     </controls:SettingsCard.HeaderIcon>
 
                     <ComboBox SelectedIndex="{x:Bind ViewModel.SettingScanAction, Mode=TwoWay}">
                         <ComboBox.Items>
-                            <ComboBoxItem Content="Add to project" FontWeight="SemiBold" />
-                            <ComboBoxItem Content="Start new project" />
+                            <ComboBoxItem Content="{x:Bind strings:Resources.SettingsScanActionAddToProject}" FontWeight="SemiBold" />
+                            <ComboBoxItem Content="{x:Bind strings:Resources.SettingsScanActionNewProject}" />
                         </ComboBox.Items>
                     </ComboBox>
                 </controls:SettingsCard>

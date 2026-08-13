@@ -15,6 +15,7 @@
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:settings="using:Scanner.Views.Settings"
     xmlns:scanner="using:Scanner"
+    xmlns:strings="using:Scanner.Resources.Strings"
     mc:Ignorable="d">
 
 
@@ -39,7 +40,7 @@
     <Grid x:Name="GridRoot">
         <ScrollViewer HorizontalScrollMode="Disabled" VerticalScrollMode="Auto" VerticalScrollBarVisibility="Auto">
             <StackPanel Orientation="Vertical" Spacing="4" Padding="32">
-                <TextBlock Text="About" Margin="0,0,0,16" FontSize="24" Style="{StaticResource BaseTextBlockStyle}" />
+                <TextBlock Text="{x:Bind strings:Resources.SettingsAboutHeading}" Margin="0,0,0,16" FontSize="24" Style="{StaticResource BaseTextBlockStyle}" />
                 <Grid Margin="0,0,0,16" HorizontalAlignment="Stretch" ColumnSpacing="16">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="60" />
@@ -51,7 +52,7 @@
                     <TextBlock Grid.Column="1" TextWrapping="WrapWholeWords" VerticalAlignment="Center" HorizontalAlignment="Left" IsTextSelectionEnabled="True">
                         <Span>
                             <Run FontWeight="SemiBold">Scanner</Run>
-                            <LineBreak /><Run>Version</Run>
+                            <LineBreak /><Run Text="{x:Bind strings:Resources.Version}" />
                             <Run Text="{x:Bind ViewModel.CurrentVersion}"/>
                             <LineBreak />Copyright © 2026 <Hyperlink x:Name="HyperlinkSimonKnuth" UnderlineStyle="None" NavigateUri="{x:Bind scanner:AppConfig.SimonUri}">Simon Knuth</Hyperlink>
                         </Span>
@@ -59,20 +60,20 @@
                     <StackPanel Grid.Column="2" Orientation="Vertical">
                         <HyperlinkButton HorizontalAlignment="Right" VerticalAlignment="Center" NavigateUri="{x:Bind scanner:AppConfig.WebsiteUri}">
                             <StackPanel Orientation="Horizontal" Spacing="12">
-                                <TextBlock Text="Website" />
+                                <TextBlock Text="{x:Bind strings:Resources.Website}" />
                                 <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE71B;" />
                             </StackPanel>
                         </HyperlinkButton>
                         <HyperlinkButton HorizontalAlignment="Right" VerticalAlignment="Center" NavigateUri="{x:Bind scanner:AppConfig.PrivacyPolicyUri}">
                             <StackPanel Orientation="Horizontal" Spacing="12">
-                                <TextBlock Text="Privacy policy" />
+                                <TextBlock Text="{x:Bind strings:Resources.PrivacyPolicy}" />
                                 <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE71B;" />
                             </StackPanel>
                         </HyperlinkButton>
                     </StackPanel>
                 </Grid>
                 <Grid>
-                    <controls:SettingsCard x:Name="SettingsCardGitHub" Header="GitHub" Description="Access the source code, see existing issues and open new ones" IsClickEnabled="True" Click="SettingsCardGitHub_Click">
+                    <controls:SettingsCard x:Name="SettingsCardGitHub" Header="{x:Bind strings:Resources.GitHub}" Description="{x:Bind strings:Resources.SettingsGitHubBody}" IsClickEnabled="True" Click="SettingsCardGitHub_Click">
                         <controls:SettingsCard.HeaderIcon>
                             <FontIcon Glyph="    " FontFamily="{StaticResource SymbolThemeFontFamily}" />
                         </controls:SettingsCard.HeaderIcon>
@@ -85,7 +86,7 @@
                     <!-- IconSourceElement doesn't support SVGs atm, can't directly use an SVG as HeaderIcon -->
                     <Image Source="/Assets/GitHub/GitHub_Invertocat.svg" Width="20" Height="20" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="20,0,0,0" IsHitTestVisible="False" />
                 </Grid>
-                <controls:SettingsCard x:Name="SettingsCardLicenses" Header="Licenses" IsClickEnabled="True" Click="SettingsCardLicenses_Click">
+                <controls:SettingsCard x:Name="SettingsCardLicenses" Header="{x:Bind strings:Resources.SettingsLicensesHeading}" IsClickEnabled="True" Click="SettingsCardLicenses_Click">
                     <controls:SettingsCard.HeaderIcon>
                         <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xEB95;" />
                     </controls:SettingsCard.HeaderIcon>
