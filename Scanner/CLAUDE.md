@@ -47,7 +47,7 @@ Day-to-day, build/run/deploy from **Visual Studio** with the `Scanner` project s
 `ScannerTests` are **FlaUI UI-automation tests that launch the installed Store app** (`Application.LaunchStoreApp` with the AUMID in `ScannerTests/Constants.cs`). They are not in-process unit tests:
 
 - The app MSIX **must be deployed locally first** (build/deploy `Scanner` from VS), or the launch fails.
-- Tests drive the real UI by AutomationId. Element IDs are defined once in `Scanner/Tests/AutomationIds.cs` (namespace `Scanner.Tests`) and referenced from both the app XAML and the tests — add an ID there when you need to target a new control.
+- Tests drive the real UI by AutomationId. Element IDs are defined once in `Scanner/Tests/AutomationIds.cs` (namespace `Scanner.Tests`) and referenced from both the app XAML and the tests — add an ID there when you need to target a new control. `ScannerTests` has **no `ProjectReference` to the app**: it links that one file in as `<Compile>`, so it stays AnyCPU and platform-agnostic (a reference to the platform-specific, self-contained app project causes `MSB3270`/`NETSDK1151`). Keep `AutomationIds.cs` free of dependencies — plain constants only.
 - Uses `EnableMSTestRunner` (Microsoft.Testing.Platform). Run via `dotnet test ScannerTests/ScannerTests.csproj` or the VS Test Explorer.
 - Note `GeneralTests.cs` contains a hard-coded absolute path to test images (`D:\GitHub\scanner\...`) — environment-specific.
 
@@ -93,5 +93,5 @@ UI strings are localized via **ReswPlus** (`Resources/Strings/`), with ~20 langu
 ## Secrets & CI
 
 - `Resources/Secrets.resx` ships with a literal placeholder `SENTRY_DSN_GOES_HERE`. The GitHub Actions release build (`.github/workflows/build.yml`) replaces it with the real DSN from secrets — **do not commit a real DSN** into this file.
-- CI builds the MSIX for all three platforms on push to `main`, signs it with a PFX from secrets, and creates a Sentry release. Local builds do not need the certificate for `Debug`.
+- CI builds the MSIX for all three platforms, signs it with a PFX from secrets, and creates a Sentry release. It is **manual-trigger only** (`workflow_dispatch`) and builds `Scanner/Scanner.csproj` directly rather than the solution, so `ScannerTests` is not built during packaging. Local builds do not need the certificate for `Debug`.
 - An extra NuGet feed (CommunityToolkit Labs) is configured in `nuget.config` for the `SegmentedControl` preview package.
