@@ -13,10 +13,10 @@
 	<Identity
     Name="9390SimonKnuth.ScannerPreview"
     Publisher="CN=757034B5-C251-4A1E-BCA4-C0C9D29C0508"
-    Version="4.0.0.0" />
+    Version="4.0.1.0" />
 
 	<Properties>
-		<DisplayName>Scanner</DisplayName>
+		<DisplayName>ms-resource:ManifestPackageDisplayName</DisplayName>
 		<PublisherDisplayName>Simon Knuth</PublisherDisplayName>
 		<Logo>Assets\StoreLogo.png</Logo>
 	</Properties>
