@@ -16,7 +16,7 @@
     Version="4.0.1.0" />
 
 	<Properties>
-		<DisplayName>ms-resource:ManifestPackageDisplayName</DisplayName>
+		<DisplayName>Scanner Preview</DisplayName>
 		<PublisherDisplayName>Simon Knuth</PublisherDisplayName>
 		<Logo>Assets\StoreLogo.png</Logo>
 	</Properties>
