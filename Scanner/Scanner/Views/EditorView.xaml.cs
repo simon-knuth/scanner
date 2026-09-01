@@ -351,14 +351,13 @@ public sealed partial class EditorView : Page
             }
 
             // fix scrolling in vertical mode
-            if (orientation == Orientation.Vertical)
-            {
-                ((ScrollViewer)VisualTreeHelper.GetChild(VisualTreeHelper.GetChild(FlipViewPages, 0), 0)).HorizontalScrollMode = ScrollMode.Disabled;
-            }
-            else
-            {
-                ((ScrollViewer)VisualTreeHelper.GetChild(VisualTreeHelper.GetChild(FlipViewPages, 0), 0)).HorizontalScrollMode = ScrollMode.Enabled;
-            }
+            ScrollViewer? flipViewScrollViewer = FlipViewPages?.FindDescendant<ScrollViewer>();
+            if (flipViewScrollViewer == null)
+                return;
+
+            flipViewScrollViewer.HorizontalScrollMode = orientation == Orientation.Vertical
+                ? ScrollMode.Disabled
+                : ScrollMode.Enabled;
         });
     }
 
