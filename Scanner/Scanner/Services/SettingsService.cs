@@ -343,9 +343,19 @@ internal class SettingsService : ObservableObject, ISettingsService
 
     private void SetSetting<T>(string name, T value)
     {
+        string key = name.ToUpper();
+
+        // raise property changed event
+        object? currentValue = settingsContainer.Values[key];
+        if (currentValue is T castCurrentValue && EqualityComparer<T>.Default.Equals(castCurrentValue, value))
+        {
+            // value unchanged
+            return;
+        }
+
         LogService?.Log.Information("Setting {Name} to {Value}", name, value);
 
-        settingsContainer.Values[name.ToUpper()] = value;
+        settingsContainer.Values[key] = value;
         OnPropertyChanged(name);
     }
 
