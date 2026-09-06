@@ -170,14 +170,14 @@
 
             <ScrollViewer x:Name="ScrollViewerDraw" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" MinZoomFactor="1.0" MaxZoomFactor="2.5" ZoomMode="Enabled" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" SizeChanged="ScrollViewerPage_SizeChanged">
                 <Grid Padding="16,16,16,80" HorizontalAlignment="Center" VerticalAlignment="Center" MaxWidth="{Binding ElementName=ScrollViewerDraw, Path=ViewportWidth, Mode=OneWay}" MaxHeight="{Binding ElementName=ScrollViewerDraw, Path=ViewportHeight, Mode=OneWay}">
-                    <Frame Margin="0" HorizontalAlignment="Center" VerticalAlignment="Center" ui:Effects.Shadow="{ThemeResource ShadowPage}">
-                        <Image>
+                    <Frame HorizontalAlignment="Center" VerticalAlignment="Center" ui:Effects.Shadow="{ThemeResource ShadowPage}">
+                        <Image x:Name="ImageDraw" SizeChanged="ImageDraw_SizeChanged">
                             <Image.Source>
                                 <BitmapImage UriSource="{x:Bind ViewModel.ProjectService.SelectedPage.PreviewBitmapUri, Mode=OneWay}" />
                             </Image.Source>
                         </Image>
                     </Frame>
-                    <!--<InkCanvas x:Name="InkCanvasDraw" />-->
+                    <InkCanvas x:Name="InkCanvasDraw" HorizontalAlignment="Center" VerticalAlignment="Center" Loaded="InkCanvasDraw_Loaded" />
                 </Grid>
             </ScrollViewer>
         </Border>
@@ -480,6 +480,7 @@
                         </Grid.ColumnDefinitions>
 
                         <StackPanel Orientation="Horizontal" Margin="0,0,4,0">
+                            <InkToolbar x:Name="InkToolbarDraw" Loaded="InkToolbarDraw_Loaded" />
                             <ToggleButton VerticalAlignment="Stretch" Style="{StaticResource MutedToggleButtonStyle}" Foreground="{ThemeResource TextFillColorPrimaryBrush}">
                                 <FontIcon Glyph="&#xED5F;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                             </ToggleButton>

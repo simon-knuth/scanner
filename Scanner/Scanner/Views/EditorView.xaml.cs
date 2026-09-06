@@ -1,4 +1,4 @@
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.WinUI;
 using Microsoft.Graphics.Canvas;
@@ -987,6 +987,30 @@ public sealed partial class EditorView : Page
 
         if (e.Key is Windows.System.VirtualKey.Enter or Windows.System.VirtualKey.Accept)
             IsNavigationTextBoxVisible = false;
+    }
+
+    private void InkToolbarDraw_Loaded(object sender, RoutedEventArgs e)
+    {
+        if (InkCanvasDraw is not null)
+            InkToolbarDraw.TargetInkCanvas = InkCanvasDraw;
+    }
+
+    private void InkCanvasDraw_Loaded(object sender, RoutedEventArgs e)
+    {
+        if (InkToolbarDraw is not null)
+            InkToolbarDraw.TargetInkCanvas = InkCanvasDraw;
+    }
+
+    private void ImageDraw_SizeChanged(object sender, SizeChangedEventArgs e)
+    {
+        double scale = XamlRoot?.RasterizationScale ?? 1.0;
+
+        double width = e.NewSize.Width / scale;
+        double height = e.NewSize.Height / scale;
+
+        InkCanvasDraw.Width = width;
+        InkCanvasDraw.Height = height;
+        InkCanvasDraw.Margin = new Thickness(-width * (scale - 1), -height * (scale - 1), 0, 0);
     }
 
 
