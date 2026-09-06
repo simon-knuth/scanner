@@ -747,20 +747,28 @@ public sealed partial class ProjectView : Page
     {
         SplitMenuFlyoutItem parentItem = (SplitMenuFlyoutItem)sender;
 
-        // clear list
-        while (parentItem.Items.Count > 3)
+        try
         {
-            parentItem.Items.RemoveAt(0);
+            PopulateOpenWithMenu(parentItem);
         }
+        catch (Exception exc)
+        {
+            Ioc.Default.GetService<ILogService>()?.Log.Warning(exc, "Unable to populate the open with menu");
+            Ioc.Default.GetService<ISentryService>()?.TrackWarning(exc);
+        }
+    }
 
-        // add items
+    private void PopulateOpenWithMenu(SplitMenuFlyoutItem parentItem)
+    {
+        // prepare items before touching the collection
         List<OpenWithTarget> reversed = [.. ViewModel.OpenWithTargets];
         reversed.Reverse();
+        List<MenuFlyoutItem> items = new();
         foreach (OpenWithTarget target in reversed)
         {
             MenuFlyoutItem item = new MenuFlyoutItem()
             {
-                Text = target.AppInfo.DisplayInfo.DisplayName,
+                Text = target.DisplayName,
                 Command = ViewModel.TryOpenWithAsyncCommand,
                 CommandParameter = target.AppInfo,
             };
@@ -780,6 +788,18 @@ public sealed partial class ProjectView : Page
                 item.Icon = icon;
             }
 
+            items.Add(item);
+        }
+
+        // clear list
+        while (parentItem.Items.Count > 3)
+        {
+            parentItem.Items.RemoveAt(0);
+        }
+
+        // add items
+        foreach (MenuFlyoutItem item in items)
+        {
             parentItem.Items.Insert(0, item);
         }
 
@@ -815,7 +835,7 @@ public sealed partial class ProjectView : Page
             if (featuredApp == null)
                 featuredApp = ViewModel.OpenWithTargets[0];
 
-            parentItem.Text = string.Format(GetLocalized(Scanner.Resources.Strings.ResourcesExtension.KeyEnum.OpenWithApp), featuredApp.AppInfo.DisplayInfo.DisplayName);
+            parentItem.Text = string.Format(GetLocalized(Scanner.Resources.Strings.ResourcesExtension.KeyEnum.OpenWithApp), featuredApp.DisplayName);
             parentItem.CommandParameter = featuredApp.AppInfo;
 
             if (featuredApp.Logo != null)

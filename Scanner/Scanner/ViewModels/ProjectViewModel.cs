@@ -600,6 +600,19 @@ partial class ProjectViewModel : ObservableRecipient, IDisposable
         IReadOnlyList<AppInfo> readOnlyList = await Windows.System.Launcher.FindFileHandlersAsync(fileExtension);
         foreach (AppInfo appInfo in readOnlyList)
         {
+            // resolve the display name right away, the app may become unavailable later on
+            string displayName;
+            try
+            {
+                displayName = appInfo.DisplayInfo.DisplayName;
+            }
+            catch (Exception exc)
+            {
+                // app can't be queried, skip it
+                LogService?.Log.Warning(exc, "Unable to get the display name of an open with target, skipping it");
+                continue;
+            }
+
             try
             {
                 RandomAccessStreamReference stream = appInfo.DisplayInfo.GetLogo(new Size(128, 128));
@@ -607,13 +620,13 @@ partial class ProjectViewModel : ObservableRecipient, IDisposable
                 {
                     BitmapImage bmp = new BitmapImage();
                     await bmp.SetSourceAsync(content);
-                    result.Add(new OpenWithTarget(appInfo, bmp));
+                    result.Add(new OpenWithTarget(appInfo, displayName, bmp));
                 }
             }
             catch (Exception)
             {
                 // add without logo
-                result.Add(new OpenWithTarget(appInfo, null));
+                result.Add(new OpenWithTarget(appInfo, displayName, null));
             }
 
             if (result.Count >= 5) break;   // 5 apps max
@@ -824,4 +837,4 @@ partial class ProjectViewModel : ObservableRecipient, IDisposable
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // MISCELLANEOUS ////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-public record OpenWithTarget(AppInfo AppInfo, BitmapImage? Logo);
+public record OpenWithTarget(AppInfo AppInfo, string DisplayName, BitmapImage? Logo);

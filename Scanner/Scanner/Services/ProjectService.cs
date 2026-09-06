@@ -872,8 +872,7 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
             {
                 bool result = await pdfProject.TryOpenWithAsync(app);
                 if (result)
-                    SentryService?.TrackEvent(AnalyticsEvent.OpenWith,
-                        app != null ? new Dictionary<string, string> { { "display_name", app.DisplayInfo.DisplayName } } : null);
+                    TrackOpenWithEvent(app);
                 return result;
             }
         }
@@ -906,8 +905,7 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
             {
                 bool result = await imageProject.TryOpenWithPageAsync(app, page);
                 if (result)
-                    SentryService?.TrackEvent(AnalyticsEvent.OpenWith,
-                        app != null ? new Dictionary<string, string> { { "display_name", app.DisplayInfo.DisplayName } } : null);
+                    TrackOpenWithEvent(app);
                 return result;
             }
         }
@@ -925,6 +923,25 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
         }
 
         return true;
+    }
+
+    private void TrackOpenWithEvent(AppInfo? app)
+    {
+        Dictionary<string, string>? properties = null;
+
+        if (app != null)
+        {
+            try
+            {
+                properties = new Dictionary<string, string> { { "display_name", app.DisplayInfo.DisplayName } };
+            }
+            catch (Exception exc)
+            {
+                LogService?.Log.Warning(exc, "Unable to get the display name of the app that the file was opened with");
+            }
+        }
+
+        SentryService?.TrackEvent(AnalyticsEvent.OpenWith, properties);
     }
 
     public async Task<bool> TryShareProjectAsync()
