@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -1661,6 +1661,16 @@ Fuzzy</comment>
   </data>
   <data name="ProjectActionCropPageAsCopy" xml:space="preserve">
     <value>Crop page as copy</value>
+  </data>
+  <data name="ProjectActionEraseInkOnPage" xml:space="preserve">
+    <value>Erase drawing</value>
+    <comment>The undo history entry for erasing everything that was drawn on a page.</comment>
+  </data>
+  <data name="ProjectActionDrawOnPage" xml:space="preserve">
+    <value>Draw on page</value>
+  </data>
+  <data name="ProjectActionDrawOnPageAsCopy" xml:space="preserve">
+    <value>Draw on page as copy</value>
   </data>
   <data name="RotatePage" xml:space="preserve">
     <value>Rotate page</value>

@@ -13,6 +13,7 @@ using System.ComponentModel.DataAnnotations;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Windows.Devices.Scanners;
 using Windows.Storage;
+using Windows.UI.Input.Inking;
 using System.ComponentModel;
 using Microsoft.UI.Dispatching;
 
@@ -30,4 +31,15 @@ public interface IProjectSnapshotPage
     ImageFilter Filter { get; }
     int Brightness { get; }
     int Contrast { get; }
+
+    /// <summary>
+    /// The page's ink, in the coordinate space of <see cref="SourceFile"/>'s pixels.
+    /// </summary>
+    IReadOnlyList<InkStroke> InkStrokes { get; }
+
+    /// <summary>
+    /// Whether the page has to be rendered rather than written out as-is. Skipping the render pass when this is
+    /// <see langword="true"/> silently drops whatever it reports.
+    /// </summary>
+    bool RequiresRasterPass => Filter != ImageFilter.None || Brightness != 0 || Contrast != 0 || InkStrokes.Count > 0;
 }

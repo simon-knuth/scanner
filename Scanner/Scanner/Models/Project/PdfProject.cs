@@ -614,10 +614,9 @@ public partial class PdfProject : ProjectBase
             {
                 // page from image (OCR or not)
                 XImage image;
-                bool hasDestructiveEffects = snapshotPage.Filter != ImageFilter.None || snapshotPage.Brightness != 0 || snapshotPage.Contrast != 0;
-                if (hasDestructiveEffects)
+                if (snapshotPage.RequiresRasterPass)
                 {
-                    // bake the filter/brightness/contrast into the image (encoded as JPG to reduce PDF size)
+                    // bake the filter/brightness/contrast and ink into the image (encoded as JPG to reduce PDF size)
                     using InMemoryRandomAccessStream targetStream = new();
                     await uiDispatcherQueue.RunOnThreadAndWaitAsync(DispatcherQueuePriority.Low, async () =>
                     {
@@ -627,7 +626,7 @@ public partial class PdfProject : ProjectBase
                         propertySet.Add("ImageQuality", new BitmapTypedValue(jpegQuality, Windows.Foundation.PropertyType.Single));
                         BitmapEncoder encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.JpegEncoderId, targetStream, propertySet);
 
-                        await ApplyEffectsAsync(sourceStream, encoder, snapshotPage.Filter, snapshotPage.Brightness, snapshotPage.Contrast);
+                        await ApplyEffectsAsync(sourceStream, encoder, snapshotPage.Filter, snapshotPage.Brightness, snapshotPage.Contrast, snapshotPage.InkStrokes);
                     });
                     image = XImage.FromStream(targetStream.AsStream());
                 }

@@ -58,11 +58,11 @@ public partial class PdfProjectSnapshot : IProjectSnapshot
         {
             if (page is ImagePage imagePage)
             {
-                Pages.Add(page, new(imagePage.SourceFile, null, imagePage.Filter, imagePage.Brightness, imagePage.Contrast));
+                Pages.Add(page, new(imagePage.SourceFile, null, imagePage.Filter, imagePage.Brightness, imagePage.Contrast, [.. imagePage.InkStrokes]));
             }
             else if (page is PdfPage pdfPage)
             {
-                Pages.Add(page, new(project.SourceFile!.File, pdfPage.IndexInPdf, ImageFilter.None, 0, 0));
+                Pages.Add(page, new(project.SourceFile!.File, pdfPage.IndexInPdf, ImageFilter.None, 0, 0, []));
             }
         }
     }

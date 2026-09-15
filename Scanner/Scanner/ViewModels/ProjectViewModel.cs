@@ -795,9 +795,9 @@ partial class ProjectViewModel : ObservableRecipient, IDisposable
                 foreach (IProjectPage page in ProjectService.SelectedPages.OrderBy(x => x.Index))
                 {
                     if (page is ImagePage imagePage)
-                        pages.Add(page, new PdfProjectSnapshotPage(imagePage.SourceFile, null, imagePage.Filter, imagePage.Brightness, imagePage.Contrast));
+                        pages.Add(page, new PdfProjectSnapshotPage(imagePage.SourceFile, null, imagePage.Filter, imagePage.Brightness, imagePage.Contrast, [.. imagePage.InkStrokes]));
                     else if (page is PdfPage pdfPage)
-                        pages.Add(page, new PdfProjectSnapshotPage(pdfProject.SourceFile!.File, pdfPage.IndexInPdf, ImageFilter.None, AppConfig.DefaultBrightness, AppConfig.DefaultContrast));
+                        pages.Add(page, new PdfProjectSnapshotPage(pdfProject.SourceFile!.File, pdfPage.IndexInPdf, ImageFilter.None, AppConfig.DefaultBrightness, AppConfig.DefaultContrast, []));
                 }
                 await PdfProject.CreatePdfFromPagesAsync(pages, null, saveOptions.FileName, saveOptions.TargetFolder, SettingsService.SettingOcrPdfs, viewDispatcherQueue!);
 
@@ -814,9 +814,9 @@ partial class ProjectViewModel : ObservableRecipient, IDisposable
                 {
                     Dictionary<IProjectPage, IProjectSnapshotPage> pages = [];
                     if (page is ImagePage imagePage)
-                        pages.Add(page, new PdfProjectSnapshotPage(imagePage.SourceFile, null, imagePage.Filter, imagePage.Brightness, imagePage.Contrast));
+                        pages.Add(page, new PdfProjectSnapshotPage(imagePage.SourceFile, null, imagePage.Filter, imagePage.Brightness, imagePage.Contrast, [.. imagePage.InkStrokes]));
                     else if (page is PdfPage pdfPage)
-                        pages.Add(page, new PdfProjectSnapshotPage(pdfProject.SourceFile!.File, pdfPage.IndexInPdf, ImageFilter.None, AppConfig.DefaultBrightness, AppConfig.DefaultContrast));
+                        pages.Add(page, new PdfProjectSnapshotPage(pdfProject.SourceFile!.File, pdfPage.IndexInPdf, ImageFilter.None, AppConfig.DefaultBrightness, AppConfig.DefaultContrast, []));
 
                     await PdfProject.CreatePdfFromPagesAsync(pages, null, saveOptions.FileName, saveOptions.TargetFolder, SettingsService.SettingOcrPdfs, viewDispatcherQueue!);
                 }

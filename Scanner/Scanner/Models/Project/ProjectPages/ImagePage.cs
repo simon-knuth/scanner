@@ -17,6 +17,7 @@ using System.Threading.Tasks;
 using Windows.Graphics.Imaging;
 using Windows.Storage;
 using Windows.Storage.FileProperties;
+using Windows.UI.Input.Inking;
 using WinRT.Interop;
 
 namespace Scanner.Models;
@@ -101,7 +102,13 @@ public partial class ImagePage : ObservableObject, IProjectPage
     public BitmapRotation Rotation { get; set; } = BitmapRotation.None;
     public BitmapRotation? RecommendedRotation { get; set; } = null;
 
-    public bool IsUsingDestructiveEffects => Filter != ImageFilter.None || Brightness != 0 || Contrast != 0;
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(HasInk))]
+    private IReadOnlyList<InkStroke> inkStrokes = [];
+
+    public bool HasInk => InkStrokes.Count > 0;
+
+    public bool IsUsingDestructiveEffects => Filter != ImageFilter.None || Brightness != 0 || Contrast != 0 || HasInk;
 
     /// <summary>
     /// The <see cref="ImageFilter"/> used by the source file, usually <see cref="ImageFilter.None"/>.
