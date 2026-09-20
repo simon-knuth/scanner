@@ -20,6 +20,7 @@ using Windows.Globalization;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 using WinRT.Interop;
+using static Scanner.Resources.Strings.ResourcesExtension;
 
 namespace Scanner.ViewModels;
 
@@ -51,15 +52,16 @@ public partial class SettingsViewModel : ObservableRecipient, IDisposable
 
     public SettingsPageEntry[] HeaderSettingsPages =
     [
-        new SettingsPageEntry(SettingsPageType.General, "\uE713", "General"),
-        new SettingsPageEntry(SettingsPageType.Personalization, "\uE771", "Personalization"),
-        new SettingsPageEntry(SettingsPageType.Privacy, "\uEA18", "Privacy"),
+        new SettingsPageEntry(SettingsPageType.General, "\uE713", Helpers.Helpers.GetLocalized(KeyEnum.SettingsGeneralHeading)),
+        new SettingsPageEntry(SettingsPageType.Personalization, "\uE771", Helpers.Helpers.GetLocalized(KeyEnum.SettingsPersonalizationHeading)),
+        new SettingsPageEntry(SettingsPageType.Privacy, "\uEA18", Helpers.Helpers.GetLocalized(KeyEnum.SettingsPrivacyHeading)),
     ];
 
     public SettingsPageEntry[] FooterSettingsPages =
     [
-        new SettingsPageEntry(SettingsPageType.Feedback, "\uED15", "Feedback"),
-        new SettingsPageEntry(SettingsPageType.About, "\uE946", "About"),
+        new SettingsPageEntry(SettingsPageType.Translations, "\uF2B7", Helpers.Helpers.GetLocalized(KeyEnum.SettingsTranslationsHeading)),
+        new SettingsPageEntry(SettingsPageType.Feedback, "\uED15", Helpers.Helpers.GetLocalized(KeyEnum.Feedback)),
+        new SettingsPageEntry(SettingsPageType.About, "\uE946", Helpers.Helpers.GetLocalized(KeyEnum.SettingsAboutHeading)),
     ];
 
     [ObservableProperty]
@@ -348,6 +350,7 @@ public enum SettingsPageType
     General,
     Personalization,
     Privacy,
+    Translations,
     Feedback,
     About
 }

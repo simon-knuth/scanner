@@ -55,33 +55,27 @@ public sealed partial class SettingsView : Page
         {
             case SettingsPageType.General:
                 if (FrameContent.Content is not SettingsViewGeneral)
-                {
                     Navigate(typeof(SettingsViewGeneral), transitionInfo);
-                }
                 break;
             case SettingsPageType.Personalization:
                 if (FrameContent.Content is not SettingsViewPersonalization)
-                {
                     Navigate(typeof(SettingsViewPersonalization), transitionInfo);
-                }
                 break;
             case SettingsPageType.Privacy:
                 if (FrameContent.Content is not SettingsViewPrivacy)
-                {
                     Navigate(typeof(SettingsViewPrivacy), transitionInfo);
-                }
+                break;
+            case SettingsPageType.Translations:
+                if (FrameContent.Content is not SettingsViewTranslations)
+                    Navigate(typeof(SettingsViewTranslations), transitionInfo);
                 break;
             case SettingsPageType.Feedback:
                 if (FrameContent.Content is not SettingsViewFeedback)
-                {
                     Navigate(typeof(SettingsViewFeedback), transitionInfo);
-                }
                 break;
             case SettingsPageType.About:
                 if (FrameContent.Content is not SettingsViewAbout)
-                {
                     Navigate(typeof(SettingsViewAbout), transitionInfo);
-                }
                 break;
         }
     }

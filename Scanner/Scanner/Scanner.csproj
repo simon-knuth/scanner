@@ -193,6 +193,9 @@
 		<Page Update="Views\Dialogs\ScanMergeDialogView.xaml">
 			<SubType>Designer</SubType>
 		</Page>
+		<Page Update="Views\Settings\SettingsViewTranslations.xaml">
+		  <SubType>Designer</SubType>
+		</Page>
 		<Page Update="Views\TeachingTips\AIDisclaimerTeachingTip.xaml">
 			<SubType>Designer</SubType>
 		</Page>
