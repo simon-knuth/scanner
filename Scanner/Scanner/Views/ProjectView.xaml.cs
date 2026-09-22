@@ -87,16 +87,20 @@ public sealed partial class ProjectView : Page
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(ShowFileNameGenerationButton))]
+    [NotifyPropertyChangedFor(nameof(IsFileNameTextBoxExpanded))]
     [NotifyPropertyChangedFor(nameof(FileNameTextBoxPadding))]
     private bool isFileNameTextBoxFocused;
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(ShowFileNameGenerationButton))]
+    [NotifyPropertyChangedFor(nameof(IsFileNameTextBoxExpanded))]
     [NotifyPropertyChangedFor(nameof(FileNameTextBoxPadding))]
     private bool isFileNameGenerationButtonFocused;
 
     public bool ShowFileNameGenerationButton => ViewModel.CurrentProject is PdfProject && ViewModel.CopilotRuntimeService.IsSupported &&
         (IsFileNameTextBoxFocused || IsFileNameGenerationButtonFocused || ViewModel.IsFileNameGenerationInProgress);
+
+    public bool IsFileNameTextBoxExpanded => !ViewModel.IsFileNameGenerationInProgress && (IsFileNameTextBoxFocused || IsFileNameGenerationButtonFocused);
 
     public bool AreMultiSelectEditActionsAvailable => !ViewModel.ProjectService.IsProcessRunningOrEditing && ViewModel.IsMultiSelect && ViewModel.ProjectService.SelectedPagesCount > 0
         && ViewModel.ProjectService.SelectedPages != null && !ViewModel.ProjectService.SelectedPages.Any(x => x is not ImagePage);
@@ -250,6 +254,7 @@ public sealed partial class ProjectView : Page
                         IsFileNameGenerationButtonFocused = false;
 
                     OnPropertyChanged(nameof(ShowFileNameGenerationButton));
+                    OnPropertyChanged(nameof(IsFileNameTextBoxExpanded));
                     OnPropertyChanged(nameof(FileNameTextBoxPadding));
                 });
                 break;

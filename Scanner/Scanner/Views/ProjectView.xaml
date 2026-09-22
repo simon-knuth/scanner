@@ -18,6 +18,7 @@
     xmlns:teachingtips="using:Scanner.Views.TeachingTips"
     xmlns:strings="using:Scanner.Resources.Strings"
     xmlns:customcontrols="using:Scanner.Controls"
+    xmlns:labs="using:CommunityToolkit.Labs.WinUI"
     mc:Ignorable="d"
     Loaded="Page_Loaded"
     Unloaded="Page_Unloaded">
@@ -112,10 +113,10 @@
 
             <!-- Header -->
             <Frame Grid.Row="0" IsEnabled="{x:Bind ViewModel.ProjectService.IsProcessRunningOrEditing, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}">
-                <Grid x:Name="GridHeader" ColumnSpacing="16" Padding="20,0,12,0" Height="56" SizeChanged="GridHeader_SizeChanged" Visibility="{x:Bind ViewModel.CurrentProject, Mode=OneWay, Converter={StaticResource NotNullVisibilityConverter}}">
+                <Grid x:Name="GridHeader" Padding="20,0,12,0" Height="56" SizeChanged="GridHeader_SizeChanged" Visibility="{x:Bind ViewModel.CurrentProject, Mode=OneWay, Converter={StaticResource NotNullVisibilityConverter}}">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="28" />
-                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="28" />
                     </Grid.RowDefinitions>
 
                     <Grid.ColumnDefinitions>
@@ -126,8 +127,8 @@
                     <Border x:Name="BorderUnsavedChanges" Grid.Row="0" Grid.Column="0" Width="12" Height="28" Margin="-16,4,0,0" HorizontalAlignment="Left" VerticalAlignment="Center" Background="Transparent" Visibility="{x:Bind ViewModel.CurrentProject.IsSaved, Mode=OneWay, Converter={StaticResource NegativeBoolVisibilityConverter}}" ToolTipService.ToolTip="{x:Bind strings:Resources.UnsavedChanges}" x:Load="{x:Bind ViewModel.SettingsService.SettingAutoSave, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}">
                         <Ellipse Width="4" Height="4" Fill="{ThemeResource AccentFillColorDefaultBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" />
                     </Border>
-                    <Grid Grid.Row="0" Grid.Column="0" Margin="-8,0,-12,-4" Visibility="{x:Bind ViewModel.ProjectService.SelectedPages, Mode=OneWay, Converter={StaticResource NullVisibilityConverter}}">
-                        <customcontrols:AIProcessingBorder x:Name="AIProcessingBorderFileNameGeneration" Background="{ThemeResource SubtleFillColorSecondaryBrush}" BorderThickness="4" CornerRadius="4" Margin="2,4,2,4" x:Load="{x:Bind ViewModel.IsFileNameGenerationInProgress, Mode=OneWay}" />
+                    <Grid Grid.Row="0" Grid.Column="0" Margin="-8,0,0,-4" Visibility="{x:Bind ViewModel.ProjectService.SelectedPages, Mode=OneWay, Converter={StaticResource NullVisibilityConverter}}">
+                        <customcontrols:AIProcessingBorder x:Name="AIProcessingBorderFileNameGeneration" Background="{ThemeResource SubtleFillColorSecondaryBrush}" BorderThickness="4" CornerRadius="4" Margin="2,0,2,0" x:Load="{x:Bind ViewModel.IsFileNameGenerationInProgress, Mode=OneWay}" />
                         <TextBox x:Name="TextBoxProjectName" Text="{x:Bind ViewModel.FileName}" FontSize="16" IsEnabled="{x:Bind ViewModel.IsFileNameGenerationInProgress, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}" Padding="{x:Bind FileNameTextBoxPadding, Mode=OneWay}" MinWidth="120" MinHeight="0" FontWeight="SemiBold" IsSpellCheckEnabled="False" HorizontalAlignment="Stretch" VerticalAlignment="Center" Style="{StaticResource MutedTextBoxStyle}" BeforeTextChanging="TextBoxProjectName_BeforeTextChanging" KeyDown="TextBoxProjectName_KeyDown" GotFocus="TextBoxProjectName_GotFocus" LostFocus="TextBoxProjectName_LostFocus">
                             <animations:Implicit.ShowAnimations>
                                 <animations:OpacityAnimation Duration="0:0:0.25" Delay="0:0:0.05" From="0.0" To="1.0" EasingMode="EaseInOut"/>
@@ -161,7 +162,7 @@
                         <TextBlock x:Name="TextBlockTotalPages" Text="{x:Bind TotalPagesString, Mode=OneWay}" Foreground="{ThemeResource TextFillColorTertiaryBrush}" Style="{StaticResource CaptionTextBlockStyle}" x:Load="{x:Bind ShowTextBlockTotalPages, Mode=OneWay}" />
                         <TextBlock x:Name="TextBlockSelectedPage" Text="{x:Bind SelectedFileString, Mode=OneWay}" Foreground="{ThemeResource TextFillColorTertiaryBrush}" Style="{StaticResource CaptionTextBlockStyle}" Typography.NumeralAlignment="Tabular" Visibility="{x:Bind ViewModel.IsMultiSelect, Mode=OneWay, Converter={StaticResource NegativeBoolVisibilityConverter}}" x:Load="{x:Bind ViewModel.CurrentProject.IsPdf, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}" />
                     </StackPanel>
-                    <Frame Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Center" IsEnabled="{x:Bind ViewModel.IsMultiSelect, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}">
+                    <Frame Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" Margin="4,0,0,0" HorizontalAlignment="Right" VerticalAlignment="Center" IsEnabled="{x:Bind ViewModel.IsMultiSelect, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}" Visibility="{x:Bind IsFileNameTextBoxExpanded, Mode=OneWay, Converter={StaticResource NegativeBoolVisibilityConverter}}">
                         <StackPanel Orientation="Horizontal" Spacing="4">
                             <Button x:Name="ButtonShowInFileExplorer" Foreground="{ThemeResource TextFillColorPrimaryBrush}" ToolTipService.ToolTip="{x:Bind strings:Resources.ShowInFileExplorer}" VerticalAlignment="Center" Width="36" Height="36" Style="{StaticResource MutedButtonStyle}" Command="{x:Bind ViewModel.ShowInFileExplorerAsyncCommand}">
                                 <FontIcon Glyph="&#xE8DA;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
