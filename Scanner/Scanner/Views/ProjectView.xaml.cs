@@ -81,7 +81,10 @@ public sealed partial class ProjectView : Page
     private double projectFlyoutWidth;
 
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(ShowCarouselNavigation))]
     private bool isHoveringCarousel;
+
+    public bool ShowCarouselNavigation => IsHoveringCarousel && ViewModel.ProjectService.TotalNumberOfPages > 1;
 
     public Thickness FileNameTextBoxPadding => ShowFileNameGenerationButton ? new Thickness(8, 4, 36, 4) : new Thickness(8, 4, 4, 4);
 
@@ -333,6 +336,7 @@ public sealed partial class ProjectView : Page
                 {
                     OnPropertyChanged(nameof(TotalPagesString));
                     OnPropertyChanged(nameof(SelectedFileString));
+                    OnPropertyChanged(nameof(ShowCarouselNavigation));
                 });
                 break;
         }
