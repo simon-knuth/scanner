@@ -18,7 +18,7 @@
     xmlns:teachingtips="using:Scanner.Views.TeachingTips"
     xmlns:strings="using:Scanner.Resources.Strings"
     xmlns:customcontrols="using:Scanner.Controls"
-    xmlns:labs="using:CommunityToolkit.Labs.WinUI"
+    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     mc:Ignorable="d"
     Loaded="Page_Loaded"
     Unloaded="Page_Unloaded">
@@ -52,18 +52,21 @@
                     <media:AttachedCardShadow x:Key="ShadowCarouselButton" Offset="0,0" BlurRadius="8" Color="Black" Opacity="0.06" CornerRadius="4" />
                     <media:AttachedCardShadow x:Key="ShadowPageListPage" Offset="0,2" BlurRadius="12" Color="Black" Opacity="0.04" CornerRadius="2" />
                     <media:AttachedCardShadow x:Key="ShadowToolbar" Offset="0,4" BlurRadius="12" Color="Black" Opacity="0.04" CornerRadius="8" />
+                    <media:AttachedCardShadow x:Key="ShadowFileNamePopup" Offset="0,8" BlurRadius="12" Color="Black" Opacity="0.05" CornerRadius="10" />
                 </ResourceDictionary>
                 <ResourceDictionary x:Key="Dark">
                     <media:AttachedCardShadow x:Key="ShadowCarouselPage" Offset="0,2" BlurRadius="6" Color="Black" Opacity="0.2" CornerRadius="2" />
                     <media:AttachedCardShadow x:Key="ShadowCarouselButton" Offset="0,0" BlurRadius="8" Color="Black" Opacity="0.15" CornerRadius="4" />
                     <media:AttachedCardShadow x:Key="ShadowPageListPage" Offset="0,2" BlurRadius="12" Color="Black" Opacity="0.3" CornerRadius="2" />
                     <media:AttachedCardShadow x:Key="ShadowToolbar" Offset="0,4" BlurRadius="12" Color="Black" Opacity="0.04" CornerRadius="8" />
+                    <media:AttachedCardShadow x:Key="ShadowFileNamePopup" Offset="0,8" BlurRadius="12" Color="Black" Opacity="0.05" CornerRadius="10" />
                 </ResourceDictionary>
                 <ResourceDictionary x:Key="HighContrast">
                     <media:AttachedCardShadow x:Key="ShadowCarouselPage" Offset="0,0" BlurRadius="0" Color="Transparent" Opacity="0.0" CornerRadius="2" />
                     <media:AttachedCardShadow x:Key="ShadowCarouselButton" Offset="0,0" BlurRadius="0" Color="Transparent" Opacity="0.0" CornerRadius="4" />
                     <media:AttachedCardShadow x:Key="ShadowPageListPage" Offset="0,0" BlurRadius="0" Color="Transparent" Opacity="0.0" CornerRadius="2" />
                     <media:AttachedCardShadow x:Key="ShadowToolbar" Offset="0,0" BlurRadius="0" Color="Transparent" Opacity="0.0" CornerRadius="8" />
+                    <media:AttachedCardShadow x:Key="ShadowFileNamePopup" Offset="0,0" BlurRadius="0" Color="Transparent" Opacity="0.0" CornerRadius="10" />
                 </ResourceDictionary>
             </ResourceDictionary.ThemeDictionaries>
 
@@ -90,6 +93,7 @@
             </Style>
 
             <!-- XAML Converters -->
+            <converters:BoolOpacityConverter x:Key="BoolOpacityConverter" />
             <converters:NegativeBoolConverter x:Key="NegativeBoolConverter" />
             <converters:NegativeBoolVisibilityConverter x:Key="NegativeBoolVisibilityConverter" />
             <converters:NegativeEnumIntComparisonVisibilityConverter x:Key="NegativeEnumIntComparisonVisibilityConverter" />
@@ -111,12 +115,261 @@
                 <RowDefinition Height="1*" />
             </Grid.RowDefinitions>
 
+            <!-- Content -->
+            <Frame x:Name="FrameContent" Grid.Row="1" Margin="0,-12,0,0" ui:UIElementExtensions.ClipToBounds="True" IsEnabled="{x:Bind ViewModel.ProjectService.IsEditing, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}">
+                <Grid>
+                    <!-- Carousel -->
+                    <Grid x:Name="GridCarousel" Height="84" VerticalAlignment="Top" x:Load="{x:Bind IsExpanded, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}" Loading="ControlAnimated_Loading" PointerEntered="GridCarousel_PointerEntered" PointerExited="GridCarousel_PointerExited">
+                        <animations:Implicit.ShowAnimations>
+                            <animations:OpacityAnimation Duration="0:0:0.25" From="0.0" To="1.0" EasingMode="EaseInOut"/>
+                            <animations:TranslationAnimation Duration="0:0:0.25" From="0,64" To="0,0" EasingMode="EaseInOut"/>
+                        </animations:Implicit.ShowAnimations>
+
+                        <animations:Implicit.HideAnimations>
+                            <animations:OpacityAnimation Duration="0:0:0.25" To="0.0" EasingMode="EaseInOut" />
+                            <animations:TranslationAnimation Duration="0:0:0.25" To="0,64" EasingMode="EaseInOut" />
+                        </animations:Implicit.HideAnimations>
+
+                        <GridView x:Name="GridViewCarousel" VerticalContentAlignment="Center" ItemsSource="{x:Bind ViewModel.CurrentProject.Pages, Mode=OneWay}" SelectedItem="{x:Bind ViewModel.ProjectService.SelectedPage, Mode=TwoWay, FallbackValue={x:Null}}" SelectionMode="Single" AllowDrop="True" ScrollViewer.HorizontalScrollMode="Auto" ScrollViewer.VerticalScrollMode="Disabled" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Hidden" SelectionChanged="GridViewCarousel_SelectionChanged" SizeChanged="GridViewCarousel_SizeChanged" DragOver="GridViewDropZone_DragOver" Drop="GridViewDropZone_Drop" Loaded="GridViewCarousel_Loaded" Unloaded="GridViewDropZone_Unloaded">
+                            <GridView.ItemContainerTransitions>
+                                <TransitionCollection>
+
+                                </TransitionCollection>
+                            </GridView.ItemContainerTransitions>
+
+                            <GridView.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <ItemsStackPanel x:Name="ItemsStackPanelCarousel" Orientation="Horizontal" ItemsUpdatingScrollMode="KeepScrollOffset" Loaded="ItemsStackPanelCarousel_Loaded" SizeChanged="ItemsStackPanelCarousel_SizeChanged" />
+                                </ItemsPanelTemplate>
+                            </GridView.ItemsPanel>
+
+                            <GridView.ItemTemplate>
+                                <DataTemplate x:DataType="interfaces:IProjectPage">
+                                    <GridViewItem Margin="0" Width="64" Height="76" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" PointerEntered="GridViewItem_PointerEntered" PointerExited="GridViewItem_PointerExited" DataContextChanged="GridViewItem_DataContextChanged">
+                                        <Grid>
+                                            <Frame x:Name="FramePreview" Margin="4,4,4,16" CornerRadius="2" HorizontalAlignment="Center" VerticalAlignment="Center" ui:Effects.Shadow="{ThemeResource ShadowCarouselPage}">
+                                                <Image>
+                                                    <Image.Source>
+                                                        <BitmapImage UriSource="{x:Bind PreviewBitmapUri, Mode=OneWay}" DecodePixelType="Logical" DecodePixelHeight="56" />
+                                                    </Image.Source>
+                                                </Image>
+                                            </Frame>
+                                            <Rectangle x:Name="RectangleSelectionIndicatorInner" Width="56" Height="56" Margin="0,4,0,0" RadiusX="4" RadiusY="4" VerticalAlignment="Top" Stroke="{ThemeResource SurfaceStrokeColorDefaultBrush}" StrokeThickness="0" />
+                                            <Rectangle x:Name="RectangleSelectionIndicatorOuter" Width="56" Height="56" Margin="0,4,0,0" RadiusX="4" RadiusY="4" VerticalAlignment="Top" Stroke="{ThemeResource AccentFillColorDefaultBrush}" StrokeThickness="0" />
+                                            <Grid MinWidth="24" Height="24" Margin="0,0,0,4" Padding="4,0,4,0" HorizontalAlignment="Center" VerticalAlignment="Bottom" CornerRadius="4" Background="{ThemeResource AcrylicInAppFillColorDefaultBrush}">
+                                                <TextBlock x:Name="TextBlockPageNumber" Text="{x:Bind PageNumber, Mode=OneWay}" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Style="{StaticResource CaptionTextBlockStyle}" />
+                                            </Grid>
+                                        </Grid>
+                                    </GridViewItem>
+                                </DataTemplate>
+                            </GridView.ItemTemplate>
+                        </GridView>
+                        <Frame x:Name="FrameCarouselButtonPreviousPage" Margin="8,0,0,16" HorizontalAlignment="Left" VerticalAlignment="Center" ui:Effects.Shadow="{ThemeResource ShadowCarouselButton}" Visibility="{x:Bind ShowCarouselNavigation, Mode=OneWay}" ToolTipService.ToolTip="{x:Bind strings:Resources.PreviousPage}">
+                            <animations:Implicit.ShowAnimations>
+                                <animations:OpacityAnimation Duration="0:0:0.25" From="0.0" To="1.0" EasingMode="EaseInOut"/>
+                            </animations:Implicit.ShowAnimations>
+
+                            <animations:Implicit.HideAnimations>
+                                <animations:OpacityAnimation Duration="0:0:0.25" To="0.0" EasingMode="EaseInOut" />
+                            </animations:Implicit.HideAnimations>
+
+                            <Button Width="24" Height="24" Style="{StaticResource AcrylicButtonStyle}" IsEnabled="{x:Bind ViewModel.ProjectService.CanSelectPreviousPage, Mode=OneWay}" Command="{x:Bind ViewModel.SelectPreviousPageCommand}">
+                                <Button.RenderTransform>
+                                    <RotateTransform Angle="90" CenterX="12" CenterY="12" />
+                                </Button.RenderTransform>
+
+                                <AnimatedIcon Height="12">
+                                    <AnimatedIcon.Source>
+                                        <animatedvisuals:AnimatedChevronDownSmallVisualSource />
+                                    </AnimatedIcon.Source>
+                                    <AnimatedIcon.FallbackIconSource>
+                                        <FontIconSource Glyph="&#xE76B;" FontSize="12" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                    </AnimatedIcon.FallbackIconSource>
+                                </AnimatedIcon>
+                            </Button>
+                        </Frame>
+                        <Frame x:Name="FrameCarouselButtonNextPage" Margin="0,0,8,16" HorizontalAlignment="Right" VerticalAlignment="Center" ui:Effects.Shadow="{ThemeResource ShadowCarouselButton}" Visibility="{x:Bind ShowCarouselNavigation, Mode=OneWay}" ToolTipService.ToolTip="{x:Bind strings:Resources.NextPage}">
+                            <animations:Implicit.ShowAnimations>
+                                <animations:OpacityAnimation Duration="0:0:0.25" From="0.0" To="1.0" EasingMode="EaseInOut"/>
+                            </animations:Implicit.ShowAnimations>
+
+                            <animations:Implicit.HideAnimations>
+                                <animations:OpacityAnimation Duration="0:0:0.25" To="0.0" EasingMode="EaseInOut" />
+                            </animations:Implicit.HideAnimations>
+
+                            <Button Width="24" Height="24" Style="{StaticResource AcrylicButtonStyle}" IsEnabled="{x:Bind ViewModel.ProjectService.CanSelectNextPage, Mode=OneWay}" Command="{x:Bind ViewModel.SelectNextPageCommand}">
+                                <Button.RenderTransform>
+                                    <RotateTransform Angle="270" CenterX="12" CenterY="12" />
+                                </Button.RenderTransform>
+
+                                <AnimatedIcon Height="12">
+                                    <AnimatedIcon.Source>
+                                        <animatedvisuals:AnimatedChevronDownSmallVisualSource />
+                                    </AnimatedIcon.Source>
+                                    <AnimatedIcon.FallbackIconSource>
+                                        <FontIconSource Glyph="&#xE76C;" FontSize="12" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                    </AnimatedIcon.FallbackIconSource>
+                                </AnimatedIcon>
+                            </Button>
+                        </Frame>
+                    </Grid>
+
+                    <Grid x:Name="GridExpanded" x:Load="{x:Bind IsExpanded, Mode=OneWay}">
+                        <!-- Page list -->
+                        <Grid x:Name="GridPageList" x:Load="{x:Bind ViewModel.CurrentProject, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}}" Loading="ControlAnimated_Loading">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="1*" />
+                            </Grid.RowDefinitions>
+
+                            <animations:Implicit.ShowAnimations>
+                                <animations:OpacityAnimation Duration="0:0:0.25" From="0.0" To="1.0" EasingMode="EaseInOut"/>
+                                <animations:TranslationAnimation Duration="0:0:0.25" From="0,-64" To="0,0" EasingMode="EaseInOut"/>
+                            </animations:Implicit.ShowAnimations>
+
+                            <animations:Implicit.HideAnimations>
+                                <animations:OpacityAnimation Duration="0:0:0.25" To="0.0" EasingMode="EaseInOut" />
+                                <animations:TranslationAnimation Duration="0:0:0.25" To="0,-64" EasingMode="EaseInOut" />
+                            </animations:Implicit.HideAnimations>
+
+                            <GridView x:Name="GridViewPageList" Grid.Row="1" HorizontalAlignment="Stretch" VerticalContentAlignment="Center" ItemsSource="{x:Bind ViewModel.Pages, Mode=OneWay}" SelectedItem="{x:Bind ViewModel.ProjectService.SelectedPage, Mode=OneWay}" SelectionMode="Single" AllowDrop="True" CanReorderItems="{x:Bind ViewModel.CurrentProject.IsPdf, Mode=OneWay}" CanDragItems="{x:Bind ViewModel.CurrentProject.IsPdf, Mode=OneWay}" DragItemsStarting="GridViewPageList_DragItemsStarting" ReorderMode="Enabled" ScrollViewer.HorizontalScrollMode="Disabled" ScrollViewer.VerticalScrollMode="Auto" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Auto" SelectionChanged="GridViewPageList_SelectionChanged" Loaded="GridViewPageList_Loaded" SizeChanged="GridViewPageList_SizeChanged" Drop="GridViewDropZone_Drop" Unloaded="GridViewDropZone_Unloaded">
+                                <GridView.ItemContainerTransitions>
+                                    <TransitionCollection>
+                                        <ReorderThemeTransition />
+                                        <RepositionThemeTransition IsStaggeringEnabled="False" />
+                                    </TransitionCollection>
+                                </GridView.ItemContainerTransitions>
+
+                                <GridView.ItemTemplate>
+                                    <DataTemplate x:DataType="interfaces:IProjectPage">
+                                        <GridViewItem Margin="0" Width="108" Height="108" FocusVisualMargin="10" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" AllowDrop="False" PointerEntered="GridViewItem_PointerEntered" PointerExited="GridViewItem_PointerExited" DataContextChanged="GridViewItem_DataContextChanged" Loaded="GridViewItem_Loaded" DropCompleted="GridViewItem_DropCompleted">
+                                            <Grid>
+                                                <Frame x:Name="FramePreview" Margin="8" CornerRadius="3" HorizontalAlignment="Center" VerticalAlignment="Center" ui:Effects.Shadow="{ThemeResource ShadowPageListPage}">
+                                                    <Image>
+                                                        <Image.Source>
+                                                            <BitmapImage UriSource="{x:Bind PreviewBitmapUri, Mode=OneWay}" DecodePixelType="Logical" DecodePixelHeight="92" />
+                                                        </Image.Source>
+                                                    </Image>
+                                                </Frame>
+                                                <Border x:Name="BorderReadOnly" MinWidth="20" Height="20" Margin="0,12,0,0" Padding="4,0,4,0" HorizontalAlignment="Center" VerticalAlignment="Top" CornerRadius="10" Background="{ThemeResource SystemControlAcrylicElementMediumHighBrush}" x:Load="{x:Bind IsReadOnly, Mode=OneWay}">
+                                                    <FontIcon Glyph="&#xE7B3;" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                                </Border>
+                                                <Rectangle x:Name="RectangleSelectionIndicatorInner" Width="92" Height="92" RadiusX="4" RadiusY="4" HorizontalAlignment="Center" VerticalAlignment="Center" Stroke="{ThemeResource SurfaceStrokeColorDefaultBrush}" StrokeThickness="0" />
+                                                <Rectangle x:Name="RectangleSelectionIndicatorOuter" Width="92" Height="92" RadiusX="4" RadiusY="4" HorizontalAlignment="Center" VerticalAlignment="Center" Stroke="{ThemeResource AccentFillColorDefaultBrush}" StrokeThickness="0" />
+                                                <Border MinWidth="24" Height="24" Margin="0,0,0,12" Padding="4,0,4,0" HorizontalAlignment="Center" VerticalAlignment="Bottom" CornerRadius="4" Background="{ThemeResource SystemControlAcrylicElementMediumHighBrush}">
+                                                    <TextBlock x:Name="TextBlockPageNumber" Text="{x:Bind PageNumber, Mode=OneWay}" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Style="{StaticResource BodyTextBlockStyle}" />
+                                                </Border>
+                                            </Grid>
+                                        </GridViewItem>
+                                    </DataTemplate>
+                                </GridView.ItemTemplate>
+                            </GridView>
+                            <Frame Grid.Row="0" Margin="8,0,8,0" CornerRadius="8" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BackgroundSizing="OuterBorderEdge" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" ui:Effects.Shadow="{ThemeResource ShadowToolbar}">
+                                <Grid ColumnSpacing="8" Padding="4" HorizontalAlignment="Center">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="1*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <ToggleButton Grid.Column="0" Height="32" Padding="12,0,12,0" IsChecked="{x:Bind ViewModel.IsMultiSelect, Mode=TwoWay}" Style="{StaticResource MutedToggleButtonStyle}">
+                                        <Grid ColumnSpacing="12">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto" />
+                                                <ColumnDefinition Width="1*" />
+                                            </Grid.ColumnDefinitions>
+
+                                            <FontIcon Grid.Column="0" Glyph="&#xE762;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                            <TextBlock Grid.Column="1" Text="{x:Bind strings:Resources.ToggleMultiSelect}" VerticalAlignment="Center" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" Style="{StaticResource BodyTextBlockStyle}" />
+                                        </Grid>
+                                    </ToggleButton>
+                                    <Frame Grid.Column="1">
+                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                            <AppBarSeparator />
+                                            <Button x:Name="ButtonRotate" Width="32" Height="32" Style="{StaticResource MutedButtonStyle}" ToolTipService.ToolTip="{x:Bind strings:Resources.RotateSelectedPagesToolTip}" IsEnabled="{x:Bind AreMultiSelectEditActionsAvailable, Mode=OneWay}" Command="{x:Bind ViewModel.RotateSelectedPages90DegreesAsyncCommand}" ContextRequested="ButtonRotate_ContextRequested">
+                                                <Grid>
+                                                    <FontIcon Glyph="&#xE7AD;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                                    <FontIcon Glyph="&#xE96E;" FontSize="8" Margin="0,0,-8,-8" Foreground="{ThemeResource TextFillColorTertiaryBrush}" HorizontalAlignment="Right" VerticalAlignment="Bottom" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                                </Grid>
+
+                                                <FlyoutBase.AttachedFlyout>
+                                                    <MenuFlyout Placement="Bottom">
+                                                        <MenuFlyoutItem Text="{x:Bind strings:Resources.RotateSelectedPages90}" FontWeight="SemiBold" Command="{x:Bind ViewModel.RotateSelectedPages90DegreesAsyncCommand}" />
+                                                        <MenuFlyoutItem Text="{x:Bind strings:Resources.RotateSelectedPages180}" Command="{x:Bind ViewModel.RotateSelectedPages180DegreesAsyncCommand}" />
+                                                        <MenuFlyoutItem Text="{x:Bind strings:Resources.RotateSelectedPages270}" Command="{x:Bind ViewModel.RotateSelectedPages270DegreesAsyncCommand}" />
+                                                        <MenuFlyoutItem Text="{x:Bind strings:Resources.RotateSelectedPagesAutomatically}" Command="{x:Bind ViewModel.RotateSelectedPagesAutomaticallyAsyncCommand}">
+                                                            <MenuFlyoutItem.Icon>
+                                                                <ImageIcon>
+                                                                    <ImageIcon.Source>
+                                                                        <SvgImageSource UriSource="/Assets/AI Sparkles.svg" RasterizePixelWidth="32" RasterizePixelHeight="32" />
+                                                                    </ImageIcon.Source>
+                                                                </ImageIcon>
+                                                            </MenuFlyoutItem.Icon>
+                                                        </MenuFlyoutItem>
+                                                        <MenuFlyoutSeparator />
+                                                        <MenuFlyoutItem Text="{x:Bind strings:Resources.Settings}" Command="{x:Bind ViewModel.ShowSettingsCommand}">
+                                                            <MenuFlyoutItem.Icon>
+                                                                <FontIcon Glyph="&#xE713;" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                                            </MenuFlyoutItem.Icon>
+                                                        </MenuFlyoutItem>
+                                                    </MenuFlyout>
+                                                </FlyoutBase.AttachedFlyout>
+                                            </Button>
+                                            <Button Width="32" Height="32" Style="{StaticResource MutedButtonStyle}" ToolTipService.ToolTip="{x:Bind strings:Resources.ApplyFilterToSelectedPagesToolTip}" IsEnabled="{x:Bind AreMultiSelectEditActionsAvailable, Mode=OneWay}">
+                                                <FontIcon Glyph="&#xE790;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+
+                                                <Button.Flyout>
+                                                    <MenuFlyout Placement="Bottom">
+                                                        <RadioMenuFlyoutItem Text="{x:Bind strings:Resources.FilterNone}" IsChecked="{x:Bind AreFilterNone, Mode=OneWay}" IsEnabled="{x:Bind IsFilterNoneAvailable, Mode=OneWay}" Command="{x:Bind ViewModel.ApplyFilterToSelectedPagesAsyncCommand}" CommandParameter="{x:Bind models:ImageFilter.None}" />
+                                                        <RadioMenuFlyoutItem Text="{x:Bind strings:Resources.FilterGrayscale}" IsChecked="{x:Bind AreFilterGrayscale, Mode=OneWay}" IsEnabled="{x:Bind IsFilterGrayscaleAvailable, Mode=OneWay}" Command="{x:Bind ViewModel.ApplyFilterToSelectedPagesAsyncCommand}" CommandParameter="{x:Bind models:ImageFilter.Grayscale}" />
+                                                        <RadioMenuFlyoutItem Text="{x:Bind strings:Resources.FilterMonochrome}" IsChecked="{x:Bind AreFilterMonochrome, Mode=OneWay}" IsEnabled="{x:Bind IsFilterMonochromeAvailable, Mode=OneWay}" Command="{x:Bind ViewModel.ApplyFilterToSelectedPagesAsyncCommand}" CommandParameter="{x:Bind models:ImageFilter.Monochrome}" />
+                                                    </MenuFlyout>
+                                                </Button.Flyout>
+                                            </Button>
+                                            <Button Width="32" Height="32" Style="{StaticResource MutedButtonStyle}" ToolTipService.ToolTip="{x:Bind strings:Resources.DeleteSelectedPages}" IsEnabled="{x:Bind AreMultiSelectEditActionsAvailable, Mode=OneWay}" Command="{x:Bind ViewModel.RemoveSelectedPagesAsyncCommand}">
+                                                <FontIcon Glyph="&#xE74D;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                            </Button>
+                                            <Button Width="32" Height="32" Style="{StaticResource MutedButtonStyle}" ToolTipService.ToolTip="{x:Bind strings:Resources.ExportSelectedPagesAsSeparatePDF}" Visibility="{x:Bind ViewModel.CurrentProject.IsPdf, Mode=OneWay}" IsEnabled="{x:Bind IsMultiSelectExportAvailable, Mode=OneWay}" Command="{x:Bind ViewModel.ExportSelectedPagesAsSeparatePDFAsyncCommand}">
+                                                <FontIcon Glyph="&#xEA3D;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                            </Button>
+                                            <Button Width="32" Height="32" Style="{StaticResource MutedButtonStyle}" ToolTipService.ToolTip="{x:Bind strings:Resources.CopySelectedPages}" Visibility="{x:Bind ViewModel.CurrentProject.IsPdf, Mode=OneWay, Converter={StaticResource NegativeBoolVisibilityConverter}}" IsEnabled="{x:Bind AreMultiSelectEditActionsAvailable, Mode=OneWay}" Command="{x:Bind ViewModel.TryCopySelectedPagesAsyncCommand}">
+                                                <FontIcon Glyph="&#xE8C8;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                            </Button>
+                                            <Button Width="32" Height="32" Style="{StaticResource MutedButtonStyle}" ToolTipService.ToolTip="{x:Bind strings:Resources.ShareSelectedPages}" Visibility="{x:Bind ViewModel.CurrentProject.IsPdf, Mode=OneWay, Converter={StaticResource NegativeBoolVisibilityConverter}}" IsEnabled="{x:Bind AreMultiSelectEditActionsAvailable, Mode=OneWay}" Command="{x:Bind ViewModel.TryShareSelectedPagesAsyncCommand}">
+                                                <FontIcon Glyph="&#xE72D;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                            </Button>
+                                        </StackPanel>
+                                    </Frame>
+                                </Grid>
+                            </Frame>
+                        </Grid>
+
+                        <!-- Placeholder -->
+                        <Grid x:Name="GridPlaceholder" RowSpacing="32" HorizontalAlignment="Center" VerticalAlignment="Center" x:Load="{x:Bind ViewModel.CurrentProject, Mode=OneWay, Converter={StaticResource NullBoolConverter}}">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+
+                            <Border Grid.Row="0" Width="64" Height="88" HorizontalAlignment="Center" Margin="0,0,4,0" Opacity="0.2" Background="{ThemeResource SystemFillColorSolidNeutralBackgroundBrush}" BorderBrush="{ThemeResource DividerStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="4" ui:VisualExtensions.NormalizedCenterPoint="0.5,0.5" ui:VisualExtensions.RotationAngleInDegrees="-12" />
+                            <Border Grid.Row="0" Width="64" Height="88" HorizontalAlignment="Center" Margin="0,4,12,0" Opacity="0.4" Background="{ThemeResource SystemFillColorSolidNeutralBackgroundBrush}" BorderBrush="{ThemeResource DividerStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="4" ui:VisualExtensions.NormalizedCenterPoint="0.5,0.5" ui:VisualExtensions.RotationAngleInDegrees="8" />
+                            <Border Grid.Row="0" Width="64" Height="88" HorizontalAlignment="Center" Margin="0,0,4,0" Opacity="0.8" Background="{ThemeResource SystemFillColorSolidNeutralBackgroundBrush}" BorderBrush="{ThemeResource DividerStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="4" ui:VisualExtensions.NormalizedCenterPoint="0.5,0.5" ui:VisualExtensions.RotationAngleInDegrees="0">
+                                <ui:Effects.Shadow>
+                                    <media:AttachedCardShadow Offset="0,0" BlurRadius="8" Color="Black" Opacity="0.05" CornerRadius="4" />
+                                </ui:Effects.Shadow>
+                            </Border>
+                            <TextBlock Grid.Row="1" Text="{x:Bind strings:Resources.PageListEmpty}" TextAlignment="Center" HorizontalAlignment="Center" Foreground="{ThemeResource TextFillColorTertiaryBrush}" Style="{StaticResource CaptionTextBlockStyle}" />
+                        </Grid>
+                    </Grid>
+                </Grid>
+            </Frame>
+
             <!-- Header -->
             <Frame Grid.Row="0" IsEnabled="{x:Bind ViewModel.ProjectService.IsProcessRunningOrEditing, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}">
-                <Grid x:Name="GridHeader" Padding="20,0,12,0" Height="56" SizeChanged="GridHeader_SizeChanged" Visibility="{x:Bind ViewModel.CurrentProject, Mode=OneWay, Converter={StaticResource NotNullVisibilityConverter}}">
+                <Grid x:Name="GridHeader" Margin="16,0,16,0" Height="72" SizeChanged="GridHeader_SizeChanged" Visibility="{x:Bind ViewModel.CurrentProject, Mode=OneWay, Converter={StaticResource NotNullVisibilityConverter}}">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="28" />
                         <RowDefinition Height="28" />
+                        <RowDefinition Height="16" />
                     </Grid.RowDefinitions>
 
                     <Grid.ColumnDefinitions>
@@ -124,12 +377,14 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
+                    <Border Grid.Row="0" Grid.RowSpan="3" Grid.Column="0" Grid.ColumnSpan="2" CornerRadius="10" Margin="-10" Background="{ThemeResource AcrylicInAppFillColorDefaultBrush}" BackgroundSizing="OuterBorderEdge" BorderBrush="{ThemeResource SurfaceStrokeColorFlyoutBrush}" BorderThickness="1" Visibility="{x:Bind IsFileNameTextBoxExpanded, Mode=OneWay}" ui:Effects.Shadow="{ThemeResource ShadowFileNamePopup}" />
+
                     <Border x:Name="BorderUnsavedChanges" Grid.Row="0" Grid.Column="0" Width="12" Height="28" Margin="-16,4,0,0" HorizontalAlignment="Left" VerticalAlignment="Center" Background="Transparent" Visibility="{x:Bind ViewModel.CurrentProject.IsSaved, Mode=OneWay, Converter={StaticResource NegativeBoolVisibilityConverter}}" ToolTipService.ToolTip="{x:Bind strings:Resources.UnsavedChanges}" x:Load="{x:Bind ViewModel.SettingsService.SettingAutoSave, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}">
                         <Ellipse Width="4" Height="4" Fill="{ThemeResource AccentFillColorDefaultBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" />
                     </Border>
-                    <Grid Grid.Row="0" Grid.Column="0" Margin="-8,0,0,-4" Visibility="{x:Bind ViewModel.ProjectService.SelectedPages, Mode=OneWay, Converter={StaticResource NullVisibilityConverter}}">
-                        <customcontrols:AIProcessingBorder x:Name="AIProcessingBorderFileNameGeneration" Background="{ThemeResource SubtleFillColorSecondaryBrush}" BorderThickness="4" CornerRadius="4" Margin="2,0,2,0" x:Load="{x:Bind ViewModel.IsFileNameGenerationInProgress, Mode=OneWay}" />
-                        <TextBox x:Name="TextBoxProjectName" Text="{x:Bind ViewModel.FileName}" FontSize="16" IsEnabled="{x:Bind ViewModel.IsFileNameGenerationInProgress, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}" Padding="{x:Bind FileNameTextBoxPadding, Mode=OneWay}" MinWidth="120" MinHeight="0" FontWeight="SemiBold" IsSpellCheckEnabled="False" HorizontalAlignment="Stretch" VerticalAlignment="Center" Style="{StaticResource MutedTextBoxStyle}" BeforeTextChanging="TextBoxProjectName_BeforeTextChanging" KeyDown="TextBoxProjectName_KeyDown" GotFocus="TextBoxProjectName_GotFocus" LostFocus="TextBoxProjectName_LostFocus">
+                    <Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="{x:Bind FileNameInputColumnSpan, Mode=OneWay}" Margin="0,0,0,-4" Visibility="{x:Bind ViewModel.ProjectService.SelectedPages, Mode=OneWay, Converter={StaticResource NullVisibilityConverter}}">
+                        <customcontrols:AIProcessingBorder x:Name="AIProcessingBorderFileNameGeneration" Background="{ThemeResource SubtleFillColorSecondaryBrush}" BorderThickness="4" CornerRadius="4" Margin="-2,0,-2,0" x:Load="{x:Bind ViewModel.IsFileNameGenerationInProgress, Mode=OneWay}" />
+                        <TextBox x:Name="TextBoxProjectName" Text="{x:Bind ViewModel.FileName}" Margin="-4,0,-4,0" FontSize="16" TabIndex="0" IsEnabled="{x:Bind ViewModel.IsFileNameGenerationInProgress, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}" Padding="{x:Bind FileNameTextBoxPadding, Mode=OneWay}" CornerRadius="{x:Bind FileNameTextBoxCornerRadius, Mode=OneWay}" MinWidth="120" MinHeight="0" FontWeight="SemiBold" IsSpellCheckEnabled="False" HorizontalAlignment="Stretch" VerticalAlignment="Center" Style="{StaticResource MutedTextBoxStyle}" BeforeTextChanging="TextBoxProjectName_BeforeTextChanging" TextChanged="TextBoxProjectName_TextChanged" KeyDown="TextBoxProjectName_KeyDown" GotFocus="TextBoxProjectName_GotFocus" LostFocus="TextBoxProjectName_LostFocus">
                             <animations:Implicit.ShowAnimations>
                                 <animations:OpacityAnimation Duration="0:0:0.25" Delay="0:0:0.05" From="0.0" To="1.0" EasingMode="EaseInOut"/>
                             </animations:Implicit.ShowAnimations>
@@ -138,31 +393,74 @@
                                 <animations:OpacityAnimation Duration="0:0:0.1" To="0.0" EasingMode="EaseInOut" />
                             </animations:Implicit.HideAnimations>
                         </TextBox>
-                        <Button x:Name="ButtonFileNameGeneration" CornerRadius="2" Margin="4,4,6,4" HorizontalAlignment="Right" VerticalAlignment="Center" Style="{StaticResource MutedButtonStyle}" Visibility="{x:Bind ShowFileNameGenerationButton, Mode=OneWay}" GettingFocus="ButtonFileNameGeneration_GettingFocus" LostFocus="ButtonFileNameGeneration_LostFocus" Click="ButtonFileNameGeneration_Click" RightTapped="ButtonFileNameGeneration_RightTapped">
+                        <Button x:Name="ButtonFileNameGeneration" CornerRadius="2" Margin="4,4,2,4" HorizontalAlignment="Right" VerticalAlignment="Center" AllowFocusOnInteraction="False" Style="{StaticResource MutedButtonStyle}" Visibility="{x:Bind ShowFileNameGenerationButton, Mode=OneWay}" GettingFocus="ButtonFileNameGeneration_GettingFocus" LostFocus="ButtonFileNameGeneration_LostFocus" Click="ButtonFileNameGeneration_Click" RightTapped="ButtonFileNameGeneration_RightTapped">
                             <Grid Width="24" Height="24">
                                 <ImageIcon Margin="4" Visibility="{x:Bind ViewModel.IsFileNameGenerationInProgress, Mode=OneWay, Converter={StaticResource NegativeBoolVisibilityConverter}}">
                                     <ImageIcon.Source>
                                         <SvgImageSource UriSource="/Assets/AI Sparkles.svg" RasterizePixelWidth="32" RasterizePixelHeight="32" />
                                     </ImageIcon.Source>
                                 </ImageIcon>
-                                
+
                                 <Grid Visibility="{x:Bind ViewModel.IsFileNameGenerationInProgress, Mode=OneWay}">
                                     <FontIcon Glyph="&#xEE95;" FontSize="10" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                                 </Grid>
                             </Grid>
                         </Button>
                     </Grid>
-                    <TextBlock x:Name="TextBlockSelectedPagesCount" Grid.Row="0" Grid.Column="0" FontSize="16" Style="{StaticResource BaseTextBlockStyle}" Text="{x:Bind SelectedPagesString, Mode=OneWay}" VerticalAlignment="Center" Typography.NumeralAlignment="Tabular" x:Load="{x:Bind ViewModel.ProjectService.SelectedPages, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}}">
+                    <TextBlock x:Name="TextBlockSelectedPagesCount" Grid.Row="0" Grid.Column="0" FontSize="16" Style="{StaticResource BaseTextBlockStyle}" Margin="4,0,4,0" Text="{x:Bind SelectedPagesString, Mode=OneWay}" VerticalAlignment="Center" Typography.NumeralAlignment="Tabular" x:Load="{x:Bind ViewModel.ProjectService.SelectedPages, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}}">
                         <animations:Implicit.ShowAnimations>
                             <animations:OpacityAnimation Duration="0:0:0.25" Delay="0:0:0.05" From="0.0" To="1.0" EasingMode="EaseInOut"/>
                         </animations:Implicit.ShowAnimations>
                     </TextBlock>
-                    <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Horizontal" Spacing="8" Margin="0,0,0,8" VerticalAlignment="Bottom">
+                    <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Horizontal" Spacing="8" Margin="4,0,4,8" VerticalAlignment="Bottom" Visibility="{x:Bind IsFileNameTextBoxExpanded, Mode=OneWay, Converter={StaticResource NegativeBoolVisibilityConverter}}">
                         <TextBlock Text="{x:Bind ViewModel.CurrentProject.FriendlyFormatName, Mode=OneWay}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Style="{StaticResource CaptionTextBlockStyle}" />
                         <TextBlock x:Name="TextBlockTotalPages" Text="{x:Bind TotalPagesString, Mode=OneWay}" Foreground="{ThemeResource TextFillColorTertiaryBrush}" Style="{StaticResource CaptionTextBlockStyle}" x:Load="{x:Bind ShowTextBlockTotalPages, Mode=OneWay}" />
                         <TextBlock x:Name="TextBlockSelectedPage" Text="{x:Bind SelectedFileString, Mode=OneWay}" Foreground="{ThemeResource TextFillColorTertiaryBrush}" Style="{StaticResource CaptionTextBlockStyle}" Typography.NumeralAlignment="Tabular" Visibility="{x:Bind ViewModel.IsMultiSelect, Mode=OneWay, Converter={StaticResource NegativeBoolVisibilityConverter}}" x:Load="{x:Bind ViewModel.CurrentProject.IsPdf, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}" />
                     </StackPanel>
-                    <Frame Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" Margin="4,0,0,0" HorizontalAlignment="Right" VerticalAlignment="Center" IsEnabled="{x:Bind ViewModel.IsMultiSelect, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}" Visibility="{x:Bind IsFileNameTextBoxExpanded, Mode=OneWay, Converter={StaticResource NegativeBoolVisibilityConverter}}">
+
+                    <!-- File name type -->
+                    <controls:Segmented x:Name="SegmentedFileNamingPattern" Grid.Row="1" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,2,0,0" CornerRadius="0,0,4,4" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" BorderThickness="0" SelectedIndex="{x:Bind SelectedFileNamingPatternIndex, Mode=TwoWay}" SingleSelectionFollowsFocus="False" AllowFocusOnInteraction="False" GettingFocus="SegmentedFileNamingPattern_GettingFocus" LostFocus="SegmentedFileNamingPattern_LostFocus" PreviewKeyDown="SegmentedFileNamingPattern_PreviewKeyDown" Visibility="{x:Bind IsFileNameTextBoxExpanded, Mode=OneWay}">
+                        <controls:Segmented.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <controls:UniformGrid Rows="1" ColumnSpacing="1" />
+                            </ItemsPanelTemplate>
+                        </controls:Segmented.ItemsPanel>
+
+                        <controls:SegmentedItem CornerRadius="0,0,4,4" SizeChanged="SegmentedItemFileNamingPattern_SizeChanged">
+                            <Grid ColumnSpacing="8" Margin="-4" Height="32" VerticalAlignment="Stretch">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="1*" />
+                                </Grid.ColumnDefinitions>
+
+                                <FontIcon Grid.Column="0" Glyph="&#xEC92;" FontSize="12" VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                <TextBlock Grid.Column="1" Text="{x:Bind strings:Resources.FileNamingDateTimePattern}" VerticalAlignment="Center" MaxLines="2" TextWrapping="WrapWholeWords" Style="{StaticResource CaptionTextBlockStyle}" />
+                            </Grid>
+                        </controls:SegmentedItem>
+                        <controls:SegmentedItem Padding="0" CornerRadius="0,0,4,4" SizeChanged="SegmentedItemFileNamingPattern_SizeChanged">
+                            <Grid ColumnSpacing="8" Margin="-4" Height="32" HorizontalAlignment="Center">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="1*" />
+                                </Grid.ColumnDefinitions>
+
+                                <FontIcon Grid.Column="0" Glyph="&#xE787;" FontSize="12" VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                <TextBlock Grid.Column="1" Text="{x:Bind strings:Resources.FileNamingDatePattern}" VerticalAlignment="Center" MaxLines="2" TextWrapping="WrapWholeWords" TextTrimming="CharacterEllipsis" Style="{StaticResource CaptionTextBlockStyle}" />
+                            </Grid>
+                        </controls:SegmentedItem>
+                        <controls:SegmentedItem Padding="0" CornerRadius="0,0,4,4" SizeChanged="SegmentedItemFileNamingPattern_SizeChanged">
+                            <Grid ColumnSpacing="8" Margin="-4" Height="32" HorizontalAlignment="Center">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="1*" />
+                                </Grid.ColumnDefinitions>
+
+                                <FontIcon Grid.Column="0" Glyph="&#xEF60;" FontSize="12" VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                <TextBlock Grid.Column="1" Text="{x:Bind strings:Resources.FileNamingCustomPattern}" VerticalAlignment="Center" MaxLines="2" TextWrapping="WrapWholeWords" TextTrimming="CharacterEllipsis" Style="{StaticResource CaptionTextBlockStyle}" />
+                            </Grid>
+                        </controls:SegmentedItem>
+                    </controls:Segmented>
+                    <Frame Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" Margin="4,0,0,0" HorizontalAlignment="Right" VerticalAlignment="Center" IsEnabled="{x:Bind ViewModel.IsMultiSelect, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}" Opacity="{x:Bind IsFileNameTextBoxExpanded, Mode=OneWay, Converter={StaticResource BoolOpacityConverter}, ConverterParameter=invert}" IsHitTestVisible="{x:Bind IsFileNameTextBoxExpanded, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}">
                         <StackPanel Orientation="Horizontal" Spacing="4">
                             <Button x:Name="ButtonShowInFileExplorer" Foreground="{ThemeResource TextFillColorPrimaryBrush}" ToolTipService.ToolTip="{x:Bind strings:Resources.ShowInFileExplorer}" VerticalAlignment="Center" Width="36" Height="36" Style="{StaticResource MutedButtonStyle}" Command="{x:Bind ViewModel.ShowInFileExplorerAsyncCommand}">
                                 <FontIcon Glyph="&#xE8DA;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
@@ -194,7 +492,7 @@
                         <MenuFlyout Placement="Bottom">
                             <MenuFlyout.MenuFlyoutPresenterStyle>
                                 <Style BasedOn="{StaticResource DefaultMenuFlyoutPresenterStyle}" TargetType="MenuFlyoutPresenter">
-                                    <Setter Property="Margin" Value="0,-4,0,0" />
+                                    <Setter Property="Margin" Value="0,-20,0,0" />
                                 </Style>
                             </MenuFlyout.MenuFlyoutPresenterStyle>
 
@@ -498,254 +796,6 @@
                             </MenuFlyoutItem>
                         </MenuFlyout>
                     </FlyoutBase.AttachedFlyout>
-                </Grid>
-            </Frame>
-
-            <!-- Content -->
-            <Frame x:Name="FrameContent" Grid.Row="1" Margin="0,4,0,0" ui:UIElementExtensions.ClipToBounds="True" IsEnabled="{x:Bind ViewModel.ProjectService.IsEditing, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}">
-                <Grid>
-                    <!-- Carousel -->
-                    <Grid x:Name="GridCarousel" Height="92" VerticalAlignment="Top" x:Load="{x:Bind IsExpanded, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}" Loading="ControlAnimated_Loading" PointerEntered="GridCarousel_PointerEntered" PointerExited="GridCarousel_PointerExited">
-                        <animations:Implicit.ShowAnimations>
-                            <animations:OpacityAnimation Duration="0:0:0.25" From="0.0" To="1.0" EasingMode="EaseInOut"/>
-                            <animations:TranslationAnimation Duration="0:0:0.25" From="0,64" To="0,0" EasingMode="EaseInOut"/>
-                        </animations:Implicit.ShowAnimations>
-
-                        <animations:Implicit.HideAnimations>
-                            <animations:OpacityAnimation Duration="0:0:0.25" To="0.0" EasingMode="EaseInOut" />
-                            <animations:TranslationAnimation Duration="0:0:0.25" To="0,64" EasingMode="EaseInOut" />
-                        </animations:Implicit.HideAnimations>
-
-                        <GridView x:Name="GridViewCarousel" VerticalContentAlignment="Center" ItemsSource="{x:Bind ViewModel.CurrentProject.Pages, Mode=OneWay}" SelectedItem="{x:Bind ViewModel.ProjectService.SelectedPage, Mode=TwoWay, FallbackValue={x:Null}}" SelectionMode="Single" AllowDrop="True" ScrollViewer.HorizontalScrollMode="Auto" ScrollViewer.VerticalScrollMode="Disabled" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Hidden" SelectionChanged="GridViewCarousel_SelectionChanged" SizeChanged="GridViewCarousel_SizeChanged" DragOver="GridViewDropZone_DragOver" Drop="GridViewDropZone_Drop" Loaded="GridViewCarousel_Loaded" Unloaded="GridViewDropZone_Unloaded">
-                            <GridView.ItemContainerTransitions>
-                                <TransitionCollection>
-
-                                </TransitionCollection>
-                            </GridView.ItemContainerTransitions>
-
-                            <GridView.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <ItemsStackPanel x:Name="ItemsStackPanelCarousel" Orientation="Horizontal" ItemsUpdatingScrollMode="KeepScrollOffset" Loaded="ItemsStackPanelCarousel_Loaded" SizeChanged="ItemsStackPanelCarousel_SizeChanged" />
-                                </ItemsPanelTemplate>
-                            </GridView.ItemsPanel>
-
-                            <GridView.ItemTemplate>
-                                <DataTemplate x:DataType="interfaces:IProjectPage">
-                                    <GridViewItem Margin="0" Width="64" Height="76" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" PointerEntered="GridViewItem_PointerEntered" PointerExited="GridViewItem_PointerExited" DataContextChanged="GridViewItem_DataContextChanged">
-                                        <Grid>
-                                            <Frame x:Name="FramePreview" Margin="4,4,4,16" CornerRadius="2" HorizontalAlignment="Center" VerticalAlignment="Center" ui:Effects.Shadow="{ThemeResource ShadowCarouselPage}">
-                                                <Image>
-                                                    <Image.Source>
-                                                        <BitmapImage UriSource="{x:Bind PreviewBitmapUri, Mode=OneWay}" DecodePixelType="Logical" DecodePixelHeight="56" />
-                                                    </Image.Source>
-                                                </Image>
-                                            </Frame>
-                                            <Rectangle x:Name="RectangleSelectionIndicatorInner" Width="56" Height="56" Margin="0,4,0,0" RadiusX="4" RadiusY="4" VerticalAlignment="Top" Stroke="{ThemeResource SurfaceStrokeColorDefaultBrush}" StrokeThickness="0" />
-                                            <Rectangle x:Name="RectangleSelectionIndicatorOuter" Width="56" Height="56" Margin="0,4,0,0" RadiusX="4" RadiusY="4" VerticalAlignment="Top" Stroke="{ThemeResource AccentFillColorDefaultBrush}" StrokeThickness="0" />
-                                            <Grid MinWidth="24" Height="24" Margin="0,0,0,4" Padding="4,0,4,0" HorizontalAlignment="Center" VerticalAlignment="Bottom" CornerRadius="4" Background="{ThemeResource AcrylicInAppFillColorDefaultBrush}">
-                                                <TextBlock x:Name="TextBlockPageNumber" Text="{x:Bind PageNumber, Mode=OneWay}" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Style="{StaticResource CaptionTextBlockStyle}" />
-                                            </Grid>
-                                        </Grid>
-                                    </GridViewItem>
-                                </DataTemplate>
-                            </GridView.ItemTemplate>
-                        </GridView>
-                        <Frame x:Name="FrameCarouselButtonPreviousPage" Margin="8,0,0,16" HorizontalAlignment="Left" VerticalAlignment="Center" ui:Effects.Shadow="{ThemeResource ShadowCarouselButton}" Visibility="{x:Bind ShowCarouselNavigation, Mode=OneWay}" ToolTipService.ToolTip="{x:Bind strings:Resources.PreviousPage}">
-                            <animations:Implicit.ShowAnimations>
-                                <animations:OpacityAnimation Duration="0:0:0.25" From="0.0" To="1.0" EasingMode="EaseInOut"/>
-                            </animations:Implicit.ShowAnimations>
-
-                            <animations:Implicit.HideAnimations>
-                                <animations:OpacityAnimation Duration="0:0:0.25" To="0.0" EasingMode="EaseInOut" />
-                            </animations:Implicit.HideAnimations>
-
-                            <Button Width="24" Height="24" Style="{StaticResource AcrylicButtonStyle}" IsEnabled="{x:Bind ViewModel.ProjectService.CanSelectPreviousPage, Mode=OneWay}" Command="{x:Bind ViewModel.SelectPreviousPageCommand}">
-                                <Button.RenderTransform>
-                                    <RotateTransform Angle="90" CenterX="12" CenterY="12" />
-                                </Button.RenderTransform>
-
-                                <AnimatedIcon Height="12">
-                                    <AnimatedIcon.Source>
-                                        <animatedvisuals:AnimatedChevronDownSmallVisualSource />
-                                    </AnimatedIcon.Source>
-                                    <AnimatedIcon.FallbackIconSource>
-                                        <FontIconSource Glyph="&#xE76B;" FontSize="12" FontFamily="{StaticResource SymbolThemeFontFamily}" />
-                                    </AnimatedIcon.FallbackIconSource>
-                                </AnimatedIcon>
-                            </Button>
-                        </Frame>
-                        <Frame x:Name="FrameCarouselButtonNextPage" Margin="0,0,8,16" HorizontalAlignment="Right" VerticalAlignment="Center" ui:Effects.Shadow="{ThemeResource ShadowCarouselButton}" Visibility="{x:Bind ShowCarouselNavigation, Mode=OneWay}" ToolTipService.ToolTip="{x:Bind strings:Resources.NextPage}">
-                            <animations:Implicit.ShowAnimations>
-                                <animations:OpacityAnimation Duration="0:0:0.25" From="0.0" To="1.0" EasingMode="EaseInOut"/>
-                            </animations:Implicit.ShowAnimations>
-
-                            <animations:Implicit.HideAnimations>
-                                <animations:OpacityAnimation Duration="0:0:0.25" To="0.0" EasingMode="EaseInOut" />
-                            </animations:Implicit.HideAnimations>
-
-                            <Button Width="24" Height="24" Style="{StaticResource AcrylicButtonStyle}" IsEnabled="{x:Bind ViewModel.ProjectService.CanSelectNextPage, Mode=OneWay}" Command="{x:Bind ViewModel.SelectNextPageCommand}">
-                                <Button.RenderTransform>
-                                    <RotateTransform Angle="270" CenterX="12" CenterY="12" />
-                                </Button.RenderTransform>
-
-                                <AnimatedIcon Height="12">
-                                    <AnimatedIcon.Source>
-                                        <animatedvisuals:AnimatedChevronDownSmallVisualSource />
-                                    </AnimatedIcon.Source>
-                                    <AnimatedIcon.FallbackIconSource>
-                                        <FontIconSource Glyph="&#xE76C;" FontSize="12" FontFamily="{StaticResource SymbolThemeFontFamily}" />
-                                    </AnimatedIcon.FallbackIconSource>
-                                </AnimatedIcon>
-                            </Button>
-                        </Frame>
-                    </Grid>
-
-                    <Grid x:Name="GridExpanded" x:Load="{x:Bind IsExpanded, Mode=OneWay}">
-                        <!-- Page list -->
-                        <Grid x:Name="GridPageList" x:Load="{x:Bind ViewModel.CurrentProject, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}}" Loading="ControlAnimated_Loading">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="1*" />
-                            </Grid.RowDefinitions>
-
-                            <animations:Implicit.ShowAnimations>
-                                <animations:OpacityAnimation Duration="0:0:0.25" From="0.0" To="1.0" EasingMode="EaseInOut"/>
-                                <animations:TranslationAnimation Duration="0:0:0.25" From="0,-64" To="0,0" EasingMode="EaseInOut"/>
-                            </animations:Implicit.ShowAnimations>
-
-                            <animations:Implicit.HideAnimations>
-                                <animations:OpacityAnimation Duration="0:0:0.25" To="0.0" EasingMode="EaseInOut" />
-                                <animations:TranslationAnimation Duration="0:0:0.25" To="0,-64" EasingMode="EaseInOut" />
-                            </animations:Implicit.HideAnimations>
-
-                            <GridView x:Name="GridViewPageList" Grid.Row="1" HorizontalAlignment="Stretch" VerticalContentAlignment="Center" ItemsSource="{x:Bind ViewModel.Pages, Mode=OneWay}" SelectedItem="{x:Bind ViewModel.ProjectService.SelectedPage, Mode=OneWay}" SelectionMode="Single" AllowDrop="True" CanReorderItems="{x:Bind ViewModel.CurrentProject.IsPdf, Mode=OneWay}" CanDragItems="{x:Bind ViewModel.CurrentProject.IsPdf, Mode=OneWay}" DragItemsStarting="GridViewPageList_DragItemsStarting" ReorderMode="Enabled" ScrollViewer.HorizontalScrollMode="Disabled" ScrollViewer.VerticalScrollMode="Auto" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Auto" SelectionChanged="GridViewPageList_SelectionChanged" Loaded="GridViewPageList_Loaded" SizeChanged="GridViewPageList_SizeChanged" Drop="GridViewDropZone_Drop" Unloaded="GridViewDropZone_Unloaded">
-                                <GridView.ItemContainerTransitions>
-                                    <TransitionCollection>
-                                        <ReorderThemeTransition />
-                                        <RepositionThemeTransition IsStaggeringEnabled="False" />
-                                    </TransitionCollection>
-                                </GridView.ItemContainerTransitions>
-
-                                <GridView.ItemTemplate>
-                                    <DataTemplate x:DataType="interfaces:IProjectPage">
-                                        <GridViewItem Margin="0" Width="108" Height="108" FocusVisualMargin="10" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" AllowDrop="False" PointerEntered="GridViewItem_PointerEntered" PointerExited="GridViewItem_PointerExited" DataContextChanged="GridViewItem_DataContextChanged" Loaded="GridViewItem_Loaded" DropCompleted="GridViewItem_DropCompleted">
-                                            <Grid>
-                                                <Frame x:Name="FramePreview" Margin="8" CornerRadius="3" HorizontalAlignment="Center" VerticalAlignment="Center" ui:Effects.Shadow="{ThemeResource ShadowPageListPage}">
-                                                    <Image>
-                                                        <Image.Source>
-                                                            <BitmapImage UriSource="{x:Bind PreviewBitmapUri, Mode=OneWay}" DecodePixelType="Logical" DecodePixelHeight="92" />
-                                                        </Image.Source>
-                                                    </Image>
-                                                </Frame>
-                                                <Border x:Name="BorderReadOnly" MinWidth="20" Height="20" Margin="0,12,0,0" Padding="4,0,4,0" HorizontalAlignment="Center" VerticalAlignment="Top" CornerRadius="10" Background="{ThemeResource SystemControlAcrylicElementMediumHighBrush}" x:Load="{x:Bind IsReadOnly, Mode=OneWay}">
-                                                    <FontIcon Glyph="&#xE7B3;" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontFamily="{StaticResource SymbolThemeFontFamily}" />
-                                                </Border>
-                                                <Rectangle x:Name="RectangleSelectionIndicatorInner" Width="92" Height="92" RadiusX="4" RadiusY="4" HorizontalAlignment="Center" VerticalAlignment="Center" Stroke="{ThemeResource SurfaceStrokeColorDefaultBrush}" StrokeThickness="0" />
-                                                <Rectangle x:Name="RectangleSelectionIndicatorOuter" Width="92" Height="92" RadiusX="4" RadiusY="4" HorizontalAlignment="Center" VerticalAlignment="Center" Stroke="{ThemeResource AccentFillColorDefaultBrush}" StrokeThickness="0" />
-                                                <Border MinWidth="24" Height="24" Margin="0,0,0,12" Padding="4,0,4,0" HorizontalAlignment="Center" VerticalAlignment="Bottom" CornerRadius="4" Background="{ThemeResource SystemControlAcrylicElementMediumHighBrush}">
-                                                    <TextBlock x:Name="TextBlockPageNumber" Text="{x:Bind PageNumber, Mode=OneWay}" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Style="{StaticResource BodyTextBlockStyle}" />
-                                                </Border>
-                                            </Grid>
-                                        </GridViewItem>
-                                    </DataTemplate>
-                                </GridView.ItemTemplate>
-                            </GridView>
-                            <Frame Grid.Row="0" Margin="8,0,8,0" CornerRadius="8" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BackgroundSizing="OuterBorderEdge" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" ui:Effects.Shadow="{ThemeResource ShadowToolbar}">
-                                <Grid ColumnSpacing="8" Padding="4" HorizontalAlignment="Center">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="1*" />
-                                        <ColumnDefinition Width="Auto" />
-                                    </Grid.ColumnDefinitions>
-
-                                    <ToggleButton Grid.Column="0" Height="32" Padding="12,0,12,0" IsChecked="{x:Bind ViewModel.IsMultiSelect, Mode=TwoWay}" Style="{StaticResource MutedToggleButtonStyle}">
-                                        <Grid ColumnSpacing="12">
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="Auto" />
-                                                <ColumnDefinition Width="1*" />
-                                            </Grid.ColumnDefinitions>
-
-                                            <FontIcon Grid.Column="0" Glyph="&#xE762;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
-                                            <TextBlock Grid.Column="1" Text="{x:Bind strings:Resources.ToggleMultiSelect}" VerticalAlignment="Center" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" Style="{StaticResource BodyTextBlockStyle}" />
-                                        </Grid>
-                                    </ToggleButton>
-                                    <Frame Grid.Column="1">
-                                        <StackPanel Orientation="Horizontal" Spacing="8">
-                                            <AppBarSeparator />
-                                            <Button x:Name="ButtonRotate" Width="32" Height="32" Style="{StaticResource MutedButtonStyle}" ToolTipService.ToolTip="{x:Bind strings:Resources.RotateSelectedPagesToolTip}" IsEnabled="{x:Bind AreMultiSelectEditActionsAvailable, Mode=OneWay}" Command="{x:Bind ViewModel.RotateSelectedPages90DegreesAsyncCommand}" ContextRequested="ButtonRotate_ContextRequested">
-                                                <Grid>
-                                                    <FontIcon Glyph="&#xE7AD;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
-                                                    <FontIcon Glyph="&#xE96E;" FontSize="8" Margin="0,0,-8,-8" Foreground="{ThemeResource TextFillColorTertiaryBrush}" HorizontalAlignment="Right" VerticalAlignment="Bottom" FontFamily="{StaticResource SymbolThemeFontFamily}" />
-                                                </Grid>
-
-                                                <FlyoutBase.AttachedFlyout>
-                                                    <MenuFlyout Placement="Bottom">
-                                                        <MenuFlyoutItem Text="{x:Bind strings:Resources.RotateSelectedPages90}" FontWeight="SemiBold" Command="{x:Bind ViewModel.RotateSelectedPages90DegreesAsyncCommand}" />
-                                                        <MenuFlyoutItem Text="{x:Bind strings:Resources.RotateSelectedPages180}" Command="{x:Bind ViewModel.RotateSelectedPages180DegreesAsyncCommand}" />
-                                                        <MenuFlyoutItem Text="{x:Bind strings:Resources.RotateSelectedPages270}" Command="{x:Bind ViewModel.RotateSelectedPages270DegreesAsyncCommand}" />
-                                                        <MenuFlyoutItem Text="{x:Bind strings:Resources.RotateSelectedPagesAutomatically}" Command="{x:Bind ViewModel.RotateSelectedPagesAutomaticallyAsyncCommand}">
-                                                            <MenuFlyoutItem.Icon>
-                                                                <ImageIcon>
-                                                                    <ImageIcon.Source>
-                                                                        <SvgImageSource UriSource="/Assets/AI Sparkles.svg" RasterizePixelWidth="32" RasterizePixelHeight="32" />
-                                                                    </ImageIcon.Source>
-                                                                </ImageIcon>
-                                                            </MenuFlyoutItem.Icon>
-                                                        </MenuFlyoutItem>
-                                                        <MenuFlyoutSeparator />
-                                                        <MenuFlyoutItem Text="{x:Bind strings:Resources.Settings}" Command="{x:Bind ViewModel.ShowSettingsCommand}">
-                                                            <MenuFlyoutItem.Icon>
-                                                                <FontIcon Glyph="&#xE713;" FontFamily="{StaticResource SymbolThemeFontFamily}" />
-                                                            </MenuFlyoutItem.Icon>
-                                                        </MenuFlyoutItem>
-                                                    </MenuFlyout>
-                                                </FlyoutBase.AttachedFlyout>
-                                            </Button>
-                                            <Button Width="32" Height="32" Style="{StaticResource MutedButtonStyle}" ToolTipService.ToolTip="{x:Bind strings:Resources.ApplyFilterToSelectedPagesToolTip}" IsEnabled="{x:Bind AreMultiSelectEditActionsAvailable, Mode=OneWay}">
-                                                <FontIcon Glyph="&#xE790;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
-
-                                                <Button.Flyout>
-                                                    <MenuFlyout Placement="Bottom">
-                                                        <RadioMenuFlyoutItem Text="{x:Bind strings:Resources.FilterNone}" IsChecked="{x:Bind AreFilterNone, Mode=OneWay}" IsEnabled="{x:Bind IsFilterNoneAvailable, Mode=OneWay}" Command="{x:Bind ViewModel.ApplyFilterToSelectedPagesAsyncCommand}" CommandParameter="{x:Bind models:ImageFilter.None}" />
-                                                        <RadioMenuFlyoutItem Text="{x:Bind strings:Resources.FilterGrayscale}" IsChecked="{x:Bind AreFilterGrayscale, Mode=OneWay}" IsEnabled="{x:Bind IsFilterGrayscaleAvailable, Mode=OneWay}" Command="{x:Bind ViewModel.ApplyFilterToSelectedPagesAsyncCommand}" CommandParameter="{x:Bind models:ImageFilter.Grayscale}" />
-                                                        <RadioMenuFlyoutItem Text="{x:Bind strings:Resources.FilterMonochrome}" IsChecked="{x:Bind AreFilterMonochrome, Mode=OneWay}" IsEnabled="{x:Bind IsFilterMonochromeAvailable, Mode=OneWay}" Command="{x:Bind ViewModel.ApplyFilterToSelectedPagesAsyncCommand}" CommandParameter="{x:Bind models:ImageFilter.Monochrome}" />
-                                                    </MenuFlyout>
-                                                </Button.Flyout>
-                                            </Button>
-                                            <Button Width="32" Height="32" Style="{StaticResource MutedButtonStyle}" ToolTipService.ToolTip="{x:Bind strings:Resources.DeleteSelectedPages}" IsEnabled="{x:Bind AreMultiSelectEditActionsAvailable, Mode=OneWay}" Command="{x:Bind ViewModel.RemoveSelectedPagesAsyncCommand}">
-                                                <FontIcon Glyph="&#xE74D;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
-                                            </Button>
-                                            <Button Width="32" Height="32" Style="{StaticResource MutedButtonStyle}" ToolTipService.ToolTip="{x:Bind strings:Resources.ExportSelectedPagesAsSeparatePDF}" Visibility="{x:Bind ViewModel.CurrentProject.IsPdf, Mode=OneWay}" IsEnabled="{x:Bind IsMultiSelectExportAvailable, Mode=OneWay}" Command="{x:Bind ViewModel.ExportSelectedPagesAsSeparatePDFAsyncCommand}">
-                                                <FontIcon Glyph="&#xEA3D;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
-                                            </Button>
-                                            <Button Width="32" Height="32" Style="{StaticResource MutedButtonStyle}" ToolTipService.ToolTip="{x:Bind strings:Resources.CopySelectedPages}" Visibility="{x:Bind ViewModel.CurrentProject.IsPdf, Mode=OneWay, Converter={StaticResource NegativeBoolVisibilityConverter}}" IsEnabled="{x:Bind AreMultiSelectEditActionsAvailable, Mode=OneWay}" Command="{x:Bind ViewModel.TryCopySelectedPagesAsyncCommand}">
-                                                <FontIcon Glyph="&#xE8C8;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
-                                            </Button>
-                                            <Button Width="32" Height="32" Style="{StaticResource MutedButtonStyle}" ToolTipService.ToolTip="{x:Bind strings:Resources.ShareSelectedPages}" Visibility="{x:Bind ViewModel.CurrentProject.IsPdf, Mode=OneWay, Converter={StaticResource NegativeBoolVisibilityConverter}}" IsEnabled="{x:Bind AreMultiSelectEditActionsAvailable, Mode=OneWay}" Command="{x:Bind ViewModel.TryShareSelectedPagesAsyncCommand}">
-                                                <FontIcon Glyph="&#xE72D;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
-                                            </Button>
-                                        </StackPanel>
-                                    </Frame>
-                                </Grid>
-                            </Frame>
-                        </Grid>
-
-                        <!-- Placeholder -->
-                        <Grid x:Name="GridPlaceholder" RowSpacing="32" HorizontalAlignment="Center" VerticalAlignment="Center" x:Load="{x:Bind ViewModel.CurrentProject, Mode=OneWay, Converter={StaticResource NullBoolConverter}}">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                            </Grid.RowDefinitions>
-
-                            <Border Grid.Row="0" Width="64" Height="88" HorizontalAlignment="Center" Margin="0,0,4,0" Opacity="0.2" Background="{ThemeResource SystemFillColorSolidNeutralBackgroundBrush}" BorderBrush="{ThemeResource DividerStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="4" ui:VisualExtensions.NormalizedCenterPoint="0.5,0.5" ui:VisualExtensions.RotationAngleInDegrees="-12" />
-                            <Border Grid.Row="0" Width="64" Height="88" HorizontalAlignment="Center" Margin="0,4,12,0" Opacity="0.4" Background="{ThemeResource SystemFillColorSolidNeutralBackgroundBrush}" BorderBrush="{ThemeResource DividerStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="4" ui:VisualExtensions.NormalizedCenterPoint="0.5,0.5" ui:VisualExtensions.RotationAngleInDegrees="8" />
-                            <Border Grid.Row="0" Width="64" Height="88" HorizontalAlignment="Center" Margin="0,0,4,0" Opacity="0.8" Background="{ThemeResource SystemFillColorSolidNeutralBackgroundBrush}" BorderBrush="{ThemeResource DividerStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="4" ui:VisualExtensions.NormalizedCenterPoint="0.5,0.5" ui:VisualExtensions.RotationAngleInDegrees="0">
-                                <ui:Effects.Shadow>
-                                    <media:AttachedCardShadow Offset="0,0" BlurRadius="8" Color="Black" Opacity="0.05" CornerRadius="4" />
-                                </ui:Effects.Shadow>
-                            </Border>
-                            <TextBlock Grid.Row="1" Text="{x:Bind strings:Resources.PageListEmpty}" TextAlignment="Center" HorizontalAlignment="Center" Foreground="{ThemeResource TextFillColorTertiaryBrush}" Style="{StaticResource CaptionTextBlockStyle}" />
-                        </Grid>
-                    </Grid>
                 </Grid>
             </Frame>
         </Grid>

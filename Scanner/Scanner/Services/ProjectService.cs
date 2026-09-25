@@ -604,7 +604,8 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
             IProjectCreationData projectCreationData;
             ScanOptions scanOptions = new(null)
             {
-                TargetFormat = targetFormat
+                TargetFormat = targetFormat,
+                ScanTime = files.Min(f => f.SourceFile.DateCreated).LocalDateTime
             };
 
             if (targetFormat == TargetFormat.PDF)

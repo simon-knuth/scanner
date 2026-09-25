@@ -94,4 +94,3 @@ UI strings are localized via **ReswPlus** (`Resources/Strings/`), with ~20 langu
 
 - `Resources/Secrets.resx` ships with a literal placeholder `SENTRY_DSN_GOES_HERE`. The GitHub Actions release build (`.github/workflows/build.yml`) replaces it with the real DSN from secrets — **do not commit a real DSN** into this file.
 - CI builds the MSIX for all three platforms, signs it with a PFX from secrets, and creates a Sentry release. It is **manual-trigger only** (`workflow_dispatch`) and builds `Scanner/Scanner.csproj` directly rather than the solution, so `ScannerTests` is not built during packaging. Local builds do not need the certificate for `Debug`.
-- An extra NuGet feed (CommunityToolkit Labs) is configured in `nuget.config` for the `SegmentedControl` preview package.

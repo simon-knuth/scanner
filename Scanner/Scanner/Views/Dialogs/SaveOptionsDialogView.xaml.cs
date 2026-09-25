@@ -41,13 +41,29 @@ public partial class SaveOptionsDialogView : ContentDialog
     private int SelectedFileNamingPatternIndex
     {
         get => ViewModel.SelectedFileNamingPattern != null ? (int)ViewModel.SelectedFileNamingPattern : -1;
-        set => ViewModel.SelectedFileNamingPattern = value != -1 ? (SettingFileNamingPattern)value : null;
+        set
+        {
+            if (value == SelectedFileNamingPatternIndex)
+                return;
+
+            ViewModel.SelectedFileNamingPattern = value != -1 ? (SettingFileNamingPattern)value : null;
+            TextBoxFileName.Focus(FocusState.Programmatic);
+            TextBoxFileName.SelectAll();
+        }
     }
 
     private int SelectedSubfolderNamingPatternIndex
     {
         get => ViewModel.SelectedSubfolderNamingPattern != null ? (int)ViewModel.SelectedSubfolderNamingPattern : -1;
-        set => ViewModel.SelectedSubfolderNamingPattern = value != -1 ? (SettingSubfolderNamingPattern)value : null;
+        set
+        {
+            if (value == SelectedSubfolderNamingPatternIndex)
+                return;
+
+            ViewModel.SelectedSubfolderNamingPattern = value != -1 ? (SettingSubfolderNamingPattern)value : null;
+            TextBoxFileName.Focus(FocusState.Programmatic);
+            TextBoxFileName.SelectAll();
+        }
     }
 
     [ObservableProperty]

@@ -9,6 +9,7 @@ using Microsoft.UI.Xaml.Media.Imaging;
 using Scanner.Messages;
 using Scanner.Models;
 using Scanner.Models.Interfaces;
+using Scanner.Models.ItemNaming;
 using Scanner.Services;
 using Scanner.Services.Interfaces;
 using Sentry.Protocol;
@@ -736,6 +737,23 @@ partial class ProjectViewModel : ObservableRecipient, IDisposable
         {
             throw new NotImplementedException();
         }
+    }
+
+    /// <summary>
+    /// Generates the file name (without extension) that <paramref name="pattern"/> currently results in for this project.
+    /// </summary>
+    public string? GenerateFileNamingPatternValue(SettingFileNamingPattern pattern)
+    {
+        if (CurrentProject == null)
+            return null;
+
+        ItemNamingPattern namingPattern = pattern switch
+        {
+            SettingFileNamingPattern.DateTime => ItemNamingStatics.FileDateTimePattern,
+            SettingFileNamingPattern.Date => ItemNamingStatics.FileDatePattern,
+            _ => SettingsService.CustomFileNamingPattern,
+        };
+        return namingPattern.GenerateResult(CurrentProject.CreationScanOptions, false);
     }
 
     private async Task ApplyOrderOfPagesToProjectAsync()
