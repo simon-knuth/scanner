@@ -140,4 +140,14 @@ public sealed partial class SettingsView : Page
             ColumnDefinitionTitlebarInsetFooter.Width = new GridLength(footerInset / scaleAdjustment);
         }
     }
+
+    private void InfoBarAppRestart_Loaded(object sender, RoutedEventArgs e)
+    {
+        FrameContent.Padding = new(0, 0, 0, ((InfoBar)sender).ActualHeight + 8);
+    }
+
+    private void InfoBarAppRestart_Unloaded(object sender, RoutedEventArgs e)
+    {
+        FrameContent.Padding = new(0);
+    }
 }

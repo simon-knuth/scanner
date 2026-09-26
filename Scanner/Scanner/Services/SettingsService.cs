@@ -299,8 +299,14 @@ internal class SettingsService : ObservableObject, ISettingsService
         set => SetSetting(nameof(LastOpenWithAppTiff), value);
     }
 
+    public bool IsAppRestartRequired => changedSettingsRequiringRestart.Count != 0;
+
     private ApplicationDataContainer settingsContainer = ApplicationData.Current.LocalSettings;
     private const int latestSettingsVersion = 0;
+
+    // effective values (including defaults) of settings requiring an app restart, captured at startup
+    private readonly Dictionary<string, object?> settingsRequiringRestartOriginalValues = [];
+    private readonly HashSet<string> changedSettingsRequiringRestart = [];
 
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -308,6 +314,11 @@ internal class SettingsService : ObservableObject, ISettingsService
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public SettingsService()
     {
+        // capture original values of settings requiring an app restart
+        settingsRequiringRestartOriginalValues[nameof(SettingAppTheme)] = (int)SettingAppTheme;
+        settingsRequiringRestartOriginalValues[nameof(SettingAppLanguage)] = SettingAppLanguage;
+        settingsRequiringRestartOriginalValues[nameof(SettingMirrorAppLayout)] = SettingMirrorAppLayout;
+
         // update settings version
         if (IsFirstAppLaunchEver)
         {
@@ -344,9 +355,28 @@ internal class SettingsService : ObservableObject, ISettingsService
     private void SetSetting<T>(string name, T value)
     {
         string key = name.ToUpper();
+        object? currentValue = settingsContainer.Values[key];
+
+        if (settingsRequiringRestartOriginalValues.TryGetValue(name, out object? originalValue))
+        {
+            // track state of settings requiring an app restart
+            bool oldIsAppRestartRequiredValue = IsAppRestartRequired;
+            if (object.Equals(originalValue, value))
+            {
+                // set to original value ~> no restart required
+                changedSettingsRequiringRestart.Remove(name);
+            }
+            else
+            {
+                // set to new value ~> restart required
+                changedSettingsRequiringRestart.Add(name);
+            }
+
+            if (oldIsAppRestartRequiredValue != IsAppRestartRequired)
+                OnPropertyChanged(nameof(IsAppRestartRequired));
+        }
 
         // raise property changed event
-        object? currentValue = settingsContainer.Values[key];
         if (currentValue is T castCurrentValue && EqualityComparer<T>.Default.Equals(castCurrentValue, value))
         {
             // value unchanged

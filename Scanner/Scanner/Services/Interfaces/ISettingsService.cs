@@ -70,6 +70,7 @@ public interface ISettingsService : INotifyPropertyChanged
     string? LastOpenWithAppPng { get; set; }
     string? LastOpenWithAppBmp { get; set; }
     string? LastOpenWithAppTiff { get; set; }
+    bool IsAppRestartRequired { get; }
 
     void ResetAllSettingsAndRestart();
     void TryLogAllSettings();

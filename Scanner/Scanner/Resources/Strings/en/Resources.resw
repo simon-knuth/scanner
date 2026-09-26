@@ -1662,16 +1662,6 @@ Fuzzy</comment>
   <data name="ProjectActionCropPageAsCopy" xml:space="preserve">
     <value>Crop page as copy</value>
   </data>
-  <data name="ProjectActionEraseInkOnPage" xml:space="preserve">
-    <value>Erase drawing</value>
-    <comment>The undo history entry for erasing everything that was drawn on a page.</comment>
-  </data>
-  <data name="ProjectActionDrawOnPage" xml:space="preserve">
-    <value>Draw on page</value>
-  </data>
-  <data name="ProjectActionDrawOnPageAsCopy" xml:space="preserve">
-    <value>Draw on page as copy</value>
-  </data>
   <data name="RotatePage" xml:space="preserve">
     <value>Rotate page</value>
   </data>
@@ -1952,6 +1942,21 @@ Fuzzy</comment>
   <data name="Remove" xml:space="preserve">
     <value>Remove</value>
   </data>
+  <data name="ScannerBusy" xml:space="preserve">
+    <value>The scanner is busy. Please try again once it has finished its current action.</value>
+  </data>
+  <data name="SortBy" xml:space="preserve">
+    <value>Sort by</value>
+  </data>
+  <data name="DeleteAll" xml:space="preserve">
+    <value>Delete all</value>
+  </data>
+  <data name="RecentlyUsed" xml:space="preserve">
+    <value>Recently used</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>Name</value>
+  </data>
   <data name="SettingsFileNamingCustomPatternExplanation" xml:space="preserve">
     <value>Drag and drop blocks to build your own dynamic file naming pattern. Select a block to modify its output or drag it into the bin to remove it.</value>
     <comment>The description for the custom file naming dialog.</comment>
@@ -1966,6 +1971,16 @@ Fuzzy</comment>
   <data name="SelectAll" xml:space="preserve">
     <value>Select all</value>
     <comment>The option to select all similar pages for cropping.</comment>
+  </data>
+  <data name="ProjectActionEraseInkOnPage" xml:space="preserve">
+    <value>Erase drawing</value>
+    <comment>The undo history entry for erasing everything that was drawn on a page.</comment>
+  </data>
+  <data name="ProjectActionDrawOnPage" xml:space="preserve">
+    <value>Draw on page</value>
+  </data>
+  <data name="ProjectActionDrawOnPageAsCopy" xml:space="preserve">
+    <value>Draw on page as copy</value>
   </data>
   <data name="HistoryGroupToday" xml:space="preserve">
     <value>Today</value>
@@ -2004,21 +2019,6 @@ Fuzzy</comment>
   </data>
   <data name="ScanAreaAlignmentHeading" xml:space="preserve">
     <value>Scan area alignment</value>
-  </data>
-  <data name="ScannerBusy" xml:space="preserve">
-    <value>The scanner is busy. Please try again once it has finished its current action.</value>
-  </data>
-  <data name="SortBy" xml:space="preserve">
-    <value>Sort by</value>
-  </data>
-  <data name="DeleteAll" xml:space="preserve">
-    <value>Delete all</value>
-  </data>
-  <data name="RecentlyUsed" xml:space="preserve">
-    <value>Recently used</value>
-  </data>
-  <data name="Name" xml:space="preserve">
-    <value>Name</value>
   </data>
   <data name="SettingsGeneralHeading" xml:space="preserve">
     <value>General</value>
@@ -2132,7 +2132,8 @@ Fuzzy</comment>
     <value>Privacy</value>
   </data>
   <data name="SettingsErrorReportsBody" xml:space="preserve">
-    <value>This helps investigate bugs and makes the app better for everyone.&#x0a;Rest assured that your scans are never included in these reports.</value>
+    <value>This helps investigate bugs and makes the app better for everyone.
+Rest assured that your scans are never included in these reports.</value>
   </data>
   <data name="Feedback" xml:space="preserve">
     <value>Feedback</value>
@@ -2220,5 +2221,13 @@ Fuzzy</comment>
   </data>
   <data name="ErrorMessageTryAgainLaterBody" xml:space="preserve">
     <value>Please try again later.</value>
+  </data>
+  <data name="SettingsAppRestartRequiredHeading" xml:space="preserve">
+    <value>Restart required</value>
+    <comment>The title of the notice in settings indicating that the app needs to be restarted for some changes to be applied.</comment>
+  </data>
+  <data name="SettingsAppRestartRequiredBody" xml:space="preserve">
+    <value>Some of your changes require an app restart.</value>
+    <comment>The message of the notice in settings indicating that the app needs to be restarted for some changes to be applied.</comment>
   </data>
 </root>

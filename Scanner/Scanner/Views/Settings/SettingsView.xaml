@@ -78,6 +78,10 @@
             </NavigationView>
         </Grid>
 
+        <!-- Content -->
         <Frame x:Name="FrameContent" Grid.Row="1" Grid.Column="1" Background="{ThemeResource LayerFillColorDefaultBrush}" BorderBrush="{ThemeResource DividerStrokeColorDefaultBrush}" BorderThickness="1,1,0,0" CornerRadius="8,0,0,0" Navigating="FrameContent_Navigating" Navigated="FrameContent_Navigated" />
+    
+        <!-- App restart required warning -->
+        <InfoBar x:Name="InfoBarAppRestart" Grid.Row="1" Grid.Column="1" VerticalAlignment="Bottom" Margin="8" IsOpen="True" Title="{x:Bind strings:Resources.SettingsAppRestartRequiredHeading}" Message="{x:Bind strings:Resources.SettingsAppRestartRequiredBody}" IsClosable="False" Severity="Warning" Loaded="InfoBarAppRestart_Loaded" Unloaded="InfoBarAppRestart_Unloaded" x:Load="{x:Bind ViewModel.SettingsService.IsAppRestartRequired, Mode=OneWay}" />
     </Grid>
 </Page>
