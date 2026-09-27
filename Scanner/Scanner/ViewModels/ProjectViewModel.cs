@@ -396,13 +396,16 @@ partial class ProjectViewModel : ObservableRecipient, IDisposable
 
     private async Task ShowInFileExplorerAsync(IProjectPage? page)
     {
-        if (CurrentProject == null) return;
+        if (CurrentProject == null)
+            return;
 
         // get folder
         StorageFolder? folder = null;
+        StorageFile? file = null;
         if (CurrentProject is PdfProject pdfProject)
         {
             folder = pdfProject.TargetFile != null ? pdfProject.TargetFolder : null;
+            file = pdfProject.TargetFile?.File;
         }
         else
         {
@@ -414,6 +417,7 @@ partial class ProjectViewModel : ObservableRecipient, IDisposable
                 return;
 
             folder = imagePage.TargetFile != null ? imagePage.TargetFolder : null;
+            file = imagePage.TargetFile?.File;
         }
 
         // ensure folder
@@ -429,7 +433,19 @@ partial class ProjectViewModel : ObservableRecipient, IDisposable
         }
 
         // open it
-        await Windows.System.Launcher.LaunchFolderAsync(folder);
+        try
+        {
+            Windows.System.FolderLauncherOptions options = new();
+
+            if (file is not null)
+                options.ItemsToSelect.Add(file);
+            
+            await Windows.System.Launcher.LaunchFolderAsync(folder, options);
+        }
+        catch (Exception exc)
+        {
+            LogService?.Log.Warning(exc, "Failed to show page in File Explorer");
+        }
     }
 
     private async Task PickAndAddFilesAsync()
