@@ -28,14 +28,8 @@ using static Scanner.Helpers.Helpers;
 
 namespace Scanner.AppWindows;
 
-public sealed partial class SettingsWindow : WindowEx
+public sealed partial class SettingsWindow : WindowBase
 {
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    private AppWindowTitleBar titlebar;
-
-
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -47,34 +41,6 @@ public sealed partial class SettingsWindow : WindowEx
         Title = GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.Settings);
 
         Content = new SettingsView(intent);
-
-        // backdrop
-        if (IsWindows11())
-            SystemBackdrop = new MicaBackdrop();
-        else
-            SystemBackdrop = new DesktopAcrylicBackdrop();
-
-        // titlebar
-        IntPtr hWnd = WindowNative.GetWindowHandle(this);
-        WindowId wndId = Win32Interop.GetWindowIdFromWindow(hWnd);
-        AppWindow appWindow = AppWindow.GetFromWindowId(wndId);
-        titlebar = appWindow.TitleBar;
-        titlebar.ExtendsContentIntoTitleBar = true;
-        titlebar.ButtonBackgroundColor = Colors.Transparent;
-        titlebar.ButtonInactiveBackgroundColor = Colors.Transparent;
-
-        // icon
-        string? iconPath = Environment.ProcessPath;
-        if (iconPath != null)
-        {
-            iconPath = Path.GetDirectoryName(iconPath);
-
-            if (iconPath != null)
-            {
-                iconPath = Path.Combine(iconPath, "Assets/Icon.ico");
-                AppWindow.SetIcon(iconPath);
-            }
-        }
     }
 
 

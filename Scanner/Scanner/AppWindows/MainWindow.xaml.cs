@@ -33,14 +33,12 @@ namespace Scanner.AppWindows;
 
 [ObservableRecipientAttribute]
 [ObservableObjectAttribute]
-public sealed partial class MainWindow : WindowEx
+public sealed partial class MainWindow : WindowBase
 {
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public bool IsInForeground { get; private set; }
-
-    private AppWindowTitleBar titlebar;
 
     private List<StorageFile> shareFiles;
 
@@ -54,38 +52,7 @@ public sealed partial class MainWindow : WindowEx
         Ioc.Default.GetService<ILogService>()?.Log.Information("Window loaded");
         PersistenceId = "MainWindow";
 
-        // backdrop
-        if (IsWindows11())
-        {
-            SystemBackdrop = new MicaBackdrop();
-        }
-        else
-        {
-            SystemBackdrop = new DesktopAcrylicBackdrop();
-        }
-
-        // titlebar
-        IntPtr hWnd = WindowNative.GetWindowHandle(this);
-        WindowId wndId = Win32Interop.GetWindowIdFromWindow(hWnd);
-        AppWindow appWindow = AppWindow.GetFromWindowId(wndId);
-        titlebar = appWindow.TitleBar;
-        titlebar.ExtendsContentIntoTitleBar = true;
-        titlebar.PreferredHeightOption = TitleBarHeightOption.Tall;
-        titlebar.ButtonBackgroundColor = Colors.Transparent;
-        titlebar.ButtonInactiveBackgroundColor = Colors.Transparent;
-
-        // icon
-        string? iconPath = Environment.ProcessPath;
-        if (iconPath != null)
-        {
-            iconPath = Path.GetDirectoryName(iconPath);
-
-            if (iconPath != null)
-            {
-                iconPath = Path.Combine(iconPath, "Assets/Icon.ico");
-                AppWindow.SetIcon(iconPath);
-            }
-        }
+        AppWindow.TitleBar.PreferredHeightOption = TitleBarHeightOption.Tall;
 
         DispatcherQueue.RunOnThread(Microsoft.UI.Dispatching.DispatcherQueuePriority.Low, SetUpSharing);
     }

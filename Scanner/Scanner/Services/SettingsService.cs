@@ -55,7 +55,7 @@ internal class SettingsService : ObservableObject, ISettingsService
 
     public SettingAppTheme SettingAppTheme
     {
-        get => (SettingAppTheme)GetSetting(nameof(SettingAppTheme), (int)SettingAppTheme.System);
+        get => ReadSettingAppTheme();
         set => SetSetting(nameof(SettingAppTheme), (int)value);
     }
 
@@ -399,5 +399,11 @@ internal class SettingsService : ObservableObject, ISettingsService
     public void TryLogAllSettings()
     {
         throw new NotImplementedException();
+    }
+
+    public static SettingAppTheme ReadSettingAppTheme()
+    {
+        object value = ApplicationData.Current.LocalSettings.Values[nameof(SettingAppTheme).ToUpper()];
+        return value is int intValue ? (SettingAppTheme)intValue : SettingAppTheme.System;
     }
 }

@@ -55,6 +55,16 @@ public partial class App : Application
     {
         this.InitializeComponent();
 
+        switch (SettingsService.ReadSettingAppTheme())
+        {
+            case SettingAppTheme.Light:
+                RequestedTheme = ApplicationTheme.Light;
+                break;
+            case SettingAppTheme.Dark:
+                RequestedTheme = ApplicationTheme.Dark;
+                break;
+        }
+
         // register error event handlers
         UnhandledException += App_UnhandledException;
         TaskScheduler.UnobservedTaskException += (s, e) =>
