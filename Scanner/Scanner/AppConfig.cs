@@ -20,11 +20,11 @@ public static partial class AppConfig
     public static int MaxErrorFeedbackPerSession = 2;
     public static double DefaultRate = 0.1;
     public static double CrashRate = 1.0;
-    public static double ErrorRate = 0.3;
-    public static double WarningRate = 0.1;
-    public static double CrashAttachmentRate = 0.25;
-    public static double ErrorAttachmentRate = 0.05;
-    public static double WarningAttachmentRate = 0.01;
+    public static double ErrorRate = 0.75;
+    public static double WarningRate = 0.5;
+    public static double CrashAttachmentRate = 1.0;
+    public static double ErrorAttachmentRate = 0.5;
+    public static double WarningAttachmentRate = 0.25;
     #endregion
 
     public static TimeSpan ConsecutiveAtomicActionMergeTime = TimeSpan.FromSeconds(1);
