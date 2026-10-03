@@ -2234,4 +2234,7 @@ Rest assured that your scans are never included in these reports.</value>
     <value>Some of your changes require an app restart.</value>
     <comment>The message of the notice in settings indicating that the app needs to be restarted for some changes to be applied.</comment>
   </data>
+  <data name="ComingSoon" xml:space="preserve">
+    <value>Coming soon</value>
+  </data>
 </root>
