@@ -549,7 +549,13 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
             }
         }
 
-        return GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.ErrorMessageBody);
+        // the driver may provide instructions for the user
+        string message = GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.ErrorMessageBody);
+        string? restrictedDescription = exc.GetRestrictedDescription();
+        if (restrictedDescription != null)
+            message += $"\n{restrictedDescription}";
+
+        return message;
     }
 
     public async Task<bool> TryOpenProjectFromFilesAsync(string[] filePaths, Guid? id, DispatcherQueue uiDispatcherQueue)

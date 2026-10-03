@@ -39,6 +39,7 @@
             <converters:EnumIntComparisonConverter x:Key="EnumIntComparisonConverter"/>
             <converters:NegativeBoolConverter x:Key="NegativeBoolConverter"/>
             <converters:NegativeBoolVisibilityConverter x:Key="NegativeBoolVisibilityConverter"/>
+            <converters:StringNotEmptyVisibilityConverter x:Key="StringNotEmptyVisibilityConverter"/>
             <converters:ToolTipConverter x:Key="ToolTipConverter"/>
 
             <!-- Other -->
@@ -155,10 +156,13 @@
                     <Grid.RowDefinitions>
                         <RowDefinition/>
                         <RowDefinition/>
+                        <RowDefinition/>
                     </Grid.RowDefinitions>
 
                     <FontIcon Grid.Row="0" Glyph="&#xE783;" FontSize="24" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,12" Foreground="{ThemeResource SystemErrorTextColor}" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                     <TextBlock Grid.Row="1" TextAlignment="Center" TextWrapping="WrapWholeWords" Style="{StaticResource BodyTextBlockStyle}" Text="{x:Bind strings:Resources.ErrorMessagePreview}" />
+                    <TextBlock Grid.Row="2" TextAlignment="Center" TextWrapping="Wrap" Margin="0,8,0,0" Style="{StaticResource BodyTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" IsTextSelectionEnabled="True"
+                               Text="{x:Bind ViewModel.PreviewErrorDetails, Mode=OneWay}" Visibility="{x:Bind ViewModel.PreviewErrorDetails, Mode=OneWay, Converter={StaticResource StringNotEmptyVisibilityConverter}}" />
                 </Grid>
             </Grid>
 

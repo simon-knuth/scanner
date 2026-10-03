@@ -67,6 +67,9 @@ public partial class PreviewDialogViewModel : ObservableRecipient, IDisposable
     [ObservableProperty]
     private bool hasPreviewFailed;
 
+    [ObservableProperty]
+    private string? previewErrorDetails;
+
     private bool isCustomRegionSelected;
     public bool IsCustomRegionSelected
     {
@@ -478,8 +481,19 @@ public partial class PreviewDialogViewModel : ObservableRecipient, IDisposable
             IsPreviewRunning = false;
             HasPreviewSucceeded = true;
         }
-        catch (Exception)
+        catch (OperationCanceledException)
         {
+            // the dialog was closed while the preview was running
+            LogService?.Log.Information("Preview scan cancelled");
+            return;
+        }
+        catch (Exception exc)
+        {
+            LogService?.Log.Error(exc, "Preview scan failed");
+            SentryService?.TrackError(exc);
+
+            // the driver may provide instructions for the user
+            PreviewErrorDetails = exc.GetRestrictedDescription();
             HasPreviewFailed = true;
             IsPreviewRunning = false;
             HasPreviewSucceeded = false;
