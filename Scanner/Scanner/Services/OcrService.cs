@@ -122,7 +122,7 @@ internal class OcrService : IOcrService
                     if (snapshotPage is PdfProjectSnapshotPage pdfSnapshotPage && pdfSnapshotPage.IndexInSourceFile != null)
                         continue;
 
-                    if (snapshotPage.Filter == ImageFilter.None && snapshotPage.Brightness == 0 && snapshotPage.Contrast == 0)
+                    if (!snapshotPage.RequiresRasterPass)
                     {
                         // source file can be used directly
                         using (Pix image = Pix.LoadFromFile(snapshotPage.SourceFile.Path))
@@ -142,7 +142,7 @@ internal class OcrService : IOcrService
                             await uiDispatcherQueue.RunOnThreadAndWaitAsync(DispatcherQueuePriority.Low, async () =>
                             {
                                 BitmapEncoder encoder = await BitmapEncoder.CreateAsync(ProjectBase.GetBitmapEncoderIdForFile(snapshotPage.SourceFile), targetStream);
-                                await ProjectBase.ApplyEffectsAsync(sourceStream, encoder, snapshotPage.Filter, snapshotPage.Brightness, snapshotPage.Contrast);
+                                await ProjectBase.ApplyEffectsAsync(sourceStream, encoder, snapshotPage.Filter, snapshotPage.Brightness, snapshotPage.Contrast, snapshotPage.InkStrokes);
                             });
 
                             // reset stream position and load into a byte array

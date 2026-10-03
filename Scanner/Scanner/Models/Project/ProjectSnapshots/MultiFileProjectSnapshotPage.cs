@@ -18,6 +18,7 @@ using System.Threading.Tasks;
 using Windows.Devices.Scanners;
 using Windows.Graphics.Imaging;
 using Windows.Storage;
+using Windows.UI.Input.Inking;
 using Windows.Storage.Streams;
 using WinRT.Interop;
 using static Scanner.Helpers.Helpers;
@@ -41,12 +42,14 @@ public partial class MultiFileProjectSnapshotPage : IProjectSnapshotPage
     public int Brightness { get; }
     public int Contrast { get; }
 
+    public IReadOnlyList<InkStroke> InkStrokes { get; }
+
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public MultiFileProjectSnapshotPage(StorageFile sourceFile, FileHandle? targetFile, StorageFolder targetFolder,
-        string? desiredFileName, ImageFilter filter, int brightness, int contrast)
+        string? desiredFileName, ImageFilter filter, int brightness, int contrast, IReadOnlyList<InkStroke> inkStrokes)
     {
         SourceFile = sourceFile;
         TargetFile = targetFile;
@@ -55,6 +58,7 @@ public partial class MultiFileProjectSnapshotPage : IProjectSnapshotPage
         Filter = filter;
         Brightness = brightness;
         Contrast = contrast;
+        InkStrokes = inkStrokes;
     }
 
 

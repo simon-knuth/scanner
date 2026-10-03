@@ -3,6 +3,7 @@ using Microsoft.Windows.ApplicationModel.Resources;
 using Scanner.Models;
 using System;
 using System.Globalization;
+using System.Numerics;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.Graphics.Imaging;
@@ -39,6 +40,28 @@ public static class RotationHelpers
         return (BitmapRotation)rotation;
 
         throw new ApplicationException("Rotations could not be combined");
+    }
+
+    public static Matrix3x2 GetPageRotationMatrix(BitmapRotation rotation, uint width, uint height)
+    {
+        return rotation switch
+        {
+            BitmapRotation.None => Matrix3x2.Identity,
+
+            // (x, y) -> (height - y, x)
+            BitmapRotation.Clockwise90Degrees => Matrix3x2.CreateRotation(MathF.PI / 2.0f)
+                * Matrix3x2.CreateTranslation(height, 0),
+
+            // (x, y) -> (width - x, height - y)
+            BitmapRotation.Clockwise180Degrees => Matrix3x2.CreateRotation(MathF.PI)
+                * Matrix3x2.CreateTranslation(width, height),
+
+            // (x, y) -> (y, width - x)
+            BitmapRotation.Clockwise270Degrees => Matrix3x2.CreateRotation(MathF.PI * 1.5f)
+                * Matrix3x2.CreateTranslation(0, width),
+
+            _ => throw new ArgumentException("Invalid rotation amount to build a matrix for", nameof(rotation)),
+        };
     }
 
     public static BitmapRotation InvertRotation(BitmapRotation rotation)

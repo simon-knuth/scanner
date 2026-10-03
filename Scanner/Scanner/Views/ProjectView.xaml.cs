@@ -81,22 +81,67 @@ public sealed partial class ProjectView : Page
     private double projectFlyoutWidth;
 
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(ShowCarouselNavigation))]
     private bool isHoveringCarousel;
 
+    public bool ShowCarouselNavigation => IsHoveringCarousel && ViewModel.ProjectService.TotalNumberOfPages > 1;
+
     public Thickness FileNameTextBoxPadding => ShowFileNameGenerationButton ? new Thickness(8, 4, 36, 4) : new Thickness(8, 4, 4, 4);
+    public CornerRadius FileNameTextBoxCornerRadius => IsFileNameTextBoxExpanded ? new CornerRadius(4,4,0,0) : new CornerRadius(4);
+
+    public int FileNameInputColumnSpan => IsFileNameTextBoxExpanded ? 2 : 1;
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(ShowFileNameGenerationButton))]
+    [NotifyPropertyChangedFor(nameof(IsFileNameTextBoxExpanded))]
     [NotifyPropertyChangedFor(nameof(FileNameTextBoxPadding))]
+    [NotifyPropertyChangedFor(nameof(FileNameTextBoxCornerRadius))]
+    [NotifyPropertyChangedFor(nameof(FileNameInputColumnSpan))]
     private bool isFileNameTextBoxFocused;
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(ShowFileNameGenerationButton))]
+    [NotifyPropertyChangedFor(nameof(IsFileNameTextBoxExpanded))]
     [NotifyPropertyChangedFor(nameof(FileNameTextBoxPadding))]
+    [NotifyPropertyChangedFor(nameof(FileNameTextBoxCornerRadius))]
+    [NotifyPropertyChangedFor(nameof(FileNameInputColumnSpan))]
     private bool isFileNameGenerationButtonFocused;
 
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(ShowFileNameGenerationButton))]
+    [NotifyPropertyChangedFor(nameof(IsFileNameTextBoxExpanded))]
+    [NotifyPropertyChangedFor(nameof(FileNameTextBoxPadding))]
+    [NotifyPropertyChangedFor(nameof(FileNameTextBoxCornerRadius))]
+    [NotifyPropertyChangedFor(nameof(FileNameInputColumnSpan))]
+    private bool isFileNamingPatternFocused;
+
     public bool ShowFileNameGenerationButton => ViewModel.CurrentProject is PdfProject && ViewModel.CopilotRuntimeService.IsSupported &&
-        (IsFileNameTextBoxFocused || IsFileNameGenerationButtonFocused || ViewModel.IsFileNameGenerationInProgress);
+        (IsFileNameTextBoxFocused || IsFileNameGenerationButtonFocused || IsFileNamingPatternFocused || ViewModel.IsFileNameGenerationInProgress);
+
+    public bool IsFileNameTextBoxExpanded => !ViewModel.IsFileNameGenerationInProgress && (IsFileNameTextBoxFocused || IsFileNameGenerationButtonFocused || IsFileNamingPatternFocused);
+
+    /// <summary>
+    /// Values of all <see cref="SettingFileNamingPattern"/>s, indexed by pattern. Refreshed whenever the file name TextBox is focused.
+    /// </summary>
+    private string?[] fileNamingPatternValues = [];
+
+    /// <summary>
+    /// Index of the <see cref="SettingFileNamingPattern"/> that matches the (uncommitted) text of the file name TextBox, or -1.
+    /// Selecting a pattern only replaces the text, which is applied or discarded in <see cref="TextBoxProjectName_LostFocus"/>.
+    /// </summary>
+    private int SelectedFileNamingPatternIndex
+    {
+        get => TextBoxProjectName != null ? Array.IndexOf(fileNamingPatternValues, TextBoxProjectName.Text) : -1;
+        set
+        {
+            if (value < 0 || value >= fileNamingPatternValues.Length || value == SelectedFileNamingPatternIndex
+                || fileNamingPatternValues[value] is not string patternValue)
+                return;
+
+            TextBoxProjectName.Text = patternValue;
+            TextBoxProjectName.SelectAll();
+        }
+    }
 
     public bool AreMultiSelectEditActionsAvailable => !ViewModel.ProjectService.IsProcessRunningOrEditing && ViewModel.IsMultiSelect && ViewModel.ProjectService.SelectedPagesCount > 0
         && ViewModel.ProjectService.SelectedPages != null && !ViewModel.ProjectService.SelectedPages.Any(x => x is not ImagePage);
@@ -250,7 +295,10 @@ public sealed partial class ProjectView : Page
                         IsFileNameGenerationButtonFocused = false;
 
                     OnPropertyChanged(nameof(ShowFileNameGenerationButton));
+                    OnPropertyChanged(nameof(IsFileNameTextBoxExpanded));
                     OnPropertyChanged(nameof(FileNameTextBoxPadding));
+                    OnPropertyChanged(nameof(FileNameTextBoxCornerRadius));
+                    OnPropertyChanged(nameof(FileNameInputColumnSpan));
                 });
                 break;
         }
@@ -328,6 +376,7 @@ public sealed partial class ProjectView : Page
                 {
                     OnPropertyChanged(nameof(TotalPagesString));
                     OnPropertyChanged(nameof(SelectedFileString));
+                    OnPropertyChanged(nameof(ShowCarouselNavigation));
                 });
                 break;
         }
@@ -372,7 +421,16 @@ public sealed partial class ProjectView : Page
 
     private void GridHeader_SizeChanged(object sender, SizeChangedEventArgs e)
     {
-        ProjectFlyoutWidth = e.NewSize.Width - 20;
+        ProjectFlyoutWidth = e.NewSize.Width + 12;
+    }
+
+    private void SegmentedItemFileNamingPattern_SizeChanged(object sender, SizeChangedEventArgs e)
+    {
+        // constrain content to the item's width to allow its text to wrap
+        if (sender is not ContentControl { Content: FrameworkElement content } item || e.NewSize.Width == e.PreviousSize.Width)
+            return;
+
+        content.MaxWidth = Math.Max(0, e.NewSize.Width - item.BorderThickness.Left - item.BorderThickness.Right - 22);
     }
 
     private void ButtonRotate_ContextRequested(UIElement sender, ContextRequestedEventArgs args)
@@ -417,6 +475,15 @@ public sealed partial class ProjectView : Page
     {
         IsFileNameTextBoxFocused = true;
         ((TextBox)sender).SelectAll();
+
+        // regenerate in case the custom pattern or the project changed since the last time
+        fileNamingPatternValues = [.. Enum.GetValues<SettingFileNamingPattern>().Select(ViewModel.GenerateFileNamingPatternValue)];
+        OnPropertyChanged(nameof(SelectedFileNamingPatternIndex));
+    }
+
+    private void TextBoxProjectName_TextChanged(object sender, TextChangedEventArgs e)
+    {
+        OnPropertyChanged(nameof(SelectedFileNamingPatternIndex));
     }
 
     private void GridViewItem_PointerEntered(object sender, PointerRoutedEventArgs e)
@@ -665,6 +732,17 @@ public sealed partial class ProjectView : Page
     private void TextBoxProjectName_LostFocus(object sender, RoutedEventArgs e)
     {
         IsFileNameTextBoxFocused = false;
+
+        if (!SegmentedFileNamingPattern.IsFocusWithin())
+            ApplyOrDiscardProjectNameInput();
+    }
+
+    /// <summary>
+    /// Applies the text of <see cref="TextBoxProjectName"/> as the file name, or restores the file name if
+    /// <see cref="isTextBoxDiscardingUserInput"/> is set.
+    /// </summary>
+    private void ApplyOrDiscardProjectNameInput()
+    {
         if (ViewModel.CurrentProject == null) return;
 
         if (isTextBoxDiscardingUserInput)
@@ -693,15 +771,8 @@ public sealed partial class ProjectView : Page
         {
             case Windows.System.VirtualKey.Enter:
             case Windows.System.VirtualKey.Accept:
-                /// focus other control, file name will be applied in <see cref="TextBoxProjectName_LostFocus(object, RoutedEventArgs)"/>
-                if (IsExpanded)
-                {
-                    ButtonShowInFileExplorer.Focus(FocusState.Pointer);
-                }
-                else
-                {
-                    ButtonShowInFileExplorer.Focus(FocusState.Pointer);
-                }
+                /// file name will be applied in <see cref="TextBoxProjectName_LostFocus(object, RoutedEventArgs)"/>
+                UnfocusFileNameInput();
                 break;
             case Windows.System.VirtualKey.Escape:
             case Windows.System.VirtualKey.Cancel:
@@ -712,18 +783,67 @@ public sealed partial class ProjectView : Page
 
     private void DiscardProjectNameInputIfFocused()
     {
-        if (!IsFileNameTextBoxFocused) return;
+        if (!IsFileNameTextBoxFocused && !IsFileNamingPatternFocused)
+            return;
 
         isTextBoxDiscardingUserInput = true;
 
-        /// focus other control, file name will be restored in <see cref="TextBoxProjectName_LostFocus(object, RoutedEventArgs)"/>
-        if (IsExpanded)
+        /// file name will be restored in <see cref="TextBoxProjectName_LostFocus(object, RoutedEventArgs)"/>
+        /// or <see cref="SegmentedFileNamingPattern_LostFocus(object, RoutedEventArgs)"/>
+        UnfocusFileNameInput();
+    }
+
+    /// <summary>
+    /// Moves focus away from <see cref="TextBoxProjectName"/> and <see cref="SegmentedFileNamingPattern"/>, collapsing them.
+    /// </summary>
+    private void UnfocusFileNameInput()
+    {
+        // the input collapses and applies or discards its text in its LostFocus handlers
+        if (!ButtonShowInFileExplorer.Focus(FocusState.Pointer))
         {
-            ButtonShowInFileExplorer.Focus(FocusState.Pointer);
+            // focus couldn't be moved, input stays pending
+            isTextBoxDiscardingUserInput = false;
         }
-        else
+    }
+
+    private void SegmentedFileNamingPattern_GettingFocus(UIElement sender, GettingFocusEventArgs args)
+    {
+        IsFileNamingPatternFocused = true;
+    }
+
+    private void SegmentedFileNamingPattern_LostFocus(object sender, RoutedEventArgs e)
+    {
+        // also raised when focus moves between items
+        if (SegmentedFileNamingPattern.IsFocusWithin())
+            return;
+
+        IsFileNamingPatternFocused = false;
+
+        // input stays pending if the user returned to the TextBox
+        if (TextBoxProjectName.FocusState == FocusState.Unfocused)
+            ApplyOrDiscardProjectNameInput();
+    }
+
+    private void SegmentedFileNamingPattern_PreviewKeyDown(object sender, KeyRoutedEventArgs e)
+    {
+        switch (e.Key)
         {
-            ButtonShowInFileExplorer.Focus(FocusState.Pointer);
+            case Windows.System.VirtualKey.Enter:
+            case Windows.System.VirtualKey.Accept:
+                // select focused pattern, file name will be applied in SegmentedFileNamingPattern_LostFocus
+                if (FocusManager.GetFocusedElement(XamlRoot) is DependencyObject focusedItem)
+                {
+                    int index = SegmentedFileNamingPattern.IndexFromContainer(focusedItem);
+                    if (index >= 0) SelectedFileNamingPatternIndex = index;
+                }
+                UnfocusFileNameInput();
+                e.Handled = true;
+                break;
+            case Windows.System.VirtualKey.Escape:
+            case Windows.System.VirtualKey.Cancel:
+                DiscardProjectNameInputIfFocused();
+                e.Handled = true;
+                break;
         }
     }
 
@@ -747,20 +867,28 @@ public sealed partial class ProjectView : Page
     {
         SplitMenuFlyoutItem parentItem = (SplitMenuFlyoutItem)sender;
 
-        // clear list
-        while (parentItem.Items.Count > 3)
+        try
         {
-            parentItem.Items.RemoveAt(0);
+            PopulateOpenWithMenu(parentItem);
         }
+        catch (Exception exc)
+        {
+            Ioc.Default.GetService<ILogService>()?.Log.Warning(exc, "Unable to populate the open with menu");
+            Ioc.Default.GetService<ISentryService>()?.TrackWarning(exc);
+        }
+    }
 
-        // add items
+    private void PopulateOpenWithMenu(SplitMenuFlyoutItem parentItem)
+    {
+        // prepare items before touching the collection
         List<OpenWithTarget> reversed = [.. ViewModel.OpenWithTargets];
         reversed.Reverse();
+        List<MenuFlyoutItem> items = new();
         foreach (OpenWithTarget target in reversed)
         {
             MenuFlyoutItem item = new MenuFlyoutItem()
             {
-                Text = target.AppInfo.DisplayInfo.DisplayName,
+                Text = target.DisplayName,
                 Command = ViewModel.TryOpenWithAsyncCommand,
                 CommandParameter = target.AppInfo,
             };
@@ -780,6 +908,18 @@ public sealed partial class ProjectView : Page
                 item.Icon = icon;
             }
 
+            items.Add(item);
+        }
+
+        // clear list
+        while (parentItem.Items.Count > 3)
+        {
+            parentItem.Items.RemoveAt(0);
+        }
+
+        // add items
+        foreach (MenuFlyoutItem item in items)
+        {
             parentItem.Items.Insert(0, item);
         }
 
@@ -815,7 +955,7 @@ public sealed partial class ProjectView : Page
             if (featuredApp == null)
                 featuredApp = ViewModel.OpenWithTargets[0];
 
-            parentItem.Text = string.Format(GetLocalized(Scanner.Resources.Strings.ResourcesExtension.KeyEnum.OpenWithApp), featuredApp.AppInfo.DisplayInfo.DisplayName);
+            parentItem.Text = string.Format(GetLocalized(Scanner.Resources.Strings.ResourcesExtension.KeyEnum.OpenWithApp), featuredApp.DisplayName);
             parentItem.CommandParameter = featuredApp.AppInfo;
 
             if (featuredApp.Logo != null)

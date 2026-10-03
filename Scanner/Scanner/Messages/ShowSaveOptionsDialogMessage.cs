@@ -16,10 +16,16 @@ internal class ShowSaveOptionsDialogMessage : RequestMessage<Task<SaveOptions?>>
     public readonly ProjectBase? Project;
     public readonly string? DesiredFileDisplayName;
 
-    public ShowSaveOptionsDialogMessage(ScanOptions scanOptions, ProjectBase? project, string? desiredFileDisplayName)
+    /// <summary>
+    /// Existing files being saved (0 for new scans), names may be kept if more than 1.
+    /// </summary>
+    public readonly int ExistingFileCount;
+
+    public ShowSaveOptionsDialogMessage(ScanOptions scanOptions, ProjectBase? project, string? desiredFileDisplayName, int existingFileCount)
     {
         ScanOptions = scanOptions;
         Project = project;
         DesiredFileDisplayName = desiredFileDisplayName;
+        ExistingFileCount = existingFileCount;
     }
 }

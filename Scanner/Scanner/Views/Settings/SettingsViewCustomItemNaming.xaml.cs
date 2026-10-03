@@ -78,7 +78,10 @@ public sealed partial class SettingsViewCustomItemNaming : SettingsPage
     {
         await this.RunOnUIThreadAndWaitAsync(DispatcherQueuePriority.Normal, () =>
         {
-            ListViewItem container = (ListViewItem)((ListView)sender).ContainerFromItem(e.ClickedItem);
+            ListViewItem container = ((ListView)sender).ContainerFromItem(e.ClickedItem) as ListViewItem;
+            if (container == null)
+                return;
+
             FlyoutBase.ShowAttachedFlyout(container);
         });
     }
@@ -167,6 +170,9 @@ public sealed partial class SettingsViewCustomItemNaming : SettingsPage
 
     private async void ListViewPattern_DragItemsStarting(object sender, DragItemsStartingEventArgs e)
     {
+        if (e.Items.Count == 0)
+            return;
+
         await this.RunOnUIThreadAndWaitAsync(DispatcherQueuePriority.Normal, () =>
         {
             ButtonAddBlock.Visibility = Visibility.Collapsed;
@@ -219,7 +225,15 @@ public sealed partial class SettingsViewCustomItemNaming : SettingsPage
     {
         e.AcceptedOperation = Windows.ApplicationModel.DataTransfer.DataPackageOperation.Move;
 
-        int blockIndex = int.Parse(await e.DataView.GetTextAsync());
+        if (!e.DataView.Contains(Windows.ApplicationModel.DataTransfer.StandardDataFormats.Text))
+            return;
+
+        if (!int.TryParse(await e.DataView.GetTextAsync(), out int blockIndex))
+            return;
+
+        if (blockIndex < 0 || blockIndex >= ViewModel.SelectedBlocks.Count)
+            return;
+
         ViewModel.DeleteBlockCommand.Execute(ViewModel.SelectedBlocks[blockIndex]);
     }
 
@@ -229,8 +243,11 @@ public sealed partial class SettingsViewCustomItemNaming : SettingsPage
         {
             await this.RunOnUIThreadAndWaitAsync(DispatcherQueuePriority.High, () =>
             {
-                ListViewItem item = (ListViewItem)ListViewPattern.ContainerFromItem(((TextBox)sender).Tag);
-                FlyoutBase.GetAttachedFlyout(item).Hide();
+                ListViewItem? item = ListViewPattern.ContainerFromItem(((TextBox)sender).Tag) as ListViewItem;
+                if (item == null)
+                    return;
+
+                FlyoutBase.GetAttachedFlyout(item)?.Hide();
             });
         }
     }

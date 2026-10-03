@@ -1,4 +1,4 @@
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.WinUI;
 using Microsoft.Graphics.Canvas;
@@ -34,6 +34,7 @@ using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Globalization.NumberFormatting;
+using Windows.Graphics.Imaging;
 using Windows.Storage;
 using Windows.Storage.Streams;
 using Windows.UI.Core;
@@ -122,6 +123,26 @@ public sealed partial class EditorView : Page
     }
 
     public bool IsEditingExperienceActive => IsCropping || IsDrawing;
+
+    /// <summary>
+    /// Whether the ink canvas currently holds strokes that can be applied to the page.
+    /// </summary>
+    [ObservableProperty]
+    private bool hasInk;
+
+    public bool IsDrawingWithTouchEnabled
+    {
+        get => ViewModel.SettingsService.LastTouchDrawState;
+        set
+        {
+            if (ViewModel.SettingsService.LastTouchDrawState == value)
+                return;
+
+            ViewModel.SettingsService.LastTouchDrawState = value;
+            OnPropertyChanged(nameof(IsDrawingWithTouchEnabled));
+            ApplyInkCanvasInputDeviceTypes();
+        }
+    }
 
     public bool IsFilterNone
     {
@@ -242,13 +263,24 @@ public sealed partial class EditorView : Page
         }
     }
 
-    private CoreInputDeviceTypes inkCanvasInputDeviceTypes => ViewModel.SettingsService.LastTouchDrawState ?
+    private CoreInputDeviceTypes inkCanvasInputDeviceTypes => IsDrawingWithTouchEnabled ?
         CoreInputDeviceTypes.Pen | CoreInputDeviceTypes.Mouse | CoreInputDeviceTypes.Touch :
-        CoreInputDeviceTypes.Pen;
+        CoreInputDeviceTypes.Pen | CoreInputDeviceTypes.Mouse;
 
     private VirtualizingStackPanel? flipViewPanel;
     
     private ConcurrentDictionary<IProjectPage, CanvasControl> pageCanvases = [];
+
+    /// <summary>
+    /// The page being drawn on, loaded for the draw experience's backdrop.
+    /// </summary>
+    private CanvasBitmap? drawBackdropBitmap;
+
+    /// <summary>
+    /// Whether the ink canvas still has to be filled with the page's existing strokes. Deferred until the
+    /// backdrop has been laid out, because the strokes can only be placed once the page's on-screen area is known.
+    /// </summary>
+    private bool isInkRehydrationPending;
 
     private readonly PointerEventHandler pointerPressedOutsideNavigationHandler;
 
@@ -351,14 +383,13 @@ public sealed partial class EditorView : Page
             }
 
             // fix scrolling in vertical mode
-            if (orientation == Orientation.Vertical)
-            {
-                ((ScrollViewer)VisualTreeHelper.GetChild(VisualTreeHelper.GetChild(FlipViewPages, 0), 0)).HorizontalScrollMode = ScrollMode.Disabled;
-            }
-            else
-            {
-                ((ScrollViewer)VisualTreeHelper.GetChild(VisualTreeHelper.GetChild(FlipViewPages, 0), 0)).HorizontalScrollMode = ScrollMode.Enabled;
-            }
+            ScrollViewer? flipViewScrollViewer = FlipViewPages?.FindDescendant<ScrollViewer>();
+            if (flipViewScrollViewer == null)
+                return;
+
+            flipViewScrollViewer.HorizontalScrollMode = orientation == Orientation.Vertical
+                ? ScrollMode.Disabled
+                : ScrollMode.Enabled;
         });
     }
 
@@ -397,6 +428,16 @@ public sealed partial class EditorView : Page
 
         PageWidth = scrollViewer.ViewportWidth;
         PageHeight = scrollViewer.ViewportHeight;
+    }
+
+    private void ScrollViewerPage_ViewChanged(object? sender, ScrollViewerViewChangedEventArgs e)
+    {
+        if (e.IsIntermediate || sender is not ScrollViewer scrollViewer)
+            return;
+
+        CanvasControl? canvas = scrollViewer.FindDescendant<CanvasControl>();
+        if (canvas != null)
+            UpdateCanvasDpiScale(canvas);
     }
 
     private void FlipViewPages_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -499,8 +540,62 @@ public sealed partial class EditorView : Page
         catch (Exception) { }
     }
 
+    /// <summary>
+    /// Matches the resolution of a page canvas's surface to the size the page is actually displayed at.
+    /// </summary>
+    /// <remarks>
+    /// Drawing stays in DIPs (source pixels, as the bitmaps are loaded at 96 DPI), so nothing else needs to
+    /// account for this.
+    /// </remarks>
+    /// <param name="canvas">The canvas to update.</param>
+    /// <param name="contentSize">
+    /// The canvas's size, if it was only just assigned and layout hasn't caught up yet. Defaults to its actual size.
+    /// </param>
+    private static void UpdateCanvasDpiScale(CanvasControl canvas, Size? contentSize = null)
+    {
+        Size size = contentSize ?? new Size(canvas.ActualWidth, canvas.ActualHeight);
+        if (!(size.Width > 0) || !(size.Height > 0))
+            return;
+
+        double displayScale = 1.0;
+        Viewbox? viewbox = canvas.FindAscendant<Viewbox>();
+        if (viewbox != null && viewbox.ActualWidth > 0 && viewbox.ActualHeight > 0)
+            displayScale = Math.Min(viewbox.ActualWidth / size.Width, viewbox.ActualHeight / size.Height);
+
+        ScrollViewer? scrollViewer = canvas.FindAscendant<ScrollViewer>();
+        if (scrollViewer != null)
+            displayScale *= scrollViewer.ZoomFactor;
+
+        // never exceed the device's limit, leaving some room for Win2D's rounding
+        double rasterizationScale = canvas.XamlRoot?.RasterizationScale ?? 1.0;
+        double longestSide = Math.Max(size.Width, size.Height) * rasterizationScale;
+        double maxScale = CanvasDevice.GetSharedDevice().MaximumBitmapSizeInPixels * 0.99 / longestSide;
+
+        // skip negligible changes
+        float dpiScale = (float)Math.Min(displayScale, maxScale);
+        if (canvas.DpiScale > maxScale || Math.Abs(dpiScale / canvas.DpiScale - 1) > 0.02)
+            canvas.DpiScale = dpiScale;
+    }
+
+    private void ViewboxPage_SizeChanged(object sender, SizeChangedEventArgs e)
+    {
+        if (((Viewbox)sender).Child is CanvasControl canvas)
+            UpdateCanvasDpiScale(canvas);
+    }
+
+    private void CanvasPage_SizeChanged(object sender, SizeChangedEventArgs e)
+    {
+        UpdateCanvasDpiScale((CanvasControl)sender);
+    }
+
     private async void CanvasPreview_CreateResources(CanvasControl sender, Microsoft.Graphics.Canvas.UI.CanvasCreateResourcesEventArgs args)
     {
+        if (args.Reason == Microsoft.Graphics.Canvas.UI.CanvasCreateResourcesReason.DpiChanged && sender.Tag is CanvasPageData)
+        {
+            UpdateCanvasDpiScale(sender);
+            return;
+        }
+
         IProjectPage? page = sender.DataContext as IProjectPage;
         if (page == null)
             return;
@@ -518,17 +613,19 @@ public sealed partial class EditorView : Page
         float brightness = 0;
         float contrast = 0;
         ImageFilter filter = ImageFilter.None;
+        IReadOnlyList<Windows.UI.Input.Inking.InkStroke> strokes = [];
 
         if (canvasPageData.Page is ImagePage imagePage)
         {
             brightness = imagePage.DisplayedBrightness;
             contrast = imagePage.DisplayedContrast;
             filter = imagePage.Filter;
+            strokes = imagePage.InkStrokes;
         }
 
-        // draw image with effects
+        // draw image with effects, then the page's ink on top
         ICanvasImage effectChain = ImageEffectsHelper.CreateEffectChain(canvasPageData.Bitmap, filter, (int)brightness, (int)contrast);
-        args.DrawingSession.DrawImage(effectChain);
+        InkRenderingHelpers.DrawImageWithInk(args.DrawingSession, sender, effectChain, strokes);
 
         sender.Width = canvasPageData.Bitmap.Size.Width;
         sender.Height = canvasPageData.Bitmap.Size.Height;
@@ -613,7 +710,8 @@ public sealed partial class EditorView : Page
                 throw new NotImplementedException();
             }
 
-            // update canvas size
+            // update canvas size, lowering its resolution first so that it can't briefly exceed the device's limit
+            UpdateCanvasDpiScale(canvas, newBitmap.Size);
             canvas.Width = newBitmap.Size.Width;
             canvas.Height = newBitmap.Size.Height;
             canvas.Invalidate();
@@ -638,7 +736,9 @@ public sealed partial class EditorView : Page
                     if (page == null)
                         return;
 
-                    CanvasControl canvas = pageCanvases[page];
+                    if (!pageCanvases.TryGetValue(page, out CanvasControl? canvas))
+                        return;
+
                     CanvasPageData? canvasPageData = canvas.Tag as CanvasPageData;
 
                     // discard old data
@@ -653,12 +753,14 @@ public sealed partial class EditorView : Page
                 case nameof(ImagePage.Filter):
                 case nameof(ImagePage.DisplayedBrightness):
                 case nameof(ImagePage.DisplayedContrast):
+                case nameof(ImagePage.InkStrokes):
                     page = sender as ImagePage;
                     if (page == null)
                         return;
 
-                    canvas = pageCanvases[page];
-                    canvas.Invalidate();
+                    // the cached bitmap is still good; only what's drawn on top of it changed
+                    if (pageCanvases.TryGetValue(page, out CanvasControl? affectedCanvas))
+                        affectedCanvas.Invalidate();
                     break;
                 default:
                     return;
@@ -727,12 +829,49 @@ public sealed partial class EditorView : Page
 
     private async Task SaveCropAsync(bool asCopy)
     {
+        Rect cropRegion = await GetCropRegionInSourcePixelsAsync();
+
         if (asCopy)
-            await ViewModel.CropCurrentPageAsCopyAsyncCommand.ExecuteAsync(ImageCropper.CroppedRegion);
+            await ViewModel.CropCurrentPageAsCopyAsyncCommand.ExecuteAsync(cropRegion);
         else
-            await ViewModel.CropCurrentPageAsyncCommand.ExecuteAsync(ImageCropper.CroppedRegion);
+            await ViewModel.CropCurrentPageAsyncCommand.ExecuteAsync(cropRegion);
 
         IsCropping = false;
+    }
+
+    /// <summary>
+    /// Converts the cropper's region into the source file's pixels, which is what the crop is applied to.
+    /// </summary>
+    /// <remarks>
+    /// The cropper is loaded from the page's preview file, which is a downscale of the source whenever the page
+    /// needs rendering (a filter, a brightness or contrast adjustment, or ink). Handing that region straight to
+    /// the crop would then take a region of the wrong size from the wrong place.
+    /// </remarks>
+    private async Task<Rect> GetCropRegionInSourcePixelsAsync()
+    {
+        Rect cropRegion = ImageCropper.CroppedRegion;
+
+        if (ViewModel.ProjectService.SelectedPage is not ImagePage page)
+            return cropRegion;
+        if (page.PreviewFile == page.SourceFile || page.Width == 0)
+            return cropRegion;
+
+        try
+        {
+            using IRandomAccessStream previewStream = await page.PreviewFile.OpenAsync(FileAccessMode.Read);
+            BitmapDecoder previewDecoder = await BitmapDecoder.CreateAsync(previewStream);
+            if (previewDecoder.PixelWidth == 0)
+                return cropRegion;
+
+            double scale = (double)page.Width / previewDecoder.PixelWidth;
+            return new Rect(cropRegion.X * scale, cropRegion.Y * scale,
+                cropRegion.Width * scale, cropRegion.Height * scale);
+        }
+        catch (Exception exc)
+        {
+            ViewModel.LogService?.Log.Warning(exc, "Failed to scale the crop region to the source, using it as-is");
+            return cropRegion;
+        }
     }
 
     private void MenuFlyoutItemCropSimilarPages_Click(object sender, RoutedEventArgs e)
@@ -799,7 +938,7 @@ public sealed partial class EditorView : Page
 
         // crop
         FlyoutBase.GetAttachedFlyout(GridCropToolbar).Hide();
-        await ViewModel.CropPagesAsyncCommand.ExecuteAsync((pages, ImageCropper.CroppedRegion));
+        await ViewModel.CropPagesAsyncCommand.ExecuteAsync((pages, await GetCropRegionInSourcePixelsAsync()));
         IsCropping = false;
     }
 
@@ -837,6 +976,109 @@ public sealed partial class EditorView : Page
     private void ButtonDiscardDraw_Click(object sender, RoutedEventArgs e)
     {
         IsDrawing = false;
+    }
+
+    private async void SplitButtonSaveDraw_Click(SplitButton sender, SplitButtonClickEventArgs args)
+    {
+        await SaveDrawAsync(false);
+    }
+
+    private async void MenuFlyoutItemSaveDraw_Click(object sender, RoutedEventArgs e)
+    {
+        await SaveDrawAsync(false);
+    }
+
+    private async void MenuFlyoutItemSaveDrawAsCopy_Click(object sender, RoutedEventArgs e)
+    {
+        await SaveDrawAsync(true);
+    }
+
+    private async Task SaveDrawAsync(bool asCopy)
+    {
+        if (InkCanvasDraw == null || CanvasDraw == null)
+            return;
+        if (ViewModel.ProjectService.SelectedPage is not ImagePage page)
+            return;
+
+        List<Windows.UI.Input.Inking.InkStroke> strokes = [.. InkCanvasDraw.InkPresenter.StrokeContainer.GetStrokes()];
+
+        // normalize the strokes into the page's own pixels, so they stop depending on the draw experience's
+        // layout once they live on the page
+        Rect pageArea = GetPageAreaInStrokeSpace();
+
+        List<Windows.UI.Input.Inking.InkStroke> pageStrokes =
+            InkRenderingHelpers.ConvertToPageSpace(strokes, pageArea, new Size(page.Width, page.Height));
+
+        if (asCopy)
+            await ViewModel.DrawOnCurrentPageAsCopyAsyncCommand.ExecuteAsync(pageStrokes);
+        else
+            await ViewModel.DrawOnCurrentPageAsyncCommand.ExecuteAsync(pageStrokes);
+
+        IsDrawing = false;
+    }
+
+    private async void CanvasDraw_CreateResources(CanvasControl sender, Microsoft.Graphics.Canvas.UI.CanvasCreateResourcesEventArgs args)
+    {
+        if (args.Reason == Microsoft.Graphics.Canvas.UI.CanvasCreateResourcesReason.DpiChanged && drawBackdropBitmap != null)
+        {
+            UpdateCanvasDpiScale(sender);
+            return;
+        }
+
+        await LoadDrawBackdropAsync(sender);
+    }
+
+    private async Task LoadDrawBackdropAsync(CanvasControl canvas)
+    {
+        try
+        {
+            if (ViewModel.ProjectService.SelectedPage is not ImagePage page)
+                return;
+
+            drawBackdropBitmap?.Dispose();
+            drawBackdropBitmap = await CanvasBitmap.LoadAsync(canvas, page.SourceBitmapUri);
+
+            UpdateCanvasDpiScale(canvas, drawBackdropBitmap.Size);
+            canvas.Width = drawBackdropBitmap.Size.Width;
+            canvas.Height = drawBackdropBitmap.Size.Height;
+            canvas.Invalidate();
+        }
+        catch (Exception exc)
+        {
+            ViewModel.LogService?.Log.Warning(exc, "Failed to load the backdrop for the draw experience");
+        }
+    }
+
+    private void CanvasDraw_Draw(CanvasControl sender, CanvasDrawEventArgs args)
+    {
+        if (drawBackdropBitmap == null)
+            return;
+        if (ViewModel.ProjectService.SelectedPage is not ImagePage page)
+            return;
+
+        ICanvasImage effectChain = ImageEffectsHelper.CreateEffectChain(drawBackdropBitmap, page.Filter,
+            page.DisplayedBrightness, page.DisplayedContrast);
+        args.DrawingSession.DrawImage(effectChain);
+    }
+
+    private void CanvasDraw_Unloaded(object sender, RoutedEventArgs e)
+    {
+        try
+        {
+            if (sender is CanvasControl canvas)
+            {
+                canvas.Draw -= CanvasDraw_Draw;
+                canvas.RemoveFromVisualTree();
+            }
+
+            drawBackdropBitmap?.Dispose();
+            drawBackdropBitmap = null;
+        }
+        catch (Exception exc)
+        {
+            ViewModel.LogService?.Log.Warning(exc, "Failed to clean up after unloading the draw backdrop");
+            ViewModel.SentryService?.TrackWarning(exc);
+        }
     }
 
     private void ScrollViewerMainEditingControls_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -989,6 +1231,125 @@ public sealed partial class EditorView : Page
 
         if (e.Key is Windows.System.VirtualKey.Enter or Windows.System.VirtualKey.Accept)
             IsNavigationTextBoxVisible = false;
+    }
+
+    private void InkToolbarDraw_Loaded(object sender, RoutedEventArgs e)
+    {
+        if (InkCanvasDraw is not null)
+        {
+            InkToolbarDraw.TargetInkCanvas = InkCanvasDraw;
+
+            // reapply in case the toolbar attached after the canvas was loaded
+            ApplyInkCanvasInputDeviceTypes();
+        }
+    }
+
+    private void InkCanvasDraw_Loaded(object sender, RoutedEventArgs e)
+    {
+        if (InkToolbarDraw is not null)
+            InkToolbarDraw.TargetInkCanvas = InkCanvasDraw;
+
+        ApplyInkCanvasInputDeviceTypes();
+
+        InkPresenter inkPresenter = InkCanvasDraw.InkPresenter;
+        inkPresenter.StrokeContainer.Clear();
+        HasInk = false;
+        isInkRehydrationPending = true;
+
+        inkPresenter.StrokesCollected -= InkPresenterDraw_StrokesCollected;
+        inkPresenter.StrokesCollected += InkPresenterDraw_StrokesCollected;
+        inkPresenter.StrokesErased -= InkPresenterDraw_StrokesErased;
+        inkPresenter.StrokesErased += InkPresenterDraw_StrokesErased;
+    }
+
+    private void InkPresenterDraw_StrokesCollected(InkPresenter sender, InkStrokesCollectedEventArgs args)
+    {
+        UpdateHasInk(sender);
+    }
+
+    private void InkPresenterDraw_StrokesErased(InkPresenter sender, InkStrokesErasedEventArgs args)
+    {
+        UpdateHasInk(sender);
+    }
+
+    private void UpdateHasInk(InkPresenter inkPresenter)
+    {
+        HasInk = inkPresenter.StrokeContainer.GetStrokes().Count > 0;
+    }
+
+    private void ApplyInkCanvasInputDeviceTypes()
+    {
+        if (InkCanvasDraw == null)
+            return;
+
+        InkCanvasDraw.InkPresenter.InputDeviceTypes = inkCanvasInputDeviceTypes;
+    }
+
+    /// <summary>
+    /// Where the page sits within the coordinate space the ink canvas reports its strokes in.
+    /// </summary>
+    /// <remarks>
+    /// Strokes come back in the same DIPs the visual tree reports, so the page's rendered bounds can be used
+    /// as-is: a stroke drawn corner to corner measures the page's rendered size, not its pixel size and not
+    /// anything scaled by the rasterization scale.
+    /// </remarks>
+    private Rect GetPageAreaInStrokeSpace()
+    {
+        if (CanvasDraw == null || InkCanvasDraw == null)
+            return new Rect(0, 0, 0, 0);
+
+        GeneralTransform pageToInk = CanvasDraw.TransformToVisual(InkCanvasDraw);
+        return pageToInk.TransformBounds(new Rect(0, 0, CanvasDraw.ActualWidth, CanvasDraw.ActualHeight));
+    }
+
+    private void ViewboxDraw_SizeChanged(object sender, SizeChangedEventArgs e)
+    {
+        if (CanvasDraw != null)
+            UpdateCanvasDpiScale(CanvasDraw);
+
+        // InkCanvas ignores the rasterization scale, so its ink surface reaches past its layout box by that
+        // factor. Shrink the box and pull it to the page's top-left corner, so the surface lands on the page.
+        double scale = XamlRoot?.RasterizationScale ?? 1.0;
+
+        double width = e.NewSize.Width / scale;
+        double height = e.NewSize.Height / scale;
+
+        InkCanvasDraw.Width = width;
+        InkCanvasDraw.Height = height;
+        InkCanvasDraw.Margin = new Thickness(-width * (scale - 1), -height * (scale - 1), 0, 0);
+
+        if (isInkRehydrationPending && width > 0 && height > 0)
+        {
+            // the size and margin just assigned above haven't been through a layout pass yet, and the strokes
+            // are placed against where the page sits inside this canvas, so let that settle first
+            isInkRehydrationPending = false;
+            DispatcherQueue.TryEnqueue(DispatcherQueuePriority.Low, RehydrateInkCanvas);
+        }
+    }
+
+    /// <summary>
+    /// Puts the page's existing strokes back onto the ink canvas, so that a drawing session can edit and erase
+    /// them rather than only adding to them.
+    /// </summary>
+    private void RehydrateInkCanvas()
+    {
+        if (InkCanvasDraw == null || CanvasDraw == null)
+            return;
+        if (ViewModel.ProjectService.SelectedPage is not ImagePage page)
+            return;
+        if (!page.HasInk)
+            return;
+
+        // make sure the deferred layout has actually been applied before measuring against it
+        InkCanvasDraw.UpdateLayout();
+
+        Rect pageArea = GetPageAreaInStrokeSpace();
+        if (pageArea.Width <= 0 || pageArea.Height <= 0)
+            return;
+
+        InkCanvasDraw.InkPresenter.StrokeContainer.AddStrokes(
+            InkRenderingHelpers.ConvertFromPageSpace(page.InkStrokes, pageArea, new Size(page.Width, page.Height)));
+        HasInk = true;
     }
 
 

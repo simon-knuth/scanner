@@ -12,7 +12,7 @@
     xmlns:ui="using:CommunityToolkit.WinUI"
     xmlns:media="using:CommunityToolkit.WinUI.Media"
     xmlns:converters="using:Scanner.Views.Converters"
-    xmlns:labs="using:CommunityToolkit.Labs.WinUI"
+    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:storage="using:Windows.Storage"
     xmlns:teachingtips="using:Scanner.Views.TeachingTips"
     xmlns:strings="using:Scanner.Resources.Strings"
@@ -58,7 +58,9 @@
             </DataTemplate>
 
             <!-- XAML Converters -->
+            <converters:NegativeBoolConverter x:Key="NegativeBoolConverter" />
             <converters:NegativeBoolVisibilityConverter x:Key="NegativeBoolVisibilityConverter" />
+            <converters:StringNotEmptyVisibilityConverter x:Key="StringNotEmptyVisibilityConverter" />
         </ResourceDictionary>
     </ContentDialog.Resources>
 
@@ -68,23 +70,24 @@
     <!-- - - - - - - - - - - - - - - - - - - -  - - - - - - - - - - - - - - - - - - - - -->
     <Grid x:Name="GridRoot">
         <StackPanel Orientation="Vertical" Spacing="8" Margin="0,8,0,0">
-            <TextBlock Text="{x:Bind strings:Resources.FileName}" Style="{StaticResource BaseTextBlockStyle}" />
+            <CheckBox Content="{x:Bind strings:Resources.SaveOptionsOverwriteFileNames}" FontWeight="SemiBold" Margin="0,0,0,-4" IsChecked="{x:Bind ViewModel.IsSettingFileName, Mode=TwoWay}" Visibility="{x:Bind ViewModel.IsHandlingMultipleFiles}" />
+            <TextBlock Text="{x:Bind strings:Resources.FileName}" Style="{StaticResource BaseTextBlockStyle}" Visibility="{x:Bind ViewModel.IsHandlingMultipleFiles, Converter={StaticResource NegativeBoolVisibilityConverter}}" />
 
             <!-- File name type -->
-            <labs:Segmented HorizontalAlignment="Stretch" BorderThickness="0" CornerRadius="4,4,0,0" SelectedIndex="{x:Bind SelectedFileNamingPatternIndex, Mode=TwoWay}">
-                <labs:SegmentedItem CornerRadius="4,4,0,0">
+            <controls:Segmented HorizontalAlignment="Stretch" BorderThickness="0" CornerRadius="4,4,0,0" AllowFocusOnInteraction="False" SelectedIndex="{x:Bind SelectedFileNamingPatternIndex, Mode=TwoWay}" IsEnabled="{x:Bind ViewModel.IsSettingFileName, Mode=OneWay}">
+                <controls:SegmentedItem CornerRadius="4,4,0,0">
                     <StackPanel Orientation="Vertical" Spacing="4" Margin="0,4,0,4">
                         <FontIcon Glyph="&#xEC92;" FontSize="16" HorizontalAlignment="Center" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontFamily="{StaticResource SymbolThemeFontFamily}"/>
                         <TextBlock Text="{x:Bind strings:Resources.FileNamingDateTimePattern}" TextAlignment="Center" Style="{StaticResource BodyTextBlockStyle}" />
                     </StackPanel>
-                </labs:SegmentedItem>
-                <labs:SegmentedItem CornerRadius="4,4,0,0">
+                </controls:SegmentedItem>
+                <controls:SegmentedItem CornerRadius="4,4,0,0">
                     <StackPanel Orientation="Vertical" Spacing="4" Margin="0,4,0,4">
                         <FontIcon Glyph="&#xE787;" FontSize="16" HorizontalAlignment="Center" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontFamily="{StaticResource SymbolThemeFontFamily}"/>
                         <TextBlock Text="{x:Bind strings:Resources.FileNamingDatePattern}" TextAlignment="Center" Style="{StaticResource BodyTextBlockStyle}" />
                     </StackPanel>
-                </labs:SegmentedItem>
-                <labs:SegmentedItem x:Name="SegmentedItemCustomFileNamingPattern" CornerRadius="4,4,0,0">
+                </controls:SegmentedItem>
+                <controls:SegmentedItem x:Name="SegmentedItemCustomFileNamingPattern" CornerRadius="4,4,0,0">
                     <Grid>
                         <StackPanel Orientation="Vertical" Spacing="4" Margin="0,4,0,4">
                             <FontIcon Glyph="&#xEF60;" FontSize="16" HorizontalAlignment="Center" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontFamily="{StaticResource SymbolThemeFontFamily}"/>
@@ -101,12 +104,12 @@
                             </AnimatedIcon>
                         </Button>
                     </Grid>
-                </labs:SegmentedItem>
-            </labs:Segmented>
+                </controls:SegmentedItem>
+            </controls:Segmented>
 
             <!-- File name -->
             <Grid ColumnSpacing="4" Margin="0,-8,0,0">
-                <TextBox x:Name="TextBoxFileName" Text="{x:Bind ViewModel.FileDisplayName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Padding="56,8,44,8" FontWeight="SemiBold" CornerRadius="{x:Bind TextBoxFileNameCornerRadius, Mode=OneWay}" Typography.NumeralAlignment="Tabular" IsSpellCheckEnabled="False" Style="{StaticResource NoClearButtonTextBoxStyle}" GotFocus="TextBox_GotFocus" Loaded="TextBoxFileName_Loaded" />
+                <TextBox x:Name="TextBoxFileName" Text="{x:Bind ViewModel.FileDisplayName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Padding="56,8,44,8" FontWeight="SemiBold" CornerRadius="{x:Bind TextBoxFileNameCornerRadius, Mode=OneWay}" Typography.NumeralAlignment="Tabular" IsSpellCheckEnabled="False" Style="{StaticResource NoClearButtonTextBoxStyle}" IsEnabled="{x:Bind ViewModel.IsSettingFileName, Mode=OneWay}" GotFocus="TextBox_GotFocus" Loaded="TextBoxFileName_Loaded" />
                 <FontIcon Glyph="&#xE91B;" FontSize="20" Width="56" HorizontalAlignment="Left" IsHitTestVisible="False" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" FontFamily="{StaticResource SymbolThemeFontFamily}" Visibility="{x:Bind ViewModel.IsPdf, Converter={StaticResource NegativeBoolVisibilityConverter}}" />
                 <FontIcon Glyph="&#xEA90;" FontSize="20" Width="56" HorizontalAlignment="Left" IsHitTestVisible="False" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" FontFamily="{StaticResource SymbolThemeFontFamily}" Visibility="{x:Bind ViewModel.IsPdf}" />
                 <TextBlock Text="{x:Bind ViewModel.FileExtension}" HorizontalAlignment="Right" VerticalAlignment="Center" IsHitTestVisible="False" TextAlignment="Center" Width="48" Style="{StaticResource BodyTextBlockStyle}" />
@@ -123,6 +126,33 @@
                 <FontIcon Grid.Column="0" Glyph="&#xEDB1;" FontSize="12" Width="56" HorizontalAlignment="Left" Foreground="{ThemeResource SystemFillColorCautionBackgroundBrush}" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                 <TextBlock Grid.Column="1" Text="{x:Bind strings:Resources.FileNameCollision}" VerticalAlignment="Center" MaxLines="1" Foreground="{ThemeResource TextFillColorPrimaryBrush}" Style="{StaticResource CaptionTextBlockStyle}" />
             </Grid>
+
+            <!-- Multi-file rename preview -->
+            <Border Height="16" Visibility="{x:Bind ViewModel.IsHandlingMultipleFiles}">
+                <Grid Visibility="{x:Bind ViewModel.IsSettingFileName, Mode=OneWay}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="1*" />
+                    </Grid.ColumnDefinitions>
+
+                    <FontIcon Grid.Column="0" Glyph="&#xE64D;" Width="56" FontSize="12" VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                    <Grid Grid.Column="1" Visibility="{x:Bind ViewModel.FileDisplayName, Mode=OneWay, Converter={StaticResource StringNotEmptyVisibilityConverter}}">
+                        <TextBlock TextTrimming="CharacterEllipsis" TextWrapping="NoWrap" VerticalAlignment="Center" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Visibility="{x:Bind IsHandlingAtLeastThreePages, Converter={StaticResource NegativeBoolVisibilityConverter}}">
+                            <Span>
+                                <Run Text="{x:Bind ViewModel.FileDisplayName, Mode=OneWay}" />,
+                                <Run Text="{x:Bind ViewModel.FileDisplayName, Mode=OneWay}" /> <Run Text="(2)" Foreground="{ThemeResource AccentTextFillColorSecondaryBrush}" />
+                            </Span>
+                        </TextBlock>
+                        <TextBlock TextTrimming="CharacterEllipsis" TextWrapping="NoWrap" VerticalAlignment="Center" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Visibility="{x:Bind IsHandlingAtLeastThreePages}">
+                            <Span>
+                                <Run Text="{x:Bind ViewModel.FileDisplayName, Mode=OneWay}" />,
+                                <Run Text="{x:Bind ViewModel.FileDisplayName, Mode=OneWay}" /> <Run Text="(2)" Foreground="{ThemeResource AccentTextFillColorSecondaryBrush}" />,
+                                <Run Text="{x:Bind ViewModel.FileDisplayName, Mode=OneWay}" /> <Run Text="(3)" Foreground="{ThemeResource AccentTextFillColorSecondaryBrush}" />, ...
+                            </Span>
+                        </TextBlock>
+                    </Grid>
+                </Grid>
+            </Border>
 
             <!-- AI file name generation -->
             <Grid x:Name="GridAIFileNameGeneration" Visibility="{x:Bind ViewModel.IsPdf}" x:Load="{x:Bind ViewModel.CanGenerateAIFileName}">
@@ -196,20 +226,20 @@
                 </StackPanel.Transitions>
                 
                 <!-- Subfolder name type -->
-                <labs:Segmented HorizontalAlignment="Stretch" BorderThickness="0" CornerRadius="4,4,0,0" SelectedIndex="{x:Bind SelectedSubfolderNamingPatternIndex, Mode=TwoWay}">
-                    <labs:SegmentedItem CornerRadius="4,4,0,0">
+                <controls:Segmented HorizontalAlignment="Stretch" BorderThickness="0" CornerRadius="4,4,0,0" AllowFocusOnInteraction="False" SelectedIndex="{x:Bind SelectedSubfolderNamingPatternIndex, Mode=TwoWay}">
+                    <controls:SegmentedItem CornerRadius="4,4,0,0">
                         <StackPanel Orientation="Vertical" Spacing="4" Margin="0,4,0,4">
                             <FontIcon Glyph="&#xE787;" FontSize="16" HorizontalAlignment="Center" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontFamily="{StaticResource SymbolThemeFontFamily}"/>
                             <TextBlock Text="{x:Bind strings:Resources.FileNamingDatePattern}" TextAlignment="Center" Style="{StaticResource BodyTextBlockStyle}" />
                         </StackPanel>
-                    </labs:SegmentedItem>
-                    <labs:SegmentedItem CornerRadius="4,4,0,0">
+                    </controls:SegmentedItem>
+                    <controls:SegmentedItem CornerRadius="4,4,0,0">
                         <StackPanel Orientation="Vertical" Spacing="4" Margin="0,4,0,4">
                             <FontIcon Glyph="&#xE8A5;" FontSize="16" HorizontalAlignment="Center" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontFamily="{StaticResource SymbolThemeFontFamily}"/>
                             <TextBlock Text="{x:Bind strings:Resources.FileNamingBlockFileType}" TextAlignment="Center" Style="{StaticResource BodyTextBlockStyle}" />
                         </StackPanel>
-                    </labs:SegmentedItem>
-                    <labs:SegmentedItem x:Name="SegmentedItemCustomSubfolderNamingPattern" CornerRadius="4,4,0,0">
+                    </controls:SegmentedItem>
+                    <controls:SegmentedItem x:Name="SegmentedItemCustomSubfolderNamingPattern" CornerRadius="4,4,0,0">
                         <Grid>
                             <StackPanel Orientation="Vertical" Spacing="4" Margin="0,4,0,4">
                                 <FontIcon Glyph="&#xEF60;" FontSize="16" HorizontalAlignment="Center" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontFamily="{StaticResource SymbolThemeFontFamily}"/>
@@ -226,8 +256,8 @@
                                 </AnimatedIcon>
                             </Button>
                         </Grid>
-                    </labs:SegmentedItem>
-                </labs:Segmented>
+                    </controls:SegmentedItem>
+                </controls:Segmented>
 
                 <!-- Subfolder name -->
                 <Grid ColumnSpacing="4" Margin="0,-8,0,0">

@@ -34,6 +34,7 @@ using Windows.Storage;
 using Windows.Storage.AccessCache;
 using Windows.Storage.Streams;
 using Windows.System.Threading;
+using Windows.UI.Input.Inking;
 using Windows.UI.WebUI;
 using WinRT.Interop;
 using static Scanner.Helpers.RotationHelpers;
@@ -227,6 +228,9 @@ public abstract partial class ProjectBase : ObservableRecipient
 
                     IProjectPage page = await CreatePageFromFileAsync(insertion.File, insertion.Index, IsPdf ? null : insertion.FileName, null, insertion.TargetFolder, keepSourceFiles, AppDataService.ChangesFolder, insertion.BaseFilter, insertion.Filter, insertion.Brightness, insertion.Contrast);
                     copiedFiles.Add(((ImagePage)page).SourceFile);
+
+                    if (insertion.InkStrokes != null && page is ImagePage insertedImagePage)
+                        insertedImagePage.InkStrokes = insertion.InkStrokes;
 
                     preparedInsertions.Add(new KeyValuePair<ImagePage, int>((ImagePage)page, insertion.Index));
                 }
@@ -526,6 +530,19 @@ public abstract partial class ProjectBase : ObservableRecipient
                         StorageFile newFile;
                         newFile = await RotateFileAsync(instruction.Key.SourceFile, instruction.Value, false, pagesFolder);
                         await instruction.Key.ChangeSourceFileAsync(pagesFolder, newFile, uiDispatcherQueue);
+
+                        // move the page's ink along with its pixels, then swap the dimensions to match
+                        if (instruction.Key.HasInk)
+                        {
+                            instruction.Key.InkStrokes = InkRenderingHelpers.TransformStrokes(instruction.Key.InkStrokes,
+                                GetPageRotationMatrix(instruction.Value, instruction.Key.Width, instruction.Key.Height));
+                        }
+
+                        if (instruction.Value is BitmapRotation.Clockwise90Degrees or BitmapRotation.Clockwise270Degrees)
+                        {
+                            (instruction.Key.Width, instruction.Key.Height) = (instruction.Key.Height, instruction.Key.Width);
+                        }
+
                         BumpRevision();
                         finalStepData.Add((instruction.Key, instruction.Key.SourceFile, newFile));
                     }
@@ -552,6 +569,9 @@ public abstract partial class ProjectBase : ObservableRecipient
             {
                 FinishEditing();
             }
+
+            // update previews
+            await GeneratePagePreviewsAsync(instructions.Keys.ToList(), uiDispatcherQueue);
 
             // delete old files
             await saveSemaphore.WaitAsync();
@@ -716,20 +736,6 @@ public abstract partial class ProjectBase : ObservableRecipient
         // process instructions
         await RotatePagesAsync(mergedInstructions, pagesFolder, uiDispatcherQueue);
 
-        // update dimensions
-        foreach (KeyValuePair<ImagePage, BitmapRotation> instruction in mergedInstructions)
-        {
-            if (instruction.Value is BitmapRotation.Clockwise90Degrees or BitmapRotation.Clockwise270Degrees)
-            {
-                uint width = instruction.Key.Width;
-                instruction.Key.Width = instruction.Key.Height;
-                instruction.Key.Height = width;
-            }
-        }
-
-        // update previews
-        await GeneratePagePreviewsAsync(mergedInstructions.Keys.ToList(), uiDispatcherQueue);
-
         // update save state
         if (mergedInstructions.Count > 0 && mergedInstructions.Values.Any((x) => x != BitmapRotation.None))
             BumpRevision();
@@ -780,19 +786,22 @@ public abstract partial class ProjectBase : ObservableRecipient
     }
 
     /// <summary>
-    /// Renders a bitmap with effects (<see cref="ImageFilter"/>, brightness, contrast) applied.
+    /// Renders a bitmap with effects (<see cref="ImageFilter"/>, brightness, contrast) and ink applied.
     /// </summary>
     /// <param name="sourceStream">The bitmap source stream.</param>
     /// <param name="encoder">The encoder load the resulting pixel data into.</param>
     /// <param name="filter">The filter to render.</param>
     /// <param name="brightness">The brightness adjustment to apply.</param>
     /// <param name="contrast">The contrast adjustment to apply.</param>
+    /// <param name="strokes">
+    /// The ink to draw on top of the effects, in the source's pixel space.
+    /// </param>
     /// <param name="scale">
     /// Factor by which to scale the encoded result. Defaults to <c>1.0</c> (full source resolution); pass a
     /// smaller value to downscale (e.g. when generating previews). Final saves must keep the default so they
     /// don't lose resolution.
     /// </param>
-    public static async Task ApplyEffectsAsync(IRandomAccessStream sourceStream, BitmapEncoder encoder, ImageFilter filter, int brightness, int contrast, double scale = 1.0)
+    public static async Task ApplyEffectsAsync(IRandomAccessStream sourceStream, BitmapEncoder encoder, ImageFilter filter, int brightness, int contrast, IReadOnlyList<InkStroke>? strokes = null, double scale = 1.0)
     {
         // get source DPI
         double dpiX = 96.0;
@@ -808,7 +817,7 @@ public abstract partial class ProjectBase : ObservableRecipient
         using CanvasDrawingSession session = renderer.CreateDrawingSession();
 
         ICanvasImage effectChain = ImageEffectsHelper.CreateEffectChain(bitmap, filter, brightness, contrast);
-        session.DrawImage(effectChain);
+        InkRenderingHelpers.DrawImageWithInk(session, device, effectChain, strokes ?? []);
         session.Flush();
 
         // encode result, preserving the source's real DPI
@@ -844,7 +853,7 @@ public abstract partial class ProjectBase : ObservableRecipient
                 using (var targetStream = await targetFile.OpenAsync(FileAccessMode.ReadWrite))
                 {
                     BitmapEncoder encoder = await BitmapEncoder.CreateAsync(GetBitmapEncoderIdForFile(targetFile), targetStream);
-                    await ApplyEffectsAsync(sourceStream, encoder, page.Filter, page.Brightness, page.Contrast, previewScale);
+                    await ApplyEffectsAsync(sourceStream, encoder, page.Filter, page.Brightness, page.Contrast, page.InkStrokes, previewScale);
                 }
 
                 // update preview file
@@ -909,6 +918,13 @@ public abstract partial class ProjectBase : ObservableRecipient
                 await Task.Run(async () => newFile = await CropFileAsync(page.SourceFile, cropRegion, false, pagesFolder));
                 page.Width = (uint)Math.Round(cropRegion.Width);
                 page.Height = (uint)Math.Round(cropRegion.Height);
+
+                // move the page's ink along with its pixels
+                if (page.HasInk)
+                {
+                    page.InkStrokes = InkRenderingHelpers.TransformStrokes(page.InkStrokes,
+                        Matrix3x2.CreateTranslation((float)-cropRegion.X, (float)-cropRegion.Y));
+                }
 
                 await page.ChangeSourceFileAsync(pagesFolder, newFile!, uiDispatcherQueue);
 
@@ -990,13 +1006,19 @@ public abstract partial class ProjectBase : ObservableRecipient
                 page.Width = (uint)Math.Round(cropRegion.Width);
                 page.Height = (uint)Math.Round(cropRegion.Height);
 
+                // the copy carries the ink, moved along with the crop; the original page keeps its own
+                List<InkStroke> croppedStrokes = page.HasInk
+                    ? InkRenderingHelpers.TransformStrokes(page.InkStrokes, Matrix3x2.CreateTranslation((float)-cropRegion.X, (float)-cropRegion.Y))
+                    : [];
+
                 // generate page
                 ImagePage? imagePage = page as ImagePage;
                 string? fileName = imagePage?.FileNameInfo?.DesiredName;
                 StorageFolder? targetFolder = imagePage?.TargetFolder;
                 ProjectFileInsertion insertion = new(newFile, page.Index + 1, fileName, targetFolder,
                     imagePage?.BaseFilter ?? ImageFilter.None, imagePage?.Filter ?? ImageFilter.None,
-                    imagePage?.Brightness ?? AppConfig.DefaultBrightness, imagePage?.Contrast ?? AppConfig.DefaultContrast);
+                    imagePage?.Brightness ?? AppConfig.DefaultBrightness, imagePage?.Contrast ?? AppConfig.DefaultContrast,
+                    croppedStrokes);
                 result.AddRange(await AddFilesInternalAsync([insertion], false, uiDispatcherQueue));
             }
 
@@ -1080,6 +1102,76 @@ public abstract partial class ProjectBase : ObservableRecipient
         {
             throw new ApplicationException("Cropping page failed", e);
         }
+    }
+
+    public async Task SetInkStrokesAsync(ImagePage page, IReadOnlyList<InkStroke> strokes, DispatcherQueue uiDispatcherQueue)
+    {
+        await StartEditingAsync();
+        IReadOnlyList<InkStroke> previousStrokes = page.InkStrokes;
+        try
+        {
+            page.InkStrokes = strokes;
+
+            // update previews
+            await GeneratePagePreviewsAsync([page], uiDispatcherQueue);
+        }
+        catch (Exception exc)
+        {
+            page.InkStrokes = previousStrokes;
+            await GeneratePagePreviewsAsync([page], uiDispatcherQueue);
+
+            throw new ActionFailedAndRolledBackException(exc);
+        }
+        finally
+        {
+            BumpRevision();
+            FinishEditing();
+        }
+    }
+
+    /// <summary>
+    /// Copies a set of pages and adds ink strokes to the copies, leaving the originals as they are.
+    /// </summary>
+    /// <param name="pages">The pages to copy and draw on.</param>
+    /// <param name="strokes">The strokes to put on all copies.</param>
+    public async Task<List<ImagePage>> AddInkedCopiesOfPagesAsync(List<ImagePage> pages, IReadOnlyList<InkStroke> strokes, StorageFolder pagesFolder, DispatcherQueue uiDispatcherQueue)
+    {
+        TaskCompletionSource process = new();
+        if (pages.Count > 1)
+            Messenger.Send(new ShowIndeterminateProgressDialogMessage(Resources.Strings.Resources.ApplyingChanges, process.Task));
+
+        List<ImagePage> result = [];
+        await StartEditingAsync();
+        try
+        {
+            foreach (ImagePage page in pages)
+            {
+                StorageFile newFile = await page.SourceFile.CopyAsync(pagesFolder, page.SourceFile.Name, NameCollisionOption.GenerateUniqueName);
+
+                ProjectFileInsertion insertion = new(newFile, page.Index + 1, page.FileNameInfo?.DesiredName, page.TargetFolder,
+                    page.BaseFilter, page.Filter, page.Brightness, page.Contrast, strokes);
+                result.AddRange(await AddFilesInternalAsync([insertion], false, uiDispatcherQueue));
+            }
+        }
+        catch (Exception exc)
+        {
+            // roll back changes
+            foreach (ImagePage newPage in result)
+            {
+                StorageFile copiedFile = newPage.SourceFile;
+                _ = Task.Run(async () => await copiedFile.DeleteAsync(StorageDeleteOption.PermanentDelete));
+            }
+
+            throw new ActionFailedAndRolledBackException(exc);
+        }
+        finally
+        {
+            BumpRevision();
+            FinishEditing();
+            process.TrySetResult();
+        }
+
+        return result;
     }
 
     public void SetBrightness(ImagePage page, int brightness, DispatcherQueue uiDispatcherQueue)
@@ -1218,5 +1310,5 @@ public abstract partial class ProjectBase : ObservableRecipient
 // MISCELLANEOUS ////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 public record FileHandle(StorageFile File, IRandomAccessStream FileStream);
-public record ProjectFileInsertion(StorageFile File, int Index, string? FileName, StorageFolder? TargetFolder, ImageFilter BaseFilter, ImageFilter Filter, int Brightness, int Contrast);
+public record ProjectFileInsertion(StorageFile File, int Index, string? FileName, StorageFolder? TargetFolder, ImageFilter BaseFilter, ImageFilter Filter, int Brightness, int Contrast, IReadOnlyList<InkStroke>? InkStrokes = null);
 public record AppliedCrop(ImagePage Page, StorageFile PreviousFile, uint PreviousWidth, uint PreviousHeight);

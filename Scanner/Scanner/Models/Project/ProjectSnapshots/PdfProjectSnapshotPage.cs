@@ -18,6 +18,7 @@ using System.Threading.Tasks;
 using Windows.Devices.Scanners;
 using Windows.Graphics.Imaging;
 using Windows.Storage;
+using Windows.UI.Input.Inking;
 using Windows.Storage.Streams;
 using WinRT.Interop;
 using static Scanner.Helpers.Helpers;
@@ -37,17 +38,20 @@ public partial class PdfProjectSnapshotPage : IProjectSnapshotPage
     public int Brightness { get; }
     public int Contrast { get; }
 
+    public IReadOnlyList<InkStroke> InkStrokes { get; }
+
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    public PdfProjectSnapshotPage(StorageFile sourceFile, uint? indexInSourceFile, ImageFilter filter, int brightness, int contrast)
+    public PdfProjectSnapshotPage(StorageFile sourceFile, uint? indexInSourceFile, ImageFilter filter, int brightness, int contrast, IReadOnlyList<InkStroke> inkStrokes)
     {
         SourceFile = sourceFile;
         IndexInSourceFile = indexInSourceFile;
         Filter = filter;
         Brightness = brightness;
         Contrast = contrast;
+        InkStrokes = inkStrokes;
     }
 
 

@@ -198,7 +198,8 @@ public partial class PdfProject : ProjectBase
                         targetFile?.FileStream.Dispose();
                     }
 
-                    await FileNameInfo.UpdateNamesAsync(saveOptions.FileName, null, false, uiDispatcherQueue);
+                    if (saveOptions.FileName is not null && FileNameInfo!.DesiredName != saveOptions.FileName)
+                        await ProjectService.ApplyActionAsync(new RenameAction(page: null, saveOptions.FileName));
 
                     forceSaving = true;
                 }
@@ -511,7 +512,7 @@ public partial class PdfProject : ProjectBase
             {
                 string newName = fileName + Helpers.Helpers.TargetFormatToFileExtension(Format);
                 if (newName != FileNameInfo.DesiredName)
-                    await ProjectService.ApplyActionAsync(new RenameAction(null, newName, true));
+                    await ProjectService.ApplyActionAsync(new RenameAction(page: null, newName, true));
 
                 successful = true;
             }
@@ -614,10 +615,9 @@ public partial class PdfProject : ProjectBase
             {
                 // page from image (OCR or not)
                 XImage image;
-                bool hasDestructiveEffects = snapshotPage.Filter != ImageFilter.None || snapshotPage.Brightness != 0 || snapshotPage.Contrast != 0;
-                if (hasDestructiveEffects)
+                if (snapshotPage.RequiresRasterPass)
                 {
-                    // bake the filter/brightness/contrast into the image (encoded as JPG to reduce PDF size)
+                    // bake the filter/brightness/contrast and ink into the image (encoded as JPG to reduce PDF size)
                     using InMemoryRandomAccessStream targetStream = new();
                     await uiDispatcherQueue.RunOnThreadAndWaitAsync(DispatcherQueuePriority.Low, async () =>
                     {
@@ -627,7 +627,7 @@ public partial class PdfProject : ProjectBase
                         propertySet.Add("ImageQuality", new BitmapTypedValue(jpegQuality, Windows.Foundation.PropertyType.Single));
                         BitmapEncoder encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.JpegEncoderId, targetStream, propertySet);
 
-                        await ApplyEffectsAsync(sourceStream, encoder, snapshotPage.Filter, snapshotPage.Brightness, snapshotPage.Contrast);
+                        await ApplyEffectsAsync(sourceStream, encoder, snapshotPage.Filter, snapshotPage.Brightness, snapshotPage.Contrast, snapshotPage.InkStrokes);
                     });
                     image = XImage.FromStream(targetStream.AsStream());
                 }

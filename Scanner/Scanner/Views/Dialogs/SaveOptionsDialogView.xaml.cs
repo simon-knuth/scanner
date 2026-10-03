@@ -41,13 +41,29 @@ public partial class SaveOptionsDialogView : ContentDialog
     private int SelectedFileNamingPatternIndex
     {
         get => ViewModel.SelectedFileNamingPattern != null ? (int)ViewModel.SelectedFileNamingPattern : -1;
-        set => ViewModel.SelectedFileNamingPattern = value != -1 ? (SettingFileNamingPattern)value : null;
+        set
+        {
+            if (value == SelectedFileNamingPatternIndex)
+                return;
+
+            ViewModel.SelectedFileNamingPattern = value != -1 ? (SettingFileNamingPattern)value : null;
+            TextBoxFileName.Focus(FocusState.Programmatic);
+            TextBoxFileName.SelectAll();
+        }
     }
 
     private int SelectedSubfolderNamingPatternIndex
     {
         get => ViewModel.SelectedSubfolderNamingPattern != null ? (int)ViewModel.SelectedSubfolderNamingPattern : -1;
-        set => ViewModel.SelectedSubfolderNamingPattern = value != -1 ? (SettingSubfolderNamingPattern)value : null;
+        set
+        {
+            if (value == SelectedSubfolderNamingPatternIndex)
+                return;
+
+            ViewModel.SelectedSubfolderNamingPattern = value != -1 ? (SettingSubfolderNamingPattern)value : null;
+            TextBoxFileName.Focus(FocusState.Programmatic);
+            TextBoxFileName.SelectAll();
+        }
     }
 
     [ObservableProperty]
@@ -57,15 +73,17 @@ public partial class SaveOptionsDialogView : ContentDialog
 
     public SaveOptions? SaveOptions => ViewModel.SaveOptions;
 
+    public bool IsHandlingAtLeastThreePages => ViewModel.ExistingFileCount >= 3;
+
     private SaveOptionsDialogViewModel ViewModel;
 
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    public SaveOptionsDialogView(ScanOptions scanOptions, ProjectBase? project, string? desiredFileDisplayName)
+    public SaveOptionsDialogView(ScanOptions scanOptions, ProjectBase? project, string? desiredFileDisplayName, int existingFileCount)
     {
-        ViewModel = new SaveOptionsDialogViewModel(scanOptions, project, desiredFileDisplayName);
+        ViewModel = new SaveOptionsDialogViewModel(scanOptions, project, desiredFileDisplayName, existingFileCount);
         ViewModel.PropertyChanged += ViewModel_PropertyChanged;
 
         this.InitializeComponent();

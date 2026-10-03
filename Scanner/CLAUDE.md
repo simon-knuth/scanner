@@ -69,7 +69,7 @@ Strict **MVVM** with `CommunityToolkit.Mvvm`. Three layers under `Scanner/`: `Vi
 
 **Persistence** — EF Core with SQLite, split into three `DbContext`s in `Data/`: `KnownScannersDbContext`, `ProjectHistoryDbContext`, `TemplatesDbContext`, each fronted by a service (`KnownScannersService`, `ProjectHistoryService`, `TemplatesService`).
 
-**Windows & app lifecycle** — three top-level windows in `AppWindows/`: `MainWindow`, `SettingsWindow`, `FeedbackWindow` (latter two created on demand via `App.ShowSettings`/`ShowFeedback`). The app is **single-instance**: `Program.cs` defines a custom `Main` (`DISABLE_XAML_GENERATED_MAIN` is set in the csproj) that uses `AppInstance` key registration and redirects activation to the existing instance.
+**Windows & app lifecycle** — three top-level windows in `AppWindows/`: `MainWindow`, `SettingsWindow`, `FeedbackWindow` (latter two created on demand via `App.ShowSettings`/`ShowFeedback`). All derive from `WindowBase` (itself a WinUIEx `WindowEx`), which sets up the backdrop, icon and extended title bar, and keeps the system-drawn caption buttons in sync with the content's theme — derive new windows from it (XAML root `appwindows:WindowBase`). The app theme setting is applied once via `Application.RequestedTheme` in the `App` constructor (only possible before any UI exists, hence a restart is required). The app is **single-instance**: `Program.cs` defines a custom `Main` (`DISABLE_XAML_GENERATED_MAIN` is set in the csproj) that uses `AppInstance` key registration and redirects activation to the existing instance.
 
 ### Key integrations
 
@@ -94,4 +94,3 @@ UI strings are localized via **ReswPlus** (`Resources/Strings/`), with ~20 langu
 
 - `Resources/Secrets.resx` ships with a literal placeholder `SENTRY_DSN_GOES_HERE`. The GitHub Actions release build (`.github/workflows/build.yml`) replaces it with the real DSN from secrets — **do not commit a real DSN** into this file.
 - CI builds the MSIX for all three platforms, signs it with a PFX from secrets, and creates a Sentry release. It is **manual-trigger only** (`workflow_dispatch`) and builds `Scanner/Scanner.csproj` directly rather than the solution, so `ScannerTests` is not built during packaging. Local builds do not need the certificate for `Debug`.
-- An extra NuGet feed (CommunityToolkit Labs) is configured in `nuget.config` for the `SegmentedControl` preview package.

@@ -109,7 +109,7 @@
     <!-- - - - - - - - - - - - - - - - -  PAGE CONTENT  - - - - - - - - - - - - - - - - -->
     <!-- - - - - - - - - - - - - - - - - - - -  - - - - - - - - - - - - - - - - - - - - -->
     <Grid x:Name="GridRoot" Visibility="{x:Bind ViewModel.ProjectService.SelectedPages, Mode=OneWay, Converter={StaticResource NullVisibilityConverter}}">
-        <FlipView x:Name="FlipViewPages" Background="Transparent" Style="{StaticResource FlipViewStyleRoundedButtons}" ItemsSource="{x:Bind ViewModel.CurrentProject.Pages, Mode=OneWay}" SelectedItem="{x:Bind ViewModel.ProjectService.SelectedPage, Mode=TwoWay}" Visibility="{x:Bind IsCropping, Mode=OneWay, Converter={StaticResource NegativeBoolVisibilityConverter}}" x:Load="{x:Bind ViewModel.CurrentProject, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}}" SelectionChanged="FlipViewPages_SelectionChanged" Loaded="FlipViewPages_Loaded">
+        <FlipView x:Name="FlipViewPages" Background="Transparent" Style="{StaticResource FlipViewStyleRoundedButtons}" ItemsSource="{x:Bind ViewModel.CurrentProject.Pages, Mode=OneWay}" SelectedItem="{x:Bind ViewModel.ProjectService.SelectedPage, Mode=TwoWay}" Visibility="{x:Bind IsEditingExperienceActive, Mode=OneWay, Converter={StaticResource NegativeBoolVisibilityConverter}}" x:Load="{x:Bind ViewModel.CurrentProject, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}}" SelectionChanged="FlipViewPages_SelectionChanged" Loaded="FlipViewPages_Loaded">
             <animations:Implicit.HideAnimations>
                 <animations:ImplicitAnimationSet>
                     <animations:OpacityAnimation To="1.0" Duration="0:0:0.3" />
@@ -125,11 +125,11 @@
             <FlipView.ItemTemplate>
                 <DataTemplate x:DataType="interfaces:IProjectPage">
                     <FlipViewItem x:Name="FlipViewItemPage" DataContextChanged="FlipViewItem_DataContextChanged" Loaded="FlipViewItemPage_Loaded">
-                        <ScrollViewer x:Name="ScrollViewerPage" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" MinZoomFactor="1.0" MaxZoomFactor="2.5" ZoomMode="Enabled" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" SizeChanged="ScrollViewerPage_SizeChanged">
+                        <ScrollViewer x:Name="ScrollViewerPage" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" MinZoomFactor="1.0" MaxZoomFactor="2.5" ZoomMode="Enabled" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" SizeChanged="ScrollViewerPage_SizeChanged" ViewChanged="ScrollViewerPage_ViewChanged">
                             <Border x:Name="BorderPage" Padding="16,16,16,80" HorizontalAlignment="Center" VerticalAlignment="Center" MaxWidth="{Binding ElementName=ScrollViewerPage, Path=ViewportWidth, Mode=OneWay}" MaxHeight="{Binding ElementName=ScrollViewerPage, Path=ViewportHeight, Mode=OneWay}">
                                 <Frame Margin="0" HorizontalAlignment="Center" VerticalAlignment="Center" ui:Effects.Shadow="{ThemeResource ShadowPage}">
-                                    <Viewbox Stretch="Uniform">
-                                        <graphics:CanvasControl UseSharedDevice="True" CreateResources="CanvasPreview_CreateResources" Draw="CanvasPreview_Draw" DataContextChanged="CanvasPreview_DataContextChanged" Unloaded="CanvasControl_Unloaded" />
+                                    <Viewbox Stretch="Uniform" SizeChanged="ViewboxPage_SizeChanged">
+                                        <graphics:CanvasControl UseSharedDevice="True" CreateResources="CanvasPreview_CreateResources" Draw="CanvasPreview_Draw" DataContextChanged="CanvasPreview_DataContextChanged" SizeChanged="CanvasPage_SizeChanged" Unloaded="CanvasControl_Unloaded" />
                                     </Viewbox>
                                 </Frame>
                             </Border>
@@ -168,34 +168,32 @@
                 </animations:ImplicitAnimationSet>
             </animations:Implicit.HideAnimations>
 
-            <ScrollViewer x:Name="ScrollViewerDraw" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" MinZoomFactor="1.0" MaxZoomFactor="2.5" ZoomMode="Enabled" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" SizeChanged="ScrollViewerPage_SizeChanged">
+            <ScrollViewer x:Name="ScrollViewerDraw" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" MinZoomFactor="1.0" MaxZoomFactor="2.5" ZoomMode="Enabled" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" SizeChanged="ScrollViewerPage_SizeChanged" ViewChanged="ScrollViewerPage_ViewChanged">
                 <Grid Padding="16,16,16,80" HorizontalAlignment="Center" VerticalAlignment="Center" MaxWidth="{Binding ElementName=ScrollViewerDraw, Path=ViewportWidth, Mode=OneWay}" MaxHeight="{Binding ElementName=ScrollViewerDraw, Path=ViewportHeight, Mode=OneWay}">
-                    <Frame Margin="0" HorizontalAlignment="Center" VerticalAlignment="Center" ui:Effects.Shadow="{ThemeResource ShadowPage}">
-                        <Image>
-                            <Image.Source>
-                                <BitmapImage UriSource="{x:Bind ViewModel.ProjectService.SelectedPage.PreviewBitmapUri, Mode=OneWay}" />
-                            </Image.Source>
-                        </Image>
+                    <Frame HorizontalAlignment="Center" VerticalAlignment="Center" ui:Effects.Shadow="{ThemeResource ShadowPage}">
+                        <Viewbox x:Name="ViewboxDraw" Stretch="Uniform" SizeChanged="ViewboxDraw_SizeChanged">
+                            <graphics:CanvasControl x:Name="CanvasDraw" UseSharedDevice="True" CreateResources="CanvasDraw_CreateResources" Draw="CanvasDraw_Draw" SizeChanged="CanvasPage_SizeChanged" Unloaded="CanvasDraw_Unloaded" />
+                        </Viewbox>
                     </Frame>
-                    <!--<InkCanvas x:Name="InkCanvasDraw" />-->
+                    <InkCanvas x:Name="InkCanvasDraw" HorizontalAlignment="Center" VerticalAlignment="Center" Loaded="InkCanvasDraw_Loaded" />
                 </Grid>
             </ScrollViewer>
         </Border>
 
         <!-- Bottom toolbar -->
-        <Grid x:Name="GridToolbar" Padding="16,0,16,0" Height="72" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Visibility="{x:Bind ViewModel.ProjectService.SelectedPage, Mode=OneWay, Converter={StaticResource NotNullVisibilityConverter}}" x:Load="{x:Bind ViewModel.CurrentProject, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}}">
+        <Grid x:Name="GridToolbar" ColumnSpacing="4" Padding="16,0,16,0" Height="72" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Visibility="{x:Bind ViewModel.ProjectService.SelectedPage, Mode=OneWay, Converter={StaticResource NotNullVisibilityConverter}}" x:Load="{x:Bind ViewModel.CurrentProject, Mode=OneWay, Converter={StaticResource NotNullBoolConverter}}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="1*" />
-                <ColumnDefinition Width="64" />
+                <ColumnDefinition Width="80" />
             </Grid.ColumnDefinitions>
 
-            <Grid x:Name="GridToolbarNavigation" Grid.Column="0" MaxWidth="64" VerticalAlignment="Center">
+            <Grid x:Name="GridToolbarNavigation" Grid.Column="0" MaxWidth="80" VerticalAlignment="Center">
                 <Border x:Name="BorderToolbarNavigationBackground" Background="{ThemeResource AcrylicBackgroundFillColorDefaultBrush}" CornerRadius="8" animations:Implicit.ShowAnimations="{StaticResource ToolbarBackgroundShowAnimations}" x:Load="{x:Bind IsToolbarBackgroundVisible, Mode=OneWay}" />
-                <Button x:Name="ButtonNavigation" HorizontalAlignment="Left" CornerRadius="8" VerticalAlignment="Center" Visibility="{x:Bind IsCropping, Mode=OneWay, Converter={StaticResource NegativeBoolVisibilityConverter}}" Style="{StaticResource MutedButtonStyle}" ToolTipService.ToolTip="{x:Bind strings:Resources.GoToPage}" x:Load="{x:Bind IsNavigationTextBoxVisible, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}" Click="ButtonNavigation_Click">
-                    <TextBlock Text="{x:Bind ProjectNavigationIndicator, Mode=OneWay}" IsHitTestVisible="False" MaxLines="1" Margin="4" Padding="4" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Typography.NumeralAlignment="Tabular" Style="{StaticResource CaptionTextBlockStyle}" />
+                <Button x:Name="ButtonNavigation" HorizontalAlignment="Left" CornerRadius="8" VerticalAlignment="Center" Visibility="{x:Bind IsCropping, Mode=OneWay, Converter={StaticResource NegativeBoolVisibilityConverter}}" Style="{StaticResource MutedButtonStyle}" ToolTipService.ToolTip="{x:Bind strings:Resources.GoToPage}" Click="ButtonNavigation_Click">
+                    <TextBlock Text="{x:Bind ProjectNavigationIndicator, Mode=OneWay}" IsHitTestVisible="False" MaxLines="1" Margin="4" Padding="4" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Typography.NumeralAlignment="Tabular" TextTrimming="Clip" Style="{StaticResource CaptionTextBlockStyle}" />
                 </Button>
-                <TextBox x:Name="TextBoxNavigation" FontSize="12" Padding="6,5,8,6" MinWidth="48" MinHeight="28" CornerRadius="8" AcceptsReturn="False" HorizontalAlignment="Left" VerticalAlignment="Center" VerticalContentAlignment="Center" Typography.NumeralAlignment="Tabular" Text="{x:Bind ViewModel.ProjectService.SelectedPage.PageNumber, Mode=OneWay}" Style="{StaticResource NoClearButtonTextBoxStyle}" x:Load="{x:Bind IsNavigationTextBoxVisible, Mode=OneWay}" Loaded="TextBoxNavigation_Loaded" LostFocus="TextBoxNavigation_LostFocus" KeyDown="TextBoxNavigation_KeyDown" />
+                <TextBox x:Name="TextBoxNavigation" FontSize="12" Padding="6,5,8,6" MinWidth="48" MinHeight="28" CornerRadius="8" AcceptsReturn="False" HorizontalAlignment="Stretch" VerticalAlignment="Center" VerticalContentAlignment="Center" Typography.NumeralAlignment="Tabular" Text="{x:Bind ViewModel.ProjectService.SelectedPage.PageNumber, Mode=OneWay}" Style="{StaticResource NoClearButtonTextBoxStyle}" x:Load="{x:Bind IsNavigationTextBoxVisible, Mode=OneWay}" Loaded="TextBoxNavigation_Loaded" LostFocus="TextBoxNavigation_LostFocus" KeyDown="TextBoxNavigation_KeyDown" />
             </Grid>
 
             <Grid Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center">
@@ -480,13 +478,14 @@
                         </Grid.ColumnDefinitions>
 
                         <StackPanel Orientation="Horizontal" Margin="0,0,4,0">
-                            <ToggleButton VerticalAlignment="Stretch" Style="{StaticResource MutedToggleButtonStyle}" Foreground="{ThemeResource TextFillColorPrimaryBrush}">
+                            <InkToolbar x:Name="InkToolbarDraw" Loaded="InkToolbarDraw_Loaded" />
+                            <ToggleButton x:Name="ToggleButtonDrawWithTouch" VerticalAlignment="Stretch" Style="{StaticResource MutedToggleButtonStyle}" Foreground="{ThemeResource TextFillColorPrimaryBrush}" ToolTipService.ToolTip="{x:Bind strings:Resources.DrawWithTouch}" AutomationProperties.Name="{x:Bind strings:Resources.DrawWithTouch}" IsChecked="{x:Bind IsDrawingWithTouchEnabled, Mode=TwoWay}">
                                 <FontIcon Glyph="&#xED5F;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                             </ToggleButton>
                         </StackPanel>
                         <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8">
                             <AppBarSeparator />
-                            <SplitButton x:Name="SplitButtonSaveDraw" VerticalAlignment="Stretch" Style="{StaticResource AccentSplitButtonStyle}">
+                            <SplitButton x:Name="SplitButtonSaveDraw" VerticalAlignment="Stretch" Style="{StaticResource AccentSplitButtonStyle}" IsEnabled="{x:Bind HasInk, Mode=OneWay}" Click="SplitButtonSaveDraw_Click">
                                 <Grid ColumnSpacing="12">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto" />
@@ -499,12 +498,12 @@
 
                                 <SplitButton.Flyout>
                                     <MenuFlyout>
-                                        <MenuFlyoutItem x:Name="MenuFlyoutItemSaveDraw" Text="{x:Bind strings:Resources.Apply}" FontWeight="SemiBold">
+                                        <MenuFlyoutItem x:Name="MenuFlyoutItemSaveDraw" Text="{x:Bind strings:Resources.Apply}" FontWeight="SemiBold" Click="MenuFlyoutItemSaveDraw_Click">
                                             <MenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE8FB;" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                                             </MenuFlyoutItem.Icon>
                                         </MenuFlyoutItem>
-                                        <MenuFlyoutItem x:Name="MenuFlyoutItemSaveDrawAsCopy" Text="{x:Bind strings:Resources.ApplyAsCopy}" />
+                                        <MenuFlyoutItem x:Name="MenuFlyoutItemSaveDrawAsCopy" Text="{x:Bind strings:Resources.ApplyAsCopy}" Click="MenuFlyoutItemSaveDrawAsCopy_Click" />
                                     </MenuFlyout>
                                 </SplitButton.Flyout>
                             </SplitButton>

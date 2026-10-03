@@ -45,7 +45,7 @@ partial class ShellViewModel : ObservableRecipient, IDisposable
 
     #region Events
     public event EventHandler<(TaskCompletionSource<bool> Task, string Trigger)> SaveChangesDialogRequested;
-    public event EventHandler<(TaskCompletionSource<SaveOptions?> Process, ScanOptions ScanOptions, ProjectBase? Project, string? DesiredFileDisplayName)> SaveFileDialogRequested;
+    public event EventHandler<(TaskCompletionSource<SaveOptions?> Process, ScanOptions ScanOptions, ProjectBase? Project, string? DesiredFileDisplayName, int ExistingFileCount)> SaveFileDialogRequested;
     public event EventHandler<(TaskCompletionSource<bool> Process, ProjectBase? Project)> ProjectDeletionDialogRequested;
     public event EventHandler<TaskCompletionSource> SaveInProgressDialogRequested;
     public event EventHandler<(string Title, Task Task)> IndeterminateProgressDialogRequested;
@@ -110,7 +110,7 @@ partial class ShellViewModel : ObservableRecipient, IDisposable
         });
         Messenger.Register<ShowSaveOptionsDialogMessage>(this, (r, m) =>
         {
-            m.Reply(ShowSaveFileDialogAsync(m.ScanOptions, m.Project, m.DesiredFileDisplayName));
+            m.Reply(ShowSaveFileDialogAsync(m.ScanOptions, m.Project, m.DesiredFileDisplayName, m.ExistingFileCount));
         });
         Messenger.Register<ShowProjectDeletionDialogMessage>(this, (r, m) =>
         {
@@ -202,10 +202,10 @@ partial class ShellViewModel : ObservableRecipient, IDisposable
         return await result.Task;
     }
 
-    private async Task<SaveOptions?> ShowSaveFileDialogAsync(ScanOptions scanOptions, ProjectBase? project, string? desiredFileDisplayName)
+    private async Task<SaveOptions?> ShowSaveFileDialogAsync(ScanOptions scanOptions, ProjectBase? project, string? desiredFileDisplayName, int existingFileCount)
     {
         TaskCompletionSource<SaveOptions?> result = new();
-        SaveFileDialogRequested?.Invoke(this, new(result, scanOptions, project, desiredFileDisplayName));
+        SaveFileDialogRequested?.Invoke(this, new(result, scanOptions, project, desiredFileDisplayName, existingFileCount));
         return await result.Task;
     }
 

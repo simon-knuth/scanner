@@ -16,6 +16,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Graphics.Imaging;
+using Windows.UI.Input.Inking;
 using static Scanner.Helpers.PageDimensionsHelper;
 using static Scanner.Helpers.RotationHelpers;
 using static Scanner.Models.ImagePage;
@@ -41,9 +42,11 @@ partial class EditorViewModel : ObservableRecipient, IDisposable
     public AsyncRelayCommand RotateCurrentPageAutomaticallyAsyncCommand => new AsyncRelayCommand(async (x) => await RotateCurrentPageAsync(RotationIntent.Automatic));
     public AsyncRelayCommand RemoveCurrentPageAsyncCommand => new AsyncRelayCommand(RemoveCurrentPageAsync);
     public AsyncRelayCommand<ImageFilter> ApplyFilterToCurrentPageAsyncCommand => new AsyncRelayCommand<ImageFilter>(ApplyFilterToCurrentPageAsync);
-    public AsyncRelayCommand<Rect> CropCurrentPageAsyncCommand => new AsyncRelayCommand<Rect>(async (x) => await CropPagesAsync(ProjectService.SelectedPage != null ? [(ImagePage)ProjectService.SelectedPage] : [], x, false));
-    public AsyncRelayCommand<Rect> CropCurrentPageAsCopyAsyncCommand => new AsyncRelayCommand<Rect>(async (x) => await CropPagesAsync(ProjectService.SelectedPage != null ? [(ImagePage)ProjectService.SelectedPage] : [], x, true));
+    public AsyncRelayCommand<Rect> CropCurrentPageAsyncCommand => new AsyncRelayCommand<Rect>(async (x) => await CropPagesAsync(GetSelectedImagePages(), x, false));
+    public AsyncRelayCommand<Rect> CropCurrentPageAsCopyAsyncCommand => new AsyncRelayCommand<Rect>(async (x) => await CropPagesAsync(GetSelectedImagePages(), x, true));
     public AsyncRelayCommand<(List<ImagePage>, Rect)> CropPagesAsyncCommand => new AsyncRelayCommand<(List<ImagePage>, Rect)>(async (x) => await CropPagesAsync(x.Item1, x.Item2, false));
+    public AsyncRelayCommand<IReadOnlyList<InkStroke>> DrawOnCurrentPageAsyncCommand => new AsyncRelayCommand<IReadOnlyList<InkStroke>>(async (x) => await DrawOnPagesAsync(GetSelectedImagePages(), x!, false));
+    public AsyncRelayCommand<IReadOnlyList<InkStroke>> DrawOnCurrentPageAsCopyAsyncCommand => new AsyncRelayCommand<IReadOnlyList<InkStroke>>(async (x) => await DrawOnPagesAsync(GetSelectedImagePages(), x!, true));
     public AsyncRelayCommand<int> SetBrightnessForCurrentPageCommand => new AsyncRelayCommand<int>(SetBrightnessForCurrentPageAsync);
     public AsyncRelayCommand<int> SetContrastForCurrentPageCommand => new AsyncRelayCommand<int>(SetContrastForCurrentPageAsync);
     public AsyncRelayCommand ResetBrightnessCommand => new AsyncRelayCommand(async () => await SetBrightnessForCurrentPageAsync(AppConfig.DefaultBrightness));
@@ -250,6 +253,29 @@ partial class EditorViewModel : ObservableRecipient, IDisposable
             Messenger.Send(new ShowIndeterminateProgressDialogMessage(Resources.Strings.Resources.ApplyingChanges, process));
 
         await process;
+    }
+
+    private async Task DrawOnPagesAsync(List<ImagePage> pages, IReadOnlyList<InkStroke> strokes, bool asCopy)
+    {
+        if (CurrentProject == null) return;
+        if (pages.Count == 0) return;
+        Task process;
+
+        if (asCopy)
+            process = ProjectService.ApplyActionAsync(new DrawOnPagesAsCopyAction(pages, strokes));
+        else
+            process = ProjectService.ApplyActionAsync(new SetPageInkAction(pages[0], strokes));
+
+        if (pages.Count > 1)
+            Messenger.Send(new ShowIndeterminateProgressDialogMessage(Resources.Strings.Resources.ApplyingChanges, process));
+
+        await process;
+    }
+
+    private List<ImagePage> GetSelectedImagePages()
+    {
+        if (ProjectService.SelectedPage is ImagePage imagePage) return [imagePage];
+        return [];
     }
 
     private bool GetAreSimilarPagesForCropAvailable()

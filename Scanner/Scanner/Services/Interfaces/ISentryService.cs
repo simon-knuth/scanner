@@ -84,8 +84,8 @@ public enum AnalyticsEvent
     CropAsCopy,
     DeletePages,
     DeletePage,
-    DrawOnPage, // TODO
-    DrawOnPageAsCopy,   // TODO
+    DrawOnPage,
+    DrawOnPageAsCopy,
     CopyPages,
     CopyPage,
     CopyDocument,

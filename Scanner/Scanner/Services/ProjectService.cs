@@ -339,7 +339,7 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
                 switch (scanOptions.TargetFormat)
                 {
                     case TargetFormat.PDF:
-                        PdfProjectCreationData pdfCreationData = new(null, files, saveOptions.FileName, saveOptions.TargetFolder, scanOptions, false);
+                        PdfProjectCreationData pdfCreationData = new(null, files, saveOptions.FileName!, saveOptions.TargetFolder, scanOptions, false);
                         project = await pdfCreationData.CreateProjectAsync(false, uiDispatcherQueue);
                         break;
                     case TargetFormat.JPG:
@@ -549,7 +549,13 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
             }
         }
 
-        return GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.ErrorMessageBody);
+        // the driver may provide instructions for the user
+        string message = GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.ErrorMessageBody);
+        string? restrictedDescription = exc.GetRestrictedDescription();
+        if (restrictedDescription != null)
+            message += $"\n{restrictedDescription}";
+
+        return message;
     }
 
     public async Task<bool> TryOpenProjectFromFilesAsync(string[] filePaths, Guid? id, DispatcherQueue uiDispatcherQueue)
@@ -604,7 +610,8 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
             IProjectCreationData projectCreationData;
             ScanOptions scanOptions = new(null)
             {
-                TargetFormat = targetFormat
+                TargetFormat = targetFormat,
+                ScanTime = files.Min(f => f.SourceFile.DateCreated).LocalDateTime
             };
 
             if (targetFormat == TargetFormat.PDF)
@@ -872,8 +879,7 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
             {
                 bool result = await pdfProject.TryOpenWithAsync(app);
                 if (result)
-                    SentryService?.TrackEvent(AnalyticsEvent.OpenWith,
-                        app != null ? new Dictionary<string, string> { { "display_name", app.DisplayInfo.DisplayName } } : null);
+                    TrackOpenWithEvent(app);
                 return result;
             }
         }
@@ -906,8 +912,7 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
             {
                 bool result = await imageProject.TryOpenWithPageAsync(app, page);
                 if (result)
-                    SentryService?.TrackEvent(AnalyticsEvent.OpenWith,
-                        app != null ? new Dictionary<string, string> { { "display_name", app.DisplayInfo.DisplayName } } : null);
+                    TrackOpenWithEvent(app);
                 return result;
             }
         }
@@ -925,6 +930,25 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
         }
 
         return true;
+    }
+
+    private void TrackOpenWithEvent(AppInfo? app)
+    {
+        Dictionary<string, string>? properties = null;
+
+        if (app != null)
+        {
+            try
+            {
+                properties = new Dictionary<string, string> { { "display_name", app.DisplayInfo.DisplayName } };
+            }
+            catch (Exception exc)
+            {
+                LogService?.Log.Warning(exc, "Unable to get the display name of the app that the file was opened with");
+            }
+        }
+
+        SentryService?.TrackEvent(AnalyticsEvent.OpenWith, properties);
     }
 
     public async Task<bool> TryShareProjectAsync()

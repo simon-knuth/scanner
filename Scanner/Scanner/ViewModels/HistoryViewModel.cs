@@ -28,6 +28,7 @@ class HistoryViewModel : ObservableRecipient, IDisposable
     // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     #region Services
+    private readonly ILogService? LogService = Ioc.Default.GetService<ILogService>();
     public readonly IProjectHistoryService ProjectHistoryService = Ioc.Default.GetRequiredService<IProjectHistoryService>();
     public readonly IProjectService ProjectService = Ioc.Default.GetRequiredService<IProjectService>();
     private readonly ISentryService? SentryService = Ioc.Default.GetService<ISentryService>();
@@ -211,8 +212,17 @@ class HistoryViewModel : ObservableRecipient, IDisposable
 
     private async Task ShowInFileExplorerAsync(ProjectHistoryEntry entry)
     {
-        SentryService?.TrackEvent(AnalyticsEvent.HistoryEntryShownInFileExplorer);
-        StorageFolder folder = await StorageFolder.GetFolderFromPathAsync(Path.GetDirectoryName(entry.Files[0].FilePath));
-        await Windows.System.Launcher.LaunchFolderAsync(folder);
+        try
+        {
+            SentryService?.TrackEvent(AnalyticsEvent.HistoryEntryShownInFileExplorer);
+            StorageFolder folder = await StorageFolder.GetFolderFromPathAsync(Path.GetDirectoryName(entry.Files[0].FilePath));
+            Windows.System.FolderLauncherOptions options = new();
+            options.ItemsToSelect.Add(await StorageFile.GetFileFromPathAsync(entry.Files[0].FilePath));
+            await Windows.System.Launcher.LaunchFolderAsync(folder, options);
+        }
+        catch (Exception exc)
+        {
+            LogService?.Log.Warning(exc, "Failed to show ProjectHistoryEntry in File Explorer");
+        }
     }
 }

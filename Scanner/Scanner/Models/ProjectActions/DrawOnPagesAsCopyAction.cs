@@ -5,57 +5,56 @@ using Microsoft.UI.Dispatching;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml.Media;
 using Scanner.Extensions;
-using Scanner.Helpers;
 using Scanner.Models.Interfaces;
 using Scanner.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Graphics.Imaging;
 using Windows.Storage;
+using Windows.UI.Input.Inking;
 using WinRT.Interop;
 using static Scanner.Helpers.RotationHelpers;
 using static Scanner.Helpers.Helpers;
 
 namespace Scanner.Models;
 
-public partial class CropPagesAction : IProjectAction
+public partial class DrawOnPagesAsCopyAction : IProjectAction
 {
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // DECLARATIONS /////////////////////////////////////////////////////////////////////////////////////////////////////////
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////        
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     #region Services
     private static readonly IAppDataService AppDataService = Ioc.Default.GetRequiredService<IAppDataService>();
     private static readonly ILogService? LogService = Ioc.Default.GetService<ILogService>();
     #endregion
 
     private List<ImagePage> pages;
-    private Rect cropRegion;
+    private IReadOnlyList<InkStroke> strokes;
 
-    private List<AppliedCrop>? appliedCrops;
+    private List<ImagePage>? addedPages;
 
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /// <summary>
-    /// Crops a set of pages.
+    /// Copies a set of pages and puts ink on the copies, leaving the originals as they are.
     /// </summary>
     /// <param name="pages">
-    /// A list of pages to crop.
+    /// A list of pages to copy and draw on.
     /// </param>
-    /// <param name="cropRegion">
-    /// The crop to apply to all pages.
+    /// <param name="strokes">
+    /// The strokes to put on all copies, in the coordinate space of the pages' pixels.
     /// </param>
-    public CropPagesAction(List<ImagePage> pages, Rect cropRegion)
+    public DrawOnPagesAsCopyAction(List<ImagePage> pages, IReadOnlyList<InkStroke> strokes)
     {
         this.pages = pages;
-        this.cropRegion = cropRegion;
+        this.strokes = strokes;
     }
 
 
@@ -64,51 +63,28 @@ public partial class CropPagesAction : IProjectAction
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public async Task<bool> ExecuteAsync(ProjectBase project, DispatcherQueue uiDispatcherQueue)
     {
-        appliedCrops = await project.CropPagesAsync(pages, cropRegion, AppDataService.ChangesFolder, uiDispatcherQueue);
+        addedPages = await project.AddInkedCopiesOfPagesAsync(pages, strokes, AppDataService.ChangesFolder, uiDispatcherQueue);
 
-        return appliedCrops.Count > 0;
+        return addedPages.Count > 0;
     }
 
     public (AnalyticsEvent Event, Dictionary<string, string>? Properties)? GetAnalyticsEvent()
     {
-        if (appliedCrops == null || appliedCrops.Count == 0) return null;
-        return (pages.Count >= 2 ? AnalyticsEvent.CropMultiple : AnalyticsEvent.Crop, null);
+        if (addedPages == null || addedPages.Count == 0) return null;
+        return (AnalyticsEvent.DrawOnPageAsCopy, null);
     }
 
     public async Task UndoAsync(ProjectBase project, DispatcherQueue uiDispatcherQueue)
     {
-        if (appliedCrops == null)
-        {
-            throw new ActionFailedAndRolledBackException("Can't undo CropPagesAction without list of applied crops");
-        }
+        if (addedPages == null)
+            throw new ActionFailedAndRolledBackException("Can't undo DrawOnPagesAsCopyAction without list of added pages");
 
-        // replace with pre-crop files
-        foreach (AppliedCrop appliedCrop in appliedCrops)
-        {
-            StorageFile croppedFile = appliedCrop.Page.SourceFile;
-            await appliedCrop.PreviousFile.MoveAsync(AppDataService.ChangesFolder, appliedCrop.PreviousFile.Name, NameCollisionOption.GenerateUniqueName);
-
-            await appliedCrop.Page.ChangeSourceFileAsync(AppDataService.ChangesFolder, appliedCrop.PreviousFile, uiDispatcherQueue);
-
-            appliedCrop.Page.Width = appliedCrop.PreviousWidth;
-            appliedCrop.Page.Height = appliedCrop.PreviousHeight;
-
-            // move the ink back out of the crop region; the translation the crop applied is its own inverse
-            if (appliedCrop.Page.HasInk)
-            {
-                appliedCrop.Page.InkStrokes = InkRenderingHelpers.TransformStrokes(appliedCrop.Page.InkStrokes,
-                    Matrix3x2.CreateTranslation((float)cropRegion.X, (float)cropRegion.Y));
-            }
-
-            await croppedFile.DeleteAsync(StorageDeleteOption.PermanentDelete);
-        }
+        // remove added pages
+        await project.RemovePagesAsync(addedPages, false, uiDispatcherQueue);
     }
 
     public string GetFriendlyName()
     {
-        if (pages.Count >= 2)
-            return string.Format(GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.ProjectActionCropPages), pages.Count);
-        else
-            return GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.ProjectActionCropPage);
+        return GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.ProjectActionDrawOnPageAsCopy);
     }
 }

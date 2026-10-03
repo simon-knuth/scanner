@@ -530,10 +530,17 @@ partial class ScanOptionsViewModel : ObservableRecipient, IDisposable
         {
             LogService?.Log.Error(exc, "Failed to update bitmap for scan area alignment.");
             SentryService?.TrackError(exc);
+
+            // the driver may provide instructions for the user
+            string message = Resources.Strings.Resources.ErrorMessageBody;
+            string? restrictedDescription = exc.GetRestrictedDescription();
+            if (restrictedDescription != null)
+                message += $"\n{restrictedDescription}";
+
             Messenger.Send(new ShowInAppNotificationMessage(new CommunityToolkit.WinUI.Behaviors.Notification
             {
                 Title = Resources.Strings.Resources.ErrorMessageHeading,
-                Message = Resources.Strings.Resources.ErrorMessageBody,
+                Message = message,
                 Severity = InfoBarSeverity.Error,
             }));
         }

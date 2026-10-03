@@ -1,0 +1,124 @@
+<settings:SettingsPage
+    x:Class="Scanner.Views.Settings.SettingsViewTranslations"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:animatedvisuals="using:Microsoft.UI.Xaml.Controls.AnimatedVisuals"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewModels="using:Scanner.ViewModels"
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:core="using:Microsoft.Xaml.Interactivity"
+    xmlns:interfaces="using:Scanner.Models.Interfaces"
+    xmlns:ui="using:CommunityToolkit.WinUI"
+    xmlns:media="using:CommunityToolkit.WinUI.Media"
+    xmlns:converters="using:Scanner.Views.Converters"
+    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
+    xmlns:settings="using:Scanner.Views.Settings"
+    xmlns:globalization="using:Windows.Globalization"
+    xmlns:strings="using:Scanner.Resources.Strings"
+    xmlns:animations="using:CommunityToolkit.WinUI.Animations"
+    mc:Ignorable="d">
+
+
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <!-- - - - - - - - - - - - - - - - -  RESOURCES  - - - - - - - - - - - - - - - - -->
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <settings:SettingsPage.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="ms-appx:///StylesDictionary.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+
+            <!-- XAML Converters -->
+            <converters:NotNullBoolConverter x:Key="NotNullBoolConverter" />
+        </ResourceDictionary>
+    </settings:SettingsPage.Resources>
+
+
+    <!-- - - - - - - - - - - - - - - - - - - -  - - - - - - - - - - - - - - - - - - - - -->
+    <!-- - - - - - - - - - - - - - - - -  PAGE CONTENT  - - - - - - - - - - - - - - - - -->
+    <!-- - - - - - - - - - - - - - - - - - - -  - - - - - - - - - - - - - - - - - - - - -->
+    <Grid x:Name="GridRoot">
+        <ScrollViewer HorizontalScrollMode="Disabled" VerticalScrollMode="Auto" VerticalScrollBarVisibility="Auto">
+            <StackPanel Orientation="Vertical" Spacing="4" Padding="32">
+                <StackPanel.ChildrenTransitions>
+                    <TransitionCollection>
+                        <RepositionThemeTransition IsStaggeringEnabled="False" />
+                    </TransitionCollection>
+                </StackPanel.ChildrenTransitions>
+                
+                <TextBlock Text="{x:Bind strings:Resources.SettingsTranslationsHeading}" Margin="0,0,0,16" FontSize="24" Style="{StaticResource BaseTextBlockStyle}" />
+                <controls:SettingsCard Header="{x:Bind strings:Resources.SettingsLanguageHeading}" Margin="0,0,0,16">
+                    <controls:SettingsCard.HeaderIcon>
+                        <FontIcon Glyph="&#xF2B7;" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                    </controls:SettingsCard.HeaderIcon>
+
+                    <ComboBox ItemsSource="{x:Bind ViewModel.AvailableAppLanguages}" SelectedItem="{x:Bind ViewModel.SettingAppLanguage, Mode=TwoWay}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate x:DataType="viewModels:DisplayedLanguage">
+                                <TextBlock Text="{x:Bind FriendlyName}" />
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                </controls:SettingsCard>
+
+                <TextBlock Text="{x:Bind strings:Resources.SettingsTranslationsBody}" Margin="0,0,0,16" Style="{StaticResource BodyTextBlockStyle}" />
+                <controls:SettingsExpander x:Name="SettingsExpanderContributors">
+                    <controls:SettingsExpander.Header>
+                        <Grid ColumnSpacing="20">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="24" />
+                                <ColumnDefinition Width="1*" />
+                            </Grid.ColumnDefinitions>
+
+                            <FontIcon Grid.Column="0" Glyph="&#xEB52;" Foreground="Red" FontFamily="{StaticResource SymbolThemeFontFamily}" Visibility="{x:Bind SettingsExpanderContributors.IsExpanded, Mode=OneWay}">
+                                <animations:Implicit.ShowAnimations>
+                                    <animations:ImplicitAnimationSet>
+                                        <animations:OpacityAnimation From="0.0" To="1.0" Duration="0:0:0.3" />
+                                    </animations:ImplicitAnimationSet>
+                                </animations:Implicit.ShowAnimations>
+
+                                <animations:Implicit.HideAnimations>
+                                    <animations:ImplicitAnimationSet>
+                                        <animations:OpacityAnimation To="0.0" Duration="0:0:0.3" />
+                                    </animations:ImplicitAnimationSet>
+                                </animations:Implicit.HideAnimations>
+                            </FontIcon>
+                            <FontIcon Grid.Column="0" Glyph="&#xEB51;" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                            <TextBlock Grid.Column="1" Text="{x:Bind strings:Resources.Contributors}" />
+                        </Grid>
+                    </controls:SettingsExpander.Header>
+
+                    <controls:SettingsExpander.Items>
+                        <controls:SettingsCard ContentAlignment="Vertical" HorizontalContentAlignment="Stretch">
+                            <ItemsControl ItemsSource="{x:Bind Contributors}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="6" VerticalSpacing="6" />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate x:DataType="x:String">
+                                        <Border Padding="8,4,8,4" CornerRadius="14" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1">
+                                            <TextBlock Text="{x:Bind}" Style="{StaticResource BodyTextBlockStyle}" Foreground="{ThemeResource TextFillColorPrimaryBrush}" IsTextSelectionEnabled="True" />
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </controls:SettingsCard>
+                    </controls:SettingsExpander.Items>
+                </controls:SettingsExpander>
+                <controls:SettingsCard x:Name="SettingsCardHelpTranslate" Header="{x:Bind strings:Resources.SettingsTranslationsHelp}" IsClickEnabled="True" Click="SettingsCardHelpTranslate_Click">
+                    <controls:SettingsCard.HeaderIcon>
+                        <FontIcon Glyph="&#xE82E;" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                    </controls:SettingsCard.HeaderIcon>
+                    
+                    <controls:SettingsCard.ActionIcon>
+                        <FontIcon Glyph="&#xE8A7;" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                    </controls:SettingsCard.ActionIcon>
+                </controls:SettingsCard>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</settings:SettingsPage>

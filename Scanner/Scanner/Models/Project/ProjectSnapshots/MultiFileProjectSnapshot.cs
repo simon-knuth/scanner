@@ -61,7 +61,7 @@ public partial class MultiFileProjectSnapshot : IProjectSnapshot
             if (page is ImagePage imagePage)
             {
                 Pages.Add(page, new MultiFileProjectSnapshotPage(imagePage.SourceFile, imagePage.TargetFile, imagePage.TargetFolder!,
-                    imagePage.FileNameInfo!.DesiredName, imagePage.Filter, imagePage.Brightness, imagePage.Contrast));
+                    imagePage.FileNameInfo!.DesiredName, imagePage.Filter, imagePage.Brightness, imagePage.Contrast, [.. imagePage.InkStrokes]));
             }
         }
     }
@@ -90,7 +90,7 @@ public partial class MultiFileProjectSnapshot : IProjectSnapshot
                     Dictionary<IProjectPage, FileHandle?> pdfResult = await PdfProject.CreatePdfFromPagesAsync(pdfPages, page.Value.TargetFile, page.Value.DesiredFileName, page.Value.TargetFolder, SettingsService.SettingOcrPdfs, uiDispatcherQueue);
                     generatedTargetFile = pdfResult[page.Key];
                 }
-                else if (page.Value.Filter != ImageFilter.None || FileExtensionToTargetFormat(page.Value.SourceFile.FileType) != Format)
+                else if (((IProjectSnapshotPage)page.Value).RequiresRasterPass || FileExtensionToTargetFormat(page.Value.SourceFile.FileType) != Format)
                 {
                     // encoding necessary ~> prepare file
                     if (page.Value.TargetFile == null)
@@ -117,10 +117,10 @@ public partial class MultiFileProjectSnapshot : IProjectSnapshot
 
                             BitmapEncoder encoder = await BitmapEncoder.CreateAsync(ProjectBase.GetBitmapEncoderIdForFile(generatedTargetFile.File), generatedTargetFile.FileStream, propertySet);
 
-                            if (page.Value.Filter != ImageFilter.None)
+                            if (((IProjectSnapshotPage)page.Value).RequiresRasterPass)
                             {
                                 // use Win2D effects pipeline
-                                await ProjectBase.ApplyEffectsAsync(sourceStream, encoder, page.Value.Filter, page.Value.Brightness, page.Value.Contrast);
+                                await ProjectBase.ApplyEffectsAsync(sourceStream, encoder, page.Value.Filter, page.Value.Brightness, page.Value.Contrast, page.Value.InkStrokes);
                             }
                             else
                             {

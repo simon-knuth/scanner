@@ -9,6 +9,7 @@ using Microsoft.UI.Xaml.Media.Imaging;
 using Scanner.Messages;
 using Scanner.Models;
 using Scanner.Models.Interfaces;
+using Scanner.Models.ItemNaming;
 using Scanner.Services;
 using Scanner.Services.Interfaces;
 using Sentry.Protocol;
@@ -132,7 +133,7 @@ partial class ProjectViewModel : ObservableRecipient, IDisposable
             {
                 if (pdfProject.FileNameInfo.DesiredName != value)
                 {
-                    _ = ProjectService.ApplyActionAsync(new RenameAction(null, value));
+                    _ = ProjectService.ApplyActionAsync(new RenameAction(page: null, value));
                 }
             }
             else if (ProjectService.SelectedPage is ImagePage imagePage)
@@ -395,13 +396,16 @@ partial class ProjectViewModel : ObservableRecipient, IDisposable
 
     private async Task ShowInFileExplorerAsync(IProjectPage? page)
     {
-        if (CurrentProject == null) return;
+        if (CurrentProject == null)
+            return;
 
         // get folder
         StorageFolder? folder = null;
+        StorageFile? file = null;
         if (CurrentProject is PdfProject pdfProject)
         {
             folder = pdfProject.TargetFile != null ? pdfProject.TargetFolder : null;
+            file = pdfProject.TargetFile?.File;
         }
         else
         {
@@ -413,6 +417,7 @@ partial class ProjectViewModel : ObservableRecipient, IDisposable
                 return;
 
             folder = imagePage.TargetFile != null ? imagePage.TargetFolder : null;
+            file = imagePage.TargetFile?.File;
         }
 
         // ensure folder
@@ -428,7 +433,19 @@ partial class ProjectViewModel : ObservableRecipient, IDisposable
         }
 
         // open it
-        await Windows.System.Launcher.LaunchFolderAsync(folder);
+        try
+        {
+            Windows.System.FolderLauncherOptions options = new();
+
+            if (file is not null)
+                options.ItemsToSelect.Add(file);
+            
+            await Windows.System.Launcher.LaunchFolderAsync(folder, options);
+        }
+        catch (Exception exc)
+        {
+            LogService?.Log.Warning(exc, "Failed to show page in File Explorer");
+        }
     }
 
     private async Task PickAndAddFilesAsync()
@@ -600,6 +617,19 @@ partial class ProjectViewModel : ObservableRecipient, IDisposable
         IReadOnlyList<AppInfo> readOnlyList = await Windows.System.Launcher.FindFileHandlersAsync(fileExtension);
         foreach (AppInfo appInfo in readOnlyList)
         {
+            // resolve the display name right away, the app may become unavailable later on
+            string displayName;
+            try
+            {
+                displayName = appInfo.DisplayInfo.DisplayName;
+            }
+            catch (Exception exc)
+            {
+                // app can't be queried, skip it
+                LogService?.Log.Warning(exc, "Unable to get the display name of an open with target, skipping it");
+                continue;
+            }
+
             try
             {
                 RandomAccessStreamReference stream = appInfo.DisplayInfo.GetLogo(new Size(128, 128));
@@ -607,13 +637,13 @@ partial class ProjectViewModel : ObservableRecipient, IDisposable
                 {
                     BitmapImage bmp = new BitmapImage();
                     await bmp.SetSourceAsync(content);
-                    result.Add(new OpenWithTarget(appInfo, bmp));
+                    result.Add(new OpenWithTarget(appInfo, displayName, bmp));
                 }
             }
             catch (Exception)
             {
                 // add without logo
-                result.Add(new OpenWithTarget(appInfo, null));
+                result.Add(new OpenWithTarget(appInfo, displayName, null));
             }
 
             if (result.Count >= 5) break;   // 5 apps max
@@ -725,6 +755,23 @@ partial class ProjectViewModel : ObservableRecipient, IDisposable
         }
     }
 
+    /// <summary>
+    /// Generates the file name (without extension) that <paramref name="pattern"/> currently results in for this project.
+    /// </summary>
+    public string? GenerateFileNamingPatternValue(SettingFileNamingPattern pattern)
+    {
+        if (CurrentProject == null)
+            return null;
+
+        ItemNamingPattern namingPattern = pattern switch
+        {
+            SettingFileNamingPattern.DateTime => ItemNamingStatics.FileDateTimePattern,
+            SettingFileNamingPattern.Date => ItemNamingStatics.FileDatePattern,
+            _ => SettingsService.CustomFileNamingPattern,
+        };
+        return namingPattern.GenerateResult(CurrentProject.CreationScanOptions, false);
+    }
+
     private async Task ApplyOrderOfPagesToProjectAsync()
     {
         if (CurrentProject == null) return;
@@ -782,9 +829,9 @@ partial class ProjectViewModel : ObservableRecipient, IDisposable
                 foreach (IProjectPage page in ProjectService.SelectedPages.OrderBy(x => x.Index))
                 {
                     if (page is ImagePage imagePage)
-                        pages.Add(page, new PdfProjectSnapshotPage(imagePage.SourceFile, null, imagePage.Filter, imagePage.Brightness, imagePage.Contrast));
+                        pages.Add(page, new PdfProjectSnapshotPage(imagePage.SourceFile, null, imagePage.Filter, imagePage.Brightness, imagePage.Contrast, [.. imagePage.InkStrokes]));
                     else if (page is PdfPage pdfPage)
-                        pages.Add(page, new PdfProjectSnapshotPage(pdfProject.SourceFile!.File, pdfPage.IndexInPdf, ImageFilter.None, AppConfig.DefaultBrightness, AppConfig.DefaultContrast));
+                        pages.Add(page, new PdfProjectSnapshotPage(pdfProject.SourceFile!.File, pdfPage.IndexInPdf, ImageFilter.None, AppConfig.DefaultBrightness, AppConfig.DefaultContrast, []));
                 }
                 await PdfProject.CreatePdfFromPagesAsync(pages, null, saveOptions.FileName, saveOptions.TargetFolder, SettingsService.SettingOcrPdfs, viewDispatcherQueue!);
 
@@ -801,9 +848,9 @@ partial class ProjectViewModel : ObservableRecipient, IDisposable
                 {
                     Dictionary<IProjectPage, IProjectSnapshotPage> pages = [];
                     if (page is ImagePage imagePage)
-                        pages.Add(page, new PdfProjectSnapshotPage(imagePage.SourceFile, null, imagePage.Filter, imagePage.Brightness, imagePage.Contrast));
+                        pages.Add(page, new PdfProjectSnapshotPage(imagePage.SourceFile, null, imagePage.Filter, imagePage.Brightness, imagePage.Contrast, [.. imagePage.InkStrokes]));
                     else if (page is PdfPage pdfPage)
-                        pages.Add(page, new PdfProjectSnapshotPage(pdfProject.SourceFile!.File, pdfPage.IndexInPdf, ImageFilter.None, AppConfig.DefaultBrightness, AppConfig.DefaultContrast));
+                        pages.Add(page, new PdfProjectSnapshotPage(pdfProject.SourceFile!.File, pdfPage.IndexInPdf, ImageFilter.None, AppConfig.DefaultBrightness, AppConfig.DefaultContrast, []));
 
                     await PdfProject.CreatePdfFromPagesAsync(pages, null, saveOptions.FileName, saveOptions.TargetFolder, SettingsService.SettingOcrPdfs, viewDispatcherQueue!);
                 }
@@ -824,4 +871,4 @@ partial class ProjectViewModel : ObservableRecipient, IDisposable
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // MISCELLANEOUS ////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-public record OpenWithTarget(AppInfo AppInfo, BitmapImage? Logo);
+public record OpenWithTarget(AppInfo AppInfo, string DisplayName, BitmapImage? Logo);

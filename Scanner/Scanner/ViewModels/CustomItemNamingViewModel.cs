@@ -56,8 +56,9 @@ public partial class CustomItemNamingViewModel : ObservableRecipient, IDisposabl
         set
         {
             SetProperty(ref kind, value);
-            Pattern = Kind == ItemNamingKind.File ? SettingsService.CustomFileNamingPattern : SettingsService.CustomSubfolderNamingPattern;
-            UpdatePattern();
+            LoadPattern(Kind == ItemNamingKind.File
+                ? SettingsService.CustomFileNamingPattern
+                : SettingsService.CustomSubfolderNamingPattern);
         }
     }
 
@@ -67,23 +68,8 @@ public partial class CustomItemNamingViewModel : ObservableRecipient, IDisposabl
     [ObservableProperty]
     private string previewResult;
 
+    [ObservableProperty]
     private ItemNamingPattern pattern;
-    public ItemNamingPattern Pattern
-    {
-        get => pattern;
-        set
-        {
-            SetProperty(ref pattern, value);
-
-            SelectedBlocks.CollectionChanged -= SelectedBlocks_CollectionChanged;
-            SelectedBlocks = new ObservableCollection<IItemNamingBlock>(Pattern.Blocks);
-            foreach (IItemNamingBlock block in SelectedBlocks)
-            {
-                block.PropertyChanged += Block_PropertyChanged;
-            }
-            SelectedBlocks.CollectionChanged += SelectedBlocks_CollectionChanged;
-        }
-    }
 
     private IScanningDevice previewScanner;
 
@@ -93,11 +79,10 @@ public partial class CustomItemNamingViewModel : ObservableRecipient, IDisposabl
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public CustomItemNamingViewModel()
     {
-        // get current pattern
-        Pattern = Kind == ItemNamingKind.File ? SettingsService.CustomFileNamingPattern : SettingsService.CustomSubfolderNamingPattern;
-
-        // ensure initial pattern is visible
-        UpdatePattern();
+        // get current pattern and make it visible
+        LoadPattern(Kind == ItemNamingKind.File
+            ? SettingsService.CustomFileNamingPattern
+            : SettingsService.CustomSubfolderNamingPattern);
     }
 
 
@@ -106,7 +91,38 @@ public partial class CustomItemNamingViewModel : ObservableRecipient, IDisposabl
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public void Dispose()
     {
+        DetachFromSelectedBlocks();
         Messenger.UnregisterAll(this);
+    }
+
+    private void LoadPattern(ItemNamingPattern newPattern)
+    {
+        DetachFromSelectedBlocks();
+
+        SelectedBlocks = newPattern?.Blocks == null
+            ? []
+            : new ObservableCollection<IItemNamingBlock>(newPattern.Blocks);
+
+        foreach (IItemNamingBlock block in SelectedBlocks)
+        {
+            block.PropertyChanged += Block_PropertyChanged;
+        }
+        SelectedBlocks.CollectionChanged += SelectedBlocks_CollectionChanged;
+
+        // ensure the pattern and its preview reflect the loaded blocks
+        UpdatePattern();
+    }
+
+    private void DetachFromSelectedBlocks()
+    {
+        if (SelectedBlocks == null)
+            return;
+
+        SelectedBlocks.CollectionChanged -= SelectedBlocks_CollectionChanged;
+        foreach (IItemNamingBlock block in SelectedBlocks)
+        {
+            block.PropertyChanged -= Block_PropertyChanged;
+        }
     }
 
     private void AcceptPattern()
@@ -132,14 +148,15 @@ public partial class CustomItemNamingViewModel : ObservableRecipient, IDisposabl
     {
         LogService?.Log.Information("Adding file naming {Block}", blockName);
 
+        if (blockName == null || !ItemNamingStatics.ItemNamingBlocksDictionary.TryGetValue(blockName, out Type? blockType))
+            return;
+
         // construct block
         Type[] parameterTypes = [];
         string[] parameters = [];
-        IItemNamingBlock? block = ItemNamingStatics.ItemNamingBlocksDictionary[blockName].GetConstructor(parameterTypes)?
-            .Invoke(parameters) as IItemNamingBlock;
 
         // add to pattern
-        if (block != null)
+        if (blockType.GetConstructor(parameterTypes)?.Invoke(parameters) is IItemNamingBlock block)
         {
             block.PropertyChanged += Block_PropertyChanged;
             SelectedBlocks.Add(block);
@@ -148,12 +165,15 @@ public partial class CustomItemNamingViewModel : ObservableRecipient, IDisposabl
 
     private void Block_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
     {
-        LogService?.Log.Information("File naming {Block} {Property} changed", ((IItemNamingBlock)sender).Name, e.PropertyName);
+        LogService?.Log.Information("File naming {Block} {Property} changed", (sender as IItemNamingBlock)?.Name, e.PropertyName);
         UpdatePattern();
     }
 
     private void DeleteBlock(IItemNamingBlock block)
     {
+        if (block == null)
+            return;
+
         LogService?.Log.Information("Removing file naming {Block}", block.Name);
 
         block.PropertyChanged -= Block_PropertyChanged;
@@ -169,10 +189,7 @@ public partial class CustomItemNamingViewModel : ObservableRecipient, IDisposabl
             block.PropertyChanged -= Block_PropertyChanged;
         }
 
-        for (int i = SelectedBlocks.Count - 1; i >= 0; i--)
-        {
-            SelectedBlocks.RemoveAt(i);
-        }
+        SelectedBlocks.Clear();
     }
 
     private void SelectedBlocks_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
@@ -190,7 +207,7 @@ public partial class CustomItemNamingViewModel : ObservableRecipient, IDisposabl
 
     private void MoveBlockForward(IItemNamingBlock block)
     {
-        int oldIndex = SelectedBlocks.IndexOf(block);
+        int oldIndex = IndexOfBlock(block);
         if (oldIndex > 0)
         {
             SelectedBlocks.Move(oldIndex, oldIndex - 1);
@@ -199,8 +216,8 @@ public partial class CustomItemNamingViewModel : ObservableRecipient, IDisposabl
 
     private void MoveBlockBackward(IItemNamingBlock block)
     {
-        int oldIndex = SelectedBlocks.IndexOf(block);
-        if (oldIndex < SelectedBlocks.Count - 1)
+        int oldIndex = IndexOfBlock(block);
+        if (oldIndex >= 0 && oldIndex < SelectedBlocks.Count - 1)
         {
             SelectedBlocks.Move(oldIndex, oldIndex + 1);
         }
@@ -208,7 +225,7 @@ public partial class CustomItemNamingViewModel : ObservableRecipient, IDisposabl
 
     private void MoveBlockToFront(IItemNamingBlock block)
     {
-        int oldIndex = SelectedBlocks.IndexOf(block);
+        int oldIndex = IndexOfBlock(block);
         if (oldIndex > 0)
         {
             SelectedBlocks.Move(oldIndex, 0);
@@ -217,11 +234,16 @@ public partial class CustomItemNamingViewModel : ObservableRecipient, IDisposabl
 
     private void MoveBlockToBack(IItemNamingBlock block)
     {
-        int oldIndex = SelectedBlocks.IndexOf(block);
-        if (oldIndex < SelectedBlocks.Count - 1)
+        int oldIndex = IndexOfBlock(block);
+        if (oldIndex >= 0 && oldIndex < SelectedBlocks.Count - 1)
         {
             SelectedBlocks.Move(oldIndex, SelectedBlocks.Count - 1);
         }
+    }
+
+    private int IndexOfBlock(IItemNamingBlock block)
+    {
+        return block == null ? -1 : SelectedBlocks.IndexOf(block);
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

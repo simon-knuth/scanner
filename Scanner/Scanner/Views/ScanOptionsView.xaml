@@ -15,7 +15,7 @@
     xmlns:media="using:CommunityToolkit.WinUI.Media"
     xmlns:strings="using:Scanner.Resources.Strings"
     xmlns:helpers="using:Scanner.Helpers"
-    xmlns:labs="using:CommunityToolkit.Labs.WinUI"
+    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:models="using:Scanner.Models"
     xmlns:customcontrols="using:Scanner.Controls"
     xmlns:tests="using:Scanner.Tests"
@@ -543,9 +543,9 @@
                                                             <TextBlock Grid.Row="1" Grid.Column="1" Text="{x:Bind strings:Resources.ScanAreaAlignmentTip}" Style="{StaticResource CaptionTextBlockStyle}" />
                                                         </Grid>
                                                     </StackPanel>
-                                                    <labs:Segmented x:Name="SegmentedPaperSizeAreaOrientation" Grid.Row="1" SelectedIndex="{x:Bind SelectedOrientationInt, Mode=TwoWay}" HorizontalAlignment="Stretch" MinWidth="248">
-                                                        <labs:Segmented.Items>
-                                                            <labs:SegmentedItem>
+                                                    <controls:Segmented x:Name="SegmentedPaperSizeAreaOrientation" Grid.Row="1" SelectedIndex="{x:Bind SelectedOrientationInt, Mode=TwoWay}" HorizontalAlignment="Stretch" MinWidth="248">
+                                                        <controls:Segmented.Items>
+                                                            <controls:SegmentedItem>
                                                                 <Grid ColumnSpacing="8">
                                                                     <Grid.ColumnDefinitions>
                                                                         <ColumnDefinition Width="Auto" />
@@ -555,8 +555,8 @@
                                                                     <FontIcon Grid.Column="0" Glyph="&#xE7C3;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                                                                     <TextBlock Grid.Column="1" Text="{x:Bind strings:Resources.OrientationPortrait}" />
                                                                 </Grid>
-                                                            </labs:SegmentedItem>
-                                                            <labs:SegmentedItem>
+                                                            </controls:SegmentedItem>
+                                                            <controls:SegmentedItem>
                                                                 <Grid ColumnSpacing="8">
                                                                     <Grid.ColumnDefinitions>
                                                                         <ColumnDefinition Width="Auto" />
@@ -570,9 +570,9 @@
                                                                     </FontIcon>
                                                                     <TextBlock Grid.Column="1" Text="{x:Bind strings:Resources.OrientationLandscape}" />
                                                                 </Grid>
-                                                            </labs:SegmentedItem>
-                                                        </labs:Segmented.Items>
-                                                    </labs:Segmented>
+                                                            </controls:SegmentedItem>
+                                                        </controls:Segmented.Items>
+                                                    </controls:Segmented>
 
                                                     <customcontrols:ScanAreaAlignmentControl Grid.Row="2" Margin="-16,0,-16,0" LongestSide="400" MaxScanArea="{x:Bind MaxScanArea, Mode=OneWay}" PaperSize="{x:Bind SelectedPaperSize, Mode=OneWay}" PreviewBitmapUri="{x:Bind ViewModel.ScanAreaAlignmentBitmapUri, Mode=OneWay}" SelectedOrientation="{x:Bind SelectedOrientation, Mode=OneWay}" SelectedCorner="{x:Bind SelectedCorner, Mode=TwoWay}" />
                                                 </Grid>
