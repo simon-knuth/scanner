@@ -127,22 +127,22 @@ public sealed partial class EditorView : Page
     /// <summary>
     /// Whether the ink canvas currently holds strokes that can be applied to the page.
     /// </summary>
-    [ObservableProperty]
-    private bool hasInk;
+    //[ObservableProperty]
+    //private bool hasInk;
 
-    public bool IsDrawingWithTouchEnabled
-    {
-        get => ViewModel.SettingsService.LastTouchDrawState;
-        set
-        {
-            if (ViewModel.SettingsService.LastTouchDrawState == value)
-                return;
+    //public bool IsDrawingWithTouchEnabled
+    //{
+    //    get => ViewModel.SettingsService.LastTouchDrawState;
+    //    set
+    //    {
+    //        if (ViewModel.SettingsService.LastTouchDrawState == value)
+    //            return;
 
-            ViewModel.SettingsService.LastTouchDrawState = value;
-            OnPropertyChanged(nameof(IsDrawingWithTouchEnabled));
-            ApplyInkCanvasInputDeviceTypes();
-        }
-    }
+    //        ViewModel.SettingsService.LastTouchDrawState = value;
+    //        OnPropertyChanged(nameof(IsDrawingWithTouchEnabled));
+    //        ApplyInkCanvasInputDeviceTypes();
+    //    }
+    //}
 
     public bool IsFilterNone
     {
@@ -263,9 +263,9 @@ public sealed partial class EditorView : Page
         }
     }
 
-    private CoreInputDeviceTypes inkCanvasInputDeviceTypes => IsDrawingWithTouchEnabled ?
-        CoreInputDeviceTypes.Pen | CoreInputDeviceTypes.Mouse | CoreInputDeviceTypes.Touch :
-        CoreInputDeviceTypes.Pen | CoreInputDeviceTypes.Mouse;
+    //private CoreInputDeviceTypes inkCanvasInputDeviceTypes => IsDrawingWithTouchEnabled ?
+    //    CoreInputDeviceTypes.Pen | CoreInputDeviceTypes.Mouse | CoreInputDeviceTypes.Touch :
+    //    CoreInputDeviceTypes.Pen | CoreInputDeviceTypes.Mouse;
 
     private VirtualizingStackPanel? flipViewPanel;
     
@@ -978,55 +978,55 @@ public sealed partial class EditorView : Page
         IsDrawing = false;
     }
 
-    private async void SplitButtonSaveDraw_Click(SplitButton sender, SplitButtonClickEventArgs args)
-    {
-        await SaveDrawAsync(false);
-    }
+    //private async void SplitButtonSaveDraw_Click(SplitButton sender, SplitButtonClickEventArgs args)
+    //{
+    //    await SaveDrawAsync(false);
+    //}
 
-    private async void MenuFlyoutItemSaveDraw_Click(object sender, RoutedEventArgs e)
-    {
-        await SaveDrawAsync(false);
-    }
+    //private async void MenuFlyoutItemSaveDraw_Click(object sender, RoutedEventArgs e)
+    //{
+    //    await SaveDrawAsync(false);
+    //}
 
-    private async void MenuFlyoutItemSaveDrawAsCopy_Click(object sender, RoutedEventArgs e)
-    {
-        await SaveDrawAsync(true);
-    }
+    //private async void MenuFlyoutItemSaveDrawAsCopy_Click(object sender, RoutedEventArgs e)
+    //{
+    //    await SaveDrawAsync(true);
+    //}
 
-    private async Task SaveDrawAsync(bool asCopy)
-    {
-        if (InkCanvasDraw == null || CanvasDraw == null)
-            return;
-        if (ViewModel.ProjectService.SelectedPage is not ImagePage page)
-            return;
+    //private async Task SaveDrawAsync(bool asCopy)
+    //{
+    //    if (InkCanvasDraw == null || CanvasDraw == null)
+    //        return;
+    //    if (ViewModel.ProjectService.SelectedPage is not ImagePage page)
+    //        return;
 
-        List<Windows.UI.Input.Inking.InkStroke> strokes = [.. InkCanvasDraw.InkPresenter.StrokeContainer.GetStrokes()];
+    //    List<Windows.UI.Input.Inking.InkStroke> strokes = [.. InkCanvasDraw.InkPresenter.StrokeContainer.GetStrokes()];
 
-        // normalize the strokes into the page's own pixels, so they stop depending on the draw experience's
-        // layout once they live on the page
-        Rect pageArea = GetPageAreaInStrokeSpace();
+    //    // normalize the strokes into the page's own pixels, so they stop depending on the draw experience's
+    //    // layout once they live on the page
+    //    Rect pageArea = GetPageAreaInStrokeSpace();
 
-        List<Windows.UI.Input.Inking.InkStroke> pageStrokes =
-            InkRenderingHelpers.ConvertToPageSpace(strokes, pageArea, new Size(page.Width, page.Height));
+    //    List<Windows.UI.Input.Inking.InkStroke> pageStrokes =
+    //        InkRenderingHelpers.ConvertToPageSpace(strokes, pageArea, new Size(page.Width, page.Height));
 
-        if (asCopy)
-            await ViewModel.DrawOnCurrentPageAsCopyAsyncCommand.ExecuteAsync(pageStrokes);
-        else
-            await ViewModel.DrawOnCurrentPageAsyncCommand.ExecuteAsync(pageStrokes);
+    //    if (asCopy)
+    //        await ViewModel.DrawOnCurrentPageAsCopyAsyncCommand.ExecuteAsync(pageStrokes);
+    //    else
+    //        await ViewModel.DrawOnCurrentPageAsyncCommand.ExecuteAsync(pageStrokes);
 
-        IsDrawing = false;
-    }
+    //    IsDrawing = false;
+    //}
 
-    private async void CanvasDraw_CreateResources(CanvasControl sender, Microsoft.Graphics.Canvas.UI.CanvasCreateResourcesEventArgs args)
-    {
-        if (args.Reason == Microsoft.Graphics.Canvas.UI.CanvasCreateResourcesReason.DpiChanged && drawBackdropBitmap != null)
-        {
-            UpdateCanvasDpiScale(sender);
-            return;
-        }
+    //private async void CanvasDraw_CreateResources(CanvasControl sender, Microsoft.Graphics.Canvas.UI.CanvasCreateResourcesEventArgs args)
+    //{
+    //    if (args.Reason == Microsoft.Graphics.Canvas.UI.CanvasCreateResourcesReason.DpiChanged && drawBackdropBitmap != null)
+    //    {
+    //        UpdateCanvasDpiScale(sender);
+    //        return;
+    //    }
 
-        await LoadDrawBackdropAsync(sender);
-    }
+    //    await LoadDrawBackdropAsync(sender);
+    //}
 
     private async Task LoadDrawBackdropAsync(CanvasControl canvas)
     {
@@ -1233,124 +1233,124 @@ public sealed partial class EditorView : Page
             IsNavigationTextBoxVisible = false;
     }
 
-    private void InkToolbarDraw_Loaded(object sender, RoutedEventArgs e)
-    {
-        if (InkCanvasDraw is not null)
-        {
-            InkToolbarDraw.TargetInkCanvas = InkCanvasDraw;
+    //private void InkToolbarDraw_Loaded(object sender, RoutedEventArgs e)
+    //{
+    //    if (InkCanvasDraw is not null)
+    //    {
+    //        InkToolbarDraw.TargetInkCanvas = InkCanvasDraw;
 
-            // reapply in case the toolbar attached after the canvas was loaded
-            ApplyInkCanvasInputDeviceTypes();
-        }
-    }
+    //        // reapply in case the toolbar attached after the canvas was loaded
+    //        ApplyInkCanvasInputDeviceTypes();
+    //    }
+    //}
 
-    private void InkCanvasDraw_Loaded(object sender, RoutedEventArgs e)
-    {
-        if (InkToolbarDraw is not null)
-            InkToolbarDraw.TargetInkCanvas = InkCanvasDraw;
+    //private void InkCanvasDraw_Loaded(object sender, RoutedEventArgs e)
+    //{
+    //    if (InkToolbarDraw is not null)
+    //        InkToolbarDraw.TargetInkCanvas = InkCanvasDraw;
 
-        ApplyInkCanvasInputDeviceTypes();
+    //    ApplyInkCanvasInputDeviceTypes();
 
-        InkPresenter inkPresenter = InkCanvasDraw.InkPresenter;
-        inkPresenter.StrokeContainer.Clear();
-        HasInk = false;
-        isInkRehydrationPending = true;
+    //    InkPresenter inkPresenter = InkCanvasDraw.InkPresenter;
+    //    inkPresenter.StrokeContainer.Clear();
+    //    HasInk = false;
+    //    isInkRehydrationPending = true;
 
-        inkPresenter.StrokesCollected -= InkPresenterDraw_StrokesCollected;
-        inkPresenter.StrokesCollected += InkPresenterDraw_StrokesCollected;
-        inkPresenter.StrokesErased -= InkPresenterDraw_StrokesErased;
-        inkPresenter.StrokesErased += InkPresenterDraw_StrokesErased;
-    }
+    //    inkPresenter.StrokesCollected -= InkPresenterDraw_StrokesCollected;
+    //    inkPresenter.StrokesCollected += InkPresenterDraw_StrokesCollected;
+    //    inkPresenter.StrokesErased -= InkPresenterDraw_StrokesErased;
+    //    inkPresenter.StrokesErased += InkPresenterDraw_StrokesErased;
+    //}
 
-    private void InkPresenterDraw_StrokesCollected(InkPresenter sender, InkStrokesCollectedEventArgs args)
-    {
-        UpdateHasInk(sender);
-    }
+    //private void InkPresenterDraw_StrokesCollected(InkPresenter sender, InkStrokesCollectedEventArgs args)
+    //{
+    //    UpdateHasInk(sender);
+    //}
 
-    private void InkPresenterDraw_StrokesErased(InkPresenter sender, InkStrokesErasedEventArgs args)
-    {
-        UpdateHasInk(sender);
-    }
+    //private void InkPresenterDraw_StrokesErased(InkPresenter sender, InkStrokesErasedEventArgs args)
+    //{
+    //    UpdateHasInk(sender);
+    //}
 
-    private void UpdateHasInk(InkPresenter inkPresenter)
-    {
-        HasInk = inkPresenter.StrokeContainer.GetStrokes().Count > 0;
-    }
+    //private void UpdateHasInk(InkPresenter inkPresenter)
+    //{
+    //    HasInk = inkPresenter.StrokeContainer.GetStrokes().Count > 0;
+    //}
 
-    private void ApplyInkCanvasInputDeviceTypes()
-    {
-        if (InkCanvasDraw == null)
-            return;
+    //private void ApplyInkCanvasInputDeviceTypes()
+    //{
+    //    if (InkCanvasDraw == null)
+    //        return;
 
-        InkCanvasDraw.InkPresenter.InputDeviceTypes = inkCanvasInputDeviceTypes;
-    }
+    //    InkCanvasDraw.InkPresenter.InputDeviceTypes = inkCanvasInputDeviceTypes;
+    //}
 
-    /// <summary>
-    /// Where the page sits within the coordinate space the ink canvas reports its strokes in.
-    /// </summary>
-    /// <remarks>
-    /// Strokes come back in the same DIPs the visual tree reports, so the page's rendered bounds can be used
-    /// as-is: a stroke drawn corner to corner measures the page's rendered size, not its pixel size and not
-    /// anything scaled by the rasterization scale.
-    /// </remarks>
-    private Rect GetPageAreaInStrokeSpace()
-    {
-        if (CanvasDraw == null || InkCanvasDraw == null)
-            return new Rect(0, 0, 0, 0);
+    ///// <summary>
+    ///// Where the page sits within the coordinate space the ink canvas reports its strokes in.
+    ///// </summary>
+    ///// <remarks>
+    ///// Strokes come back in the same DIPs the visual tree reports, so the page's rendered bounds can be used
+    ///// as-is: a stroke drawn corner to corner measures the page's rendered size, not its pixel size and not
+    ///// anything scaled by the rasterization scale.
+    ///// </remarks>
+    //private Rect GetPageAreaInStrokeSpace()
+    //{
+    //    if (CanvasDraw == null || InkCanvasDraw == null)
+    //        return new Rect(0, 0, 0, 0);
 
-        GeneralTransform pageToInk = CanvasDraw.TransformToVisual(InkCanvasDraw);
-        return pageToInk.TransformBounds(new Rect(0, 0, CanvasDraw.ActualWidth, CanvasDraw.ActualHeight));
-    }
+    //    GeneralTransform pageToInk = CanvasDraw.TransformToVisual(InkCanvasDraw);
+    //    return pageToInk.TransformBounds(new Rect(0, 0, CanvasDraw.ActualWidth, CanvasDraw.ActualHeight));
+    //}
 
-    private void ViewboxDraw_SizeChanged(object sender, SizeChangedEventArgs e)
-    {
-        if (CanvasDraw != null)
-            UpdateCanvasDpiScale(CanvasDraw);
+    //private void ViewboxDraw_SizeChanged(object sender, SizeChangedEventArgs e)
+    //{
+    //    if (CanvasDraw != null)
+    //        UpdateCanvasDpiScale(CanvasDraw);
 
-        // InkCanvas ignores the rasterization scale, so its ink surface reaches past its layout box by that
-        // factor. Shrink the box and pull it to the page's top-left corner, so the surface lands on the page.
-        double scale = XamlRoot?.RasterizationScale ?? 1.0;
+    //    // InkCanvas ignores the rasterization scale, so its ink surface reaches past its layout box by that
+    //    // factor. Shrink the box and pull it to the page's top-left corner, so the surface lands on the page.
+    //    double scale = XamlRoot?.RasterizationScale ?? 1.0;
 
-        double width = e.NewSize.Width / scale;
-        double height = e.NewSize.Height / scale;
+    //    double width = e.NewSize.Width / scale;
+    //    double height = e.NewSize.Height / scale;
 
-        InkCanvasDraw.Width = width;
-        InkCanvasDraw.Height = height;
-        InkCanvasDraw.Margin = new Thickness(-width * (scale - 1), -height * (scale - 1), 0, 0);
+    //    InkCanvasDraw.Width = width;
+    //    InkCanvasDraw.Height = height;
+    //    InkCanvasDraw.Margin = new Thickness(-width * (scale - 1), -height * (scale - 1), 0, 0);
 
-        if (isInkRehydrationPending && width > 0 && height > 0)
-        {
-            // the size and margin just assigned above haven't been through a layout pass yet, and the strokes
-            // are placed against where the page sits inside this canvas, so let that settle first
-            isInkRehydrationPending = false;
-            DispatcherQueue.TryEnqueue(DispatcherQueuePriority.Low, RehydrateInkCanvas);
-        }
-    }
+    //    if (isInkRehydrationPending && width > 0 && height > 0)
+    //    {
+    //        // the size and margin just assigned above haven't been through a layout pass yet, and the strokes
+    //        // are placed against where the page sits inside this canvas, so let that settle first
+    //        isInkRehydrationPending = false;
+    //        DispatcherQueue.TryEnqueue(DispatcherQueuePriority.Low, RehydrateInkCanvas);
+    //    }
+    //}
 
     /// <summary>
     /// Puts the page's existing strokes back onto the ink canvas, so that a drawing session can edit and erase
     /// them rather than only adding to them.
     /// </summary>
-    private void RehydrateInkCanvas()
-    {
-        if (InkCanvasDraw == null || CanvasDraw == null)
-            return;
-        if (ViewModel.ProjectService.SelectedPage is not ImagePage page)
-            return;
-        if (!page.HasInk)
-            return;
+    //private void RehydrateInkCanvas()
+    //{
+    //    if (InkCanvasDraw == null || CanvasDraw == null)
+    //        return;
+    //    if (ViewModel.ProjectService.SelectedPage is not ImagePage page)
+    //        return;
+    //    if (!page.HasInk)
+    //        return;
 
-        // make sure the deferred layout has actually been applied before measuring against it
-        InkCanvasDraw.UpdateLayout();
+    //    // make sure the deferred layout has actually been applied before measuring against it
+    //    InkCanvasDraw.UpdateLayout();
 
-        Rect pageArea = GetPageAreaInStrokeSpace();
-        if (pageArea.Width <= 0 || pageArea.Height <= 0)
-            return;
+    //    Rect pageArea = GetPageAreaInStrokeSpace();
+    //    if (pageArea.Width <= 0 || pageArea.Height <= 0)
+    //        return;
 
-        InkCanvasDraw.InkPresenter.StrokeContainer.AddStrokes(
-            InkRenderingHelpers.ConvertFromPageSpace(page.InkStrokes, pageArea, new Size(page.Width, page.Height)));
-        HasInk = true;
-    }
+    //    InkCanvasDraw.InkPresenter.StrokeContainer.AddStrokes(
+    //        InkRenderingHelpers.ConvertFromPageSpace(page.InkStrokes, pageArea, new Size(page.Width, page.Height)));
+    //    HasInk = true;
+    //}
 
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

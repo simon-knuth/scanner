@@ -156,7 +156,7 @@
 
         <!-- Draw experience -->
         <Border x:Name="BorderDraw" x:Load="{x:Bind IsDrawing, Mode=OneWay}">
-            <animations:Implicit.ShowAnimations>
+            <!--<animations:Implicit.ShowAnimations>
                 <animations:ImplicitAnimationSet>
                     <animations:OpacityAnimation From="0.0" To="1.0" Duration="0:0:0.3" />
                 </animations:ImplicitAnimationSet>
@@ -177,7 +177,7 @@
                     </Frame>
                     <InkCanvas x:Name="InkCanvasDraw" HorizontalAlignment="Center" VerticalAlignment="Center" Loaded="InkCanvasDraw_Loaded" />
                 </Grid>
-            </ScrollViewer>
+            </ScrollViewer>-->
         </Border>
 
         <!-- Bottom toolbar -->
@@ -471,7 +471,7 @@
 
                 <!-- Draw controls -->
                 <Frame x:Name="FrameDrawToolbar" Margin="4" IsEnabled="{x:Bind ViewModel.ProjectService.IsProcessRunning, Mode=OneWay, Converter={StaticResource NegativeBoolConverter}}" x:Load="{x:Bind IsDrawing, Mode=OneWay}">
-                    <Grid x:Name="GridDrawToolbar" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <!--<Grid x:Name="GridDrawToolbar" HorizontalAlignment="Center" VerticalAlignment="Center">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="1*" />
                             <ColumnDefinition Width="Auto" />
@@ -515,7 +515,7 @@
                                 </Button.KeyboardAccelerators>
                             </Button>
                         </StackPanel>
-                    </Grid>
+                    </Grid>-->
                 </Frame>
             </Grid>
 

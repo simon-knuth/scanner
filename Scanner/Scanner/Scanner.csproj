@@ -146,7 +146,7 @@
 		</PackageReference>
 		<PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.3.1" />
 		<PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.28000.2705" />
-		<PackageReference Include="Microsoft.WindowsAppSDK" Version="2.4.1-experimental" />
+		<PackageReference Include="Microsoft.WindowsAppSDK" Version="2.5.1" />
 		<PackageReference Include="PDFsharp" Version="6.2.4" />
 		<PackageReference Include="ReswPlus" Version="0.5.0" />
 		<PackageReference Include="Sentry" Version="6.10.0" />
