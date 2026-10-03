@@ -430,6 +430,16 @@ public sealed partial class EditorView : Page
         PageHeight = scrollViewer.ViewportHeight;
     }
 
+    private void ScrollViewerPage_ViewChanged(object? sender, ScrollViewerViewChangedEventArgs e)
+    {
+        if (e.IsIntermediate || sender is not ScrollViewer scrollViewer)
+            return;
+
+        CanvasControl? canvas = scrollViewer.FindDescendant<CanvasControl>();
+        if (canvas != null)
+            UpdateCanvasDpiScale(canvas);
+    }
+
     private void FlipViewPages_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
         InitializeZoomProperties();
@@ -530,8 +540,62 @@ public sealed partial class EditorView : Page
         catch (Exception) { }
     }
 
+    /// <summary>
+    /// Matches the resolution of a page canvas's surface to the size the page is actually displayed at.
+    /// </summary>
+    /// <remarks>
+    /// Drawing stays in DIPs (source pixels, as the bitmaps are loaded at 96 DPI), so nothing else needs to
+    /// account for this.
+    /// </remarks>
+    /// <param name="canvas">The canvas to update.</param>
+    /// <param name="contentSize">
+    /// The canvas's size, if it was only just assigned and layout hasn't caught up yet. Defaults to its actual size.
+    /// </param>
+    private static void UpdateCanvasDpiScale(CanvasControl canvas, Size? contentSize = null)
+    {
+        Size size = contentSize ?? new Size(canvas.ActualWidth, canvas.ActualHeight);
+        if (!(size.Width > 0) || !(size.Height > 0))
+            return;
+
+        double displayScale = 1.0;
+        Viewbox? viewbox = canvas.FindAscendant<Viewbox>();
+        if (viewbox != null && viewbox.ActualWidth > 0 && viewbox.ActualHeight > 0)
+            displayScale = Math.Min(viewbox.ActualWidth / size.Width, viewbox.ActualHeight / size.Height);
+
+        ScrollViewer? scrollViewer = canvas.FindAscendant<ScrollViewer>();
+        if (scrollViewer != null)
+            displayScale *= scrollViewer.ZoomFactor;
+
+        // never exceed the device's limit, leaving some room for Win2D's rounding
+        double rasterizationScale = canvas.XamlRoot?.RasterizationScale ?? 1.0;
+        double longestSide = Math.Max(size.Width, size.Height) * rasterizationScale;
+        double maxScale = CanvasDevice.GetSharedDevice().MaximumBitmapSizeInPixels * 0.99 / longestSide;
+
+        // skip negligible changes
+        float dpiScale = (float)Math.Min(displayScale, maxScale);
+        if (canvas.DpiScale > maxScale || Math.Abs(dpiScale / canvas.DpiScale - 1) > 0.02)
+            canvas.DpiScale = dpiScale;
+    }
+
+    private void ViewboxPage_SizeChanged(object sender, SizeChangedEventArgs e)
+    {
+        if (((Viewbox)sender).Child is CanvasControl canvas)
+            UpdateCanvasDpiScale(canvas);
+    }
+
+    private void CanvasPage_SizeChanged(object sender, SizeChangedEventArgs e)
+    {
+        UpdateCanvasDpiScale((CanvasControl)sender);
+    }
+
     private async void CanvasPreview_CreateResources(CanvasControl sender, Microsoft.Graphics.Canvas.UI.CanvasCreateResourcesEventArgs args)
     {
+        if (args.Reason == Microsoft.Graphics.Canvas.UI.CanvasCreateResourcesReason.DpiChanged && sender.Tag is CanvasPageData)
+        {
+            UpdateCanvasDpiScale(sender);
+            return;
+        }
+
         IProjectPage? page = sender.DataContext as IProjectPage;
         if (page == null)
             return;
@@ -646,7 +710,8 @@ public sealed partial class EditorView : Page
                 throw new NotImplementedException();
             }
 
-            // update canvas size
+            // update canvas size, lowering its resolution first so that it can't briefly exceed the device's limit
+            UpdateCanvasDpiScale(canvas, newBitmap.Size);
             canvas.Width = newBitmap.Size.Width;
             canvas.Height = newBitmap.Size.Height;
             canvas.Invalidate();
@@ -953,6 +1018,12 @@ public sealed partial class EditorView : Page
 
     private async void CanvasDraw_CreateResources(CanvasControl sender, Microsoft.Graphics.Canvas.UI.CanvasCreateResourcesEventArgs args)
     {
+        if (args.Reason == Microsoft.Graphics.Canvas.UI.CanvasCreateResourcesReason.DpiChanged && drawBackdropBitmap != null)
+        {
+            UpdateCanvasDpiScale(sender);
+            return;
+        }
+
         await LoadDrawBackdropAsync(sender);
     }
 
@@ -966,6 +1037,7 @@ public sealed partial class EditorView : Page
             drawBackdropBitmap?.Dispose();
             drawBackdropBitmap = await CanvasBitmap.LoadAsync(canvas, page.SourceBitmapUri);
 
+            UpdateCanvasDpiScale(canvas, drawBackdropBitmap.Size);
             canvas.Width = drawBackdropBitmap.Size.Width;
             canvas.Height = drawBackdropBitmap.Size.Height;
             canvas.Invalidate();
@@ -1231,6 +1303,9 @@ public sealed partial class EditorView : Page
 
     private void ViewboxDraw_SizeChanged(object sender, SizeChangedEventArgs e)
     {
+        if (CanvasDraw != null)
+            UpdateCanvasDpiScale(CanvasDraw);
+
         // InkCanvas ignores the rasterization scale, so its ink surface reaches past its layout box by that
         // factor. Shrink the box and pull it to the page's top-left corner, so the surface lands on the page.
         double scale = XamlRoot?.RasterizationScale ?? 1.0;

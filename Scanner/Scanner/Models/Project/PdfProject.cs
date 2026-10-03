@@ -199,7 +199,7 @@ public partial class PdfProject : ProjectBase
                     }
 
                     if (saveOptions.FileName is not null && FileNameInfo!.DesiredName != saveOptions.FileName)
-                        await ProjectService.ApplyActionAsync(new RenameAction(null, saveOptions.FileName));
+                        await ProjectService.ApplyActionAsync(new RenameAction(page: null, saveOptions.FileName));
 
                     forceSaving = true;
                 }
@@ -512,7 +512,7 @@ public partial class PdfProject : ProjectBase
             {
                 string newName = fileName + Helpers.Helpers.TargetFormatToFileExtension(Format);
                 if (newName != FileNameInfo.DesiredName)
-                    await ProjectService.ApplyActionAsync(new RenameAction(null, newName, true));
+                    await ProjectService.ApplyActionAsync(new RenameAction(page: null, newName, true));
 
                 successful = true;
             }

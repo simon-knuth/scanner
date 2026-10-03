@@ -133,7 +133,7 @@ partial class ProjectViewModel : ObservableRecipient, IDisposable
             {
                 if (pdfProject.FileNameInfo.DesiredName != value)
                 {
-                    _ = ProjectService.ApplyActionAsync(new RenameAction(null, value));
+                    _ = ProjectService.ApplyActionAsync(new RenameAction(page: null, value));
                 }
             }
             else if (ProjectService.SelectedPage is ImagePage imagePage)

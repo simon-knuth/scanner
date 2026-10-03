@@ -125,11 +125,11 @@
             <FlipView.ItemTemplate>
                 <DataTemplate x:DataType="interfaces:IProjectPage">
                     <FlipViewItem x:Name="FlipViewItemPage" DataContextChanged="FlipViewItem_DataContextChanged" Loaded="FlipViewItemPage_Loaded">
-                        <ScrollViewer x:Name="ScrollViewerPage" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" MinZoomFactor="1.0" MaxZoomFactor="2.5" ZoomMode="Enabled" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" SizeChanged="ScrollViewerPage_SizeChanged">
+                        <ScrollViewer x:Name="ScrollViewerPage" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" MinZoomFactor="1.0" MaxZoomFactor="2.5" ZoomMode="Enabled" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" SizeChanged="ScrollViewerPage_SizeChanged" ViewChanged="ScrollViewerPage_ViewChanged">
                             <Border x:Name="BorderPage" Padding="16,16,16,80" HorizontalAlignment="Center" VerticalAlignment="Center" MaxWidth="{Binding ElementName=ScrollViewerPage, Path=ViewportWidth, Mode=OneWay}" MaxHeight="{Binding ElementName=ScrollViewerPage, Path=ViewportHeight, Mode=OneWay}">
                                 <Frame Margin="0" HorizontalAlignment="Center" VerticalAlignment="Center" ui:Effects.Shadow="{ThemeResource ShadowPage}">
-                                    <Viewbox Stretch="Uniform">
-                                        <graphics:CanvasControl UseSharedDevice="True" CreateResources="CanvasPreview_CreateResources" Draw="CanvasPreview_Draw" DataContextChanged="CanvasPreview_DataContextChanged" Unloaded="CanvasControl_Unloaded" />
+                                    <Viewbox Stretch="Uniform" SizeChanged="ViewboxPage_SizeChanged">
+                                        <graphics:CanvasControl UseSharedDevice="True" CreateResources="CanvasPreview_CreateResources" Draw="CanvasPreview_Draw" DataContextChanged="CanvasPreview_DataContextChanged" SizeChanged="CanvasPage_SizeChanged" Unloaded="CanvasControl_Unloaded" />
                                     </Viewbox>
                                 </Frame>
                             </Border>
@@ -168,11 +168,11 @@
                 </animations:ImplicitAnimationSet>
             </animations:Implicit.HideAnimations>
 
-            <ScrollViewer x:Name="ScrollViewerDraw" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" MinZoomFactor="1.0" MaxZoomFactor="2.5" ZoomMode="Enabled" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" SizeChanged="ScrollViewerPage_SizeChanged">
+            <ScrollViewer x:Name="ScrollViewerDraw" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" MinZoomFactor="1.0" MaxZoomFactor="2.5" ZoomMode="Enabled" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" SizeChanged="ScrollViewerPage_SizeChanged" ViewChanged="ScrollViewerPage_ViewChanged">
                 <Grid Padding="16,16,16,80" HorizontalAlignment="Center" VerticalAlignment="Center" MaxWidth="{Binding ElementName=ScrollViewerDraw, Path=ViewportWidth, Mode=OneWay}" MaxHeight="{Binding ElementName=ScrollViewerDraw, Path=ViewportHeight, Mode=OneWay}">
                     <Frame HorizontalAlignment="Center" VerticalAlignment="Center" ui:Effects.Shadow="{ThemeResource ShadowPage}">
                         <Viewbox x:Name="ViewboxDraw" Stretch="Uniform" SizeChanged="ViewboxDraw_SizeChanged">
-                            <graphics:CanvasControl x:Name="CanvasDraw" UseSharedDevice="True" CreateResources="CanvasDraw_CreateResources" Draw="CanvasDraw_Draw" Unloaded="CanvasDraw_Unloaded" />
+                            <graphics:CanvasControl x:Name="CanvasDraw" UseSharedDevice="True" CreateResources="CanvasDraw_CreateResources" Draw="CanvasDraw_Draw" SizeChanged="CanvasPage_SizeChanged" Unloaded="CanvasDraw_Unloaded" />
                         </Viewbox>
                     </Frame>
                     <InkCanvas x:Name="InkCanvasDraw" HorizontalAlignment="Center" VerticalAlignment="Center" Loaded="InkCanvasDraw_Loaded" />
