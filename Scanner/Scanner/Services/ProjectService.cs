@@ -339,7 +339,7 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
                 switch (scanOptions.TargetFormat)
                 {
                     case TargetFormat.PDF:
-                        PdfProjectCreationData pdfCreationData = new(null, files, saveOptions.FileName, saveOptions.TargetFolder, scanOptions, false);
+                        PdfProjectCreationData pdfCreationData = new(null, files, saveOptions.FileName!, saveOptions.TargetFolder, scanOptions, false);
                         project = await pdfCreationData.CreateProjectAsync(false, uiDispatcherQueue);
                         break;
                     case TargetFormat.JPG:

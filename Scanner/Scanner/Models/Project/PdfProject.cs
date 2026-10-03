@@ -198,7 +198,8 @@ public partial class PdfProject : ProjectBase
                         targetFile?.FileStream.Dispose();
                     }
 
-                    await FileNameInfo.UpdateNamesAsync(saveOptions.FileName, null, false, uiDispatcherQueue);
+                    if (saveOptions.FileName is not null && FileNameInfo!.DesiredName != saveOptions.FileName)
+                        await ProjectService.ApplyActionAsync(new RenameAction(null, saveOptions.FileName));
 
                     forceSaving = true;
                 }

@@ -1764,6 +1764,10 @@ Fuzzy</comment>
   <data name="FileName" xml:space="preserve">
     <value>File name</value>
   </data>
+  <data name="SaveOptionsOverwriteFileNames" xml:space="preserve">
+    <value>Overwrite file names</value>
+    <comment>Check box in the save dialog when saving multiple files. If checked, all files receive the name entered below.</comment>
+  </data>
   <data name="FileNamingDateTimePattern" xml:space="preserve">
     <value>Date and time</value>
   </data>

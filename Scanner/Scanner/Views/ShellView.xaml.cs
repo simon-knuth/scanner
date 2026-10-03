@@ -401,9 +401,9 @@ public sealed partial class ShellView : Page
         ShowSaveChangesDialog(e.Task, e.Trigger);
     }
 
-    private void ViewModel_SaveFileDialogRequested(object? sender, (TaskCompletionSource<SaveOptions?> Process, ScanOptions ScanOptions, ProjectBase? Project, string? DesiredFileDisplayName) e)
+    private void ViewModel_SaveFileDialogRequested(object? sender, (TaskCompletionSource<SaveOptions?> Process, ScanOptions ScanOptions, ProjectBase? Project, string? DesiredFileDisplayName, int ExistingFileCount) e)
     {
-        ShowSaveFileDialog(e.Process, e.ScanOptions, e.Project, e.DesiredFileDisplayName);
+        ShowSaveFileDialog(e.Process, e.ScanOptions, e.Project, e.DesiredFileDisplayName, e.ExistingFileCount);
     }
 
     private void ViewModel_SaveInProgressDialogRequested(object? sender, TaskCompletionSource e)
@@ -503,7 +503,7 @@ public sealed partial class ShellView : Page
         });
     }
 
-    private void ShowSaveFileDialog(TaskCompletionSource<SaveOptions?> task, ScanOptions scanOptions, ProjectBase? project, string? desiredFileDisplayName)
+    private void ShowSaveFileDialog(TaskCompletionSource<SaveOptions?> task, ScanOptions scanOptions, ProjectBase? project, string? desiredFileDisplayName, int existingFileCount)
     {
         this.RunOnUIThread(Microsoft.UI.Dispatching.DispatcherQueuePriority.Normal, async () =>
         {
@@ -516,13 +516,15 @@ public sealed partial class ShellView : Page
 
             isDialogVisible = true;
 
-            SaveOptionsDialogView dialog = new SaveOptionsDialogView(scanOptions, project, desiredFileDisplayName);
+            SaveOptionsDialogView dialog = new SaveOptionsDialogView(scanOptions, project, desiredFileDisplayName, existingFileCount);
             dialog.XamlRoot = this.XamlRoot;
             ContentDialogResult result = await dialog.ShowAsync();
 
             isDialogVisible = false;
-            if (result == ContentDialogResult.Primary) task.TrySetResult(dialog.SaveOptions);
-            else task.TrySetResult(null);
+            if (result == ContentDialogResult.Primary)
+                task.TrySetResult(dialog.SaveOptions);
+            else
+                task.TrySetResult(null);
         });
     }
 

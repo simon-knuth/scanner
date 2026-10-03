@@ -36,9 +36,12 @@ public interface ISaveLocationService
     ///     Determines the save location to use for a scan. This can result in a file picker dialog opening and even the user
     ///     cancelling the operation.
     /// </summary>
+    /// <param name="existingFileCount">
+    ///     The number of existing files being saved, if any. With more than one, the save dialog lets them keep their names.
+    /// </param>
     /// <returns>The <see cref="SaveOptions?"/> to use for saving.</returns>
     Task<SaveOptions?> GetSaveOptionsAsync(Window window, ScanOptions scanOptions, ProjectBase? existingProject,
-        bool forceTargetFolder, DispatcherQueue uiDispatcherQueue, bool saveAs = false, string? desiredFileDisplayName = null);
+        bool forceTargetFolder, DispatcherQueue uiDispatcherQueue, bool saveAs = false, string? desiredFileDisplayName = null, int existingFileCount = 0);
 
     /// <summary>
     ///     Gets the currently selected fixed save location regardless of whether it's used or not. Can be null if unsupported.
@@ -78,4 +81,4 @@ public interface ISaveLocationService
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // MISCELLANEOUS ////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-public record SaveOptions(StorageFolder? TargetFolder, string? SubfolderName, string FileName, bool GenerateAIFileName);    
+public record SaveOptions(StorageFolder? TargetFolder, string? SubfolderName, string? FileName, bool GenerateAIFileName);    

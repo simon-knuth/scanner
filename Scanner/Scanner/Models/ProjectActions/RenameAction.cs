@@ -29,11 +29,12 @@ public partial class RenameAction : IProjectAction
     private static readonly ILogService? LogService = Ioc.Default.GetService<ILogService>();
     #endregion
 
-    private IProjectPage? page;
+    private List<ImagePage> pages;
     private string newName;
     private bool isAIGenerated;
 
     private string? oldName;
+    private Dictionary<ImagePage, string>? oldPageNames;
     private AnalyticsEvent? analyticsEvent;
 
 
@@ -44,8 +45,17 @@ public partial class RenameAction : IProjectAction
     /// Renames a page.
     /// </summary>
     public RenameAction(IProjectPage? page, string newName, bool isAIGenerated = false)
+        : this(page is ImagePage imagePage ? [imagePage] : [], newName, isAIGenerated)
     {
-        this.page = page;
+
+    }
+
+    /// <summary>
+    /// Renames a set of pages as one action, so that they can be restored with a single undo.
+    /// </summary>
+    public RenameAction(List<ImagePage> pages, string newName, bool isAIGenerated = false)
+    {
+        this.pages = pages;
         this.newName = newName;
         this.isAIGenerated = isAIGenerated;
     }
@@ -65,12 +75,16 @@ public partial class RenameAction : IProjectAction
             if (!isAIGenerated)
                 analyticsEvent = AnalyticsEvent.RenamePDF;
         }
-        else if (page is ImagePage imagePage)
+        else if (pages.Count > 0)
         {
-            if (!isAIGenerated)
-                imagePage.FileNameInfo.NameGenerationCts?.Cancel();
-            oldName = imagePage.FileNameInfo.DesiredName;
-            await imagePage.FileNameInfo.UpdateNamesAsync(newName, imagePage.FileNameInfo.ActualName, isAIGenerated, uiDispatcherQueue);
+            oldPageNames = new();
+            foreach (ImagePage imagePage in pages)
+            {
+                if (!isAIGenerated)
+                    imagePage.FileNameInfo.NameGenerationCts?.Cancel();
+                oldPageNames.Add(imagePage, imagePage.FileNameInfo.DesiredName);
+                await imagePage.FileNameInfo.UpdateNamesAsync(newName, imagePage.FileNameInfo.ActualName, isAIGenerated, uiDispatcherQueue);
+            }
             if (!isAIGenerated)
                 analyticsEvent = AnalyticsEvent.RenamePage;
         }
@@ -85,18 +99,26 @@ public partial class RenameAction : IProjectAction
 
     public async Task UndoAsync(ProjectBase project, DispatcherQueue uiDispatcherQueue)
     {
-        if (oldName == null)
-        {
-            throw new ActionFailedAndRolledBackException("Can't undo RenameAction without old name");
-        }
-
         if (project is PdfProject pdfProject)
         {
+            if (oldName == null)
+            {
+                throw new ActionFailedAndRolledBackException("Can't undo RenameAction without old name");
+            }
+
             await pdfProject.FileNameInfo.UpdateNamesAsync(oldName, pdfProject.FileNameInfo.ActualName, false, uiDispatcherQueue);
         }
-        else if (page is ImagePage imagePage)
+        else if (pages.Count > 0)
         {
-            await imagePage.FileNameInfo.UpdateNamesAsync(oldName, imagePage.FileNameInfo.ActualName, false, uiDispatcherQueue);
+            if (oldPageNames == null)
+            {
+                throw new ActionFailedAndRolledBackException("Can't undo RenameAction without old names");
+            }
+
+            foreach (KeyValuePair<ImagePage, string> pair in oldPageNames)
+            {
+                await pair.Key.FileNameInfo.UpdateNamesAsync(pair.Value, pair.Key.FileNameInfo.ActualName, false, uiDispatcherQueue);
+            }
         }
     }
 

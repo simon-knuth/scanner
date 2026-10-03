@@ -212,7 +212,7 @@ public partial class MultiFileProject : ProjectBase
                         desiredFileDisplayName = imagePage.FileNameInfo?.DesiredDisplayName;
 
                     // get save options
-                    SaveOptions? saveOptions = await SaveLocationService.GetSaveOptionsAsync(((App)Application.Current).MainWindow, CreationScanOptions!, this, true, uiDispatcherQueue, saveAs, desiredFileDisplayName);
+                    SaveOptions? saveOptions = await SaveLocationService.GetSaveOptionsAsync(((App)Application.Current).MainWindow, CreationScanOptions!, this, true, uiDispatcherQueue, saveAs, desiredFileDisplayName, pages.Count);
                     if (saveOptions == null || saveOptions.TargetFolder == null)
                         return;
 
@@ -221,6 +221,7 @@ public partial class MultiFileProject : ProjectBase
                     if (saveOptions.SubfolderName != null)
                         targetFolder = await targetFolder.CreateFolderAsync(saveOptions.SubfolderName, CreationCollisionOption.OpenIfExists);
 
+                    List<ImagePage> pagesToRename = [];
                     foreach (IProjectPage page in pages)
                     {
                         imagePage = (ImagePage)page;
@@ -231,9 +232,14 @@ public partial class MultiFileProject : ProjectBase
                         if (page is ImagePage imagePageToUpdate)
                         {
                             imagePageToUpdate.TargetFolder = targetFolder;
-                            await imagePageToUpdate.FileNameInfo!.UpdateNamesAsync(saveOptions.FileName, saveOptions.FileName, false, uiDispatcherQueue);
+
+                            if (saveOptions.FileName is not null && imagePageToUpdate.FileNameInfo?.DesiredName != saveOptions.FileName)
+                                pagesToRename.Add(imagePageToUpdate);
                         }
                     }
+
+                    if (pagesToRename.Count > 0)
+                        await ProjectService.ApplyActionAsync(new RenameAction(pagesToRename, saveOptions.FileName!));
 
                     forceSaving = true;
                 }
@@ -299,7 +305,8 @@ public partial class MultiFileProject : ProjectBase
                     {
                         snapshot = new MultiFileProjectSnapshot(this);
                     });
-                    if (snapshot == null) throw new ApplicationException("Failed to save project (snapshot is null)");
+                    if (snapshot == null)
+                        throw new ApplicationException("Failed to save project (snapshot is null)");
 
                     // capture the revision the snapshot represents before releasing object lock
                     revisionAtSnapshot = CaptureContentRevision();
@@ -312,7 +319,8 @@ public partial class MultiFileProject : ProjectBase
                     Dictionary<IProjectPage, FileHandle?> pageSaves = await snapshot.TrySaveAsync(uiDispatcherQueue);
 
                     // process save result
-                    if (pageSaves.Count == 0) throw new ApplicationException("Failed to save project (no files saved)");
+                    if (pageSaves.Count == 0)
+                        throw new ApplicationException("Failed to save project (no files saved)");
 
                     // update target files
                     await projectObjectSemaphore.WaitAsync();

@@ -46,7 +46,7 @@ public partial class SaveOptionsDialogViewModel : ObservableRecipient, IDisposab
         {
             if (AreValidOptionsSelected)
             {
-                return new SaveOptions(SelectedFolder!, CreateSubfolder ? SubfolderName : null, FileDisplayName + FileExtension, GenerateAIFileName);
+                return new SaveOptions(SelectedFolder!, CreateSubfolder ? SubfolderName : null, IsSettingFileName ? FileDisplayName + FileExtension : null, GenerateAIFileName);
             }
             else
             {
@@ -75,7 +75,7 @@ public partial class SaveOptionsDialogViewModel : ObservableRecipient, IDisposab
     [NotifyPropertyChangedFor(nameof(IsFileNameCollision))]
     private string fileDisplayName;
 
-    public bool IsFileNameCollision => occupiedFileNames.Contains(FileDisplayName.ToLower() + FileExtension);
+    public bool IsFileNameCollision => IsSettingFileName && occupiedFileNames.Contains(FileDisplayName.ToLower() + FileExtension);
 
     public SettingFileNamingPattern? SelectedFileNamingPattern
     {
@@ -114,6 +114,14 @@ public partial class SaveOptionsDialogViewModel : ObservableRecipient, IDisposab
             }
         }
     }
+
+    // only existing files can keep their names, new scans always need one (count is 0 for those)
+    public bool IsHandlingMultipleFiles => ExistingFileCount > 1;
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(AreValidOptionsSelected))]
+    [NotifyPropertyChangedFor(nameof(IsFileNameCollision))]
+    private bool isSettingFileName;
 
     [ObservableProperty]
     private bool createSubfolder;
@@ -183,11 +191,13 @@ public partial class SaveOptionsDialogViewModel : ObservableRecipient, IDisposab
 
     public bool IsPdf => ScanOptions.TargetFormat == TargetFormat.PDF;
 
-    public bool AreValidOptionsSelected => SelectedFolder != null && IsValidFileName(FileDisplayName);
+    public bool AreValidOptionsSelected => SelectedFolder != null && (!IsSettingFileName || IsValidFileName(FileDisplayName));
 
     public ScanOptions ScanOptions;
 
     public ProjectBase? Project;
+
+    public readonly int ExistingFileCount;
 
     public List<StorageFolder> RecentFolders;
 
@@ -199,13 +209,14 @@ public partial class SaveOptionsDialogViewModel : ObservableRecipient, IDisposab
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    public SaveOptionsDialogViewModel(ScanOptions scanOptions, ProjectBase? project, string? desiredFileDisplayName)
+    public SaveOptionsDialogViewModel(ScanOptions scanOptions, ProjectBase? project, string? desiredFileDisplayName, int existingFileCount)
     {
         ScanOptions = scanOptions;
         Project = project;
+        ExistingFileCount = existingFileCount;
         FileExtension = TargetFormatToFileExtension(ScanOptions.TargetFormat);
 
-        PickFolderAsyncCommand = new AsyncRelayCommand(() => SelectFolderAsync());
+        PickFolderAsyncCommand = new AsyncRelayCommand(SelectFolderAsync);
 
         SettingsService.PropertyChanged += SettingsService_PropertyChanged;
 
@@ -219,6 +230,8 @@ public partial class SaveOptionsDialogViewModel : ObservableRecipient, IDisposab
         FileTypeSubfolderNamingPatternValue = ItemNamingStatics.FolderFileTypePattern.GenerateResult(ScanOptions, false);
         CustomSubfolderNamingPatternValue = SettingsService.CustomSubfolderNamingPattern.GenerateResult(ScanOptions, false);
         SelectedSubfolderNamingPattern = SettingsService.SettingSubfolderNamingPattern;
+
+        IsSettingFileName = !IsHandlingMultipleFiles;
 
         // keep name if already present
         if (desiredFileDisplayName != null)

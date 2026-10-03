@@ -132,7 +132,7 @@ internal class SaveLocationService : ObservableRecipient, ISaveLocationService
     }
 
     public async Task<SaveOptions?> GetSaveOptionsAsync(Window window, ScanOptions scanOptions, ProjectBase? existingProject,
-        bool forceTargetFolder, DispatcherQueue uiDispatcherQueue, bool forceDialog = false, string? desiredFileDisplayName = null)
+        bool forceTargetFolder, DispatcherQueue uiDispatcherQueue, bool forceDialog = false, string? desiredFileDisplayName = null, int existingFileCount = 0)
     {
         // generate default file name
         string fileName;
@@ -153,7 +153,7 @@ internal class SaveLocationService : ObservableRecipient, ISaveLocationService
         // show save dialog if forced
         if (forceDialog)
         {
-            SaveOptions? result = await Messenger.Send(new ShowSaveOptionsDialogMessage(scanOptions, existingProject, desiredFileDisplayName)).Response;
+            SaveOptions? result = await Messenger.Send(new ShowSaveOptionsDialogMessage(scanOptions, existingProject, desiredFileDisplayName, existingFileCount)).Response;
             if (result?.TargetFolder != null)
                 TrackRecentlyUsedFolder(result.TargetFolder);
             return result;
@@ -196,7 +196,7 @@ internal class SaveLocationService : ObservableRecipient, ISaveLocationService
                 }
 
                 // ask user for location
-                SaveOptions? result = await Messenger.Send(new ShowSaveOptionsDialogMessage(scanOptions, existingProject, null)).Response;
+                SaveOptions? result = await Messenger.Send(new ShowSaveOptionsDialogMessage(scanOptions, existingProject, null, existingFileCount)).Response;
                 if (result?.TargetFolder != null)
                     TrackRecentlyUsedFolder(result.TargetFolder);
                 return result;
@@ -226,7 +226,7 @@ internal class SaveLocationService : ObservableRecipient, ISaveLocationService
                         baseFileDisplayName = imagePage.FileNameInfo?.DesiredDisplayName;                            
 
                     // ask user for location
-                    result = await Messenger.Send(new ShowSaveOptionsDialogMessage(scanOptions, existingProject, baseFileDisplayName)).Response;
+                    result = await Messenger.Send(new ShowSaveOptionsDialogMessage(scanOptions, existingProject, baseFileDisplayName, existingFileCount)).Response;
                     if (result?.TargetFolder != null)
                         TrackRecentlyUsedFolder(result.TargetFolder);
                     return result;
@@ -245,7 +245,7 @@ internal class SaveLocationService : ObservableRecipient, ISaveLocationService
 
             case SettingSaveLocationType.AskEveryTime:
                 // ask user for location
-                result = await Messenger.Send(new ShowSaveOptionsDialogMessage(scanOptions, existingProject, null)).Response;
+                result = await Messenger.Send(new ShowSaveOptionsDialogMessage(scanOptions, existingProject, null, existingFileCount)).Response;
                 if (result?.TargetFolder != null)
                     TrackRecentlyUsedFolder(result.TargetFolder);
                 return result;

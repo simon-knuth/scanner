@@ -73,15 +73,17 @@ public partial class SaveOptionsDialogView : ContentDialog
 
     public SaveOptions? SaveOptions => ViewModel.SaveOptions;
 
+    public bool IsHandlingAtLeastThreePages => ViewModel.ExistingFileCount >= 3;
+
     private SaveOptionsDialogViewModel ViewModel;
 
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    public SaveOptionsDialogView(ScanOptions scanOptions, ProjectBase? project, string? desiredFileDisplayName)
+    public SaveOptionsDialogView(ScanOptions scanOptions, ProjectBase? project, string? desiredFileDisplayName, int existingFileCount)
     {
-        ViewModel = new SaveOptionsDialogViewModel(scanOptions, project, desiredFileDisplayName);
+        ViewModel = new SaveOptionsDialogViewModel(scanOptions, project, desiredFileDisplayName, existingFileCount);
         ViewModel.PropertyChanged += ViewModel_PropertyChanged;
 
         this.InitializeComponent();
