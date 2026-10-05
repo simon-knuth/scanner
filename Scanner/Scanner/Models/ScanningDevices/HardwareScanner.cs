@@ -344,18 +344,19 @@ internal partial class HardwareScanner : IScanningDevice
         {
             // use scanner's native preview capability
             using IRandomAccessStream sourceStream = new InMemoryRandomAccessStream();
-            previewCancellationTokenSource = new CancellationTokenSource();
+            CancellationTokenSource cancellationTokenSource = new();
+            previewCancellationTokenSource = cancellationTokenSource;
             try
             {
                 switch (sourceMode)
                 {
                     case ScannerSource.Flatbed:
                         await imageScanner.ScanPreviewToStreamAsync(ImageScannerScanSource.Flatbed, sourceStream)
-                            .AsTask(previewCancellationTokenSource.Token);
+                            .AsTask(cancellationTokenSource.Token);
                         break;
                     case ScannerSource.Feeder:
                         await imageScanner.ScanPreviewToStreamAsync(ImageScannerScanSource.Feeder, sourceStream)
-                            .AsTask(previewCancellationTokenSource.Token);
+                            .AsTask(cancellationTokenSource.Token);
                         break;
                     case ScannerSource.Auto:
                     case ScannerSource.None:
@@ -366,8 +367,8 @@ internal partial class HardwareScanner : IScanningDevice
             }
             finally
             {
-                previewCancellationTokenSource.Dispose();
-                previewCancellationTokenSource = null;
+                Interlocked.CompareExchange(ref previewCancellationTokenSource, null, cancellationTokenSource);
+                cancellationTokenSource.Dispose();
             }
 
             // convert to JPG and save to file
@@ -438,20 +439,21 @@ internal partial class HardwareScanner : IScanningDevice
         ApplyScanOptions(scanOptions);
 
         // scan
-        scanCancellationTokenSource = new CancellationTokenSource();
+        CancellationTokenSource cancellationTokenSource = new();
+        scanCancellationTokenSource = cancellationTokenSource;
         try
         {
             ImageScannerScanResult result = await imageScanner
                 .ScanFilesToFolderAsync(scanOptions.GetSourceModeForScanning(), targetFolder)
-                .AsTask(scanCancellationTokenSource.Token);
+                .AsTask(cancellationTokenSource.Token);
 
             // process result
             return result.ScannedFiles;
         }
         finally
         {
-            scanCancellationTokenSource.Dispose();
-            scanCancellationTokenSource = null;
+            Interlocked.CompareExchange(ref scanCancellationTokenSource, null, cancellationTokenSource);
+            cancellationTokenSource.Dispose();
         }
     }
 
