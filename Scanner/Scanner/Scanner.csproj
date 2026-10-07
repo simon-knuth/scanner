@@ -167,6 +167,10 @@
 		<ProjectReference Include="..\..\Tesseract\src\Tesseract\Tesseract.csproj" />
 	</ItemGroup>
 	<ItemGroup>
+		<!-- Required for Tesseract -->
+		<SDKReference Include="Microsoft.VCLibs.Desktop, Version=14.0" />
+	</ItemGroup>
+	<ItemGroup>
 		<Content Update="Assets\Icon.ico">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</Content>

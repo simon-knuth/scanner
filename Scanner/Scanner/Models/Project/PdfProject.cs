@@ -549,6 +549,13 @@ public partial class PdfProject : ProjectBase
         // generate PDF
         try
         {
+            if (ocr && !OcrService.IsAvailable)
+            {
+                // fall back to a PDF without text layer rather than failing the save
+                LogService?.Log.Warning("OCR requested but unavailable, generating PDF without OCR");
+                ocr = false;
+            }
+
             if (ocr)
             {
                 await OcrService.GenerateOcrPdfAsync([.. pages.Values], pdfGenerationFilePath, uiDispatcherQueue);

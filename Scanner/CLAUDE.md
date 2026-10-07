@@ -74,7 +74,7 @@ Strict **MVVM** with `CommunityToolkit.Mvvm`. Three layers under `Scanner/`: `Vi
 ### Key integrations
 
 - **Scanning**: `Windows.Devices.Scanners` (WIA) via `ScannerDiscoveryService`; hardware in `Models/ScanningDevices/HardwareScanner.cs`.
-- **OCR**: Tesseract (the submodule). `OcrService` + training data under `Resources/Tesseract Training Data/`.
+- **OCR**: Tesseract (the submodule). `OcrService` + training data under `Resources/Tesseract Training Data/`. Its native DLLs need the VC++ runtime, provided via the `Microsoft.VCLibs.Desktop` `SDKReference` (a `Microsoft.VCLibs.140.00.UWPDesktop` package dependency). If creating the engine fails, OCR degrades to "unavailable" (`IOcrService.IsAvailable`). The `OcrService` constructor must never throw, since the service is resolved from `ProjectBase`'s static initializer.
 - **AI features**: `CopilotRuntimeService` uses the Windows Copilot Runtime (on-device models, e.g. Phi Silica) — gated behind Copilot+ hardware availability.
 - **PDF**: PDFsharp.
 - **Native interop**: `Microsoft.Windows.CsWin32` (source-generated P/Invoke; see `NativeMethods.txt` if present) and CsWinRT.
