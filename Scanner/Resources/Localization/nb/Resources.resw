@@ -1890,4 +1890,56 @@ Velg ut et appspråk som er uavhengig av systemspråket ditt (men bare ett om ga
     <value>Fest utklippstavlen til oppgavelinjen og få tilgang til utklippstavlehistorikken fra hvor som helst.</value>
     <comment>The description for ClipShelf.</comment>
   </data>
+  <data name="ButtonAppPreview.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Prøv neste versjon</value>
+    <comment>The text of the button in the toolbar that opens the dialog about the preview of the next app version.</comment>
+  </data>
+  <data name="HeadingDialogAppPreview.Text" xml:space="preserve">
+    <value>Prøv neste versjon av Scanner</value>
+    <comment>The heading for the dialog about the preview of the next app version.</comment>
+  </data>
+  <data name="SubheadingDialogAppPreview.Text" xml:space="preserve">
+    <value>Den kommende versjonen er allerede tilgjengelig som forhåndsversjon.</value>
+    <comment>The subheading for the dialog about the preview of the next app version.</comment>
+  </data>
+  <data name="TextDialogAppPreviewBadge.Text" xml:space="preserve">
+    <value>FORHÅNDSVERSJON</value>
+    <comment>A short badge next to the app name that marks it as a preview version. Displayed in uppercase like the badge in the preview app's icon.</comment>
+  </data>
+  <data name="TextDialogAppPreviewPitch.Text" xml:space="preserve">
+    <value>Få en tidlig titt på den neste store oppdateringen, og hjelp til med å forme den med tilbakemeldingene dine.</value>
+    <comment>Short description of why the user should try the preview of the next app version.</comment>
+  </data>
+  <data name="HeadingDialogAppPreviewSeparate.Text" xml:space="preserve">
+    <value>En egen app</value>
+    <comment>Heading for the point explaining that the preview is a separate app.</comment>
+  </data>
+  <data name="TextDialogAppPreviewSeparate.Text" xml:space="preserve">
+    <value>Forhåndsversjonen installeres ved siden av denne versjonen, som forblir uendret. Du kan bytte frem og tilbake når som helst.</value>
+    <comment>Explains that the preview is a separate app and the user can switch between both versions at any time.</comment>
+  </data>
+  <data name="HeadingDialogAppPreviewUnfinished.Text" xml:space="preserve">
+    <value>Fortsatt under arbeid</value>
+    <comment>Heading for the point explaining that the preview is unfinished.</comment>
+  </data>
+  <data name="TextDialogAppPreviewUnfinished.Text" xml:space="preserve">
+    <value>Forhåndsversjonen er ikke ferdig og kan inneholde feil eller mangle funksjoner. Ikke bruk den til noe viktig ennå.</value>
+    <comment>Warns the user that the preview is unfinished and should not be used for anything important.</comment>
+  </data>
+  <data name="HeadingDialogAppPreviewLanguages.Text" xml:space="preserve">
+    <value>Ikke tilgjengelig på alle språk</value>
+    <comment>Heading for the point explaining that the preview is not available in all languages.</comment>
+  </data>
+  <data name="TextDialogAppPreviewLanguages.Text" xml:space="preserve">
+    <value>Forhåndsversjonen er ikke oversatt til alle språk ennå, så deler av den eller hele appen kan vises på engelsk.</value>
+    <comment>Explains that the preview is not translated into all languages yet and may be shown in English.</comment>
+  </data>
+  <data name="DialogAppPreview.PrimaryButtonText" xml:space="preserve">
+    <value>Hent forhåndsversjonen</value>
+    <comment>The text on the button that opens the Microsoft Store page of the preview.</comment>
+  </data>
+  <data name="DialogAppPreview.CloseButtonText" xml:space="preserve">
+    <value>Ikke nå</value>
+    <comment>The text on the button that closes the dialog about the preview of the next app version.</comment>
+  </data>
 </root>

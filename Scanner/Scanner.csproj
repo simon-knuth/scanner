@@ -176,6 +176,7 @@
     <Compile Include="Services\PdfService.cs" />
     <Compile Include="Services\PersistentScanOptionsDatabaseService.cs" />
     <Compile Include="ViewModels\CustomFileNamingDialogViewModel.cs" />
+    <Compile Include="ViewModels\AppPreviewDialogViewModel.cs" />
     <Compile Include="ViewModels\OtherAppsDialogViewModel.cs" />
     <Compile Include="ViewModels\ScanMergeDialogViewModel.cs" />
     <Compile Include="ViewModels\PreviewDialogViewModel.cs" />
@@ -200,6 +201,9 @@
     <Compile Include="Views\Converters\VisibilityOpacityConverter.cs" />
     <Compile Include="Views\Dialogs\CustomFileNamingDialogView.xaml.cs">
       <DependentUpon>CustomFileNamingDialogView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Dialogs\AppPreviewDialogView.xaml.cs">
+      <DependentUpon>AppPreviewDialogView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Dialogs\OtherAppsDialogView.xaml.cs">
       <DependentUpon>OtherAppsDialogView.xaml</DependentUpon>
@@ -325,6 +329,7 @@
     </AppxManifest>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\AppPreview\Logo.png" />
     <Content Include="Assets\ClipShelf\Hero Image Alt Close-Up.jpg" />
     <Content Include="Assets\ClipShelf\Logo.svg" />
     <Content Include="Assets\contrast-black\Logo small.svg" />
@@ -398,6 +403,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Dialogs\CustomFileNamingDialogView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Dialogs\AppPreviewDialogView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

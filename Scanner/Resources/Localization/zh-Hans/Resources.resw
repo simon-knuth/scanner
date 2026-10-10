@@ -1868,4 +1868,56 @@ PDF是一种非常流行的文档格式，允许您在一个文件中保存多�
     <value>将剪贴板固定在任务栏上，随时随地访问剪贴板历史记录。</value>
     <comment>The description for ClipShelf.</comment>
   </data>
+  <data name="ButtonAppPreview.ToolTipService.ToolTip" xml:space="preserve">
+    <value>试用下一个版本</value>
+    <comment>The text of the button in the toolbar that opens the dialog about the preview of the next app version.</comment>
+  </data>
+  <data name="HeadingDialogAppPreview.Text" xml:space="preserve">
+    <value>试用 Scanner 的下一个版本</value>
+    <comment>The heading for the dialog about the preview of the next app version.</comment>
+  </data>
+  <data name="SubheadingDialogAppPreview.Text" xml:space="preserve">
+    <value>即将推出的版本现已提供预览版。</value>
+    <comment>The subheading for the dialog about the preview of the next app version.</comment>
+  </data>
+  <data name="TextDialogAppPreviewBadge.Text" xml:space="preserve">
+    <value>预览版</value>
+    <comment>A short badge next to the app name that marks it as a preview version. Displayed in uppercase like the badge in the preview app's icon.</comment>
+  </data>
+  <data name="TextDialogAppPreviewPitch.Text" xml:space="preserve">
+    <value>抢先体验下一次重大更新，并通过你的反馈帮助完善它。</value>
+    <comment>Short description of why the user should try the preview of the next app version.</comment>
+  </data>
+  <data name="HeadingDialogAppPreviewSeparate.Text" xml:space="preserve">
+    <value>独立的应用</value>
+    <comment>Heading for the point explaining that the preview is a separate app.</comment>
+  </data>
+  <data name="TextDialogAppPreviewSeparate.Text" xml:space="preserve">
+    <value>预览版会与当前版本并存安装，当前版本保持不变。你可以随时在两者之间切换。</value>
+    <comment>Explains that the preview is a separate app and the user can switch between both versions at any time.</comment>
+  </data>
+  <data name="HeadingDialogAppPreviewUnfinished.Text" xml:space="preserve">
+    <value>仍在开发中</value>
+    <comment>Heading for the point explaining that the preview is unfinished.</comment>
+  </data>
+  <data name="TextDialogAppPreviewUnfinished.Text" xml:space="preserve">
+    <value>预览版尚未完成，可能存在错误或缺少功能。请暂时不要将其用于任何重要事务。</value>
+    <comment>Warns the user that the preview is unfinished and should not be used for anything important.</comment>
+  </data>
+  <data name="HeadingDialogAppPreviewLanguages.Text" xml:space="preserve">
+    <value>并非支持所有语言</value>
+    <comment>Heading for the point explaining that the preview is not available in all languages.</comment>
+  </data>
+  <data name="TextDialogAppPreviewLanguages.Text" xml:space="preserve">
+    <value>预览版尚未翻译成所有语言，因此部分或全部内容可能会以英文显示。</value>
+    <comment>Explains that the preview is not translated into all languages yet and may be shown in English.</comment>
+  </data>
+  <data name="DialogAppPreview.PrimaryButtonText" xml:space="preserve">
+    <value>获取预览版</value>
+    <comment>The text on the button that opens the Microsoft Store page of the preview.</comment>
+  </data>
+  <data name="DialogAppPreview.CloseButtonText" xml:space="preserve">
+    <value>以后再说</value>
+    <comment>The text on the button that closes the dialog about the preview of the next app version.</comment>
+  </data>
 </root>

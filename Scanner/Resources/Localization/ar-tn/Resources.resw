@@ -1885,4 +1885,56 @@ JPG و PNG هي تنسيقات للصور، مما يعني أنه سيتم حف
     <value>قم بتثبيت الحافظة في شريط المهام والوصول إلى محفوظات الحافظة من أي مكان.</value>
     <comment>The description for ClipShelf.</comment>
   </data>
+  <data name="ButtonAppPreview.ToolTipService.ToolTip" xml:space="preserve">
+    <value>جرّب الإصدار القادم</value>
+    <comment>The text of the button in the toolbar that opens the dialog about the preview of the next app version.</comment>
+  </data>
+  <data name="HeadingDialogAppPreview.Text" xml:space="preserve">
+    <value>جرّب الإصدار القادم من Scanner</value>
+    <comment>The heading for the dialog about the preview of the next app version.</comment>
+  </data>
+  <data name="SubheadingDialogAppPreview.Text" xml:space="preserve">
+    <value>الإصدار القادم متوفر الآن كإصدار تجريبي.</value>
+    <comment>The subheading for the dialog about the preview of the next app version.</comment>
+  </data>
+  <data name="TextDialogAppPreviewBadge.Text" xml:space="preserve">
+    <value>تجريبي</value>
+    <comment>A short badge next to the app name that marks it as a preview version. Displayed in uppercase like the badge in the preview app's icon.</comment>
+  </data>
+  <data name="TextDialogAppPreviewPitch.Text" xml:space="preserve">
+    <value>ألقِ نظرة مبكرة على التحديث الكبير القادم وساعد في تطويره بملاحظاتك.</value>
+    <comment>Short description of why the user should try the preview of the next app version.</comment>
+  </data>
+  <data name="HeadingDialogAppPreviewSeparate.Text" xml:space="preserve">
+    <value>تطبيق منفصل</value>
+    <comment>Heading for the point explaining that the preview is a separate app.</comment>
+  </data>
+  <data name="TextDialogAppPreviewSeparate.Text" xml:space="preserve">
+    <value>يُثبَّت الإصدار التجريبي بجانب هذا الإصدار الذي يبقى كما هو. يمكنك التبديل بينهما في أي وقت.</value>
+    <comment>Explains that the preview is a separate app and the user can switch between both versions at any time.</comment>
+  </data>
+  <data name="HeadingDialogAppPreviewUnfinished.Text" xml:space="preserve">
+    <value>لا يزال قيد التطوير</value>
+    <comment>Heading for the point explaining that the preview is unfinished.</comment>
+  </data>
+  <data name="TextDialogAppPreviewUnfinished.Text" xml:space="preserve">
+    <value>الإصدار التجريبي غير مكتمل وقد يحتوي على أخطاء أو تنقصه بعض الميزات. من فضلك لا تستخدمه لأي شيء مهم بعد.</value>
+    <comment>Warns the user that the preview is unfinished and should not be used for anything important.</comment>
+  </data>
+  <data name="HeadingDialogAppPreviewLanguages.Text" xml:space="preserve">
+    <value>غير متوفر بجميع اللغات</value>
+    <comment>Heading for the point explaining that the preview is not available in all languages.</comment>
+  </data>
+  <data name="TextDialogAppPreviewLanguages.Text" xml:space="preserve">
+    <value>لم تتم ترجمة الإصدار التجريبي إلى جميع اللغات بعد، لذا قد يظهر جزء منه أو كله باللغة الإنجليزية.</value>
+    <comment>Explains that the preview is not translated into all languages yet and may be shown in English.</comment>
+  </data>
+  <data name="DialogAppPreview.PrimaryButtonText" xml:space="preserve">
+    <value>احصل على الإصدار التجريبي</value>
+    <comment>The text on the button that opens the Microsoft Store page of the preview.</comment>
+  </data>
+  <data name="DialogAppPreview.CloseButtonText" xml:space="preserve">
+    <value>ليس الآن</value>
+    <comment>The text on the button that closes the dialog about the preview of the next app version.</comment>
+  </data>
 </root>

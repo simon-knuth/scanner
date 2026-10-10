@@ -1892,4 +1892,56 @@ Fuzzy</comment>
     <value>Закріпіть буфер обміну на панелі завдань і отримуйте доступ до історії буфера обміну з будь-якого місця.</value>
     <comment>The description for ClipShelf.</comment>
   </data>
+  <data name="ButtonAppPreview.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Спробувати наступну версію</value>
+    <comment>The text of the button in the toolbar that opens the dialog about the preview of the next app version.</comment>
+  </data>
+  <data name="HeadingDialogAppPreview.Text" xml:space="preserve">
+    <value>Спробуйте наступну версію Scanner</value>
+    <comment>The heading for the dialog about the preview of the next app version.</comment>
+  </data>
+  <data name="SubheadingDialogAppPreview.Text" xml:space="preserve">
+    <value>Наступна версія вже доступна як попередня версія.</value>
+    <comment>The subheading for the dialog about the preview of the next app version.</comment>
+  </data>
+  <data name="TextDialogAppPreviewBadge.Text" xml:space="preserve">
+    <value>ПРЕВʼЮ</value>
+    <comment>A short badge next to the app name that marks it as a preview version. Displayed in uppercase like the badge in the preview app's icon.</comment>
+  </data>
+  <data name="TextDialogAppPreviewPitch.Text" xml:space="preserve">
+    <value>Ознайомтеся з наступним великим оновленням раніше за всіх і допоможіть удосконалити його своїми відгуками.</value>
+    <comment>Short description of why the user should try the preview of the next app version.</comment>
+  </data>
+  <data name="HeadingDialogAppPreviewSeparate.Text" xml:space="preserve">
+    <value>Окремий застосунок</value>
+    <comment>Heading for the point explaining that the preview is a separate app.</comment>
+  </data>
+  <data name="TextDialogAppPreviewSeparate.Text" xml:space="preserve">
+    <value>Попередня версія встановлюється поруч із цією, яка залишається без змін. Ви можете перемикатися між ними будь-коли.</value>
+    <comment>Explains that the preview is a separate app and the user can switch between both versions at any time.</comment>
+  </data>
+  <data name="HeadingDialogAppPreviewUnfinished.Text" xml:space="preserve">
+    <value>Ще в розробці</value>
+    <comment>Heading for the point explaining that the preview is unfinished.</comment>
+  </data>
+  <data name="TextDialogAppPreviewUnfinished.Text" xml:space="preserve">
+    <value>Попередня версія не завершена й може містити помилки або не мати деяких функцій. Будь ласка, поки не використовуйте її для чогось важливого.</value>
+    <comment>Warns the user that the preview is unfinished and should not be used for anything important.</comment>
+  </data>
+  <data name="HeadingDialogAppPreviewLanguages.Text" xml:space="preserve">
+    <value>Доступна не всіма мовами</value>
+    <comment>Heading for the point explaining that the preview is not available in all languages.</comment>
+  </data>
+  <data name="TextDialogAppPreviewLanguages.Text" xml:space="preserve">
+    <value>Попередню версію ще не перекладено всіма мовами, тому частково або повністю вона може відображатися англійською.</value>
+    <comment>Explains that the preview is not translated into all languages yet and may be shown in English.</comment>
+  </data>
+  <data name="DialogAppPreview.PrimaryButtonText" xml:space="preserve">
+    <value>Отримати попередню версію</value>
+    <comment>The text on the button that opens the Microsoft Store page of the preview.</comment>
+  </data>
+  <data name="DialogAppPreview.CloseButtonText" xml:space="preserve">
+    <value>Не зараз</value>
+    <comment>The text on the button that closes the dialog about the preview of the next app version.</comment>
+  </data>
 </root>

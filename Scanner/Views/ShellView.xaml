@@ -263,6 +263,11 @@
                         </MenuFlyout>
                     </muxc:NavigationViewItem.ContextFlyout>
                 </muxc:NavigationViewItem>
+                <muxc:NavigationViewItem x:Name="NavigationViewItemMainAppPreview" x:Uid="ButtonAppPreview" SelectsOnInvoked="False" Opacity="{x:Bind ViewModel.WindowActivationState, Mode=OneWay, Converter={StaticResource WindowStateOpacityConverter}, FallbackValue=1.0}" AutomationProperties.Name="{x:Bind NavigationViewItemMainAppPreview, Converter={StaticResource ToolTipConverter}}">
+                    <muxc:NavigationViewItem.Icon>
+                        <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE945;" FontSize="16"/>
+                    </muxc:NavigationViewItem.Icon>
+                </muxc:NavigationViewItem>
                 <muxc:NavigationViewItem x:Name="NavigationViewItemMainHelp" x:Uid="ButtonHelp" Opacity="{x:Bind ViewModel.WindowActivationState, Mode=OneWay, Converter={StaticResource WindowStateOpacityConverter}, FallbackValue=1.0}" AutomationProperties.Name="{x:Bind NavigationViewItemMainHelp, Converter={StaticResource ToolTipConverter}}">
                     <muxc:NavigationViewItem.Icon>
                         <FontIcon Style="{StaticResource FontIconStyleSegoeFluentIcons}" Glyph="&#xE897;" FontSize="16"/>

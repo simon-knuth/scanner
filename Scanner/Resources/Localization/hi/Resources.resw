@@ -1852,4 +1852,56 @@ Fuzzy</comment>
     <value>अमान्य फ़ाइल नाम</value>
     <comment>The error message that appears when entering an invalid file name into the rename dialog.</comment>
   </data>
+  <data name="ButtonAppPreview.ToolTipService.ToolTip" xml:space="preserve">
+    <value>अगला संस्करण आज़माएँ</value>
+    <comment>The text of the button in the toolbar that opens the dialog about the preview of the next app version.</comment>
+  </data>
+  <data name="HeadingDialogAppPreview.Text" xml:space="preserve">
+    <value>Scanner का अगला संस्करण आज़माएँ</value>
+    <comment>The heading for the dialog about the preview of the next app version.</comment>
+  </data>
+  <data name="SubheadingDialogAppPreview.Text" xml:space="preserve">
+    <value>आने वाला संस्करण अब प्रीव्यू के रूप में उपलब्ध है।</value>
+    <comment>The subheading for the dialog about the preview of the next app version.</comment>
+  </data>
+  <data name="TextDialogAppPreviewBadge.Text" xml:space="preserve">
+    <value>प्रीव्यू</value>
+    <comment>A short badge next to the app name that marks it as a preview version. Displayed in uppercase like the badge in the preview app's icon.</comment>
+  </data>
+  <data name="TextDialogAppPreviewPitch.Text" xml:space="preserve">
+    <value>अगले बड़े अपडेट की पहली झलक पाएँ और अपनी प्रतिक्रिया से उसे बेहतर बनाने में मदद करें।</value>
+    <comment>Short description of why the user should try the preview of the next app version.</comment>
+  </data>
+  <data name="HeadingDialogAppPreviewSeparate.Text" xml:space="preserve">
+    <value>एक अलग ऐप</value>
+    <comment>Heading for the point explaining that the preview is a separate app.</comment>
+  </data>
+  <data name="TextDialogAppPreviewSeparate.Text" xml:space="preserve">
+    <value>प्रीव्यू इस संस्करण के साथ इंस्टॉल होता है, जो बिल्कुल वैसा ही रहता है। आप किसी भी समय दोनों के बीच आ-जा सकते हैं।</value>
+    <comment>Explains that the preview is a separate app and the user can switch between both versions at any time.</comment>
+  </data>
+  <data name="HeadingDialogAppPreviewUnfinished.Text" xml:space="preserve">
+    <value>अभी भी काम जारी है</value>
+    <comment>Heading for the point explaining that the preview is unfinished.</comment>
+  </data>
+  <data name="TextDialogAppPreviewUnfinished.Text" xml:space="preserve">
+    <value>प्रीव्यू अधूरा है और इसमें बग हो सकते हैं या कुछ सुविधाएँ नहीं हो सकती हैं। कृपया अभी इसका उपयोग किसी महत्वपूर्ण काम के लिए न करें।</value>
+    <comment>Warns the user that the preview is unfinished and should not be used for anything important.</comment>
+  </data>
+  <data name="HeadingDialogAppPreviewLanguages.Text" xml:space="preserve">
+    <value>सभी भाषाओं में उपलब्ध नहीं</value>
+    <comment>Heading for the point explaining that the preview is not available in all languages.</comment>
+  </data>
+  <data name="TextDialogAppPreviewLanguages.Text" xml:space="preserve">
+    <value>प्रीव्यू का अभी सभी भाषाओं में अनुवाद नहीं हुआ है, इसलिए इसका कुछ हिस्सा या पूरा ऐप अंग्रेज़ी में दिख सकता है।</value>
+    <comment>Explains that the preview is not translated into all languages yet and may be shown in English.</comment>
+  </data>
+  <data name="DialogAppPreview.PrimaryButtonText" xml:space="preserve">
+    <value>प्रीव्यू पाएँ</value>
+    <comment>The text on the button that opens the Microsoft Store page of the preview.</comment>
+  </data>
+  <data name="DialogAppPreview.CloseButtonText" xml:space="preserve">
+    <value>अभी नहीं</value>
+    <comment>The text on the button that closes the dialog about the preview of the next app version.</comment>
+  </data>
 </root>

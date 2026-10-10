@@ -302,6 +302,11 @@ namespace Scanner.Views
                 OtherAppsDialogView dialog = new OtherAppsDialogView();
                 await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, async () => await dialog.ShowAsync());
             }
+            else if (args.InvokedItemContainer == NavigationViewItemMainAppPreview)
+            {
+                AppPreviewDialogView dialog = new AppPreviewDialogView();
+                await RunOnUIThreadAsync(CoreDispatcherPriority.Normal, async () => await dialog.ShowAsync());
+            }
         }
 
         private async void NavigationViewItemMainSettings_RightTapped(object sender, Windows.UI.Xaml.Input.RightTappedRoutedEventArgs e)
