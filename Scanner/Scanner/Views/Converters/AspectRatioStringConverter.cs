@@ -21,8 +21,8 @@ public partial class AspectRatioStringConverter : IValueConverter
                 return Resources.Strings.Resources.AspectRatio3By2;
             case AspectRatio.FourByThree:
                 return Resources.Strings.Resources.AspectRatio4By3;
-            case AspectRatio.DinA:
-                return Resources.Strings.Resources.AspectRatioInternationalDINA;
+            case AspectRatio.A:
+                return Resources.Strings.Resources.AspectRatioInternationalA;
             case AspectRatio.AnsiA:
                 return Resources.Strings.Resources.AspectRatioNAANSIA;
             case AspectRatio.AnsiB:

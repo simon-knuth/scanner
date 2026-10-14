@@ -36,9 +36,9 @@ public partial class ScanOptionsSnapshotScanAreaStringConverter : IValueConverte
             case ScanAreaKind.PaperSize:
                 return snapshot.PaperSize switch
                 {
-                    PaperSize.DinA3 => GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.PaperSizeInternationalDINA3),
-                    PaperSize.DinA4 => GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.PaperSizeInternationalDINA4),
-                    PaperSize.DinA5 => GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.PaperSizeInternationalDINA5),
+                    PaperSize.A3 => GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.PaperSizeInternationalA3),
+                    PaperSize.A4 => GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.PaperSizeInternationalA4),
+                    PaperSize.A5 => GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.PaperSizeInternationalA5),
                     PaperSize.AnsiA => GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.AspectRatioNAANSIA),
                     PaperSize.AnsiB => GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.AspectRatioNAANSIB),
                     PaperSize.AnsiC => GetLocalized(Resources.Strings.ResourcesExtension.KeyEnum.AspectRatioNAANSIC),

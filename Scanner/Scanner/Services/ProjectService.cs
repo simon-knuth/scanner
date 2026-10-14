@@ -704,7 +704,7 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
             : ScannerAutoCropMode.Disabled;
         string region = scanOptions.ScanArea switch
         {
-            PaperSizeArea paperSizeArea => paperSizeArea.PaperSize.ToString(),  // fixed paper size, e.g. "DinA4"
+            PaperSizeArea paperSizeArea => paperSizeArea.PaperSize.ToString(),  // fixed paper size, e.g. "A4"
             AutoCropArea autoCrop => autoCrop.AutoCropMode.ToString(),          // e.g. "SingleRegion"
             RectScanArea => "CustomRegion",                                     // user-selected region
             _ => "WholeArea",                                                   // whole bed / no area set

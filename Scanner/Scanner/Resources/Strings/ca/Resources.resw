@@ -158,7 +158,7 @@ Fuzzy</comment>
     <value>Dona la volta</value>
     <comment>The aspect ratio description for flipping the current aspect ratio.</comment>
   </data>
-  <data name="AspectRatioInternationalDINA" xml:space="preserve">
+  <data name="AspectRatioInternationalA" xml:space="preserve">
     <value>A</value>
     <comment>The aspect ratio description for the international "DIN A".</comment>
   </data>
@@ -1571,13 +1571,13 @@ Fuzzy</comment>
   <data name="GiveFeedback" xml:space="preserve">
     <value />
   </data>
-  <data name="PaperSizeInternationalDINA3" xml:space="preserve">
+  <data name="PaperSizeInternationalA3" xml:space="preserve">
     <value>A3</value>
   </data>
-  <data name="PaperSizeInternationalDINA4" xml:space="preserve">
+  <data name="PaperSizeInternationalA4" xml:space="preserve">
     <value>A4</value>
   </data>
-  <data name="PaperSizeInternationalDINA5" xml:space="preserve">
+  <data name="PaperSizeInternationalA5" xml:space="preserve">
     <value>A5</value>
   </data>
   <data name="ScanAreaAlignmentBody" xml:space="preserve">

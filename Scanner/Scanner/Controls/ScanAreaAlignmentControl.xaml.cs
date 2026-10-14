@@ -35,7 +35,7 @@ public sealed partial class ScanAreaAlignmentControl : UserControl
         DependencyProperty.Register(nameof(MaxScanArea), typeof(Size), typeof(ScanAreaAlignmentControl), new PropertyMetadata(Size.Empty, OnMaxScanAreaChanged));
 
     public static readonly DependencyProperty PaperSizeProperty =
-        DependencyProperty.Register(nameof(PaperSize), typeof(PaperSize), typeof(ScanAreaAlignmentControl), new PropertyMetadata(PaperSize.DinA4, OnPaperSizeChanged));
+        DependencyProperty.Register(nameof(PaperSize), typeof(PaperSize), typeof(ScanAreaAlignmentControl), new PropertyMetadata(PaperSize.A4, OnPaperSizeChanged));
 
     public static readonly DependencyProperty SelectedOrientationProperty =
         DependencyProperty.Register(nameof(SelectedOrientation), typeof(ScanOrientation), typeof(ScanAreaAlignmentControl), new PropertyMetadata(ScanOrientation.Portrait, OnSelectedOrientationChanged));
