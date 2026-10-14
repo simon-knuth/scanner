@@ -270,8 +270,10 @@ public partial class PdfProject : ProjectBase
                     TargetFile = pageSaves.Values.First();
                     projectObjectSemaphore.Release();
 
-                    // update file name
-                    await FileNameInfo!.UpdateNamesAsync(FileNameInfo!.DesiredName, TargetFile.File.Name, false, uiDispatcherQueue);
+                    // update file name, adopting a name numbered due to a collision unless the project has been renamed during
+                    // the save, as renaming the file to the desired name again would skip its own number
+                    string desiredName = FileNameInfo!.DesiredName == snapshot.DesiredFileName ? TargetFile.File.Name : FileNameInfo.DesiredName;
+                    await FileNameInfo.UpdateNamesAsync(desiredName, TargetFile.File.Name, false, uiDispatcherQueue);
 
                     projectFolderSemaphore.Release();
                 }

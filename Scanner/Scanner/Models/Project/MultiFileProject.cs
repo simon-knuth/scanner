@@ -335,7 +335,12 @@ public partial class MultiFileProject : ProjectBase
                     {
                         if (pageSave.Key is ImagePage imagePage && imagePage.FileNameInfo != null)
                         {
-                            await imagePage.FileNameInfo.UpdateNamesAsync(imagePage.FileNameInfo.DesiredName, imagePage.TargetFile!.File.Name, false, uiDispatcherQueue);
+                            // adopt a name numbered due to a collision, unless the page has been renamed during the save,
+                            // as renaming the file to the desired name again would skip its own number
+                            string actualName = imagePage.TargetFile!.File.Name;
+                            string desiredName = imagePage.FileNameInfo.DesiredName == snapshot.Pages[pageSave.Key].DesiredFileName
+                                ? actualName : imagePage.FileNameInfo.DesiredName;
+                            await imagePage.FileNameInfo.UpdateNamesAsync(desiredName, actualName, false, uiDispatcherQueue);
                         }
                     }
 
