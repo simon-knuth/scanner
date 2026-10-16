@@ -262,11 +262,15 @@ public sealed partial class ShellView : Page
         {
             AppWindowTitleBar titlebar = ((App)Application.Current).MainWindow.AppWindow.TitleBar;
 
+            if (this.XamlRoot == null) return;
+
             double scaleAdjustment = this.XamlRoot.RasterizationScale;
+            if (!double.IsFinite(scaleAdjustment) || scaleAdjustment <= 0) return;
+
             double headerInset = ViewModel.AccessibilityService.DefaultFlowDirection == FlowDirection.LeftToRight ? titlebar.LeftInset + 0 : titlebar.RightInset + 24;
             double footerInset = ViewModel.AccessibilityService.DefaultFlowDirection == FlowDirection.LeftToRight ? titlebar.RightInset + 24 : titlebar.LeftInset + 0;
-            ColumnDefinitionTitlebarInsetHeader.Width = new GridLength(headerInset / scaleAdjustment);
-            ColumnDefinitionTitlebarInsetFooter.Width = new GridLength(footerInset / scaleAdjustment);
+            ColumnDefinitionTitlebarInsetHeader.Width = GetInsetLength(headerInset, scaleAdjustment);
+            ColumnDefinitionTitlebarInsetFooter.Width = GetInsetLength(footerInset, scaleAdjustment);
 
             GeneralTransform transform = StackPanelTitlebarButtonsLeft.TransformToVisual(null);
             Rect bounds = transform.TransformBounds(new Rect(0, 0,
@@ -291,6 +295,12 @@ public sealed partial class ShellView : Page
             ViewModel.SentryService?.TrackError(exc);
             ViewModel.LogService?.Log.Error(exc, "Failed to set custom title bar region");
         }
+    }
+
+    private static GridLength GetInsetLength(double inset, double scale)
+    {
+        double value = inset / scale;
+        return new GridLength(double.IsFinite(value) && value > 0 ? value : 0);
     }
 
     private Windows.Graphics.RectInt32 GetRect(Rect bounds, double scale)
