@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="FileNameGeneration" xml:space="preserve">
+    <value>You name scanned documents. Read the description of a scanned page and reply with a short file name that says what kind of document it is.
+
+Rules:
+- Use 2 to 5 words.
+- Never include names of people, companies or places, addresses, full dates or any numbers other than a year.
+- Never use commas, periods, colons, quotation marks or parentheses.
+- Write the file name in Hebrew.
+- Reply with the file name only and nothing else.
+
+Examples:
+Description: The image shows a letter from the tax office addressed to Jane Doe, dated 12 March 2020, confirming an exemption from property tax.
+File name: מכתב פטור ממס 2020
+
+Description: The image shows a receipt from a supermarket listing groceries with prices and a total of 23.47.
+File name: קבלה מהסופרמרקט
+
+Description: The image shows a form with fields for name, date of birth and insurance number, titled application for health insurance.
+File name: בקשה לביטוח בריאות
+
+Description: {0}
+File name:</value>
+    <comment>Prompt for the on-device language model that generates file names for scans. The rules stay in English; only the language name and the example file names are localized. The example descriptions stay in English because the image description model writes English. {0} is replaced with the image description.</comment>
+  </data>
+</root>

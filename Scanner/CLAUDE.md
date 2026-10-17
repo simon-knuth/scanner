@@ -84,6 +84,8 @@ Strict **MVVM** with `CommunityToolkit.Mvvm`. Three layers under `Scanner/`: `Vi
 
 UI strings are localized via **ReswPlus** (`Resources/Strings/`), with ~20 languages. ReswPlus generates strongly-typed accessors from the `.resw` files — edit the resource files, not generated code.
 
+Prompts for the on-device language model live in a separate `Prompts.resw` per language (class `Resources.Strings.Prompts`), kept out of `Resources.resw` so they aren't treated as UI strings. Their rules stay in English; only the output language name and the example file names are localized. A language without its own `Prompts.resw` falls back to `en`.
+
 ## Conventions
 
 - `Nullable` is enabled across both projects; honor nullable annotations.
