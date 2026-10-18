@@ -431,8 +431,10 @@ public abstract partial class ProjectBase : ObservableRecipient
         try
         {
             // keep track of changes in case of error
-            List<StorageFile> deletedFiles = new();
-            List<int> deletedIndices = new();
+            List<KeyValuePair<StorageFile, StorageFolder>> moves = new();
+            List<ImagePage> pagesWithClosedTargetFiles = new();
+            List<ImagePage> pagesWithRemovedPreviews = new();
+            List<ImagePage> removedPages = new();
 
             // revertable section
             try
@@ -440,11 +442,9 @@ public abstract partial class ProjectBase : ObservableRecipient
                 // remove pages
                 foreach (ImagePage page in pages)
                 {
-                    deletedFiles.Add(page.SourceFile);
-                    deletedIndices.Add(page.Index);
-
                     if (page is ImagePage imagePage)
                     {
+                        StorageFolder previousFolder = await page.SourceFile.GetParentAsync();
                         if (isUndoing)
                         {
                             // move to redo folder
@@ -455,30 +455,69 @@ public abstract partial class ProjectBase : ObservableRecipient
                             // move to undo folder
                             await page.SourceFile.MoveAsync(AppDataService.UndoFolder, page.SourceFile.Name, NameCollisionOption.GenerateUniqueName);
                         }
+                        moves.Add(new KeyValuePair<StorageFile, StorageFolder>(page.SourceFile, previousFolder));
 
                         if (page.TargetFile != null)
+                        {
                             page.TargetFile.FileStream.Dispose();
+                            pagesWithClosedTargetFiles.Add(page);
+                        }
 
                         if (page.PreviewFile != null && page.PreviewFile != page.SourceFile)
                         {
                             await imagePage.UpdatePreviewFileAsync(null, uiDispatcherQueue);
+                            pagesWithRemovedPreviews.Add(page);
                         }
                     }
-                    
+
                     Pages.Remove(page);
+                    removedPages.Add(page);
                 }
             }
             catch (Exception exc)
             {
-                // roll back changes
-                foreach (StorageFile file in deletedFiles)
+                foreach (KeyValuePair<StorageFile, StorageFolder> move in moves)
                 {
-                    await file.DeleteAsync(StorageDeleteOption.PermanentDelete);
+                    try
+                    {
+                        await move.Key.MoveAsync(move.Value, move.Key.Name, NameCollisionOption.GenerateUniqueName);
+                    }
+                    catch (Exception rollbackExc)
+                    {
+                        LogService?.Log.Error(rollbackExc, "Failed to move a page's source file back while rolling back");
+                    }
                 }
-                for (int i = 0; i < deletedIndices.Count; i++)
+
+                foreach (ImagePage page in pagesWithClosedTargetFiles)
                 {
-                    Pages.Insert(deletedIndices[i], pages[i]);
+                    try
+                    {
+                        page.TargetFile = new(page.TargetFile!.File, await page.TargetFile.File.OpenAsync(FileAccessMode.ReadWrite, StorageOpenOptions.AllowOnlyReaders));
+                    }
+                    catch (Exception rollbackExc)
+                    {
+                        LogService?.Log.Error(rollbackExc, "Failed to reopen a page's target file while rolling back");
+                    }
                 }
+
+                // reinsert in ascending order, so that each original index is valid again
+                foreach (ImagePage page in removedPages.OrderBy(x => x.Index))
+                {
+                    Pages.Insert(Math.Min(page.Index, Pages.Count), page);
+                }
+
+                if (pagesWithRemovedPreviews.Count > 0)
+                {
+                    try
+                    {
+                        await GeneratePagePreviewsAsync(pagesWithRemovedPreviews, uiDispatcherQueue);
+                    }
+                    catch (Exception rollbackExc)
+                    {
+                        LogService?.Log.Error(rollbackExc, "Failed to regenerate page previews while rolling back");
+                    }
+                }
+
                 throw new ActionFailedAndRolledBackException(exc);
             }
 

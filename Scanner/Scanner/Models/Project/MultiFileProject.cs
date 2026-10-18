@@ -207,6 +207,11 @@ public partial class MultiFileProject : ProjectBase
             // revision at snapshot time (-1 means no bytes were written this pass)
             long revisionAtSnapshot = -1;
 
+            // locks held at any given moment, so that each is released exactly once on every path
+            bool holdsProjectObjectSemaphore = false;
+            bool holdsProjectFolderSemaphore = false;
+            bool holdsChangesFolderSemaphore = false;
+
             try
             {
                 uiDispatcherQueue.RunOnThread(DispatcherQueuePriority.Low, () =>
@@ -271,8 +276,11 @@ public partial class MultiFileProject : ProjectBase
                 {
                     // lock data
                     await projectObjectSemaphore.WaitAsync();
+                    holdsProjectObjectSemaphore = true;
                     await projectFolderSemaphore.WaitAsync();
+                    holdsProjectFolderSemaphore = true;
                     await changesFolderSemaphore.WaitAsync();
+                    holdsChangesFolderSemaphore = true;
 
                     // commit changes
                     foreach (IProjectPage page in pages)
@@ -335,7 +343,9 @@ public partial class MultiFileProject : ProjectBase
 
                     // continue processing edits during save process
                     projectObjectSemaphore.Release();
+                    holdsProjectObjectSemaphore = false;
                     changesFolderSemaphore.Release();
+                    holdsChangesFolderSemaphore = false;
 
                     // save
                     Dictionary<IProjectPage, FileHandle?> pageSaves = await snapshot.TrySaveAsync(uiDispatcherQueue);
@@ -346,11 +356,13 @@ public partial class MultiFileProject : ProjectBase
 
                     // update target files
                     await projectObjectSemaphore.WaitAsync();
+                    holdsProjectObjectSemaphore = true;
                     foreach (KeyValuePair<IProjectPage, FileHandle?> pageSave in pageSaves)
                     {
                         ((ImagePage)pageSave.Key).TargetFile = pageSave.Value;
                     }
                     projectObjectSemaphore.Release();
+                    holdsProjectObjectSemaphore = false;
 
                     // update file names
                     foreach (KeyValuePair<IProjectPage, FileHandle?> pageSave in pageSaves)
@@ -367,10 +379,12 @@ public partial class MultiFileProject : ProjectBase
                     }
 
                     projectFolderSemaphore.Release();
+                    holdsProjectFolderSemaphore = false;
                 }
 
                 // apply file name
                 await projectObjectSemaphore.WaitAsync();
+                holdsProjectObjectSemaphore = true;
 
                 await uiDispatcherQueue.RunOnThreadAndWaitAsync(DispatcherQueuePriority.Low, async () =>
                 {
@@ -392,6 +406,7 @@ public partial class MultiFileProject : ProjectBase
 
                 success = true;
                 projectObjectSemaphore.Release();
+                holdsProjectObjectSemaphore = false;
             }
             catch (Exception exc)
             {
@@ -400,6 +415,14 @@ public partial class MultiFileProject : ProjectBase
             }
             finally
             {
+                // release locks still held after a failure
+                if (holdsChangesFolderSemaphore)
+                    changesFolderSemaphore.Release();
+                if (holdsProjectFolderSemaphore)
+                    projectFolderSemaphore.Release();
+                if (holdsProjectObjectSemaphore)
+                    projectObjectSemaphore.Release();
+
                 uiDispatcherQueue.RunOnThread(DispatcherQueuePriority.Low, () =>
                 {
                     IsSaving = false;

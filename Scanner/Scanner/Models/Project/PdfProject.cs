@@ -178,6 +178,11 @@ public partial class PdfProject : ProjectBase
             // revision at snapshot time (-1 means no bytes were written this pass)
             long revisionAtSnapshot = -1;
 
+            // locks held at any given moment, so that each is released exactly once on every path
+            bool holdsProjectObjectSemaphore = false;
+            bool holdsProjectFolderSemaphore = false;
+            bool holdsChangesFolderSemaphore = false;
+
             try
             {
                 uiDispatcherQueue.RunOnThread(DispatcherQueuePriority.Low, () =>
@@ -222,8 +227,11 @@ public partial class PdfProject : ProjectBase
                 {
                     // lock data
                     await projectObjectSemaphore.WaitAsync();
+                    holdsProjectObjectSemaphore = true;
                     await projectFolderSemaphore.WaitAsync();
+                    holdsProjectFolderSemaphore = true;
                     await changesFolderSemaphore.WaitAsync();
+                    holdsChangesFolderSemaphore = true;
 
                     // commit changes
                     foreach (IProjectPage page in Pages)
@@ -270,7 +278,9 @@ public partial class PdfProject : ProjectBase
 
                     // continue processing edits during save process
                     projectObjectSemaphore.Release();
+                    holdsProjectObjectSemaphore = false;
                     changesFolderSemaphore.Release();
+                    holdsChangesFolderSemaphore = false;
 
                     // save
                     Dictionary<IProjectPage, FileHandle?> pageSaves = await snapshot.TrySaveAsync(uiDispatcherQueue);
@@ -280,8 +290,10 @@ public partial class PdfProject : ProjectBase
 
                     // update target file
                     await projectObjectSemaphore.WaitAsync();
+                    holdsProjectObjectSemaphore = true;
                     TargetFile = pageSaves.Values.First();
                     projectObjectSemaphore.Release();
+                    holdsProjectObjectSemaphore = false;
 
                     // update file name, adopting a name numbered due to a collision unless the project has been renamed during
                     // the save, as renaming the file to the desired name again would skip its own number
@@ -289,6 +301,7 @@ public partial class PdfProject : ProjectBase
                     await FileNameInfo.UpdateNamesAsync(desiredName, TargetFile.File.Name, false, uiDispatcherQueue);
 
                     projectFolderSemaphore.Release();
+                    holdsProjectFolderSemaphore = false;
                 }
 
                 // apply file name
@@ -313,6 +326,14 @@ public partial class PdfProject : ProjectBase
             }
             finally
             {
+                // release locks still held after a failure
+                if (holdsChangesFolderSemaphore)
+                    changesFolderSemaphore.Release();
+                if (holdsProjectFolderSemaphore)
+                    projectFolderSemaphore.Release();
+                if (holdsProjectObjectSemaphore)
+                    projectObjectSemaphore.Release();
+
                 uiDispatcherQueue.RunOnThread(DispatcherQueuePriority.Low, () =>
                 {
                     IsSaving = false;
