@@ -71,22 +71,35 @@ public partial class MultiFileProject : ProjectBase
         await AppDataService.EmptyFolderAsync(AppDataService.UndoFolder);
         await AppDataService.EmptyFolderAsync(AppDataService.RedoFolder);
 
-        // create pages
         List<IProjectPage> pages = new();
-        for (int i = 0; i < creationData.Pages.Count; i++)
+        try
         {
-            PageCreationData pageData = creationData.Pages[i];
-            pages.Add(await CreatePageFromFileAsync(pageData.File, i, pageData.TargetFileName, pageData.TargetFile, pageData.TargetFolder, keepSourceFiles, AppDataService.ProjectFolder, pageData.BaseFilter, pageData.Filter, pageData.Brightness, pageData.Contrast));
+            // create pages
+            for (int i = 0; i < creationData.Pages.Count; i++)
+            {
+                PageCreationData pageData = creationData.Pages[i];
+                pages.Add(await CreatePageFromFileAsync(pageData.File, i, pageData.TargetFileName, pageData.TargetFile, pageData.TargetFolder, keepSourceFiles, AppDataService.ProjectFolder, pageData.BaseFilter, pageData.Filter, pageData.Brightness, pageData.Contrast));
+            }
+
+            // create project and update previews
+            MultiFileProject project = new MultiFileProject(creationData.Id, pages, creationData.Format, creationData.CreationScanOptions);
+            await project.GeneratePagePreviewsAsync(pages.OfType<ImagePage>().ToList(), uiDispatcherQueue);
+
+            if (isAlreadySaved)
+                project.MarkRevisionSaved(project.CaptureContentRevision());
+
+            return project;
         }
-
-        // create project and update previews
-        MultiFileProject project = new MultiFileProject(creationData.Id, pages, creationData.Format, creationData.CreationScanOptions);
-        await project.GeneratePagePreviewsAsync(pages.OfType<ImagePage>().ToList(), uiDispatcherQueue);
-
-        if (isAlreadySaved)
-            project.MarkRevisionSaved(project.CaptureContentRevision());
-
-        return project;
+        catch
+        {
+            // release files of the pages created so far, as the project is discarded
+            foreach (IProjectPage page in pages)
+            {
+                if (page is ImagePage imagePage)
+                    imagePage.TargetFile?.FileStream.Dispose();
+            }
+            throw;
+        }
     }
 
 
@@ -202,6 +215,10 @@ public partial class MultiFileProject : ProjectBase
                     saveProcessWaitingToStart = false;
                 });
 
+                // don't save a project that has been closed while waiting
+                if (AreFileHandlesReleased)
+                    return;
+
                 // update target location for every file if needed
                 bool forceSaving = false;
                 if (saveAs || pages.Any(x => x is ImagePage imagePage && imagePage.TargetFile == null && imagePage.TargetFolder == null))
@@ -226,8 +243,13 @@ public partial class MultiFileProject : ProjectBase
                     {
                         imagePage = (ImagePage)page;
 
-                        if (saveAs)
+                        if (saveAs && imagePage.TargetFile != null)
+                        {
+                            // release previous file
+                            FileHandle targetFile = imagePage.TargetFile;
                             imagePage.TargetFile = null;
+                            targetFile.FileStream.Dispose();
+                        }
 
                         if (page is ImagePage imagePageToUpdate)
                         {
@@ -388,10 +410,22 @@ public partial class MultiFileProject : ProjectBase
 
                     saveProcess.TrySetResult(success);
                 });
+
+                // don't keep files locked if the project has been closed during the save
+                ReleaseFileHandlesIfClosed();
                 saveSemaphore.Release();
             }
         });
         return success;
+    }
+
+    protected override void DisposeFileHandles()
+    {
+        foreach (IProjectPage page in Pages)
+        {
+            if (page is ImagePage imagePage)
+                imagePage.TargetFile?.FileStream.Dispose();
+        }
     }
 
     public async Task CopyPagesAsync(List<ImagePage> pages)

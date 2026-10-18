@@ -146,6 +146,21 @@ public abstract partial class ProjectBase : ObservableRecipient
     protected SemaphoreSlim projectFolderSemaphore = new(1, 1);       // needed to modify the Project folder
     protected SemaphoreSlim changesFolderSemaphore = new(1, 1);       // needed to modify the Changes folder
 
+    private readonly object fileHandleLock = new();
+    private bool areFileHandlesReleased;                                // set once the project has been closed
+
+    /// <summary>
+    /// Whether <see cref="ReleaseFileHandles"/> has been called, after which the project must not lock any files.
+    /// </summary>
+    protected bool AreFileHandlesReleased
+    {
+        get
+        {
+            lock (fileHandleLock)
+                return areFileHandlesReleased;
+        }
+    }
+
     private ConcurrentDictionary<ImagePage, ThreadPoolTimer> consecutiveAtomicActionMergeTimers = [];
 
 
@@ -171,6 +186,37 @@ public abstract partial class ProjectBase : ObservableRecipient
     /// dialog) rather than an automatic save. Only user-initiated saves are tracked in analytics.
     /// </param>
     public abstract Task SaveAsync(bool saveAs, DispatcherQueue uiDispatcherQueue, bool isUserInitiated = false);
+
+    /// <summary>
+    /// Releases all files locked by the project, which must not lock any files afterwards. A save process that is
+    /// still running at this point releases the files it locks once it ends (see <see cref="ReleaseFileHandlesIfClosed"/>).
+    /// </summary>
+    public void ReleaseFileHandles()
+    {
+        lock (fileHandleLock)
+        {
+            areFileHandlesReleased = true;
+            DisposeFileHandles();
+        }
+    }
+
+    /// <summary>
+    /// Releases files locked by a save process that was still running when <see cref="ReleaseFileHandles"/> got called.
+    /// Needs to be called at the very end of every save process.
+    /// </summary>
+    protected void ReleaseFileHandlesIfClosed()
+    {
+        lock (fileHandleLock)
+        {
+            if (areFileHandlesReleased)
+                DisposeFileHandles();
+        }
+    }
+
+    /// <summary>
+    /// Disposes the streams of all <see cref="FileHandle"/>s currently held by the project.
+    /// </summary>
+    protected abstract void DisposeFileHandles();
 
     /// <summary>
     /// Tracks a successful, user-initiated save and the relevant save configuration.

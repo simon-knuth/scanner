@@ -83,14 +83,23 @@ public partial class PdfProject : ProjectBase
         if (isAlreadySaved)
             project.MarkRevisionSaved(project.CaptureContentRevision());
 
-        if (pages[0] is PdfPage)
+        try
         {
-            project.SourceFile = project.TargetFile = new(creationData.Pages[0].File, await creationData.Pages[0].File.OpenAsync(FileAccessMode.ReadWrite, StorageOpenOptions.AllowOnlyReaders));
-            await project.GeneratePagePreviewsAsync([.. pages.Cast<PdfPage>()], uiDispatcherQueue);
+            if (pages[0] is PdfPage)
+            {
+                project.SourceFile = project.TargetFile = new(creationData.Pages[0].File, await creationData.Pages[0].File.OpenAsync(FileAccessMode.ReadWrite, StorageOpenOptions.AllowOnlyReaders));
+                await project.GeneratePagePreviewsAsync([.. pages.Cast<PdfPage>()], uiDispatcherQueue);
+            }
+            else
+            {
+                await project.GeneratePagePreviewsAsync([.. pages.Cast<ImagePage>()], uiDispatcherQueue);
+            }
         }
-        else
+        catch
         {
-            await project.GeneratePagePreviewsAsync([.. pages.Cast<ImagePage>()], uiDispatcherQueue);
+            // release files, as the project is discarded
+            project.ReleaseFileHandles();
+            throw;
         }
 
         return project;
@@ -176,6 +185,10 @@ public partial class PdfProject : ProjectBase
                     IsSaving = true;
                     saveProcessWaitingToStart = false;
                 });
+
+                // don't save a project that has been closed while waiting
+                if (AreFileHandlesReleased)
+                    return;
 
                 // update target location if needed
                 bool forceSaving = false;
@@ -310,10 +323,21 @@ public partial class PdfProject : ProjectBase
 
                     saveProcess.TrySetResult(success);
                 });
+
+                // don't keep files locked if the project has been closed during the save
+                ReleaseFileHandlesIfClosed();
                 saveSemaphore.Release();
             }
         });
         return success;
+    }
+
+    protected override void DisposeFileHandles()
+    {
+        TargetFile?.FileStream.Dispose();
+
+        if (SourceFile != null && SourceFile != TargetFile)
+            SourceFile.FileStream.Dispose();
     }
 
     public async Task CopyAsync()

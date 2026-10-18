@@ -1030,24 +1030,11 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
             ProjectBase project = CurrentProject;
             CurrentProject = null;
             SelectedPage = null;
+
+            // release files (also covers files locked by a save process that is still running)
+            project.ReleaseFileHandles();
+
             await AppDataService.EmptyFolderAsync(AppDataService.IncomingFolder);
-
-            // release files
-            if (project is PdfProject pdfProject && pdfProject.TargetFile != null)
-            {
-                pdfProject.TargetFile.FileStream.Dispose();
-
-                if (pdfProject.SourceFile != null && pdfProject.SourceFile != pdfProject.TargetFile)
-                    pdfProject.SourceFile.FileStream.Dispose();
-            }
-            else
-            {
-                foreach (IProjectPage page in pages)
-                {
-                    if (page is ImagePage imagePage && imagePage.TargetFile != null)
-                        imagePage.TargetFile.FileStream.Dispose();
-                }
-            }
 
             if (preserveSourceFilesInIncomingFolder)
             {
