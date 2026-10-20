@@ -1,5 +1,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.DependencyInjection;
+using CommunityToolkit.Mvvm.Messaging;
+using CommunityToolkit.WinUI;
 using CommunityToolkit.WinUI.Behaviors;
 using Microsoft.UI.Input;
 using Microsoft.UI.Windowing;
@@ -13,6 +15,7 @@ using Microsoft.UI.Xaml.Media.Imaging;
 using Microsoft.UI.Xaml.Navigation;
 using Scanner.Extensions;
 using Scanner.Helpers;
+using Scanner.Messages;
 using Scanner.Models;
 using Scanner.Resources.Strings;
 using Scanner.Services;
@@ -68,6 +71,18 @@ public sealed partial class ShellView : Page
     public string SaveButtonGlyph => ViewModel.CurrentProject == null || ViewModel.CurrentProject.IsPdf ? "\uE74E" : "\uEA35";
 
     private bool isDialogVisible;
+    private bool IsDialogVisible
+    {
+        get => isDialogVisible;
+        set
+        {
+            if (isDialogVisible == value)
+                return;
+
+            isDialogVisible = value;
+            WeakReferenceMessenger.Default.Send(new DialogVisibilityChangedMessage(value));
+        }
+    }
 
     private Notification DebugNotification = new Notification
     {
@@ -471,261 +486,130 @@ public sealed partial class ShellView : Page
         ShowSetupDialog();
     }
 
-    private void ShowSaveChangesDialog(TaskCompletionSource<bool> task, string trigger)
+    /// <summary>
+    /// Shows the dialog created by <paramref name="createDialog"/> on the UI thread, unless another dialog is
+    /// already visible. <paramref name="createDialog"/> is only invoked if the dialog is actually shown.
+    /// </summary>
+    /// <returns>The dialog and its result, or null if another dialog was already visible.</returns>
+    private Task<(T Dialog, ContentDialogResult Result)?> TryShowDialogAsync<T>(Func<T> createDialog) where T : ContentDialog
     {
-        this.RunOnUIThread(Microsoft.UI.Dispatching.DispatcherQueuePriority.Normal, async () =>
+        return DispatcherQueue.EnqueueAsync<(T Dialog, ContentDialogResult Result)?>(async () =>
         {
             // return if dialog is already visible
-            if (isDialogVisible)
+            if (IsDialogVisible)
+                return null;
+
+            IsDialogVisible = true;
+            try
             {
-                task.TrySetResult(false);
-                return;
+                T dialog = createDialog();
+                dialog.XamlRoot = this.XamlRoot;
+                return (dialog, await dialog.ShowAsync());
             }
+            finally
+            {
+                IsDialogVisible = false;
+            }
+        });
+    }
 
-            isDialogVisible = true;
-
+    private async void ShowSaveChangesDialog(TaskCompletionSource<bool> task, string trigger)
+    {
+        var shown = await TryShowDialogAsync(() =>
+        {
             // analytics
             ViewModel.SentryService?.TrackEvent(AnalyticsEvent.UnsavedChangesDialogShown, new Dictionary<string, string>
             {
                 { "trigger", trigger }
             });
 
-            UnsavedChangesDialogView dialog = new UnsavedChangesDialogView(ViewModel.CurrentProject);
-            dialog.XamlRoot = this.XamlRoot;
-            ContentDialogResult result = await dialog.ShowAsync();
-
-            isDialogVisible = false;
-
-            // analytics: Save (Primary), Discard (Secondary), Cancel (CloseButton / None)
-            string selection = result switch
-            {
-                ContentDialogResult.Primary => "Save",
-                ContentDialogResult.Secondary => "Discard",
-                _ => "Cancel",
-            };
-            ViewModel.SentryService?.TrackEvent(AnalyticsEvent.UnsavedChangesDialogResolved, new Dictionary<string, string>
-            {
-                { "trigger", trigger },
-                { "result", selection },
-            });
-
-            task.TrySetResult(result != ContentDialogResult.None);
+            return new UnsavedChangesDialogView(ViewModel.CurrentProject);
         });
+
+        if (shown == null)
+        {
+            task.TrySetResult(false);
+            return;
+        }
+
+        // analytics: Save (Primary), Discard (Secondary), Cancel (CloseButton / None)
+        string selection = shown.Value.Result switch
+        {
+            ContentDialogResult.Primary => "Save",
+            ContentDialogResult.Secondary => "Discard",
+            _ => "Cancel",
+        };
+        ViewModel.SentryService?.TrackEvent(AnalyticsEvent.UnsavedChangesDialogResolved, new Dictionary<string, string>
+        {
+            { "trigger", trigger },
+            { "result", selection },
+        });
+
+        task.TrySetResult(shown.Value.Result != ContentDialogResult.None);
     }
 
-    private void ShowSaveFileDialog(TaskCompletionSource<SaveOptions?> task, ScanOptions scanOptions, ProjectBase? project, string? desiredFileDisplayName, int existingFileCount)
+    private async void ShowSaveFileDialog(TaskCompletionSource<SaveOptions?> task, ScanOptions scanOptions, ProjectBase? project, string? desiredFileDisplayName, int existingFileCount)
     {
-        this.RunOnUIThread(Microsoft.UI.Dispatching.DispatcherQueuePriority.Normal, async () =>
-        {
-            // return if dialog is already visible
-            if (isDialogVisible)
-            {
-                task.TrySetResult(null);
-                return;
-            }
-
-            isDialogVisible = true;
-
-            SaveOptionsDialogView dialog = new SaveOptionsDialogView(scanOptions, project, desiredFileDisplayName, existingFileCount);
-            dialog.XamlRoot = this.XamlRoot;
-            ContentDialogResult result = await dialog.ShowAsync();
-
-            isDialogVisible = false;
-            if (result == ContentDialogResult.Primary)
-                task.TrySetResult(dialog.SaveOptions);
-            else
-                task.TrySetResult(null);
-        });
+        var shown = await TryShowDialogAsync(() => new SaveOptionsDialogView(scanOptions, project, desiredFileDisplayName, existingFileCount));
+        task.TrySetResult(shown?.Result == ContentDialogResult.Primary ? shown.Value.Dialog.SaveOptions : null);
     }
 
-    private void ShowSaveInProgressDialog(TaskCompletionSource task)
+    private async void ShowSaveInProgressDialog(TaskCompletionSource task)
     {
-        this.RunOnUIThread(Microsoft.UI.Dispatching.DispatcherQueuePriority.Normal, async () =>
-        {
-            // return if dialog is already visible
-            if (isDialogVisible)
-            {
-                task.TrySetResult();
-                return;
-            }
-
-            isDialogVisible = true;
-
-            SaveInProgressDialogView dialog = new SaveInProgressDialogView(ViewModel.CurrentProject);
-            dialog.XamlRoot = this.XamlRoot;
-            ContentDialogResult result = await dialog.ShowAsync();
-
-            isDialogVisible = false;
-            task.TrySetResult();
-        });
+        await TryShowDialogAsync(() => new SaveInProgressDialogView(ViewModel.CurrentProject));
+        task.TrySetResult();
     }
 
-    private void ShowProjectDeletionDialog(TaskCompletionSource<bool> task, ProjectBase project)
+    private async void ShowProjectDeletionDialog(TaskCompletionSource<bool> task, ProjectBase project)
     {
-        this.RunOnUIThread(Microsoft.UI.Dispatching.DispatcherQueuePriority.Normal, async () =>
-        {
-            // return if dialog is already visible
-            if (isDialogVisible)
-            {
-                task.TrySetResult(false);
-                return;
-            }
-
-            isDialogVisible = true;
-
-            ProjectDeletionDialogView dialog = new ProjectDeletionDialogView(project);
-            dialog.XamlRoot = this.XamlRoot;
-            ContentDialogResult result = await dialog.ShowAsync();
-
-            isDialogVisible = false;
-            if (result == ContentDialogResult.Primary) task.TrySetResult(true);
-            else task.TrySetResult(false);
-        });
+        var shown = await TryShowDialogAsync(() => new ProjectDeletionDialogView(project));
+        task.TrySetResult(shown?.Result == ContentDialogResult.Primary);
     }
 
-    private void ShowIndeterminateProgressDialog(string title, Task task)
+    private async void ShowIndeterminateProgressDialog(string title, Task task)
     {
-        this.RunOnUIThread(Microsoft.UI.Dispatching.DispatcherQueuePriority.Normal, async () =>
-        {
-            // return if dialog is already visible
-            if (isDialogVisible)
-            {
-                return;
-            }
-
-            isDialogVisible = true;
-
-            IndeterminateProgressDialogView dialog = new(title, task);
-            dialog.XamlRoot = this.XamlRoot;
-            ContentDialogResult result = await dialog.ShowAsync();
-
-            isDialogVisible = false;
-        });
+        await TryShowDialogAsync(() => new IndeterminateProgressDialogView(title, task));
     }
 
-    private void ShowDonationDialog()
+    private async void ShowDonationDialog()
     {
-        this.RunOnUIThread(Microsoft.UI.Dispatching.DispatcherQueuePriority.Normal, async () =>
+        await TryShowDialogAsync(() =>
         {
-            // return if dialog is already visible
-            if (isDialogVisible)
-            {
-                return;
-            }
-
             TeachingTipFeedback.IsOpen = false;
-            isDialogVisible = true;
-
-            DonationDialogView dialog = new DonationDialogView();
-            dialog.XamlRoot = this.XamlRoot;
-            ContentDialogResult result = await dialog.ShowAsync();
-
-            isDialogVisible = false;
+            return new DonationDialogView();
         });
     }
 
-    private void ShowOtherAppsDialog()
+    private async void ShowOtherAppsDialog()
     {
-        this.RunOnUIThread(Microsoft.UI.Dispatching.DispatcherQueuePriority.Normal, async () =>
-        {
-            // return if dialog is already visible
-            if (isDialogVisible)
-            {
-                return;
-            }
-
-            isDialogVisible = true;
-
-            OtherAppsDialogView dialog = new OtherAppsDialogView();
-            dialog.XamlRoot = this.XamlRoot;
-            ContentDialogResult result = await dialog.ShowAsync();
-
-            isDialogVisible = false;
-        });
+        await TryShowDialogAsync(() => new OtherAppsDialogView());
     }
 
-    private void ShowScanMergeDialog()
+    private async void ShowScanMergeDialog()
     {
-        this.RunOnUIThread(Microsoft.UI.Dispatching.DispatcherQueuePriority.Normal, async () =>
-        {
-            // return if dialog is already visible
-            if (isDialogVisible)
-            {
-                return;
-            }
-
-            isDialogVisible = true;
-
-            ScanMergeDialogView dialog = new ScanMergeDialogView();
-            dialog.XamlRoot = this.XamlRoot;
-            ContentDialogResult result = await dialog.ShowAsync();
-
-            isDialogVisible = false;
-        });
+        await TryShowDialogAsync(() => new ScanMergeDialogView());
     }
 
-    private void ShowPreviewDialog(ScanOptions scanOptions)
+    private async void ShowPreviewDialog(ScanOptions scanOptions)
     {
-        this.RunOnUIThread(Microsoft.UI.Dispatching.DispatcherQueuePriority.Normal, async () =>
-        {
-            // return if dialog is already visible
-            if (isDialogVisible)
-            {
-                return;
-            }
-
-            isDialogVisible = true;
-
-            PreviewDialogView dialog = new PreviewDialogView(scanOptions);
-            dialog.XamlRoot = this.XamlRoot;
-            ContentDialogResult result = await dialog.ShowAsync();
-
-            isDialogVisible = false;
-        });
+        await TryShowDialogAsync(() => new PreviewDialogView(scanOptions));
     }
 
-    private void ShowSetupDialog()
+    private async void ShowSetupDialog()
     {
-        this.RunOnUIThread(Microsoft.UI.Dispatching.DispatcherQueuePriority.Normal, async () =>
-        {
-            // return if dialog is already visible
-            if (isDialogVisible)
-            {
-                return;
-            }
-
-            isDialogVisible = true;
-
-            SetupDialogView dialog = new SetupDialogView();
-            dialog.XamlRoot = this.XamlRoot;
-            ContentDialogResult result = await dialog.ShowAsync();
-
-            isDialogVisible = false;
-        });
+        await TryShowDialogAsync(() => new SetupDialogView());
     }
 
-    private void ShowChangelogDialog()
+    private async void ShowChangelogDialog()
     {
-        this.RunOnUIThread(Microsoft.UI.Dispatching.DispatcherQueuePriority.Normal, async () =>
+        var shown = await TryShowDialogAsync(() =>
         {
-            // return if dialog is already visible
-            if (isDialogVisible)
-            {
-                return;
-            }
-
             TeachingTipUpdated.IsOpen = false;
-            isDialogVisible = true;
-
-            ChangelogDialogView dialog = new ChangelogDialogView();
-            dialog.XamlRoot = this.XamlRoot;
-            ContentDialogResult result = await dialog.ShowAsync();
-
-            isDialogVisible = false;
-
-            if (result is ContentDialogResult.Primary)
-                ViewModel.ShowDonationDialogCommand.Execute(null);
+            return new ChangelogDialogView();
         });
+
+        if (shown?.Result is ContentDialogResult.Primary)
+            ViewModel.ShowDonationDialogCommand.Execute(null);
     }
 
     private void ViewModel_ShowInAppNotificationRequested(object? sender, Notification e)
