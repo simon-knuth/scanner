@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.DependencyInjection;
+using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.WinUI;
 using Microsoft.Graphics.Canvas;
 using Microsoft.Graphics.Canvas.Effects;
@@ -16,6 +17,7 @@ using Microsoft.UI.Xaml.Navigation;
 using Microsoft.VisualBasic.FileIO;
 using Scanner.Extensions;
 using Scanner.Helpers;
+using Scanner.Messages;
 using Scanner.Models;
 using Scanner.Models.Interfaces;
 using Scanner.Resources.Strings;
@@ -130,6 +132,9 @@ public sealed partial class EditorView : Page
     [ObservableProperty]
     private bool hasInk;
 
+    [ObservableProperty]
+    private bool isDialogVisible;
+
     public bool IsDrawingWithTouchEnabled
     {
         get => ViewModel.SettingsService.LastTouchDrawState;
@@ -239,6 +244,7 @@ public sealed partial class EditorView : Page
             }
 
             _selectedItemScrollViewer = value;
+            pendingZoom = null;
 
             if (value != null)
             {
@@ -246,6 +252,8 @@ public sealed partial class EditorView : Page
             }
         }
     }
+
+    private (float ZoomFactor, Point Center)? pendingZoom;
 
     private bool isNavigationTextBoxVisible;
     public bool IsNavigationTextBoxVisible
@@ -298,6 +306,8 @@ public sealed partial class EditorView : Page
         ViewModel.SettingsService.PropertyChanged += SettingsService_PropertyChanged;
         ViewModel.ProjectService.PropertyChanging += ProjectService_PropertyChanging;
         ViewModel.ProjectService.PropertyChanged += ProjectService_PropertyChanged;
+
+        WeakReferenceMessenger.Default.Register<DialogVisibilityChangedMessage>(this, (r, m) => IsDialogVisible = m.IsDialogVisible);
     }
 
 
@@ -470,10 +480,14 @@ public sealed partial class EditorView : Page
     {
         if (selectedItemScrollViewer == null || sender is not ScrollViewer scrollViewer) return;
         PageZoomFactor = selectedItemScrollViewer.ZoomFactor;
+
+        if (!e.IsIntermediate)
+            pendingZoom = null;
     }
 
     private void ButtonPageZoomFactor_Click(object sender, RoutedEventArgs e)
     {
+        pendingZoom = null;
         selectedItemScrollViewer?.ChangeView(null, null, 1.0f);
     }
 
@@ -519,25 +533,57 @@ public sealed partial class EditorView : Page
     {
         if (selectedItemScrollViewer == null) return;
 
-        float newFactor = selectedItemScrollViewer.ZoomFactor + change;
-        if (newFactor > maxZoomFactor) newFactor = maxZoomFactor;
-        if (newFactor < minZoomFactor) newFactor = minZoomFactor;
+        ScrollViewer scrollViewer = selectedItemScrollViewer;
+        float zoomFactor = scrollViewer.ZoomFactor;
+        if (zoomFactor <= 0) return;
+
+        Size unzoomedExtent = new(scrollViewer.ExtentWidth / zoomFactor, scrollViewer.ExtentHeight / zoomFactor);
+
+        Point center;
+        if (pendingZoom is (float pendingZoomFactor, Point pendingCenter))
+        {
+            zoomFactor = pendingZoomFactor;
+            center = pendingCenter;
+        }
+        else
+        {
+            center = new Point(
+                GetViewportCenterInExtent(scrollViewer.HorizontalOffset, scrollViewer.ViewportWidth, scrollViewer.ExtentWidth, zoomFactor),
+                GetViewportCenterInExtent(scrollViewer.VerticalOffset, scrollViewer.ViewportHeight, scrollViewer.ExtentHeight, zoomFactor));
+        }
+
+        float newFactor = Math.Clamp(zoomFactor + change, minZoomFactor, maxZoomFactor);
+
+        double newHorizontalOffset = GetOffsetToCenter(center.X, scrollViewer.ViewportWidth, unzoomedExtent.Width, newFactor);
+        double newVerticalOffset = GetOffsetToCenter(center.Y, scrollViewer.ViewportHeight, unzoomedExtent.Height, newFactor);
 
         try
         {
-            // Calculate the center of the viewport in content coordinates before zooming
-            double horizontalCenter = selectedItemScrollViewer.HorizontalOffset + (selectedItemScrollViewer.ViewportWidth / 2);
-            double verticalCenter = selectedItemScrollViewer.VerticalOffset + (selectedItemScrollViewer.ViewportHeight / 2);
-
-            // Preserve the center point correctly after zooming
-            double scaleRatio = newFactor / selectedItemScrollViewer.ZoomFactor;
-
-            double newHorizontalOffset = Math.Max((horizontalCenter * scaleRatio) - (selectedItemScrollViewer.ViewportWidth / 2), 0);
-            double newVerticalOffset = Math.Max((verticalCenter * scaleRatio) - (selectedItemScrollViewer.ViewportHeight / 2), 0);
-
-            selectedItemScrollViewer.ChangeView(newHorizontalOffset, newVerticalOffset, newFactor, !animate);
+            bool isChanging = scrollViewer.ChangeView(newHorizontalOffset, newVerticalOffset, newFactor, !animate);
+            pendingZoom = animate && isChanging ? (newFactor, center) : null;
         }
-        catch (Exception) { }
+        catch (Exception)
+        {
+            pendingZoom = null;
+        }
+    }
+
+    private static double GetViewportCenterInExtent(double offset, double viewportLength, double zoomedExtentLength, float zoomFactor)
+    {
+        return (offset + (viewportLength / 2) - GetCenteredContentInset(viewportLength, zoomedExtentLength)) / zoomFactor;
+    }
+
+    private static double GetOffsetToCenter(double center, double viewportLength, double unzoomedExtentLength, float zoomFactor)
+    {
+        double zoomedExtentLength = unzoomedExtentLength * zoomFactor;
+        double offset = (center * zoomFactor) + GetCenteredContentInset(viewportLength, zoomedExtentLength) - (viewportLength / 2);
+
+        return Math.Clamp(offset, 0, Math.Max(zoomedExtentLength - viewportLength, 0));
+    }
+
+    private static double GetCenteredContentInset(double viewportLength, double zoomedExtentLength)
+    {
+        return Math.Max((viewportLength - zoomedExtentLength) / 2, 0);
     }
 
     /// <summary>
@@ -1306,21 +1352,9 @@ public sealed partial class EditorView : Page
         if (CanvasDraw != null)
             UpdateCanvasDpiScale(CanvasDraw);
 
-        // InkCanvas ignores the rasterization scale, so its ink surface reaches past its layout box by that
-        // factor. Shrink the box and pull it to the page's top-left corner, so the surface lands on the page.
-        double scale = XamlRoot?.RasterizationScale ?? 1.0;
-
-        double width = e.NewSize.Width / scale;
-        double height = e.NewSize.Height / scale;
-
-        InkCanvasDraw.Width = width;
-        InkCanvasDraw.Height = height;
-        InkCanvasDraw.Margin = new Thickness(-width * (scale - 1), -height * (scale - 1), 0, 0);
-
-        if (isInkRehydrationPending && width > 0 && height > 0)
+        if (isInkRehydrationPending && e.NewSize.Width > 0 && e.NewSize.Height > 0)
         {
-            // the size and margin just assigned above haven't been through a layout pass yet, and the strokes
-            // are placed against where the page sits inside this canvas, so let that settle first
+            // the strokes are placed against where the page sits inside the ink canvas, so let layout settle first
             isInkRehydrationPending = false;
             DispatcherQueue.TryEnqueue(DispatcherQueuePriority.Low, RehydrateInkCanvas);
         }
@@ -1338,9 +1372,6 @@ public sealed partial class EditorView : Page
             return;
         if (!page.HasInk)
             return;
-
-        // make sure the deferred layout has actually been applied before measuring against it
-        InkCanvasDraw.UpdateLayout();
 
         Rect pageArea = GetPageAreaInStrokeSpace();
         if (pageArea.Width <= 0 || pageArea.Height <= 0)
