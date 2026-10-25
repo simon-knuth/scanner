@@ -515,6 +515,7 @@ public sealed partial class ShellView : Page
 
     private async void ShowSaveChangesDialog(TaskCompletionSource<bool> task, string trigger)
     {
+        ProjectBase? project = ViewModel.CurrentProject;
         var shown = await TryShowDialogAsync(() =>
         {
             // analytics
@@ -523,7 +524,7 @@ public sealed partial class ShellView : Page
                 { "trigger", trigger }
             });
 
-            return new UnsavedChangesDialogView(ViewModel.CurrentProject);
+            return new UnsavedChangesDialogView();
         });
 
         if (shown == null)
@@ -545,7 +546,34 @@ public sealed partial class ShellView : Page
             { "result", selection },
         });
 
+        if (shown.Value.Result == ContentDialogResult.Primary && project != null)
+        {
+            // save now that the dialog has closed, as saving may need to ask for a save location, and only count the
+            // changes as handled if they have actually been saved
+            task.TrySetResult(await TrySaveUnsavedChangesAsync(project));
+            return;
+        }
+
         task.TrySetResult(shown.Value.Result != ContentDialogResult.None);
+    }
+
+    private async Task<bool> TrySaveUnsavedChangesAsync(ProjectBase project)
+    {
+        ViewModel.LogService?.Log.Information("Saving unsaved changes from the unsaved-changes dialog");
+
+        try
+        {
+            bool isSaved = await project.SaveAsync(false, DispatcherQueue, isUserInitiated: true);
+            if (!isSaved)
+                ViewModel.LogService?.Log.Information("Unsaved changes have not been saved");
+
+            return isSaved;
+        }
+        catch (Exception exc)
+        {
+            ViewModel.LogService?.Log.Error(exc, "Failed to save unsaved changes");
+            return false;
+        }
     }
 
     private async void ShowSaveFileDialog(TaskCompletionSource<SaveOptions?> task, ScanOptions scanOptions, ProjectBase? project, string? desiredFileDisplayName, int existingFileCount)

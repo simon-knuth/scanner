@@ -155,11 +155,12 @@ public partial class PdfProject : ProjectBase
         saveProcessWaitingToStart = true;
 
         // enable waiting for save process (even if it is waiting to start)
-        TaskCompletionSource<bool> saveProcess = new();
+        TaskCompletionSource<bool> saveProcess = new(TaskCreationOptions.RunContinuationsAsynchronously);
         LatestSaveProcess = saveProcess;
 
         // save
         bool success = await SaveInternalAsync(saveAs, saveProcess, uiDispatcherQueue);
+        await saveProcess.Task;
 
         // analytics (user-initiated saves only)
         if (success && isUserInitiated)

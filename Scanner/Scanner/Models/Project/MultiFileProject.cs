@@ -157,11 +157,12 @@ public partial class MultiFileProject : ProjectBase
         saveProcessWaitingToStart = true;
 
         // enable waiting for save process (even if it is waiting to start)
-        TaskCompletionSource<bool> saveProcess = new();
+        TaskCompletionSource<bool> saveProcess = new(TaskCreationOptions.RunContinuationsAsynchronously);
         LatestSaveProcess = saveProcess;
 
         // save
         bool success = await SaveInternalAsync(saveAs, [.. Pages], saveProcess, uiDispatcherQueue);
+        await saveProcess.Task;
 
         // analytics (user-initiated saves only)
         if (success && isUserInitiated)
@@ -184,11 +185,14 @@ public partial class MultiFileProject : ProjectBase
         saveProcessWaitingToStart = true;
 
         // enable waiting for save process (even if it is waiting to start)
-        TaskCompletionSource<bool> saveProcess = new();
+        TaskCompletionSource<bool> saveProcess = new(TaskCreationOptions.RunContinuationsAsynchronously);
         LatestSaveProcess = saveProcess;
 
         // save (always a user-initiated "save as current page")
         bool success = await SaveInternalAsync(true, [page], saveProcess, uiDispatcherQueue);
+
+        // wait for the result to be applied on the UI thread (IsSaving, IsSaved), so that callers can act on it right away
+        await saveProcess.Task;
 
         // analytics
         if (success)

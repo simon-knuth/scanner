@@ -185,7 +185,11 @@ public abstract partial class ProjectBase : ObservableRecipient
     /// Whether the save was explicitly invoked by the user (e.g. the Save button or the unsaved-changes
     /// dialog) rather than an automatic save. Only user-initiated saves are tracked in analytics.
     /// </param>
-    public abstract Task SaveAsync(bool saveAs, DispatcherQueue uiDispatcherQueue, bool isUserInitiated = false);
+    /// <returns>
+    /// Whether the project has been saved, false if e.g. the user cancelled picking a save location. Only completes once
+    /// <see cref="IsSaving"/> and <see cref="IsSaved"/> reflect the result.
+    /// </returns>
+    public abstract Task<bool> SaveAsync(bool saveAs, DispatcherQueue uiDispatcherQueue, bool isUserInitiated = false);
 
     /// <summary>
     /// Releases all files locked by the project, which must not lock any files afterwards. A save process that is

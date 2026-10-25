@@ -1509,9 +1509,11 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
 
                 if (CurrentProject != null && CurrentProject.IsSaved)
                 {
+                    // capture the project, as it may have been closed by the time the entry gets updated
+                    ProjectBase project = CurrentProject;
                     UiDispatcherQueue?.RunOnThread(DispatcherQueuePriority.Low, () =>
                     {
-                        ProjectHistoryService.AddOrUpdateEntryAsync(CurrentProject);
+                        ProjectHistoryService.AddOrUpdateEntryAsync(project);
                     });
                 }
                 break;
