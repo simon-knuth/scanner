@@ -317,6 +317,7 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
             {
                 cancellationToken.ThrowIfCancellationRequested();
                 CurrentScanState = ScanState.AutomaticRotation;
+                LogService?.Log.Information("Auto-rotating {PageCount} scanned page(s)", files.Count);
 
                 await Task.Run(async () =>
                 {
@@ -333,6 +334,7 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
             // create project
             cancellationToken.ThrowIfCancellationRequested();
             CurrentScanState = ScanState.Processing;
+            LogService?.Log.Information("Creating the project from the scanned page(s)");
             ProjectBase? project = null;
             await Task.Run(async () =>
             {
@@ -394,6 +396,7 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
                 {
                     CurrentScanState = ScanState.Saving;
                 }
+                LogService?.Log.Information("Auto-saving the new project");
                 await Task.Run(async () =>
                 {
                     await CurrentProject.SaveAsync(false, UiDispatcherQueue!);
@@ -475,6 +478,7 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
             {
                 cancellationToken.ThrowIfCancellationRequested();
                 CurrentScanState = ScanState.AutomaticRotation;
+                LogService?.Log.Information("Auto-rotating {PageCount} scanned page(s)", files.Count);
 
                 await Task.Run(async () =>
                 {
@@ -491,6 +495,7 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
             // add files
             cancellationToken.ThrowIfCancellationRequested();
             CurrentScanState = ScanState.Processing;
+            LogService?.Log.Information("Adding {PageCount} scanned page(s) to the project", files.Count);
             List<ProjectFileInsertion> insertions = new();
             for (int i = 0; i < files.Count; i++)
             {

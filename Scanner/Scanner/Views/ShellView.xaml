@@ -402,6 +402,11 @@
                                                     <FontIcon Glyph="&#xE81F;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
                                                 </controls:SettingsCard.HeaderIcon>
                                             </controls:SettingsCard>
+                                            <controls:SettingsCard x:Name="SettingsCardDebugCrashBackgroundThread" Header="Test crash (background thread)" IsClickEnabled="True" Click="SettingsCardDebugCrashBackgroundThread_Click">
+                                                <controls:SettingsCard.HeaderIcon>
+                                                    <FontIcon Glyph="&#xE81F;" FontSize="16" FontFamily="{StaticResource SymbolThemeFontFamily}" />
+                                                </controls:SettingsCard.HeaderIcon>
+                                            </controls:SettingsCard>
                                         </controls:SettingsExpander.Items>
                                     </controls:SettingsExpander>
                                     <controls:SettingsExpander Header="Dialogs">

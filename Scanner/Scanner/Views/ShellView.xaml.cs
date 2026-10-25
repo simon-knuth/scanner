@@ -768,6 +768,11 @@ public sealed partial class ShellView : Page
         throw new InvalidOperationException("Test crash");
     }
 
+    private void SettingsCardDebugCrashBackgroundThread_Click(object sender, RoutedEventArgs e)
+    {
+        new System.Threading.Thread(() => throw new InvalidOperationException("Test crash (background thread)")).Start();
+    }
+
     private void SettingsCardDebugDialogFeedback_Click(object sender, RoutedEventArgs e)
     {
         TeachingTipFeedback.IsOpen = true;
