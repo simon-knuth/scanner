@@ -321,8 +321,20 @@ public sealed partial class ScanOptionsView : Page
         get => ScanOptions.ScanArea is PaperSizeArea paperSizeArea ? (int)paperSizeArea.Orientation : -1;
         set
         {
-            if (ScanOptions.ScanArea is PaperSizeArea paperSizeArea)
-                paperSizeArea.Orientation = (ScanOrientation)value;
+            if (ScanOptions.ScanArea is not PaperSizeArea paperSizeArea)
+                return;
+
+            if (!Enum.IsDefined((ScanOrientation)value))
+            {
+                // Segmented may push -1 when (re)applying its template, restore the actual selection
+                this.RunOnUIThread(Microsoft.UI.Dispatching.DispatcherQueuePriority.Normal, () =>
+                {
+                    OnPropertyChanged(nameof(SelectedOrientationInt));
+                });
+                return;
+            }
+
+            paperSizeArea.Orientation = (ScanOrientation)value;
         }
     }
 

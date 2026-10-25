@@ -100,6 +100,10 @@ public partial class PaperSizeArea : RectScanArea
         double width = Measurement.FromCentimeters(rect.Width / 10).GetInches();
         double height = Measurement.FromCentimeters(rect.Height / 10).GetInches();
 
+        // paper sizes are defined in portrait
+        if (Orientation == ScanOrientation.Landscape)
+            (width, height) = (height, width);
+
         // get base values
         double x, y;
         switch (Corner)
