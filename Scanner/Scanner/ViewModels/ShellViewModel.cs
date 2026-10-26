@@ -130,6 +130,7 @@ partial class ShellViewModel : ObservableRecipient, IDisposable
         });
         Messenger.Register<ShowInAppNotificationMessage>(this, (r, m) =>
         {
+            LogService?.Log.Information("Showing in-app notification {Title} ({Severity})", m.Notification.Title, m.Notification.Severity);
             ShowInAppNotificationRequested?.Invoke(this, m.Notification);
         });
         Messenger.Register<ShowSettingsMessage>(this, (r, m) =>
