@@ -51,7 +51,7 @@ internal class TemplatesService : ITemplatesService
     public ObservableCollection<TemplateEntry> Entries { get; } = [];
 
     private readonly SemaphoreSlim dbLock = new(1, 1);
-    private TaskCompletionSource initializationTcs = new(TaskCreationOptions.RunContinuationsAsynchronously);
+    private readonly TaskCompletionSource initializationTcs = new(TaskCreationOptions.RunContinuationsAsynchronously);
     private string? databasePath;
 
     private DispatcherQueue? uiDispatcherQueue;
@@ -92,14 +92,15 @@ internal class TemplatesService : ITemplatesService
                 foreach (TemplateEntry entry in initial)
                     Entries.Add(entry);
             });
-
-            initializationTcs.TrySetResult();
         }
         catch (Exception exc)
         {
+            // the next operation will recreate the database
             LogService?.Log.Error(exc, "Failed to initialize database");
-            initializationTcs.TrySetException(exc);
-            throw;
+        }
+        finally
+        {
+            initializationTcs.TrySetResult();
         }
     }
 
@@ -397,9 +398,6 @@ internal class TemplatesService : ITemplatesService
             await using TemplatesDbContext context = CreateContext();
             await context.Database.EnsureCreatedAsync();
 
-            initializationTcs = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
-            initializationTcs.TrySetResult();
-
             uiDispatcherQueue.RunOnThread(DispatcherQueuePriority.Low, () =>
             {
                 Entries.Clear();
@@ -410,9 +408,8 @@ internal class TemplatesService : ITemplatesService
         }
         catch (Exception exc)
         {
+            // the next operation will retry
             LogService?.Log.Error(exc, "Failed to recreate database");
-            initializationTcs.TrySetException(exc);
-            throw;
         }
     }
 
