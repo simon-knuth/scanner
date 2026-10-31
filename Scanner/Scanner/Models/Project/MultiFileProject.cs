@@ -302,7 +302,7 @@ public partial class MultiFileProject : ProjectBase
                             }
                             else
                             {
-                                newSourceFile = await imagePage.SourceFile.CopyAsync(AppDataService.ProjectFolder);
+                                newSourceFile = await imagePage.SourceFile.CopyAsync(AppDataService.ProjectFolder, imagePage.SourceFile.Name, NameCollisionOption.GenerateUniqueName);
                             }
 
                             // update page
