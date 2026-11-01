@@ -1353,13 +1353,13 @@ public sealed partial class EditorView : Page
     //    if (CanvasDraw != null)
     //        UpdateCanvasDpiScale(CanvasDraw);
 
-        if (isInkRehydrationPending && e.NewSize.Width > 0 && e.NewSize.Height > 0)
-        {
-            // the strokes are placed against where the page sits inside the ink canvas, so let layout settle first
-            isInkRehydrationPending = false;
-            DispatcherQueue.TryEnqueue(DispatcherQueuePriority.Low, RehydrateInkCanvas);
-        }
-    }
+        //if (isInkRehydrationPending && e.NewSize.Width > 0 && e.NewSize.Height > 0)
+        //{
+        //    // the strokes are placed against where the page sits inside the ink canvas, so let layout settle first
+        //    isInkRehydrationPending = false;
+        //    DispatcherQueue.TryEnqueue(DispatcherQueuePriority.Low, RehydrateInkCanvas);
+        //}
+    //}
 
     /// <summary>
     /// Puts the page's existing strokes back onto the ink canvas, so that a drawing session can edit and erase
@@ -1374,9 +1374,9 @@ public sealed partial class EditorView : Page
     //    if (!page.HasInk)
     //        return;
 
-        Rect pageArea = GetPageAreaInStrokeSpace();
-        if (pageArea.Width <= 0 || pageArea.Height <= 0)
-            return;
+        //Rect pageArea = GetPageAreaInStrokeSpace();
+        //if (pageArea.Width <= 0 || pageArea.Height <= 0)
+        //    return;
 
     //    InkCanvasDraw.InkPresenter.StrokeContainer.AddStrokes(
     //        InkRenderingHelpers.ConvertFromPageSpace(page.InkStrokes, pageArea, new Size(page.Width, page.Height)));
