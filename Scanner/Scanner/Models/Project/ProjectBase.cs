@@ -146,6 +146,21 @@ public abstract partial class ProjectBase : ObservableRecipient
     protected SemaphoreSlim projectFolderSemaphore = new(1, 1);       // needed to modify the Project folder
     protected SemaphoreSlim changesFolderSemaphore = new(1, 1);       // needed to modify the Changes folder
 
+    private readonly object fileHandleLock = new();
+    private bool areFileHandlesReleased;                                // set once the project has been closed
+
+    /// <summary>
+    /// Whether <see cref="ReleaseFileHandles"/> has been called, after which the project must not lock any files.
+    /// </summary>
+    protected bool AreFileHandlesReleased
+    {
+        get
+        {
+            lock (fileHandleLock)
+                return areFileHandlesReleased;
+        }
+    }
+
     private ConcurrentDictionary<ImagePage, ThreadPoolTimer> consecutiveAtomicActionMergeTimers = [];
 
 
@@ -170,7 +185,42 @@ public abstract partial class ProjectBase : ObservableRecipient
     /// Whether the save was explicitly invoked by the user (e.g. the Save button or the unsaved-changes
     /// dialog) rather than an automatic save. Only user-initiated saves are tracked in analytics.
     /// </param>
-    public abstract Task SaveAsync(bool saveAs, DispatcherQueue uiDispatcherQueue, bool isUserInitiated = false);
+    /// <returns>
+    /// Whether the project has been saved, false if e.g. the user cancelled picking a save location. Only completes once
+    /// <see cref="IsSaving"/> and <see cref="IsSaved"/> reflect the result.
+    /// </returns>
+    public abstract Task<bool> SaveAsync(bool saveAs, DispatcherQueue uiDispatcherQueue, bool isUserInitiated = false);
+
+    /// <summary>
+    /// Releases all files locked by the project, which must not lock any files afterwards. A save process that is
+    /// still running at this point releases the files it locks once it ends (see <see cref="ReleaseFileHandlesIfClosed"/>).
+    /// </summary>
+    public void ReleaseFileHandles()
+    {
+        lock (fileHandleLock)
+        {
+            areFileHandlesReleased = true;
+            DisposeFileHandles();
+        }
+    }
+
+    /// <summary>
+    /// Releases files locked by a save process that was still running when <see cref="ReleaseFileHandles"/> got called.
+    /// Needs to be called at the very end of every save process.
+    /// </summary>
+    protected void ReleaseFileHandlesIfClosed()
+    {
+        lock (fileHandleLock)
+        {
+            if (areFileHandlesReleased)
+                DisposeFileHandles();
+        }
+    }
+
+    /// <summary>
+    /// Disposes the streams of all <see cref="FileHandle"/>s currently held by the project.
+    /// </summary>
+    protected abstract void DisposeFileHandles();
 
     /// <summary>
     /// Tracks a successful, user-initiated save and the relevant save configuration.
@@ -385,8 +435,10 @@ public abstract partial class ProjectBase : ObservableRecipient
         try
         {
             // keep track of changes in case of error
-            List<StorageFile> deletedFiles = new();
-            List<int> deletedIndices = new();
+            List<KeyValuePair<StorageFile, StorageFolder>> moves = new();
+            List<ImagePage> pagesWithClosedTargetFiles = new();
+            List<ImagePage> pagesWithRemovedPreviews = new();
+            List<ImagePage> removedPages = new();
 
             // revertable section
             try
@@ -394,11 +446,9 @@ public abstract partial class ProjectBase : ObservableRecipient
                 // remove pages
                 foreach (ImagePage page in pages)
                 {
-                    deletedFiles.Add(page.SourceFile);
-                    deletedIndices.Add(page.Index);
-
                     if (page is ImagePage imagePage)
                     {
+                        StorageFolder previousFolder = await page.SourceFile.GetParentAsync();
                         if (isUndoing)
                         {
                             // move to redo folder
@@ -409,30 +459,69 @@ public abstract partial class ProjectBase : ObservableRecipient
                             // move to undo folder
                             await page.SourceFile.MoveAsync(AppDataService.UndoFolder, page.SourceFile.Name, NameCollisionOption.GenerateUniqueName);
                         }
+                        moves.Add(new KeyValuePair<StorageFile, StorageFolder>(page.SourceFile, previousFolder));
 
                         if (page.TargetFile != null)
+                        {
                             page.TargetFile.FileStream.Dispose();
+                            pagesWithClosedTargetFiles.Add(page);
+                        }
 
                         if (page.PreviewFile != null && page.PreviewFile != page.SourceFile)
                         {
                             await imagePage.UpdatePreviewFileAsync(null, uiDispatcherQueue);
+                            pagesWithRemovedPreviews.Add(page);
                         }
                     }
-                    
+
                     Pages.Remove(page);
+                    removedPages.Add(page);
                 }
             }
             catch (Exception exc)
             {
-                // roll back changes
-                foreach (StorageFile file in deletedFiles)
+                foreach (KeyValuePair<StorageFile, StorageFolder> move in moves)
                 {
-                    await file.DeleteAsync(StorageDeleteOption.PermanentDelete);
+                    try
+                    {
+                        await move.Key.MoveAsync(move.Value, move.Key.Name, NameCollisionOption.GenerateUniqueName);
+                    }
+                    catch (Exception rollbackExc)
+                    {
+                        LogService?.Log.Error(rollbackExc, "Failed to move a page's source file back while rolling back");
+                    }
                 }
-                for (int i = 0; i < deletedIndices.Count; i++)
+
+                foreach (ImagePage page in pagesWithClosedTargetFiles)
                 {
-                    Pages.Insert(deletedIndices[i], pages[i]);
+                    try
+                    {
+                        page.TargetFile = new(page.TargetFile!.File, await page.TargetFile.File.OpenAsync(FileAccessMode.ReadWrite, StorageOpenOptions.AllowOnlyReaders));
+                    }
+                    catch (Exception rollbackExc)
+                    {
+                        LogService?.Log.Error(rollbackExc, "Failed to reopen a page's target file while rolling back");
+                    }
                 }
+
+                // reinsert in ascending order, so that each original index is valid again
+                foreach (ImagePage page in removedPages.OrderBy(x => x.Index))
+                {
+                    Pages.Insert(Math.Min(page.Index, Pages.Count), page);
+                }
+
+                if (pagesWithRemovedPreviews.Count > 0)
+                {
+                    try
+                    {
+                        await GeneratePagePreviewsAsync(pagesWithRemovedPreviews, uiDispatcherQueue);
+                    }
+                    catch (Exception rollbackExc)
+                    {
+                        LogService?.Log.Error(rollbackExc, "Failed to regenerate page previews while rolling back");
+                    }
+                }
+
                 throw new ActionFailedAndRolledBackException(exc);
             }
 

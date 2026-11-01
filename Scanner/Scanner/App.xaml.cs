@@ -67,6 +67,7 @@ public partial class App : Application
 
         // register error event handlers
         UnhandledException += App_UnhandledException;
+        AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
         TaskScheduler.UnobservedTaskException += (s, e) =>
         {
             LogService?.Log.Fatal(e.Exception, "Unobserved task exception");
@@ -312,6 +313,21 @@ public partial class App : Application
 
         Ioc.Default.GetService<ISentryService>()?.TrackError(e.Exception, true);
         SentrySdk.Flush();
+    }
+
+    /// <summary>
+    /// Catches exceptions that bring down the process without passing through <see cref="App_UnhandledException"/>,
+    /// e.g. ones thrown on thread pool threads by async void methods. Sentry captures these on its own.
+    /// </summary>
+    private void CurrentDomain_UnhandledException(object sender, System.UnhandledExceptionEventArgs e)
+    {
+        Exception exc = e.ExceptionObject as Exception ?? new Exception($"Non-exception object thrown: {e.ExceptionObject}");
+
+        LogService?.Log.Fatal(exc, "CRASH (non-UI thread)");
+        LogService?.CloseAndFlush();
+
+        if (LogService == null)
+            FallbackFatalLogging(exc);
     }
 
     private void FallbackFatalLogging(Exception exc)

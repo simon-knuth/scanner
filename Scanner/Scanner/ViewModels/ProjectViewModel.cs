@@ -12,7 +12,6 @@ using Scanner.Models.Interfaces;
 using Scanner.Models.ItemNaming;
 using Scanner.Services;
 using Scanner.Services.Interfaces;
-using Sentry.Protocol;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -632,7 +631,10 @@ partial class ProjectViewModel : ObservableRecipient, IDisposable
 
             try
             {
-                RandomAccessStreamReference stream = appInfo.DisplayInfo.GetLogo(new Size(128, 128));
+                // prefer package logo, the app logo can have a ton of padding
+                RandomAccessStreamReference stream = OperatingSystem.IsWindowsVersionAtLeast(10, 0, 19041)
+                    ? appInfo.Package.GetLogoAsRandomAccessStreamReference(new Size(32, 32))
+                    : appInfo.DisplayInfo.GetLogo(new Size(32, 32));
                 using (IRandomAccessStreamWithContentType content = await stream.OpenReadAsync())
                 {
                     BitmapImage bmp = new BitmapImage();

@@ -314,15 +314,27 @@ public sealed partial class ScanOptionsView : Page
 
     public bool IsPaperSizeAreaSelected => ViewModel.ScanOptions.ScanArea is PaperSizeArea;
 
-    public PaperSize SelectedPaperSize => ScanOptions.ScanArea is PaperSizeArea paperSizeArea ? paperSizeArea.PaperSize : PaperSize.DinA4;
+    public PaperSize SelectedPaperSize => ScanOptions.ScanArea is PaperSizeArea paperSizeArea ? paperSizeArea.PaperSize : PaperSize.A4;
 
     public int SelectedOrientationInt
     {
         get => ScanOptions.ScanArea is PaperSizeArea paperSizeArea ? (int)paperSizeArea.Orientation : -1;
         set
         {
-            if (ScanOptions.ScanArea is PaperSizeArea paperSizeArea)
-                paperSizeArea.Orientation = (ScanOrientation)value;
+            if (ScanOptions.ScanArea is not PaperSizeArea paperSizeArea)
+                return;
+
+            if (!Enum.IsDefined((ScanOrientation)value))
+            {
+                // Segmented may push -1 when (re)applying its template, restore the actual selection
+                this.RunOnUIThread(Microsoft.UI.Dispatching.DispatcherQueuePriority.Normal, () =>
+                {
+                    OnPropertyChanged(nameof(SelectedOrientationInt));
+                });
+                return;
+            }
+
+            paperSizeArea.Orientation = (ScanOrientation)value;
         }
     }
 
@@ -386,9 +398,9 @@ public sealed partial class ScanOptionsView : Page
         }
     }
 
-    public string PaperSizeDinA3Dimensions => PaperSize.DinA3.ToDimensionsString();
-    public string PaperSizeDinA4Dimensions => PaperSize.DinA4.ToDimensionsString();
-    public string PaperSizeDinA5Dimensions => PaperSize.DinA5.ToDimensionsString();
+    public string PaperSizeA3Dimensions => PaperSize.A3.ToDimensionsString();
+    public string PaperSizeA4Dimensions => PaperSize.A4.ToDimensionsString();
+    public string PaperSizeA5Dimensions => PaperSize.A5.ToDimensionsString();
     public string PaperSizeAnsiADimensions => PaperSize.AnsiA.ToDimensionsString();
     public string PaperSizeAnsiBDimensions => PaperSize.AnsiB.ToDimensionsString();
     public string PaperSizeAnsiCDimensions => PaperSize.AnsiC.ToDimensionsString();
@@ -633,9 +645,9 @@ public sealed partial class ScanOptionsView : Page
         if (e.PropertyName != nameof(ISettingsService.SettingMeasurementUnits))
             return;
 
-        OnPropertyChanged(nameof(PaperSizeDinA3Dimensions));
-        OnPropertyChanged(nameof(PaperSizeDinA4Dimensions));
-        OnPropertyChanged(nameof(PaperSizeDinA5Dimensions));
+        OnPropertyChanged(nameof(PaperSizeA3Dimensions));
+        OnPropertyChanged(nameof(PaperSizeA4Dimensions));
+        OnPropertyChanged(nameof(PaperSizeA5Dimensions));
         OnPropertyChanged(nameof(PaperSizeAnsiADimensions));
         OnPropertyChanged(nameof(PaperSizeAnsiBDimensions));
         OnPropertyChanged(nameof(PaperSizeAnsiCDimensions));

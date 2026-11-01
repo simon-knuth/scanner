@@ -54,8 +54,6 @@ internal partial class CopilotRuntimeService : ObservableObject, ICopilotRuntime
     private const int minImageDescriptionLengthAcceptanceThreshold = 48;
     private const int minNameLengthAcceptanceThreshold = 8;
     private const int maxNameLengthAcceptanceThreshold = 40;
-
-    private const string nameGenerationPrompt = "You write short captions (4 words or less) for document descriptions. Do not reply with any extraneous content besides the caption itself. Do not include the word 'Caption'. Only reply in {0}. The following text is the description: '{1}'";
     #endregion
 
     public bool IsSupported { get; private set; }
@@ -71,6 +69,9 @@ internal partial class CopilotRuntimeService : ObservableObject, ICopilotRuntime
 
     [GeneratedRegex("" + @"(\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])", RegexOptions.Compiled)]    // dummy string added in front to maybe fix ServiceHub.Host.dotnet.arm64 CPU usage https://github.com/dotnet/roslyn/issues/79925
     private static partial Regex EmojiRegex();
+
+    [GeneratedRegex("" + @"[\p{IsCJKUnifiedIdeographs}\p{IsCJKUnifiedIdeographsExtensionA}\p{IsHiragana}\p{IsKatakana}\p{IsHangulSyllables}]")]    // dummy string, see EmojiRegex
+    private static partial Regex DenseScriptCharRegex();
 
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -139,9 +140,9 @@ internal partial class CopilotRuntimeService : ObservableObject, ICopilotRuntime
                 "cx4kQY+vrjcpofbmrNBTQA==",
                 "69n05hp4v3s90 has registered their use of com.microsoft.windows.ai.languagemodel with Microsoft and agrees to the terms of use.");
 
-            // generate short name
+            // generate short name (prompt is localized via Prompts.resw)
             using LanguageModel languageModel = await LanguageModel.CreateAsync().AsTask(cts.Token);
-            LanguageModelResponseResult languageModelResult = await languageModel.GenerateResponseAsync(string.Format(nameGenerationPrompt, CultureInfo.GetCultureInfo(GlobalizationPreferences.Languages[0]).EnglishName, description), new LanguageModelOptions()).AsTask(cts.Token);
+            LanguageModelResponseResult languageModelResult = await languageModel.GenerateResponseAsync(string.Format(Resources.Strings.Prompts.FileNameGeneration, description), new LanguageModelOptions()).AsTask(cts.Token);
 
             // clean up name
             string generatedName = languageModelResult.Text.Trim();
@@ -166,9 +167,10 @@ internal partial class CopilotRuntimeService : ObservableObject, ICopilotRuntime
                 LogService?.Log.Warning("Name generation failed with {Status} and {Error}", languageModelResult.Status, languageModelResult.ExtendedError);
                 return null;
             }
-            if (generatedName.Length < minNameLengthAcceptanceThreshold)
+            int weightedNameLength = GetWeightedNameLength(generatedName);
+            if (weightedNameLength < minNameLengthAcceptanceThreshold)
             {
-                LogService?.Log.Warning("Name generation {Length} is below threshold", languageModelResult.Text.Length);
+                LogService?.Log.Warning("Name generation {Length} is below threshold", weightedNameLength);
                 return null;
             }
             if (generatedName.Length > maxNameLengthAcceptanceThreshold)
@@ -185,6 +187,12 @@ internal partial class CopilotRuntimeService : ObservableObject, ICopilotRuntime
         }
 
         return null;
+    }
+
+    // CJK characters count twice, as one carries about as much meaning as two letters of an alphabet
+    private static int GetWeightedNameLength(string name)
+    {
+        return name.Length + DenseScriptCharRegex().Count(name);
     }
 
     public async Task TryShowModelsInstallProgressAsync(DispatcherQueue uiDispatcherQueue)

@@ -42,6 +42,10 @@ internal partial class HardwareScanner : IScanningDevice
 
     #region Constants
     private const double jpegQuality = 0.85;
+
+    // some drivers don't accept feeder scans until there are no pages left (value 0),
+    // try to find an alternative value instead
+    private static readonly uint[] feederMaxPagesFallbacks = [999, 99, 50, 25, 10, 1];
     #endregion
 
     public string Id { get; private set; }
@@ -344,18 +348,19 @@ internal partial class HardwareScanner : IScanningDevice
         {
             // use scanner's native preview capability
             using IRandomAccessStream sourceStream = new InMemoryRandomAccessStream();
-            previewCancellationTokenSource = new CancellationTokenSource();
+            CancellationTokenSource cancellationTokenSource = new();
+            previewCancellationTokenSource = cancellationTokenSource;
             try
             {
                 switch (sourceMode)
                 {
                     case ScannerSource.Flatbed:
                         await imageScanner.ScanPreviewToStreamAsync(ImageScannerScanSource.Flatbed, sourceStream)
-                            .AsTask(previewCancellationTokenSource.Token);
+                            .AsTask(cancellationTokenSource.Token);
                         break;
                     case ScannerSource.Feeder:
                         await imageScanner.ScanPreviewToStreamAsync(ImageScannerScanSource.Feeder, sourceStream)
-                            .AsTask(previewCancellationTokenSource.Token);
+                            .AsTask(cancellationTokenSource.Token);
                         break;
                     case ScannerSource.Auto:
                     case ScannerSource.None:
@@ -366,8 +371,8 @@ internal partial class HardwareScanner : IScanningDevice
             }
             finally
             {
-                previewCancellationTokenSource.Dispose();
-                previewCancellationTokenSource = null;
+                Interlocked.CompareExchange(ref previewCancellationTokenSource, null, cancellationTokenSource);
+                cancellationTokenSource.Dispose();
             }
 
             // convert to JPG and save to file
@@ -438,20 +443,21 @@ internal partial class HardwareScanner : IScanningDevice
         ApplyScanOptions(scanOptions);
 
         // scan
-        scanCancellationTokenSource = new CancellationTokenSource();
+        CancellationTokenSource cancellationTokenSource = new();
+        scanCancellationTokenSource = cancellationTokenSource;
         try
         {
             ImageScannerScanResult result = await imageScanner
                 .ScanFilesToFolderAsync(scanOptions.GetSourceModeForScanning(), targetFolder)
-                .AsTask(scanCancellationTokenSource.Token);
+                .AsTask(cancellationTokenSource.Token);
 
             // process result
             return result.ScannedFiles;
         }
         finally
         {
-            scanCancellationTokenSource.Dispose();
-            scanCancellationTokenSource = null;
+            Interlocked.CompareExchange(ref scanCancellationTokenSource, null, cancellationTokenSource);
+            cancellationTokenSource.Dispose();
         }
     }
 
@@ -559,7 +565,33 @@ internal partial class HardwareScanner : IScanningDevice
                 // multiple pages
                 if (scanOptions.ScanMultiplePages)
                 {
-                    imageScanner.FeederConfiguration.MaxNumberOfPages = 0;
+                    try
+                    {
+                        imageScanner.FeederConfiguration.MaxNumberOfPages = 0;
+                    }
+                    catch (ArgumentException)
+                    {
+                        // some drivers reject 0 ("all pages") despite the WIA spec, fall back to the highest value they accept
+                        uint? acceptedMaxPages = null;
+                        foreach (uint maxPages in feederMaxPagesFallbacks)
+                        {
+                            try
+                            {
+                                imageScanner.FeederConfiguration.MaxNumberOfPages = maxPages;
+                                acceptedMaxPages = maxPages;
+                                break;
+                            }
+                            catch (ArgumentException)
+                            {
+                                // try the next lower value
+                            }
+                        }
+
+                        if (acceptedMaxPages == null)
+                            throw;
+
+                        LogService?.Log.Warning("Driver rejected unlimited feeder pages, using {MaxPages} instead", acceptedMaxPages);
+                    }
 
                     if (imageScanner.FeederConfiguration.CanScanAhead)
                         imageScanner.FeederConfiguration.ScanAhead = true;

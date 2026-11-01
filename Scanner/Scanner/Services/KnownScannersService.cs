@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.DependencyInjection;
+using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Scanner.Data;
@@ -37,7 +38,7 @@ internal class KnownScannersService : IKnownScannersService
     #endregion
 
     private readonly SemaphoreSlim dbLock = new(1, 1);
-    private TaskCompletionSource initializationTcs = new(TaskCreationOptions.RunContinuationsAsynchronously);
+    private readonly TaskCompletionSource initializationTcs = new(TaskCreationOptions.RunContinuationsAsynchronously);
     private string? databasePath;
 
 
@@ -70,14 +71,15 @@ internal class KnownScannersService : IKnownScannersService
             await context.Database.EnsureCreatedAsync();
 
             LogService?.Log.Information("Initialized database");
-
-            initializationTcs.TrySetResult();
         }
         catch (Exception exc)
         {
+            // the next operation will recreate the database
             LogService?.Log.Error(exc, "Failed to initialize database");
-            initializationTcs.TrySetException(exc);
-            throw;
+        }
+        finally
+        {
+            initializationTcs.TrySetResult();
         }
     }
 
@@ -186,22 +188,20 @@ internal class KnownScannersService : IKnownScannersService
 
         try
         {
+            SqliteConnection.ClearAllPools();
+
             if (databasePath is not null && File.Exists(databasePath))
                 File.Delete(databasePath);
 
             await using KnownScannersDbContext context = CreateContext();
             await context.Database.EnsureCreatedAsync();
 
-            initializationTcs = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
-            initializationTcs.TrySetResult();
-
             LogService?.Log.Warning("Database recreated successfully");
         }
         catch (Exception exc)
         {
+            // // the next operation will retry
             LogService?.Log.Error(exc, "Failed to recreate database");
-            initializationTcs.TrySetException(exc);
-            throw;
         }
     }
 

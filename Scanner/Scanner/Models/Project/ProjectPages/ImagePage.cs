@@ -216,9 +216,16 @@ public partial class ImagePage : ObservableObject, IProjectPage
             target = new(targetFile, await targetFile.OpenAsync(FileAccessMode.ReadWrite, StorageOpenOptions.AllowOnlyReaders));
 
         // create ImagePage
-        ImagePage result = new(sourceFile, target, new Uri(AppDataService.GetUriForAppDataFolder(pagesFolder, sourceFile.Name)), index, targetFileName, targetFolder, baseFilter, filter, brightness, contrast, imageProperties.Width, imageProperties.Height);
-        
-        return result;
+        try
+        {
+            ImagePage result = new(sourceFile, target, new Uri(AppDataService.GetUriForAppDataFolder(pagesFolder, sourceFile.Name)), index, targetFileName, targetFolder, baseFilter, filter, brightness, contrast, imageProperties.Width, imageProperties.Height);
+            return result;
+        }
+        catch
+        {
+            target?.FileStream.Dispose();
+            throw;
+        }
     }
 
 

@@ -71,22 +71,35 @@ public partial class MultiFileProject : ProjectBase
         await AppDataService.EmptyFolderAsync(AppDataService.UndoFolder);
         await AppDataService.EmptyFolderAsync(AppDataService.RedoFolder);
 
-        // create pages
         List<IProjectPage> pages = new();
-        for (int i = 0; i < creationData.Pages.Count; i++)
+        try
         {
-            PageCreationData pageData = creationData.Pages[i];
-            pages.Add(await CreatePageFromFileAsync(pageData.File, i, pageData.TargetFileName, pageData.TargetFile, pageData.TargetFolder, keepSourceFiles, AppDataService.ProjectFolder, pageData.BaseFilter, pageData.Filter, pageData.Brightness, pageData.Contrast));
+            // create pages
+            for (int i = 0; i < creationData.Pages.Count; i++)
+            {
+                PageCreationData pageData = creationData.Pages[i];
+                pages.Add(await CreatePageFromFileAsync(pageData.File, i, pageData.TargetFileName, pageData.TargetFile, pageData.TargetFolder, keepSourceFiles, AppDataService.ProjectFolder, pageData.BaseFilter, pageData.Filter, pageData.Brightness, pageData.Contrast));
+            }
+
+            // create project and update previews
+            MultiFileProject project = new MultiFileProject(creationData.Id, pages, creationData.Format, creationData.CreationScanOptions);
+            await project.GeneratePagePreviewsAsync(pages.OfType<ImagePage>().ToList(), uiDispatcherQueue);
+
+            if (isAlreadySaved)
+                project.MarkRevisionSaved(project.CaptureContentRevision());
+
+            return project;
         }
-
-        // create project and update previews
-        MultiFileProject project = new MultiFileProject(creationData.Id, pages, creationData.Format, creationData.CreationScanOptions);
-        await project.GeneratePagePreviewsAsync(pages.OfType<ImagePage>().ToList(), uiDispatcherQueue);
-
-        if (isAlreadySaved)
-            project.MarkRevisionSaved(project.CaptureContentRevision());
-
-        return project;
+        catch
+        {
+            // release files of the pages created so far, as the project is discarded
+            foreach (IProjectPage page in pages)
+            {
+                if (page is ImagePage imagePage)
+                    imagePage.TargetFile?.FileStream.Dispose();
+            }
+            throw;
+        }
     }
 
 
@@ -144,11 +157,12 @@ public partial class MultiFileProject : ProjectBase
         saveProcessWaitingToStart = true;
 
         // enable waiting for save process (even if it is waiting to start)
-        TaskCompletionSource<bool> saveProcess = new();
+        TaskCompletionSource<bool> saveProcess = new(TaskCreationOptions.RunContinuationsAsynchronously);
         LatestSaveProcess = saveProcess;
 
         // save
         bool success = await SaveInternalAsync(saveAs, [.. Pages], saveProcess, uiDispatcherQueue);
+        await saveProcess.Task;
 
         // analytics (user-initiated saves only)
         if (success && isUserInitiated)
@@ -171,11 +185,14 @@ public partial class MultiFileProject : ProjectBase
         saveProcessWaitingToStart = true;
 
         // enable waiting for save process (even if it is waiting to start)
-        TaskCompletionSource<bool> saveProcess = new();
+        TaskCompletionSource<bool> saveProcess = new(TaskCreationOptions.RunContinuationsAsynchronously);
         LatestSaveProcess = saveProcess;
 
         // save (always a user-initiated "save as current page")
         bool success = await SaveInternalAsync(true, [page], saveProcess, uiDispatcherQueue);
+
+        // wait for the result to be applied on the UI thread (IsSaving, IsSaved), so that callers can act on it right away
+        await saveProcess.Task;
 
         // analytics
         if (success)
@@ -194,6 +211,11 @@ public partial class MultiFileProject : ProjectBase
             // revision at snapshot time (-1 means no bytes were written this pass)
             long revisionAtSnapshot = -1;
 
+            // locks held at any given moment, so that each is released exactly once on every path
+            bool holdsProjectObjectSemaphore = false;
+            bool holdsProjectFolderSemaphore = false;
+            bool holdsChangesFolderSemaphore = false;
+
             try
             {
                 uiDispatcherQueue.RunOnThread(DispatcherQueuePriority.Low, () =>
@@ -201,6 +223,10 @@ public partial class MultiFileProject : ProjectBase
                     IsSaving = true;
                     saveProcessWaitingToStart = false;
                 });
+
+                // don't save a project that has been closed while waiting
+                if (AreFileHandlesReleased)
+                    return;
 
                 // update target location for every file if needed
                 bool forceSaving = false;
@@ -226,8 +252,13 @@ public partial class MultiFileProject : ProjectBase
                     {
                         imagePage = (ImagePage)page;
 
-                        if (saveAs)
+                        if (saveAs && imagePage.TargetFile != null)
+                        {
+                            // release previous file
+                            FileHandle targetFile = imagePage.TargetFile;
                             imagePage.TargetFile = null;
+                            targetFile.FileStream.Dispose();
+                        }
 
                         if (page is ImagePage imagePageToUpdate)
                         {
@@ -249,8 +280,11 @@ public partial class MultiFileProject : ProjectBase
                 {
                     // lock data
                     await projectObjectSemaphore.WaitAsync();
+                    holdsProjectObjectSemaphore = true;
                     await projectFolderSemaphore.WaitAsync();
+                    holdsProjectFolderSemaphore = true;
                     await changesFolderSemaphore.WaitAsync();
+                    holdsChangesFolderSemaphore = true;
 
                     // commit changes
                     foreach (IProjectPage page in pages)
@@ -268,7 +302,7 @@ public partial class MultiFileProject : ProjectBase
                             }
                             else
                             {
-                                newSourceFile = await imagePage.SourceFile.CopyAsync(AppDataService.ProjectFolder);
+                                newSourceFile = await imagePage.SourceFile.CopyAsync(AppDataService.ProjectFolder, imagePage.SourceFile.Name, NameCollisionOption.GenerateUniqueName);
                             }
 
                             // update page
@@ -313,7 +347,9 @@ public partial class MultiFileProject : ProjectBase
 
                     // continue processing edits during save process
                     projectObjectSemaphore.Release();
+                    holdsProjectObjectSemaphore = false;
                     changesFolderSemaphore.Release();
+                    holdsChangesFolderSemaphore = false;
 
                     // save
                     Dictionary<IProjectPage, FileHandle?> pageSaves = await snapshot.TrySaveAsync(uiDispatcherQueue);
@@ -324,26 +360,35 @@ public partial class MultiFileProject : ProjectBase
 
                     // update target files
                     await projectObjectSemaphore.WaitAsync();
+                    holdsProjectObjectSemaphore = true;
                     foreach (KeyValuePair<IProjectPage, FileHandle?> pageSave in pageSaves)
                     {
                         ((ImagePage)pageSave.Key).TargetFile = pageSave.Value;
                     }
                     projectObjectSemaphore.Release();
+                    holdsProjectObjectSemaphore = false;
 
                     // update file names
                     foreach (KeyValuePair<IProjectPage, FileHandle?> pageSave in pageSaves)
                     {
                         if (pageSave.Key is ImagePage imagePage && imagePage.FileNameInfo != null)
                         {
-                            await imagePage.FileNameInfo.UpdateNamesAsync(imagePage.FileNameInfo.DesiredName, imagePage.TargetFile!.File.Name, false, uiDispatcherQueue);
+                            // adopt a name numbered due to a collision, unless the page has been renamed during the save,
+                            // as renaming the file to the desired name again would skip its own number
+                            string actualName = imagePage.TargetFile!.File.Name;
+                            string desiredName = imagePage.FileNameInfo.DesiredName == snapshot.Pages[pageSave.Key].DesiredFileName
+                                ? actualName : imagePage.FileNameInfo.DesiredName;
+                            await imagePage.FileNameInfo.UpdateNamesAsync(desiredName, actualName, false, uiDispatcherQueue);
                         }
                     }
 
                     projectFolderSemaphore.Release();
+                    holdsProjectFolderSemaphore = false;
                 }
 
                 // apply file name
                 await projectObjectSemaphore.WaitAsync();
+                holdsProjectObjectSemaphore = true;
 
                 await uiDispatcherQueue.RunOnThreadAndWaitAsync(DispatcherQueuePriority.Low, async () =>
                 {
@@ -365,6 +410,7 @@ public partial class MultiFileProject : ProjectBase
 
                 success = true;
                 projectObjectSemaphore.Release();
+                holdsProjectObjectSemaphore = false;
             }
             catch (Exception exc)
             {
@@ -373,6 +419,14 @@ public partial class MultiFileProject : ProjectBase
             }
             finally
             {
+                // release locks still held after a failure
+                if (holdsChangesFolderSemaphore)
+                    changesFolderSemaphore.Release();
+                if (holdsProjectFolderSemaphore)
+                    projectFolderSemaphore.Release();
+                if (holdsProjectObjectSemaphore)
+                    projectObjectSemaphore.Release();
+
                 uiDispatcherQueue.RunOnThread(DispatcherQueuePriority.Low, () =>
                 {
                     IsSaving = false;
@@ -383,10 +437,22 @@ public partial class MultiFileProject : ProjectBase
 
                     saveProcess.TrySetResult(success);
                 });
+
+                // don't keep files locked if the project has been closed during the save
+                ReleaseFileHandlesIfClosed();
                 saveSemaphore.Release();
             }
         });
         return success;
+    }
+
+    protected override void DisposeFileHandles()
+    {
+        foreach (IProjectPage page in Pages)
+        {
+            if (page is ImagePage imagePage)
+                imagePage.TargetFile?.FileStream.Dispose();
+        }
     }
 
     public async Task CopyPagesAsync(List<ImagePage> pages)

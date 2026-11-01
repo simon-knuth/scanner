@@ -26,35 +26,19 @@ public partial class UnsavedChangesDialogView : ContentDialog
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     #region Services
     public readonly IAccessibilityService AccessibilityService = Ioc.Default.GetRequiredService<IAccessibilityService>();
-    private ILogService? LogService = Ioc.Default.GetService<ILogService>();
     #endregion
-
-    private ProjectBase project;
 
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // CONSTRUCTORS / FACTORIES /////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    public UnsavedChangesDialogView(ProjectBase project)
+    /// <remarks>
+    /// Only asks the user. Saving is up to the caller once the dialog has closed, as only one dialog can be shown at a
+    /// time and saving may need to ask for a save location.
+    /// </remarks>
+    public UnsavedChangesDialogView()
     {
-        this.project = project;
-
         this.InitializeComponent();
         Ioc.Default.GetService<ILogService>()?.Log.Information("Dialog loaded");
-    }
-
-
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    private async void ContentDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
-    {
-        this.IsEnabled = false;
-
-        // save changes
-        LogService?.Log.Information("Saving unsaved changes from the unsaved-changes dialog");
-        ContentDialogButtonClickDeferral deferral = args.GetDeferral();
-        await project.SaveAsync(false, this.DispatcherQueue, isUserInitiated: true);
-        deferral.Complete();
     }
 }

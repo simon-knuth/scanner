@@ -18,9 +18,9 @@ public static class PageDimensionsExtensions
     /// </summary>
     private static readonly Dictionary<PaperSize, Rect> PaperSizes = new()
     {
-        { PaperSize.DinA3, new(0 , 0, 297, 320) },
-        { PaperSize.DinA4, new(0 , 0, 210, 297) },
-        { PaperSize.DinA5, new(0 , 0, 148, 210) },
+        { PaperSize.A3, new(0 , 0, 297, 320) },
+        { PaperSize.A4, new(0 , 0, 210, 297) },
+        { PaperSize.A5, new(0 , 0, 148, 210) },
         { PaperSize.AnsiA, new(0 , 0, 216, 279) },
         { PaperSize.AnsiB, new(0 , 0, 279, 432) },
         { PaperSize.AnsiC, new(0 , 0, 432, 559) },
@@ -34,9 +34,9 @@ public static class PageDimensionsExtensions
     /// </summary>
     private static readonly Dictionary<PaperSize, AspectRatio> PaperSizeAspectRatios = new()
     {
-        { PaperSize.DinA3, AspectRatio.DinA },
-        { PaperSize.DinA4, AspectRatio.DinA },
-        { PaperSize.DinA5, AspectRatio.DinA },
+        { PaperSize.A3, AspectRatio.A },
+        { PaperSize.A4, AspectRatio.A },
+        { PaperSize.A5, AspectRatio.A },
         { PaperSize.AnsiA, AspectRatio.AnsiA },
         { PaperSize.AnsiB, AspectRatio.AnsiB },
         { PaperSize.AnsiC, AspectRatio.AnsiC },
@@ -57,7 +57,7 @@ public static class PageDimensionsExtensions
                 return 1.5;
             case AspectRatio.FourByThree:
                 return 1.3333;
-            case AspectRatio.DinA:
+            case AspectRatio.A:
                 return 0.7070;
             case AspectRatio.AnsiA:
                 return 0.7741;
@@ -82,9 +82,9 @@ public static class PageDimensionsExtensions
     {
         return paperSize switch
         {
-            PaperSize.DinA3 => PrintMediaSize.IsoA3,
-            PaperSize.DinA4 => PrintMediaSize.IsoA4,
-            PaperSize.DinA5 => PrintMediaSize.IsoA5,
+            PaperSize.A3 => PrintMediaSize.IsoA3,
+            PaperSize.A4 => PrintMediaSize.IsoA4,
+            PaperSize.A5 => PrintMediaSize.IsoA5,
             PaperSize.AnsiA => PrintMediaSize.NorthAmericaLetter,
             PaperSize.AnsiB => PrintMediaSize.NorthAmericaTabloid,
             PaperSize.AnsiC => PrintMediaSize.NorthAmericaCSheet,

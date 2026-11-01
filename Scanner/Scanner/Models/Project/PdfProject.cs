@@ -83,14 +83,23 @@ public partial class PdfProject : ProjectBase
         if (isAlreadySaved)
             project.MarkRevisionSaved(project.CaptureContentRevision());
 
-        if (pages[0] is PdfPage)
+        try
         {
-            project.SourceFile = project.TargetFile = new(creationData.Pages[0].File, await creationData.Pages[0].File.OpenAsync(FileAccessMode.ReadWrite, StorageOpenOptions.AllowOnlyReaders));
-            await project.GeneratePagePreviewsAsync([.. pages.Cast<PdfPage>()], uiDispatcherQueue);
+            if (pages[0] is PdfPage)
+            {
+                project.SourceFile = project.TargetFile = new(creationData.Pages[0].File, await creationData.Pages[0].File.OpenAsync(FileAccessMode.ReadWrite, StorageOpenOptions.AllowOnlyReaders));
+                await project.GeneratePagePreviewsAsync([.. pages.Cast<PdfPage>()], uiDispatcherQueue);
+            }
+            else
+            {
+                await project.GeneratePagePreviewsAsync([.. pages.Cast<ImagePage>()], uiDispatcherQueue);
+            }
         }
-        else
+        catch
         {
-            await project.GeneratePagePreviewsAsync([.. pages.Cast<ImagePage>()], uiDispatcherQueue);
+            // release files, as the project is discarded
+            project.ReleaseFileHandles();
+            throw;
         }
 
         return project;
@@ -146,11 +155,12 @@ public partial class PdfProject : ProjectBase
         saveProcessWaitingToStart = true;
 
         // enable waiting for save process (even if it is waiting to start)
-        TaskCompletionSource<bool> saveProcess = new();
+        TaskCompletionSource<bool> saveProcess = new(TaskCreationOptions.RunContinuationsAsynchronously);
         LatestSaveProcess = saveProcess;
 
         // save
         bool success = await SaveInternalAsync(saveAs, saveProcess, uiDispatcherQueue);
+        await saveProcess.Task;
 
         // analytics (user-initiated saves only)
         if (success && isUserInitiated)
@@ -169,6 +179,11 @@ public partial class PdfProject : ProjectBase
             // revision at snapshot time (-1 means no bytes were written this pass)
             long revisionAtSnapshot = -1;
 
+            // locks held at any given moment, so that each is released exactly once on every path
+            bool holdsProjectObjectSemaphore = false;
+            bool holdsProjectFolderSemaphore = false;
+            bool holdsChangesFolderSemaphore = false;
+
             try
             {
                 uiDispatcherQueue.RunOnThread(DispatcherQueuePriority.Low, () =>
@@ -176,6 +191,10 @@ public partial class PdfProject : ProjectBase
                     IsSaving = true;
                     saveProcessWaitingToStart = false;
                 });
+
+                // don't save a project that has been closed while waiting
+                if (AreFileHandlesReleased)
+                    return;
 
                 // update target location if needed
                 bool forceSaving = false;
@@ -209,8 +228,11 @@ public partial class PdfProject : ProjectBase
                 {
                     // lock data
                     await projectObjectSemaphore.WaitAsync();
+                    holdsProjectObjectSemaphore = true;
                     await projectFolderSemaphore.WaitAsync();
+                    holdsProjectFolderSemaphore = true;
                     await changesFolderSemaphore.WaitAsync();
+                    holdsChangesFolderSemaphore = true;
 
                     // commit changes
                     foreach (IProjectPage page in Pages)
@@ -257,7 +279,9 @@ public partial class PdfProject : ProjectBase
 
                     // continue processing edits during save process
                     projectObjectSemaphore.Release();
+                    holdsProjectObjectSemaphore = false;
                     changesFolderSemaphore.Release();
+                    holdsChangesFolderSemaphore = false;
 
                     // save
                     Dictionary<IProjectPage, FileHandle?> pageSaves = await snapshot.TrySaveAsync(uiDispatcherQueue);
@@ -267,13 +291,18 @@ public partial class PdfProject : ProjectBase
 
                     // update target file
                     await projectObjectSemaphore.WaitAsync();
+                    holdsProjectObjectSemaphore = true;
                     TargetFile = pageSaves.Values.First();
                     projectObjectSemaphore.Release();
+                    holdsProjectObjectSemaphore = false;
 
-                    // update file name
-                    await FileNameInfo!.UpdateNamesAsync(FileNameInfo!.DesiredName, TargetFile.File.Name, false, uiDispatcherQueue);
+                    // update file name, adopting a name numbered due to a collision unless the project has been renamed during
+                    // the save, as renaming the file to the desired name again would skip its own number
+                    string desiredName = FileNameInfo!.DesiredName == snapshot.DesiredFileName ? TargetFile.File.Name : FileNameInfo.DesiredName;
+                    await FileNameInfo.UpdateNamesAsync(desiredName, TargetFile.File.Name, false, uiDispatcherQueue);
 
                     projectFolderSemaphore.Release();
+                    holdsProjectFolderSemaphore = false;
                 }
 
                 // apply file name
@@ -298,6 +327,14 @@ public partial class PdfProject : ProjectBase
             }
             finally
             {
+                // release locks still held after a failure
+                if (holdsChangesFolderSemaphore)
+                    changesFolderSemaphore.Release();
+                if (holdsProjectFolderSemaphore)
+                    projectFolderSemaphore.Release();
+                if (holdsProjectObjectSemaphore)
+                    projectObjectSemaphore.Release();
+
                 uiDispatcherQueue.RunOnThread(DispatcherQueuePriority.Low, () =>
                 {
                     IsSaving = false;
@@ -308,10 +345,21 @@ public partial class PdfProject : ProjectBase
 
                     saveProcess.TrySetResult(success);
                 });
+
+                // don't keep files locked if the project has been closed during the save
+                ReleaseFileHandlesIfClosed();
                 saveSemaphore.Release();
             }
         });
         return success;
+    }
+
+    protected override void DisposeFileHandles()
+    {
+        TargetFile?.FileStream.Dispose();
+
+        if (SourceFile != null && SourceFile != TargetFile)
+            SourceFile.FileStream.Dispose();
     }
 
     public async Task CopyAsync()
@@ -549,6 +597,13 @@ public partial class PdfProject : ProjectBase
         // generate PDF
         try
         {
+            if (ocr && !OcrService.IsAvailable)
+            {
+                // fall back to a PDF without text layer rather than failing the save
+                LogService?.Log.Warning("OCR requested but unavailable, generating PDF without OCR");
+                ocr = false;
+            }
+
             if (ocr)
             {
                 await OcrService.GenerateOcrPdfAsync([.. pages.Values], pdfGenerationFilePath, uiDispatcherQueue);

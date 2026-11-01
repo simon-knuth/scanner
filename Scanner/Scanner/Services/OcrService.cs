@@ -40,6 +40,7 @@ internal class OcrService : IOcrService
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     #region Services
     private readonly ILogService? LogService = Ioc.Default.GetService<ILogService>();
+    private readonly ISentryService? SentryService = Ioc.Default.GetService<ISentryService>();
     #endregion
 
     #region Constants
@@ -47,7 +48,13 @@ internal class OcrService : IOcrService
     private const double tesseractDpi = 72;
     #endregion
 
-    private TesseractEngine osdEngine = new TesseractEngine(trainingDataFolderPath, "osd");
+    /// <summary>
+    /// Null if the engine could not be created (e.g. Tesseract's native libraries failed to load), in which case OCR is
+    /// unavailable.
+    /// </summary>
+    private readonly TesseractEngine? osdEngine;
+
+    public bool IsAvailable => osdEngine != null;
 
     private static string trainingDataFolderPath = Path.GetDirectoryName(Environment.ProcessPath)
             + Path.DirectorySeparatorChar
@@ -63,7 +70,15 @@ internal class OcrService : IOcrService
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public OcrService()
     {
-
+        try
+        {
+            osdEngine = new TesseractEngine(trainingDataFolderPath, "osd");
+        }
+        catch (Exception exc)
+        {
+            LogService?.Log.Error(exc, "Failed to initialize OCR engine, OCR is unavailable");
+            SentryService?.TrackError(exc);
+        }
     }
 
 
@@ -72,6 +87,9 @@ internal class OcrService : IOcrService
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public BitmapRotation? GetRecommendedRotation(StorageFile file)
     {
+        if (osdEngine == null)
+            return null;
+
         // load file
         using (Pix image = Pix.LoadFromFile(file.Path))
         {

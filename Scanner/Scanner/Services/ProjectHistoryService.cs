@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.DependencyInjection;
+using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.UI.Dispatching;
 using Microsoft.UI.Xaml.Media;
@@ -41,7 +42,7 @@ internal class ProjectHistoryService : IProjectHistoryService
     public ObservableCollection<ProjectHistoryEntry> Entries { get; } = [];
 
     private readonly SemaphoreSlim dbLock = new(1, 1);
-    private TaskCompletionSource initializationTcs = new(TaskCreationOptions.RunContinuationsAsynchronously);
+    private readonly TaskCompletionSource initializationTcs = new(TaskCreationOptions.RunContinuationsAsynchronously);
     private string? databasePath;
 
     private DispatcherQueue? uiDispatcherQueue;
@@ -83,14 +84,15 @@ internal class ProjectHistoryService : IProjectHistoryService
                 foreach (ProjectHistoryEntry entry in initial)
                     Entries.Add(entry);
             });
-
-            initializationTcs.TrySetResult();
         }
         catch (Exception exc)
         {
+            // the next operation will recreate the database
             LogService?.Log.Error(exc, "Failed to initialize database");
-            initializationTcs.TrySetException(exc);
-            throw;
+        }
+        finally
+        {
+            initializationTcs.TrySetResult();
         }
     }
 
@@ -334,14 +336,13 @@ internal class ProjectHistoryService : IProjectHistoryService
 
         try
         {
+            SqliteConnection.ClearAllPools();
+
             if (databasePath is not null && File.Exists(databasePath))
                 File.Delete(databasePath);
 
             await using ProjectHistoryDbContext context = CreateContext();
             await context.Database.EnsureCreatedAsync();
-
-            initializationTcs = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
-            initializationTcs.TrySetResult();
 
             uiDispatcherQueue.RunOnThread(DispatcherQueuePriority.Low, () =>
             {
@@ -353,9 +354,8 @@ internal class ProjectHistoryService : IProjectHistoryService
         }
         catch (Exception exc)
         {
+            // the next operation will retry
             LogService?.Log.Error(exc, "Failed to recreate database");
-            initializationTcs.TrySetException(exc);
-            throw;
         }
     }
 

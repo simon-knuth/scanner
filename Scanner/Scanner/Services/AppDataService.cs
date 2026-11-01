@@ -30,6 +30,7 @@ internal class AppDataService : IAppDataService
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     #region Services
     private readonly ILogService? LogService = Ioc.Default.GetService<ILogService>();
+    private readonly ISentryService? SentryService = Ioc.Default.GetService<ISentryService>();
     #endregion
 
     private const string IncomingFolderName = "Incoming";
@@ -116,11 +117,42 @@ internal class AppDataService : IAppDataService
     }
 
     /// <summary>
-    ///     Removes all files from the given <paramref name="folder"/>.
+    ///     Removes all files from the given <paramref name="folder"/>, as far as possible. Never throws, as items that
+    ///     are still in use (e.g. by another process) can't be deleted and are left for the next cleanup on startup.
     /// </summary>
     public async Task EmptyFolderAsync(StorageFolder folder)
     {
-        await CreateOrReplaceFolderAsync(folder.Name);
+        // delete items individually, as replacing the folder fails entirely as soon as a single file is in use
+        int failedCount = 0;
+        Exception? lastException = null;
+        try
+        {
+            StorageFolder existingFolder = await TempFolder.CreateFolderAsync(folder.Name, CreationCollisionOption.OpenIfExists);
+            IReadOnlyList<IStorageItem> items = await existingFolder.GetItemsAsync();
+            foreach (IStorageItem item in items)
+            {
+                try
+                {
+                    await item.DeleteAsync(StorageDeleteOption.PermanentDelete);
+                }
+                catch (Exception exc)
+                {
+                    failedCount++;
+                    lastException = exc;
+                }
+            }
+        }
+        catch (Exception exc)
+        {
+            LogService?.Log.Warning(exc, "Failed to empty folder {Folder} in temp folder", folder.Name);
+            return;
+        }
+
+        if (failedCount > 0)
+        {
+            LogService?.Log.Warning(lastException!, "Failed to delete {FailedCount} item(s) from folder {Folder} in temp folder", failedCount, folder.Name);
+            SentryService?.TrackWarning(lastException!);
+        }
     }
 
     public string GetUriForAppDataFolder(StorageFolder folder, string fileName = "")

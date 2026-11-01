@@ -65,7 +65,9 @@ Strict **MVVM** with `CommunityToolkit.Mvvm`. Three layers under `Scanner/`: `Vi
 
 **Undo/redo** — a command pattern. Every editing operation is an `IProjectAction` in `Models/ProjectActions/` (e.g. `CropPagesAction`, `RotatePagesAction`, `RenameAction`). Apply through `IProjectService.ApplyActionAsync`; the service maintains `UndoStack`/`RedoStack`. Add a new `IProjectAction` to support a new editing operation rather than mutating pages directly.
 
-**Save safety (change tracking & concurrency)** — dirty state is two monotonic revision numbers on `ProjectBase`, not a mutable flag: every content mutation calls `BumpRevision()` (bumping `contentRevision`, raising `ContentChanged`); a save captures the revision at snapshot time and, on success, advances `savedRevision` to it, so `IsSaved` is `savedRevision >= contentRevision`. This makes "mark clean" correct by construction — an edit landing during a save keeps the project dirty. Effect values (`SetBrightness`/`SetContrast`) are committed synchronously so a save never serializes a stale value. A save holds `saveSemaphore` for its whole duration (including the unlocked encode that reads live source files), so any edit that deletes/moves a page's former source file must do so via `RetireSourceFileAsync` (which takes `saveSemaphore`) **after** releasing the edit locks, never during editing. Auto-save (`ProjectService`) is debounced on `ContentChanged` plus a slow self-healing safety-net timer.
+**Save safety (change tracking & concurrency)** — dirty state is two monotonic revision numbers on `ProjectBase`, not a mutable flag: every content mutation calls `BumpRevision()` (bumping `contentRevision`, raising `ContentChanged`); a save captures the revision at snapshot time and, on success, advances `savedRevision` to it, so `IsSaved` is `savedRevision >= contentRevision`. This makes "mark clean" correct by construction — an edit landing during a save keeps the project dirty. Effect values (`SetBrightness`/`SetContrast`) are committed synchronously so a save never serializes a stale value. A save holds `saveSemaphore` for its whole duration (including the unlocked encode that reads live source files), so any edit that deletes/moves a page's former source file must do so via `RetireSourceFileAsync` (which takes `saveSemaphore`) **after** releasing the edit locks, never during editing. `SaveAsync` returns whether the project got saved and only completes once `IsSaving`/`IsSaved` have been updated on the UI thread, so callers may act on the result (e.g. close the project) right away. Auto-save (`ProjectService`) is debounced on `ContentChanged` plus a slow self-healing safety-net timer.
+
+**File locks** — a project locks its output files via `FileHandle` records (streams opened with `StorageOpenOptions.AllowOnlyReaders`) and must hold no lock once closed. Closing calls `ProjectBase.ReleaseFileHandles()` without waiting for a running save, so every save process must bail out early when `AreFileHandlesReleased` and call `ReleaseFileHandlesIfClosed()` at its very end. Dispose a handle's stream before dropping or replacing it, including on failure paths.
 
 **Persistence** — EF Core with SQLite, split into three `DbContext`s in `Data/`: `KnownScannersDbContext`, `ProjectHistoryDbContext`, `TemplatesDbContext`, each fronted by a service (`KnownScannersService`, `ProjectHistoryService`, `TemplatesService`).
 
@@ -74,7 +76,7 @@ Strict **MVVM** with `CommunityToolkit.Mvvm`. Three layers under `Scanner/`: `Vi
 ### Key integrations
 
 - **Scanning**: `Windows.Devices.Scanners` (WIA) via `ScannerDiscoveryService`; hardware in `Models/ScanningDevices/HardwareScanner.cs`.
-- **OCR**: Tesseract (the submodule). `OcrService` + training data under `Resources/Tesseract Training Data/`.
+- **OCR**: Tesseract (the submodule). `OcrService` + training data under `Resources/Tesseract Training Data/`. Its native DLLs need the VC++ runtime, provided via the `Microsoft.VCLibs.Desktop` `SDKReference` (a `Microsoft.VCLibs.140.00.UWPDesktop` package dependency). If creating the engine fails, OCR degrades to "unavailable" (`IOcrService.IsAvailable`). The `OcrService` constructor must never throw, since the service is resolved from `ProjectBase`'s static initializer.
 - **AI features**: `CopilotRuntimeService` uses the Windows Copilot Runtime (on-device models, e.g. Phi Silica) — gated behind Copilot+ hardware availability.
 - **PDF**: PDFsharp.
 - **Native interop**: `Microsoft.Windows.CsWin32` (source-generated P/Invoke; see `NativeMethods.txt` if present) and CsWinRT.
@@ -83,6 +85,8 @@ Strict **MVVM** with `CommunityToolkit.Mvvm`. Three layers under `Scanner/`: `Vi
 ### Localization
 
 UI strings are localized via **ReswPlus** (`Resources/Strings/`), with ~20 languages. ReswPlus generates strongly-typed accessors from the `.resw` files — edit the resource files, not generated code.
+
+Prompts for the on-device language model live in a separate `Prompts.resw` per language (class `Resources.Strings.Prompts`), kept out of `Resources.resw` so they aren't treated as UI strings. Their rules stay in English; only the output language name and the example file names are localized. A language without its own `Prompts.resw` falls back to `en`.
 
 ## Conventions
 

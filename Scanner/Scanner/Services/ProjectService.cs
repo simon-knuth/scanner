@@ -317,6 +317,7 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
             {
                 cancellationToken.ThrowIfCancellationRequested();
                 CurrentScanState = ScanState.AutomaticRotation;
+                LogService?.Log.Information("Auto-rotating {PageCount} scanned page(s)", files.Count);
 
                 await Task.Run(async () =>
                 {
@@ -333,6 +334,7 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
             // create project
             cancellationToken.ThrowIfCancellationRequested();
             CurrentScanState = ScanState.Processing;
+            LogService?.Log.Information("Creating the project from the scanned page(s)");
             ProjectBase? project = null;
             await Task.Run(async () =>
             {
@@ -394,6 +396,7 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
                 {
                     CurrentScanState = ScanState.Saving;
                 }
+                LogService?.Log.Information("Auto-saving the new project");
                 await Task.Run(async () =>
                 {
                     await CurrentProject.SaveAsync(false, UiDispatcherQueue!);
@@ -475,6 +478,7 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
             {
                 cancellationToken.ThrowIfCancellationRequested();
                 CurrentScanState = ScanState.AutomaticRotation;
+                LogService?.Log.Information("Auto-rotating {PageCount} scanned page(s)", files.Count);
 
                 await Task.Run(async () =>
                 {
@@ -491,6 +495,7 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
             // add files
             cancellationToken.ThrowIfCancellationRequested();
             CurrentScanState = ScanState.Processing;
+            LogService?.Log.Information("Adding {PageCount} scanned page(s) to the project", files.Count);
             List<ProjectFileInsertion> insertions = new();
             for (int i = 0; i < files.Count; i++)
             {
@@ -704,7 +709,7 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
             : ScannerAutoCropMode.Disabled;
         string region = scanOptions.ScanArea switch
         {
-            PaperSizeArea paperSizeArea => paperSizeArea.PaperSize.ToString(),  // fixed paper size, e.g. "DinA4"
+            PaperSizeArea paperSizeArea => paperSizeArea.PaperSize.ToString(),  // fixed paper size, e.g. "A4"
             AutoCropArea autoCrop => autoCrop.AutoCropMode.ToString(),          // e.g. "SingleRegion"
             RectScanArea => "CustomRegion",                                     // user-selected region
             _ => "WholeArea",                                                   // whole bed / no area set
@@ -1030,24 +1035,11 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
             ProjectBase project = CurrentProject;
             CurrentProject = null;
             SelectedPage = null;
+
+            // release files (also covers files locked by a save process that is still running)
+            project.ReleaseFileHandles();
+
             await AppDataService.EmptyFolderAsync(AppDataService.IncomingFolder);
-
-            // release files
-            if (project is PdfProject pdfProject && pdfProject.TargetFile != null)
-            {
-                pdfProject.TargetFile.FileStream.Dispose();
-
-                if (pdfProject.SourceFile != null && pdfProject.SourceFile != pdfProject.TargetFile)
-                    pdfProject.SourceFile.FileStream.Dispose();
-            }
-            else
-            {
-                foreach (IProjectPage page in pages)
-                {
-                    if (page is ImagePage imagePage && imagePage.TargetFile != null)
-                        imagePage.TargetFile.FileStream.Dispose();
-                }
-            }
 
             if (preserveSourceFilesInIncomingFolder)
             {
@@ -1522,9 +1514,11 @@ internal partial class ProjectService : ObservableRecipient, IProjectService
 
                 if (CurrentProject != null && CurrentProject.IsSaved)
                 {
+                    // capture the project, as it may have been closed by the time the entry gets updated
+                    ProjectBase project = CurrentProject;
                     UiDispatcherQueue?.RunOnThread(DispatcherQueuePriority.Low, () =>
                     {
-                        ProjectHistoryService.AddOrUpdateEntryAsync(CurrentProject);
+                        ProjectHistoryService.AddOrUpdateEntryAsync(project);
                     });
                 }
                 break;

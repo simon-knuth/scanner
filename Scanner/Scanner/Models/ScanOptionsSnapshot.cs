@@ -157,6 +157,7 @@ public abstract class ScanOptionsSnapshot
             Scanner.Data.ScanAreaKind.PaperSize when PaperSize.HasValue
                                                  && PaperSizeCorner.HasValue
                                                  && PaperSizeOrientation.HasValue
+                                                 && Enum.IsDefined(PaperSizeOrientation.Value)
                 => new PaperSizeArea
                 {
                     PaperSize = PaperSize.Value,
