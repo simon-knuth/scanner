@@ -369,6 +369,11 @@ internal partial class HardwareScanner : IScanningDevice
                         throw new ApplicationException("Failed to scan preview to stream for source mode " + sourceMode);
                 }
             }
+            catch (OperationCanceledException exc) when (!cancellationTokenSource.IsCancellationRequested)
+            {
+                // cancelled by the driver
+                throw new ApplicationException("The preview was cancelled by the scanner driver", exc);
+            }
             finally
             {
                 Interlocked.CompareExchange(ref previewCancellationTokenSource, null, cancellationTokenSource);
@@ -453,6 +458,11 @@ internal partial class HardwareScanner : IScanningDevice
 
             // process result
             return result.ScannedFiles;
+        }
+        catch (OperationCanceledException exc) when (!cancellationTokenSource.IsCancellationRequested)
+        {
+            // cancelled by the driver
+            throw new ApplicationException("The scan was cancelled by the scanner driver", exc);
         }
         finally
         {
