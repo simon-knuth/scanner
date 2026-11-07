@@ -355,6 +355,18 @@ internal class SentryService : ISentryService
         }
     }
 
+    public void TrackCrashReport(string report)
+    {
+        LogService?.Log.Information("Tracking crash report");
+        SentrySdk.CaptureMessage(report, (scope) =>
+        {
+            defaultScope(scope);
+
+            // The text differs for every crash, so group all reports in one issue.
+            scope.SetFingerprint("fallback-crash-report");
+        }, SentryLevel.Fatal);
+    }
+
     public void TrackWarning(Exception exception)
     {
         LogService?.Log.Information("Tracking warning");

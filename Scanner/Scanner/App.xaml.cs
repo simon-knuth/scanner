@@ -70,10 +70,11 @@ public partial class App : Application
         AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
         TaskScheduler.UnobservedTaskException += (s, e) =>
         {
-            LogService?.Log.Fatal(e.Exception, "Unobserved task exception");
-
-            if (LogService == null)
-                FallbackFatalLogging(e.Exception);
+            var log = LogService?.Log;
+            if (log != null)
+                log.Fatal(e.Exception, "Unobserved task exception");
+            else
+                FallbackFatalLogging(e.Exception, "Unobserved task exception");
 
             e.SetObserved();
         };
@@ -144,6 +145,7 @@ public partial class App : Application
                     }
                     ISentryService? sentryService = Ioc.Default.GetService<ISentryService>();
                     sentryService?.Initialize();
+                    ReportFallbackCrashLog(sentryService);
                     sentryService?.TrackEvent(AnalyticsEvent.Launch);
                     sentryService?.TrackEvent(AnalyticsEvent.ArchitectureDetected, new Dictionary<string, string>
                     {
@@ -236,10 +238,18 @@ public partial class App : Application
             }
             catch (Exception exc)
             {
-                LogService?.Log.Fatal(exc, "Unhandled background exception");
-                LogService?.CloseAndFlush();
+                var log = LogService?.Log;
+                if (log != null)
+                {
+                    log.Fatal(exc, "Unhandled background exception");
+                    LogService!.CloseAndFlush();
+                }
+                else
+                {
+                    FallbackFatalLogging(exc, "Unhandled background exception");
+                }
             }
-            
+
         });
     }
 
@@ -305,14 +315,30 @@ public partial class App : Application
 
     private void App_UnhandledException(object sender, Microsoft.UI.Xaml.UnhandledExceptionEventArgs e)
     {
-        LogService?.Log.Fatal(e.Exception, "CRASH");
-        LogService?.CloseAndFlush();
+        // For native errors e.Exception is a generic COMException, only e.Message carries WinUI's actual error text.
+        var log = LogService?.Log;
+        if (log != null)
+        {
+            log.Fatal(e.Exception, "CRASH: {Message}", e.Message);
+            LogService!.CloseAndFlush();
+        }
+        else
+        {
+            FallbackFatalLogging(e.Exception, e.Message);
+        }
 
-        if (LogService == null)
-            FallbackFatalLogging(e.Exception);
+        e.Exception.Data["WinUIMessage"] = e.Message;
 
-        Ioc.Default.GetService<ISentryService>()?.TrackError(e.Exception, true);
-        SentrySdk.Flush();
+        // Ioc.Default throws when the crash happens before the services are configured.
+        try
+        {
+            Ioc.Default.GetService<ISentryService>()?.TrackError(e.Exception, true);
+            SentrySdk.Flush();
+        }
+        catch
+        {
+            // The fallback crash log covers this case.
+        }
     }
 
     /// <summary>
@@ -323,32 +349,55 @@ public partial class App : Application
     {
         Exception exc = e.ExceptionObject as Exception ?? new Exception($"Non-exception object thrown: {e.ExceptionObject}");
 
-        LogService?.Log.Fatal(exc, "CRASH (non-UI thread)");
-        LogService?.CloseAndFlush();
-
-        if (LogService == null)
+        var log = LogService?.Log;
+        if (log != null)
+        {
+            log.Fatal(exc, "CRASH (non-UI thread)");
+            LogService!.CloseAndFlush();
+        }
+        else
+        {
             FallbackFatalLogging(exc);
+        }
     }
 
-    private void FallbackFatalLogging(Exception exc)
+    private static string FallbackCrashLogPath => Path.Combine(Windows.Storage.ApplicationData.Current.TemporaryFolder.Path, "crash.txt");
+
+    /// <summary>
+    /// Records an error while the log isn't initialized yet. The next launch reports the file, see <see cref="ReportFallbackCrashLog"/>.
+    /// </summary>
+    private static void FallbackFatalLogging(Exception exc, string? message = null)
     {
         try
         {
-            string tempPath = Windows.Storage.ApplicationData.Current.TemporaryFolder.Path;
-            string fileName = $"crash.txt";
-            string filePath = Path.Combine(tempPath, fileName);
-
-            string content = $"""
-                CRASH at {DateTime.Now:O}
-
-                {exc}
-                """;
-
-            File.WriteAllText(filePath, content);
+            string heading = message != null ? $"CRASH at {DateTime.Now:O}: {message}" : $"CRASH at {DateTime.Now:O}";
+            File.AppendAllText(FallbackCrashLogPath, $"{heading}\n{exc}\n\n");
         }
         catch
         {
             // Nothing we can do if writing the fallback log also fails.
+        }
+    }
+
+    /// <summary>
+    /// Sends errors that <see cref="FallbackFatalLogging"/> recorded during an earlier launch to the log and Sentry.
+    /// </summary>
+    private void ReportFallbackCrashLog(ISentryService? sentryService)
+    {
+        try
+        {
+            if (!File.Exists(FallbackCrashLogPath)) return;
+
+            // Delete before reporting, so a report that fails can't repeat on every launch.
+            string report = File.ReadAllText(FallbackCrashLogPath);
+            File.Delete(FallbackCrashLogPath);
+
+            LogService?.Log?.Warning("Previous launch crashed before logging was available: {Report}", report);
+            sentryService?.TrackCrashReport(report);
+        }
+        catch (Exception exc)
+        {
+            LogService?.Log?.Error(exc, "Failed to report fallback crash log");
         }
     }
 }

@@ -33,6 +33,7 @@ public interface ISentryService
 
     void TrackWarning(Exception exception);
     void TrackError(Exception exception, bool isFatal = false);
+    void TrackCrashReport(string report);
     void TrackEvent(AnalyticsEvent sentryEvent, Dictionary<string, string>? attributes = null);
 
     /// <summary>
