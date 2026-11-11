@@ -79,56 +79,85 @@ internal class SaveLocationService : ObservableRecipient, ISaveLocationService
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     private async Task InitializeAsync()
     {
-        if (futureAccessList.Entries.Count != 0)
+        if (futureAccessList.ContainsItem(futureAccessListFixedLocationToken))
         {
-            // save location may be cached
+            // fixed save location is cached
             try
             {
                 fixedSaveLocation = await futureAccessList.GetFolderAsync(futureAccessListFixedLocationToken);
             }
+            catch (Exception exc) when (exc is FileNotFoundException or DirectoryNotFoundException)
+            {
+                // folder deleted or its drive disconnected ~> reset to default folder for good, even if it returns later
+                LogService?.Log.Warning(exc, "Fixed save location no longer exists");
+                fixedSaveLocation = await TryGetDefaultSaveLocationAsync();
+                if (fixedSaveLocation != null)
+                    futureAccessList.AddOrReplace(futureAccessListFixedLocationToken, fixedSaveLocation);
+                else
+                    futureAccessList.Remove(futureAccessListFixedLocationToken);
+            }
             catch (Exception exc)
             {
-                LogService?.Log.Error(exc, "Failed to load fixed save location from FutureAccessList");
-                try
-                {
-                    fixedSaveLocation = await KnownFolders.PicturesLibrary.CreateFolderAsync
-                        (GetDefaultScanFolderName(), CreationCollisionOption.OpenIfExists);
-                }
-                catch (Exception exc2)
-                {
-                    isFixedSaveLocationSupported = false;
-                    SettingsService.SettingSaveLocationType = SettingSaveLocationType.AskAfterNewProject;
-                    LogService?.Log.Error(exc2, "Fixed save location is not supported");
-                    SentryService?.TrackError(exc2);
-                    SentryService?.TrackEvent(AnalyticsEvent.SetSaveLocationUnavailable);
-                }
-            }
-
-            // recent folders may be cached
-            for (int i = 0; i < recentFoldersLimit; i++)
-            {
-                string token = $"{futureAccessListRecentFoldersToken}{i}";
-                try
-                {
-                    if (futureAccessList.ContainsItem(token))
-                    {
-                        recentFolders.Add(await futureAccessList.GetFolderAsync(token));
-                    }
-                }
-                catch (Exception)
-                {
-                    // folder probably deleted
-                    futureAccessList.Remove(token);
-                }
+                // a folder that can't be restored after a launch would have to be selected again every time
+                isFixedSaveLocationSupported = false;
+                LogService?.Log.Error(exc, "Fixed save location is not supported");
+                SentryService?.TrackError(exc);
+                SentryService?.TrackEvent(AnalyticsEvent.SetSaveLocationUnavailable);
+                fixedSaveLocation = await TryGetDefaultSaveLocationAsync();
             }
         }
         else
         {
-            // no folders saved ~> save location needs to be acquired
-            await TryResetSaveLocationInternalAsync(false);
+            // first launch or no default folder so far ~> try to set one up
+            fixedSaveLocation = await TryGetDefaultSaveLocationAsync();
+            if (fixedSaveLocation != null)
+                futureAccessList.AddOrReplace(futureAccessListFixedLocationToken, fixedSaveLocation);
+        }
+
+        // a fixed save location can only be used with a restorable folder
+        if ((!isFixedSaveLocationSupported || fixedSaveLocation == null)
+            && SettingsService.SettingSaveLocationType == SettingSaveLocationType.FixedLocation)
+        {
+            SettingsService.SettingSaveLocationType = SettingSaveLocationType.AskAfterNewProject;
+        }
+
+        // recent folders may be cached
+        for (int i = 0; i < recentFoldersLimit; i++)
+        {
+            string token = $"{futureAccessListRecentFoldersToken}{i}";
+            try
+            {
+                if (futureAccessList.ContainsItem(token))
+                {
+                    recentFolders.Add(await futureAccessList.GetFolderAsync(token));
+                }
+            }
+            catch (Exception)
+            {
+                // folder probably deleted
+                futureAccessList.Remove(token);
+            }
         }
 
         initializationCompleted.TrySetResult();
+    }
+
+    /// <summary>
+    ///     Opens or creates the default scan folder in the Pictures library. Fails on PCs where that library is missing or
+    ///     broken, which doesn't prevent the user from selecting a fixed save location manually.
+    /// </summary>
+    private async Task<StorageFolder?> TryGetDefaultSaveLocationAsync()
+    {
+        try
+        {
+            return await KnownFolders.PicturesLibrary.CreateFolderAsync
+                (GetDefaultScanFolderName(), CreationCollisionOption.OpenIfExists);
+        }
+        catch (Exception exc)
+        {
+            LogService?.Log.Warning(exc, "Default save location is unavailable");
+            return null;
+        }
     }
 
     public async Task<SaveOptions?> GetSaveOptionsAsync(Window window, ScanOptions scanOptions, ProjectBase? existingProject,
@@ -179,12 +208,17 @@ internal class SaveLocationService : ObservableRecipient, ISaveLocationService
         {
             case SettingSaveLocationType.FixedLocation:
                 await initializationCompleted.Task;
-                TrackRecentlyUsedFolder(fixedSaveLocation!);
+                if (fixedSaveLocation == null)
+                {
+                    // no folder available (yet) ~> ask instead
+                    goto case SettingSaveLocationType.AskAfterNewProject;
+                }
+                TrackRecentlyUsedFolder(fixedSaveLocation);
 
                 if (scanOptions.TargetFormat == TargetFormat.PDF)
-                    return new SaveOptions(fixedSaveLocation!, subfolderName, fileName, SettingsService.SettingGenerateFileNameWithAI);
+                    return new SaveOptions(fixedSaveLocation, subfolderName, fileName, SettingsService.SettingGenerateFileNameWithAI);
                 else
-                    return new SaveOptions(fixedSaveLocation!, subfolderName, fileName, false);
+                    return new SaveOptions(fixedSaveLocation, subfolderName, fileName, false);
 
             case SettingSaveLocationType.AskBeforeNewProject:
                 if (existingProject != null)
@@ -263,23 +297,18 @@ internal class SaveLocationService : ObservableRecipient, ISaveLocationService
 
     public async Task<StorageFolder?> TryResetSaveLocationAsync()
     {
-        return await TryResetSaveLocationInternalAsync();
-    }
-
-    private async Task<StorageFolder?> TryResetSaveLocationInternalAsync(bool awaitInitialization = true)
-    {
+        await initializationCompleted.Task;
         if (!isFixedSaveLocationSupported) return null;
-        if (awaitInitialization) await initializationCompleted.Task;
 
         try
         {
             fixedSaveLocation = await KnownFolders.PicturesLibrary.CreateFolderAsync
                 (GetDefaultScanFolderName(), CreationCollisionOption.OpenIfExists);
+            futureAccessList.AddOrReplace(futureAccessListFixedLocationToken, fixedSaveLocation);
         }
         catch (UnauthorizedAccessException exc)
         {
-            isFixedSaveLocationSupported = false;
-            SettingsService.SettingSaveLocationType = SettingSaveLocationType.AskAfterNewProject;
+            // keep the current folder, the user can still select another one manually
             LogService?.Log.Error(exc, "Resetting fixed save location failed (Unauthorized)");
             SentryService?.TrackError(exc);
             Messenger.Send(new ShowInAppNotificationMessage(new CommunityToolkit.WinUI.Behaviors.Notification
@@ -291,8 +320,6 @@ internal class SaveLocationService : ObservableRecipient, ISaveLocationService
         }
         catch (Exception exc)
         {
-            isFixedSaveLocationSupported = false;
-            SettingsService.SettingSaveLocationType = SettingSaveLocationType.AskAfterNewProject;
             LogService?.Log.Error(exc, "Resetting fixed save location failed");
             SentryService?.TrackError(exc);
             Messenger.Send(new ShowInAppNotificationMessage(new CommunityToolkit.WinUI.Behaviors.Notification
@@ -303,10 +330,6 @@ internal class SaveLocationService : ObservableRecipient, ISaveLocationService
             }));
         }
 
-        if (fixedSaveLocation != null)
-        {
-            futureAccessList.AddOrReplace(futureAccessListFixedLocationToken, fixedSaveLocation);
-        }
         return fixedSaveLocation;
     }
 
