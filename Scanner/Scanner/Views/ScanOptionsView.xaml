@@ -583,11 +583,11 @@
                             </StackPanel>
 
                             <!-- Feeder options -->
-                            <StackPanel x:Name="StackPanelFeederOptions" Orientation="Vertical" Spacing="12" Margin="0,12,0,0" x:Load="{x:Bind IsDuplexVisible, Mode=OneWay}">
+                            <StackPanel x:Name="StackPanelFeederOptions" Orientation="Vertical" Spacing="12" Margin="0,12,0,0" x:Load="{x:Bind AreFeederOptionsVisible, Mode=OneWay}">
                                 <TextBlock Text="{x:Bind strings:Resources.FeederOptionsHeading}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Style="{StaticResource BaseTextBlockStyle}" />
                                 <StackPanel Orientation="Vertical" Spacing="4">
                                     <CheckBox Content="{x:Bind strings:Resources.ScanMultiplePages}" IsChecked="{x:Bind ViewModel.ScanOptions.ScanMultiplePages, Mode=TwoWay}"  HorizontalAlignment="Stretch" />
-                                    <CheckBox Content="{x:Bind strings:Resources.Duplex}" IsChecked="{x:Bind ViewModel.ScanOptions.Duplex, Mode=TwoWay}" HorizontalAlignment="Stretch" />
+                                    <CheckBox x:Name="CheckBoxDuplex" Content="{x:Bind strings:Resources.Duplex}" IsChecked="{x:Bind ViewModel.ScanOptions.Duplex, Mode=TwoWay}" HorizontalAlignment="Stretch" x:Load="{x:Bind IsDuplexVisible, Mode=OneWay}" />
                                 </StackPanel>
                             </StackPanel>
 

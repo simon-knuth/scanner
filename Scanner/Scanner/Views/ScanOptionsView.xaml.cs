@@ -510,9 +510,10 @@ public sealed partial class ScanOptionsView : Page
         && ((ViewModel.ScanOptions?.SourceMode == ScannerSource.Flatbed && ViewModel.SelectedScanner.IsFlatbedAutoCropSupported)
         || (ViewModel.ScanOptions?.SourceMode == ScannerSource.Feeder && ViewModel.SelectedScanner.IsFeederAutoCropSupported));
 
-    private bool IsDuplexVisible => ViewModel.SelectedScanner != null
-        && ViewModel.ScanOptions?.SourceMode == ScannerSource.Feeder
-        && ViewModel.SelectedScanner.IsFeederDuplexSupported;
+    private bool AreFeederOptionsVisible => ViewModel.SelectedScanner != null
+        && ViewModel.ScanOptions?.SourceMode == ScannerSource.Feeder;
+    private bool IsDuplexVisible => AreFeederOptionsVisible
+        && ViewModel.SelectedScanner!.IsFeederDuplexSupported;
 
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -620,6 +621,7 @@ public sealed partial class ScanOptionsView : Page
                     OnPropertyChanged(nameof(IsAutoCropSingleSupported));
                     OnPropertyChanged(nameof(IsAutoCropMulti));
                     OnPropertyChanged(nameof(IsAutoCropMultiSupported));
+                    OnPropertyChanged(nameof(AreFeederOptionsVisible));
                     OnPropertyChanged(nameof(IsDuplexVisible));
                     OnPropertyChanged(nameof(MaxScanArea));
                     OnPropertyChanged(nameof(IsPaperSizeAreaSelected));
@@ -686,6 +688,7 @@ public sealed partial class ScanOptionsView : Page
                     OnPropertyChanged(nameof(IsAutoCropDisabled));
                     OnPropertyChanged(nameof(IsAutoCropSingle));
                     OnPropertyChanged(nameof(IsAutoCropMulti));
+                    OnPropertyChanged(nameof(AreFeederOptionsVisible));
                     OnPropertyChanged(nameof(IsDuplexVisible));
                     OnPropertyChanged(nameof(MaxScanArea));
                     OnPropertyChanged(nameof(IsScanAreaSelectionVisible));
