@@ -6,6 +6,7 @@ using Scanner.Models;
 using Scanner.Models.Interfaces;
 using Scanner.Services.Interfaces;
 using Serilog;
+using Serilog.Events;
 using Serilog.Exceptions;
 using Serilog.Sinks.File;
 using System;
@@ -36,6 +37,9 @@ internal partial class LogService : ILogService
 
     private const string logFolderName = "logs";
 
+    // A level above Fatal, which no log entry reaches.
+    private const LogEventLevel levelOff = LogEventLevel.Fatal + 1;
+
     public CallerLogger Log
     {
         get;
@@ -50,7 +54,9 @@ internal partial class LogService : ILogService
 
     public string LogFilePath => hook.Path;
 
+    private Serilog.Core.Logger? logger;
     private CaptureFilePathHook hook;
+    private LogTailSink? sentryLogTail;
 
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -66,11 +72,12 @@ internal partial class LogService : ILogService
     // METHODS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /// <summary>
-    ///     Close the current log file.
+    ///     Writes all pending entries to the current log file and closes it. Entries logged afterwards are dropped until
+    ///     <see cref="InitializeAsync"/> is called again.
     /// </summary>
     public void CloseAndFlush()
     {
-        Serilog.Log.CloseAndFlush();
+        Interlocked.Exchange(ref logger, null)?.Dispose();
     }
 
     /// <summary>
@@ -83,13 +90,31 @@ internal partial class LogService : ILogService
             .CreateFolderAsync(logFolderName, CreationCollisionOption.OpenIfExists);
         string logPath = Path.Combine(LogFolder.Path, "log.log");
 
+        // close a logger left over from a previous initialization, so it releases the file
+        CloseAndFlush();
+
         // prepare hook
         hook = new CaptureFilePathHook();
         hook.FilePathChanged += Hook_FilePathChanged;
 
-        ILogger log;
-        log = new LoggerConfiguration()
-                .MinimumLevel.Is(Serilog.Events.LogEventLevel.Information)
+        // Sentry Logs only get the latest entries, sent along with a diagnostic event, see SendLogTailToSentry. The tail
+        // is created once and outlives CloseAndFlush, as the crash handlers close the log before they report the crash.
+        if (sentryLogTail == null)
+        {
+            ILogger sentryLogger = new LoggerConfiguration()
+                    .MinimumLevel.Verbose()     // the main logger below decides the level
+                    .WriteTo.Sentry(options =>
+                    {
+                        options.InitializeSdk = false;              // SentryService initializes the SDK
+                        options.MinimumBreadcrumbLevel = levelOff;  // structured logs only
+                        options.MinimumEventLevel = levelOff;
+                    })
+                    .CreateLogger();
+            sentryLogTail = new LogTailSink(sentryLogger, AppConfig.SentryLogTailLength);
+        }
+
+        Serilog.Core.Logger log = new LoggerConfiguration()
+                .MinimumLevel.Is(LogEventLevel.Information)
                 .WriteTo.Async(a => a.File(
                     path: logPath,
                     outputTemplate: "{Timestamp:yy-MM-dd HH:mm:ss} [{Level:u3}] [{Caller}] {Message:lj}{NewLine}{Exception}",
@@ -98,6 +123,7 @@ internal partial class LogService : ILogService
                     fileSizeLimitBytes: 500000,
                     rollOnFileSizeLimit: true,
                     hooks: hook))
+                .WriteTo.Sink(sentryLogTail)
                 .Enrich.WithExceptionDetails()
                 .ConfigureCustomDestructuring()
                 .CreateLogger();
@@ -106,6 +132,7 @@ internal partial class LogService : ILogService
         log.Information("App version: {AppVersion}", Helpers.Helpers.GetCurrentVersion());
         log.Information("Windows version: {WindowsVersion}", GetWindowsVersion());
         log.Information("System architecture: {SystemArchitecture}", RuntimeInformation.OSArchitecture);
+        logger = log;
         Log = new(log);
     }
 
@@ -119,6 +146,15 @@ internal partial class LogService : ILogService
         return $"{major}.{minor}.{build}.{revision}";
     }
 
+    /// <summary>
+    ///     Sends the latest log entries to Sentry Logs, where they show up with the event that is being sent. Each entry
+    ///     is sent once at most.
+    /// </summary>
+    public void SendLogTailToSentry()
+    {
+        sentryLogTail?.Send();
+    }
+
     private void Hook_FilePathChanged(object? sender, string e)
     {
         if (sender == null) return;
@@ -128,29 +164,35 @@ internal partial class LogService : ILogService
     public async Task<List<LogFile>> GetLogFilesAsync()
     {
         // flush log
-        Serilog.Log.CloseAndFlush();
+        CloseAndFlush();
 
-        // populate file list
-        var files = await LogFolder.GetFilesAsync();
-
-        List<LogFile> sortedFiles = new List<LogFile>();
-        foreach (var file in files)
+        try
         {
-            var properties = await file.GetBasicPropertiesAsync();
-            if (properties.Size >= 1000)
+            // populate file list
+            var files = await LogFolder.GetFilesAsync();
+
+            List<LogFile> sortedFiles = new List<LogFile>();
+            foreach (var file in files)
             {
-                sortedFiles.Add(await LogFile.CreateLogFile(file));
+                var properties = await file.GetBasicPropertiesAsync();
+                if (properties.Size >= 1000)
+                {
+                    sortedFiles.Add(await LogFile.CreateLogFile(file));
+                }
             }
+            sortedFiles.Sort(delegate (LogFile x, LogFile y)
+            {
+                return DateTimeOffset.Compare(x.LastModified, y.LastModified);
+            });
+            sortedFiles.Reverse();
+
+            return sortedFiles;
         }
-        sortedFiles.Sort(delegate (LogFile x, LogFile y)
+        finally
         {
-            return DateTimeOffset.Compare(x.LastModified, y.LastModified);
-        });
-        sortedFiles.Reverse();
-
-        await InitializeAsync();
-
-        return sortedFiles;
+            // reopen the log, also when listing the files failed
+            await InitializeAsync();
+        }
     }
 
     public async Task OpenLatestLogFileAsync()
@@ -178,6 +220,7 @@ internal partial class LogService : ILogService
         public override Stream OnFileOpened(string path, Stream underlyingStream, Encoding encoding)
         {
             Path = path;
+            FilePathChanged?.Invoke(this, path);
             return base.OnFileOpened(path, underlyingStream, encoding);
         }
     }

@@ -242,7 +242,6 @@ public partial class App : Application
                 if (log != null)
                 {
                     log.Fatal(exc, "Unhandled background exception");
-                    LogService!.CloseAndFlush();
                 }
                 else
                 {

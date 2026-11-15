@@ -133,8 +133,7 @@ public enum AnalyticsEvent
     ScanMergeConfirmed,
     CopilotModelDownloadStarted,
     CopilotModelDownloadCompleted,
-    CopilotModelDownloadFailed,
-    TestEvent
+    CopilotModelDownloadFailed
 }
 
 public enum AnalyticsMetric

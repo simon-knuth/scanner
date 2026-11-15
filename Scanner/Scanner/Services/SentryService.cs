@@ -128,6 +128,9 @@ internal class SentryService : ISentryService
                 FileAttachmentContent fileAttachment = new FileAttachmentContent(LogService?.LogFilePath);
                 SentryAttachment attachment = new SentryAttachment(AttachmentType.Default, fileAttachment, "log.log", "application/log");
                 scope.AddAttachment(attachment);
+
+                // feedback skips the BeforeSend callback, so the logs are sent here instead
+                LogService?.SendLogTailToSentry();
             }
 
             SettingsService.ErrorFeedbackSentThisSession = errorFeedbackSentThisSession + 1;
@@ -140,11 +143,6 @@ internal class SentryService : ISentryService
             // attachment
             scope.ClearAttachments();
         };
-
-        TrackEvent(AnalyticsEvent.TestEvent, new()
-        {
-            { "category", "value" }
-        });
     }
 
 
@@ -165,7 +163,8 @@ internal class SentryService : ISentryService
             IsGlobalModeEnabled = true,
             AutoSessionTracking = true,
             Release = Helpers.Helpers.GetCurrentVersion(),
-            SendDefaultPii = false
+            SendDefaultPii = false,
+            EnableLogs = true       // only the latest entries are sent with each event, see BeforeSend
         };
 
         options.SetBeforeSend((sentryEvent, hint) =>
@@ -201,6 +200,9 @@ internal class SentryService : ISentryService
 
             // accept event
             SettingsService.DiagnosticEventsSentThisSession = eventsSentThisSession + 1;
+
+            // the latest log entries show up with the event, as they share its trace
+            LogService?.SendLogTailToSentry();
             return sentryEvent;
         });
 

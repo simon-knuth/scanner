@@ -25,6 +25,7 @@ public static partial class AppConfig
     public static double CrashAttachmentRate = 0.25;
     public static double ErrorAttachmentRate = 0.05;
     public static double WarningAttachmentRate = 0.01;
+    public static int SentryLogTailLength = 20;     // latest log entries sent to Sentry Logs with each event
     #endregion
 
     public static TimeSpan ConsecutiveAtomicActionMergeTime = TimeSpan.FromSeconds(1);

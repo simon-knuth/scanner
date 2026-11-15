@@ -211,8 +211,8 @@ internal class SettingsService : ObservableObject, ISettingsService
 
     public int ErrorFeedbackSentThisSession
     {
-        get => GetSetting(nameof(DiagnosticEventsSentThisSession), 0);
-        set => SetSetting(nameof(DiagnosticEventsSentThisSession), value);
+        get => GetSetting(nameof(ErrorFeedbackSentThisSession), 0);
+        set => SetSetting(nameof(ErrorFeedbackSentThisSession), value);
     }
 
     public bool SettingAutoSave

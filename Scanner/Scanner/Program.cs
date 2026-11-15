@@ -66,8 +66,15 @@ public class Program
         redirectEventHandle = PInvoke.CreateEvent(null, true, false, null);
         Task.Run(() =>
         {
-            keyInstance.RedirectActivationToAsync(args).AsTask().Wait();
-            PInvoke.SetEvent(redirectEventHandle);
+            try
+            {
+                keyInstance.RedirectActivationToAsync(args).AsTask().Wait();
+            }
+            finally
+            {
+                // also when the redirection fails, so this instance doesn't wait forever
+                PInvoke.SetEvent(redirectEventHandle);
+            }
         });
 
         uint CWMO_DEFAULT = 0;
@@ -77,8 +84,15 @@ public class Program
         GC.KeepAlive(redirectEventHandle);
 
         // Bring the window to the foreground
-        Process process = Process.GetProcessById((int)keyInstance.ProcessId);
-        PInvoke.SetForegroundWindow(new(process.MainWindowHandle));
+        try
+        {
+            Process process = Process.GetProcessById((int)keyInstance.ProcessId);
+            PInvoke.SetForegroundWindow(new(process.MainWindowHandle));
+        }
+        catch (ArgumentException)
+        {
+            // The main instance has exited in the meantime, so there's no window to bring forward.
+        }
     }
 
     private static void OnActivated(object sender, AppActivationArguments args)

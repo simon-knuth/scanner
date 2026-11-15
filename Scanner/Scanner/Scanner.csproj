@@ -150,6 +150,7 @@
 		<PackageReference Include="PDFsharp" Version="6.2.4" />
 		<PackageReference Include="ReswPlus" Version="0.5.0" />
 		<PackageReference Include="Sentry" Version="6.12.0" />
+		<PackageReference Include="Sentry.Serilog" Version="6.12.0" />
 		<PackageReference Include="Serilog" Version="4.4.0" />
 		<PackageReference Include="Serilog.Exceptions" Version="8.4.0" />
 		<PackageReference Include="Serilog.Sinks.Async" Version="2.1.0" />

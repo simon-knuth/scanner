@@ -40,6 +40,7 @@ public interface ILogService
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     Task InitializeAsync();
     void CloseAndFlush();
+    void SendLogTailToSentry();
     Task<List<LogFile>> GetLogFilesAsync();
     Task OpenLatestLogFileAsync();
     Task OpenLogFolderAsync();
