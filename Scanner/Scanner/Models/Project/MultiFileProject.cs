@@ -17,6 +17,7 @@ using Scanner.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -54,13 +55,10 @@ public partial class MultiFileProject : ProjectBase
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     private MultiFileProject(Guid? id, IList<IProjectPage> pages, TargetFormat format, ScanOptions creationScanOptions) : base(id, pages, format, creationScanOptions)
     {
-        foreach (IProjectPage page in pages)
-        {
-            if (page is ImagePage imagePage && imagePage.FileNameInfo != null)
-            {
-                imagePage.FileNameInfo.NameChanged += PageFileNameInfo_NameChanged;
-            }
-        }
+        foreach (IProjectPage page in Pages)
+            ObservePageFileName(page);
+
+        Pages.CollectionChanged += Pages_CollectionChanged;
     }
 
     public static async Task<ProjectBase> CreateAsync(MultiFileProjectCreationData creationData, bool keepSourceFiles, bool isAlreadySaved, DispatcherQueue uiDispatcherQueue)
@@ -402,7 +400,6 @@ public partial class MultiFileProject : ProjectBase
                                 await imagePage.TargetFile.File.RenameAsync(imagePage.FileNameInfo.DesiredName, NameCollisionOption.GenerateUniqueName);
                                 imagePage.TargetFile = new(imagePage.TargetFile.File, await imagePage.TargetFile.File.OpenAsync(FileAccessMode.ReadWrite, StorageOpenOptions.AllowOnlyReaders));
                                 await imagePage.FileNameInfo.UpdateNamesAsync(imagePage.TargetFile.File.Name, imagePage.TargetFile.File.Name, false, uiDispatcherQueue);
-                                hasFileNameBeenApplied = true;
                             }
                         }
                     }
@@ -611,13 +608,44 @@ public partial class MultiFileProject : ProjectBase
         }
     }
 
+    private void Pages_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    {
+        if (e.OldItems != null)
+        {
+            foreach (IProjectPage page in e.OldItems)
+                StopObservingPageFileName(page);
+        }
+
+        if (e.NewItems != null)
+        {
+            foreach (IProjectPage page in e.NewItems)
+                ObservePageFileName(page);
+        }
+
+        // removing the only page with a pending rename resolves it
+        if (e.Action == NotifyCollectionChangedAction.Remove)
+            UpdateHasFileNameBeenApplied();
+    }
+
+    private void ObservePageFileName(IProjectPage page)
+    {
+        if (page is ImagePage { FileNameInfo: FileNameInfo fileNameInfo })
+            fileNameInfo.NameChanged += PageFileNameInfo_NameChanged;
+    }
+
+    private void StopObservingPageFileName(IProjectPage page)
+    {
+        if (page is ImagePage { FileNameInfo: FileNameInfo fileNameInfo })
+            fileNameInfo.NameChanged -= PageFileNameInfo_NameChanged;
+    }
+
     private void PageFileNameInfo_NameChanged(object? sender, EventArgs e)
     {
-        if (sender == null) return;
+        UpdateHasFileNameBeenApplied();
+    }
 
-        if (((FileNameInfo)sender).DesiredName != ((FileNameInfo)sender).ActualName)
-        {
-            hasFileNameBeenApplied = false;
-        }
+    private void UpdateHasFileNameBeenApplied()
+    {
+        hasFileNameBeenApplied = !Pages.Any(x => x is ImagePage { FileNameInfo: FileNameInfo info } && info.DesiredName != info.ActualName);
     }
 }
