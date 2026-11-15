@@ -83,7 +83,7 @@
                                                 <TextBlock Grid.Row="1" Text="{x:Bind strings:Resources.SettingsSaveLocationChooseBody}" MaxWidth="300" HorizontalAlignment="Left" Visibility="{x:Bind ComboBoxSettingSaveLocation.IsDropDownOpen, Mode=OneWay}" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="WrapWholeWords" />
                                             </Grid>
                                         </ComboBoxItem>
-                                        <ComboBoxItem IsEnabled="{x:Bind ViewModel.IsFixedSaveLocationSupported}">
+                                        <ComboBoxItem IsEnabled="{x:Bind ViewModel.IsFixedSaveLocationSupported, Mode=OneWay}">
                                             <Grid>
                                                 <Grid.RowDefinitions>
                                                     <RowDefinition Height="20" />

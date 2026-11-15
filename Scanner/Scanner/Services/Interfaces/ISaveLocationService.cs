@@ -44,7 +44,8 @@ public interface ISaveLocationService
         bool forceTargetFolder, DispatcherQueue uiDispatcherQueue, bool saveAs = false, string? desiredFileDisplayName = null, int existingFileCount = 0);
 
     /// <summary>
-    ///     Gets the currently selected fixed save location regardless of whether it's used or not. Can be null if unsupported.
+    ///     Gets the currently selected fixed save location regardless of whether it's used or not. Can be null if no folder is
+    ///     available, e.g. because the default folder couldn't be created and the user hasn't selected one.
     /// </summary>
     /// <returns>The <see cref="StorageFolder"/> that is used as the fixed save location.</returns>
     Task<StorageFolder?> GetFixedSaveLocationAsync();
@@ -60,12 +61,16 @@ public interface ISaveLocationService
     /// <summary>
     ///     Resets the save location to a default value.
     /// </summary>
-    /// <returns>The updated save location. Can be null if fixed save locations aren't supported.</returns>
+    /// <returns>
+    ///     The updated save location. If the default folder is unavailable, this is the previous one, which can be null.
+    ///     Always null if fixed save locations aren't supported.
+    /// </returns>
     Task<StorageFolder?> TryResetSaveLocationAsync();
 
 
     /// <summary>
-    ///    Determines if using a fixed save location is supported.
+    ///    Determines if using a fixed save location is supported, i.e. a selected folder can be restored after a launch.
+    ///    An unavailable default folder alone doesn't make it unsupported.
     /// </summary>
     Task<bool> GetIsFixedSaveLocationSupportedAsync();
 

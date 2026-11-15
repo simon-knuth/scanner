@@ -82,7 +82,17 @@ public partial class SettingsViewModel : ObservableRecipient, IDisposable
     public int SettingSaveLocationType
     {
         get => (int)SettingsService.SettingSaveLocationType;
-        set => SettingsService.SettingSaveLocationType = (SettingSaveLocationType)value;
+        set
+        {
+            // x:Bind writes the current value back on load, which mustn't open the folder picker
+            if (value == (int)SettingsService.SettingSaveLocationType)
+                return;
+
+            if ((SettingSaveLocationType)value == global::Scanner.Services.Interfaces.SettingSaveLocationType.FixedLocation)
+                _ = ApplyFixedSaveLocationTypeAsync();
+            else
+                SettingsService.SettingSaveLocationType = (SettingSaveLocationType)value;
+        }
     }
 
     public int SettingFileNamingPattern
@@ -240,6 +250,30 @@ public partial class SettingsViewModel : ObservableRecipient, IDisposable
         if (viewDispatcherQueue == null) return;
         await SaveLocationService.SelectFixedSaveLocationAsync(((App)Application.Current).SettingsWindow!, viewDispatcherQueue);
         await UpdateFixedSaveLocationPath();
+    }
+
+    private async Task ApplyFixedSaveLocationTypeAsync()
+    {
+        try
+        {
+            // a fixed save location needs a folder, which may be missing if the default one couldn't be created
+            if (await SaveLocationService.GetFixedSaveLocationAsync() == null)
+                await SelectFixedSaveLocationAsync();
+
+            if (await SaveLocationService.GetFixedSaveLocationAsync() != null)
+            {
+                SettingsService.SettingSaveLocationType = Services.Interfaces.SettingSaveLocationType.FixedLocation;
+                return;
+            }
+        }
+        catch (Exception exc)
+        {
+            LogService?.Log.Error(exc, "Selecting a fixed save location failed");
+            SentryService?.TrackError(exc);
+        }
+
+        // no folder selected ~> show the previous option again
+        OnPropertyChanged(nameof(SettingSaveLocationType));
     }
 
     private async Task ResetFixedSaveLocationAsync()
